@@ -1,7 +1,10 @@
 * 🚀 Emacs ONTOP – Don't Shave The GNU, Just Fly It
 
 *Mission: The Smoothest Setup for Each Programming Language in Emacs*
-Currently in Alpha state.
+
+/Notebook-like literate programming is provided via Org-mode./
+/Compilers, language servers and build systems must be installed separately./
+/Currently in Alpha state./
 
 * Included IDEs, ranked by user experience smoothness:
 
@@ -25,9 +28,6 @@ Lua "IDE" with REPL and telemetry-free lua-language-server. Tiny setup, does wha
 Just basic HTML, CSS and JavaScript editing and linting; includes web-mode. Highly under-developed.
 **** ontop-emacsdev ☆☆☆☆☆
 IDE for Emacs package development. Scheduled for later, not included yet.
-
-/Notebook-like literate programming is provided via Org-mode./
-/Compilers, language servers and build systems must be installed separately./
 
 * FULL INSTALL -- Get ONTOP
 
