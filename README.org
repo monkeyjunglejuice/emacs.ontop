@@ -7,15 +7,15 @@ Currently in Alpha state.
 
 **** ontop-lisp ★★★★★
 Complete Common Lisp IDE with Sly (fork of Slime). Install [[https://roswell.github.io/Installation.html][Roswell]], or [[https://www.quicklisp.org/beta/][Quicklisp]] together with a Lisp implemtation (e.g. SBCL). Works well, but seasoned Lispers may still have improvements that I'm not aware of.
-**** ontop-ocaml ★★★★★
+**** ontop-ocaml ★★★★☆
 Complete OCaml IDE in Emacs with Tuareg, Merlin, etc. The standard OCaml toplevel (M-x tuareg-run-ocaml) works perfectly with Merlin providing completion candidates (inkl. types) for Company. I try to get Utop to work with Company equally well, which doesn't when Utop is started from within a Tuareg buffer.
-**** ontop-haskell ★★★★★
+**** ontop-haskell ★★★★☆
 Interactive Haskell IDE with REPL and LSP. Works well with Cabal and Stack projects, both on Linux and MacOS.
-**** ontop-elixir ★★★★★
+**** ontop-elixir ★★★★☆
 Elixir IDE with REPL, LSPs, Tree-sitter, Mix. Pretty fresh and already working well. Pre-configured for elixir-ls and next-ls. "Jump-to-definition" doesn't work, but that seem to be limitations of the language servers themselves.
-**** ontop-julia ★★★★★
+**** ontop-julia ★★★★☆
 Julia IDE built around Julia Snail and Tree-sitter. The embedded terminal emulator (Eat) where the REPL runs needs some keybinding tweaking to integrate seamlessly.
-**** ontop-racket ★★★★★
+**** ontop-racket ★★★☆☆
 Racket IDE with the new `racket-hash-lang-mode' that supports arbitrary syntax for DSLs. Perfectly usable, but smartparens-mode could be configured more in-depth.
 **** ontop-scheme ★★★☆☆
 Scheme IDE with SRFI-browser and structural editing. Supports 8 major Scheme implementations via Geiser and works just fine. However, the Scheme implementations have either more or less comprehensive tooling. Tested on Debian Linux with Guile (most interactive experience) and Chicken (rather bare-bones).
