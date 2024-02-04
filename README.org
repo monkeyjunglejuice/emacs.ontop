@@ -1,0 +1,113 @@
+* 🚀 Emacs ONTOP – Don't Shave The GNU, Just Fly It
+
+*Mission: The Smoothest Setup for Each Programming Language in Emacs*
+Currently in Alpha state.
+
+* Included IDEs, Ranked by User Experience Smoothness:
+
+**** ontop-lisp: Complete Common Lisp IDE with Sly (fork of Slime)
+Works nicely! Seasoned Lispers may have improvements that I'm not aware of. Install [[https://roswell.github.io/Installation.html][Roswell]], or [[https://www.quicklisp.org/beta/][Quicklisp]] together with a Lisp implemtation (e.g. SBCL).
+**** ontop-ocaml: Complete OCaml IDE in Emacs with Tuareg, Merlin, etc.
+The standard OCaml toplevel (M-x tuareg-run-ocaml) works perfectly with Merlin providing completion candidates (inkl. types) for Company. I try to get Utop to work with Company equally well, which doesn't when Utop is started from within a Tuareg buffer.
+**** ontop-elixir: Elixir IDE with REPL, LSPs, Tree-sitter, Mix
+Pretty fresh and already working well. Pre-configured for elixir-ls and next-ls. "Jump-to-definition" doesn't work, but that seem to be limitations of the language servers themselves.
+**** ontop-haskell: Interactive Haskell IDE with REPL and LSP
+Works well with Cabal and Stack projects, both on Linux and MacOS.
+**** ontop-julia: Julia IDE built around Julia Snail and Tree-sitter
+Eat (the embedded terminal where the REPL runs) needs tweaking of the key-bindings to integrate seamlessly.
+**** ontop-racket: Racket IDE via Racket-mode
+Works perfectly on Linux, but doesn't find the Racket executable on MacOS.
+**** ontop-scheme: Scheme IDE with SRFI-browser and structural editing
+Supports 8 major Scheme implementations via Geiser and works just fine. Haven't tested with all Scheme implementations,just Guile and Chicken on Linux.
+**** ontop-lua: Lua IDE with REPL and telemetry-free lua-language-server
+Tiny setup, does what it is supposed to do.
+**** ontop-webdev: IDE for HTML, CSS and JS
+Just basic HTML and CSS editing via web-mode right now; higly underdeveloped.
+**** ontop-emacsdev: IDE for Emacs package development
+Scheduled for later; not available yet.
+
+/Notebook-like literate programming is provided via Org-mode./
+/Compilers, language servers and build systems must be installed separately./
+
+* FULL INSTALL -- Get ONTOP
+
+- *1.* Clone this repository:
+#+begin_src shell
+git clone https://github.com/monkeyjunglejuice/emacs.ontop.git ~/.emacs.ontop
+#+end_src
+
+- *2.* Put this line into your Emacs init file (=~/.emacs.d/init.el= or =~/.emacs=):
+#+begin_src emacs-lisp
+(load-file "~/.emacs.ontop/ontop.el")
+#+end_src
+
+- *3.* Edit =~/.emacs.ontop/ontop-setup-modules.el= to select your desired modules, then restart Emacs.
+  The installation process begins: Emacs will download and install the required Emacs packages from MELPA. It will take approx. 1--3 min, depending on your module selection and internet speed. If the process gets interupted, that's no problem -- just restart Emacs, and it will continue.
+
+* Get comfortable
+Look into the module files in order to learn about the commands and key bindings -- all documentation lives there. If you want to change settings, re-define these settings within the file =ontop-setup-personal.el=.
+
+** For new Emacs users:
+"M-x" — Press <Alt>+<x> to show all commands
+"M-x eon-" shows all commands coming with Emacs ONtop and Emacs ONboard
+"C-g" — Get out! Press <Ctrl>+<g> to cancel whatever happens (or hit 3x <ESC> in utter panic)
+
+* Why?
+
+I've been looking into many Emacs starter-kits and distros like Spacemacs or Doom Emacs, the focus is mostly on improving the overall user experience, rather than building IDEs -- comprehensive in-depth setups for using a certain programming language, based on best-practices.
+
+Setting up a programming environment in Emacs usually involves more than just installing a major mode. It's rather about cherry-picking from a selection of complementing packages with overlapping functionality, making them work together seamlessly, and take care about certain peculiarities.
+
+* Principles and Goals
+
+- Carefully pre-configured: the goal is not to pack as much features as possible for each language, but to identify the subtleties, refine iteratively, and offer best practices.
+
+- Towards un-opinionated: Where one opinion has to be followed, prepare or mention the alternatives -- e.g. via conditionals, code examples/templates in the documentation, or even a whole new module that can be activated separately -- but don't foster decision fatique.
+
+- Reading the documentation in the Elisp files shall be a reward in itself. Tipps, tricks, alternatives -- covering the whole experience working with Emacs in a certain programming language.
+
+- Modular simplicity: Even though this is an extension to the [[https://github.com/monkeyjunglejuice/emacs.onboard][Emacs ONboard starterkit]], the language setups are largely self-contained and can be used independently -- thanks to use-package, you could just pick one module from Emacs ONTOP, load it and all dependent Emacs packages get installed automatically.
+
+- Portable: Emacs ONtop Should work on recent Linux/Unix, Windows and MacOS systems; Compatibility with Emacs versions from what's in Debian stable upwards (Debian is the measure of all things)
+
+- Consistency: global definitions and inheritance of language-independent features is crucial for the user experience (e.g. same Eglot keybindings across all languages; consistant keybindings for "evaluate buffer", "compile"; Helm and Consult, etc.). If in doubt, follow `ontop-lisp.el' or `ontop-ocaml.el'.
+
+- Beginner-friendly: novice Emacs users willing to touch Elisp code should be able to follow, adapt code and and immediately celebrate their achievements. Code should not be intertwined, but easily modificable, separately usable and stealable -- if that leads to redundancy, it's fine. 
+
+- Don't be invasive: try to provide add-ons rather than replacements -- in the large, and in the small. A concrete example: In Emacs, global variables are often used across packages. Be careful not to `setq' these variables, but do `add-to-list' insted (this negligence appears very often in instructions for how to setup packages).
+
+#+begin_src emacs-lisp
+  ;; 😖 Not like this:
+  (setq treesit-language-source-alist
+        '((elixir "https://github.com/elixir-lang/tree-sitter-elixir")))
+
+  ;; 🤓 But like that instead:
+  (add-to-list 'treesit-language-source-alist
+               '(elixir "https://github.com/elixir-lang/tree-sitter-elixir"))
+#+end_src
+
+- Rely only on Emacs features enabled by the GNU Emacs distribution's default build options (smallest common denominator).
+
+* Contribute
+
+Here's what's deemed important right now (priority A = highest ... D = lowest):
+
+**** [#A] Refining current IDE modules
+I'm no professional or expert in working with these languages. If you are an xperienced user, you hold nuanced views that are highly valuable. You may contribute little or large improvements, so that we can craft useful programming language setups so that Emacs gets other professionals up to speed more easily.
+
+**** [#A] Ensure portability
+That one is quite easy: just use Emacs ONTOP, an open an issue if there's something wrong. Even better if you can suggest a solution, too. Testing Emacs ONTOP with various Emacs versions and operating systems improves robustness and the overall quality. Eventually, Emacs ONTOP is supposed to work equally well on Linux, Windows and MacOS.
+
+Tested with:
+- [X] [[https://formulae.brew.sh/cask/emacs#default][Emacs 29.2 via Homebrew (universal binary)]] / MacOS Sonoma 14.2.1
+- [X] Emacs 28.2 / Debian
+
+**** [#B] Add support for mainstream programming languages and other use-cases
+There are many programming languages that are heavily used, but not by me. If you think this project can benefit from your nifty language setup, you're welcome!
+
+**** [#D] Evil-mode compatibility (VIM keybindings)
+VIM keybindings are popular, but I missed the train and settled for Emacs keybindings. Hence I can't ensure that /anything/ works under Evil-mode. Long-term Evil users may just use their own keybindings with ONTOP; but it may be sensible to create a common basic Evil config that caters to new Evil users.
+
+* Credits and Acknowledgements
+
+Emacs ONtop is largely based on setup recommendations by the respective package authors, but also ideas from personal configs, starter-kits and my own GNU-shaving. It has been home-grown since 2014, and unfortunately I can't trace all code back to where it came from in order to give proper credit. I hope to spread some Emacs joy and make more people to consider Emacs.
