@@ -11,7 +11,7 @@
 
 /Compilers, language servers and build systems must be installed separately./
 
-*** ontop-lisp ★★★★★
+*** ontop-commonlisp ★★★★★
 Complete Common Lisp IDE with [[https://github.com/joaotavora/sly][Sly]] (fork of Slime). Just install and setup [[https://roswell.github.io/Installation.html][Roswell]], and you're ready to go. Alternatively, install a Lisp implemtation (e.g. SBCL) in combination with [[https://www.quicklisp.org/beta/][Quicklisp]]. The IDE covers most needs, Seasoned Lispers though may still come up with improvements that I don't know about.
 *** ontop-ocaml ★★★★☆
 Complete OCaml IDE in Emacs based on Tuareg and Merlin. The standard OCaml toplevel (M-x tuareg-run-ocaml) works perfectly in Emacs with Merlin, providing completion candidates (inkl. types) for Company/Corfu. I try to make Utop work equally well with Company/Corfu, but there are still some quirks.
