@@ -152,10 +152,10 @@
 ;; <https://github.com/Malabarba/aggressive-indent-mode>
 
 ;; Reindent immediately after change
-;; (use-package aggressive-indent
-;;   :ensure t
-;;   :hook
-;;   (elixir-ts-mode . aggressive-indent-mode))
+(use-package aggressive-indent
+  :ensure t
+  :hook
+  ((elixir-ts-mode heex-ts-mode elixir-mode) . aggressive-indent-mode))
 
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
