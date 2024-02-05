@@ -1,4 +1,4 @@
-* 🚀 Emacs ONTOP – Don't Shave The GNU, Just Fly It
+* 🚀 Emacs ONTOP: Don't Shave The GNU, Just Fly It
 
 *Mission: The Smoothest Setup for Each Programming Language in Emacs*
 
