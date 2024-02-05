@@ -2,11 +2,12 @@
 
 *Mission: The Smoothest Setup for Each Programming Language in Emacs*
 
-/Notebook-like literate programming is provided via Org-mode./
-/Compilers, language servers and build systems must be installed separately./
 /Currently in Alpha state./
 
-* Included IDEs, ranked by user experience smoothness:
+* Included IDEs, ranked by User Experience:
+
+/Notebook-like literate programming is provided via Org-mode./
+/Compilers, language servers and build systems must be installed separately./
 
 **** ontop-lisp ★★★★★
 Complete Common Lisp IDE with Sly (fork of Slime). Install [[https://roswell.github.io/Installation.html][Roswell]], or [[https://www.quicklisp.org/beta/][Quicklisp]] together with a Lisp implemtation (e.g. SBCL). Works well, but seasoned Lispers may still have improvements that I'm not aware of.
@@ -29,7 +30,7 @@ Just basic HTML, CSS and JavaScript editing and linting; includes web-mode. High
 **** ontop-emacsdev ☆☆☆☆☆
 IDE for Emacs package development. Scheduled for later, not included yet.
 
-* FULL INSTALL -- Get ONTOP
+* FULL INSTALL -- Get ONtop:
 
 - *1.* Clone this repository:
 #+begin_src shell
@@ -93,7 +94,7 @@ Setting up a programming environment in Emacs usually involves more than just in
 Here's what's deemed important right now (priority A = highest ... D = lowest):
 
 **** [#A] Refining current IDE modules
-I'm no professional or expert in working with these languages. If you are an xperienced user, you hold nuanced views that are highly valuable. You may contribute little or large improvements, so that we can craft useful programming language setups so that Emacs gets other professionals up to speed more easily.
+I'm no professional or expert. If you are an experienced programmer, you hold nuanced views that are highly valuable. You may be able to contribute little or larger improvements, so that we can craft useful programming language setups based on best practices.
 
 **** [#A] Ensure portability
 That one is quite easy: just use Emacs ONTOP, an open an issue if there's something wrong. Even better if you can suggest a solution, too. Testing Emacs ONTOP with various Emacs versions and operating systems improves robustness and the overall quality. Eventually, Emacs ONTOP is supposed to work equally well on Linux, Windows and MacOS.
