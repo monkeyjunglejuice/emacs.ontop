@@ -4,11 +4,12 @@
 
 /Currently in Alpha state./
 
-- Once you tried [[https://magit.vc/][Magit]], you'll never want to use Git in any other way
+- [[https://magit.vc/][Magit]] is the ultimate Emacs lock-in. You'll never want to use Git in any other way
 - [[https://orgmode.org/features.html#babel][Org]] provides functionality far beyond that of notebooks such as Jypyter or R Markdown
-- Compilers, language servers and build systems must be installed separately
 
 * Integrated Development Environments, ranked by User Experience
+
+/Compilers, language servers and build systems must be installed separately./
 
 *** ontop-lisp ★★★★★
 Complete Common Lisp IDE with [[https://github.com/joaotavora/sly][Sly]] (fork of Slime). Just install and setup [[https://roswell.github.io/Installation.html][Roswell]], and you're ready to go. Alternatively, install a Lisp implemtation (e.g. SBCL) in combination with [[https://www.quicklisp.org/beta/][Quicklisp]]. The IDE covers most needs, Seasoned Lispers though may still come up with improvements that I don't know about.
