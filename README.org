@@ -25,7 +25,7 @@ Racket IDE with the new `racket-hash-lang-mode' that supports arbitrary syntax f
 Scheme IDE with SRFI-browser and structural editing. Supports 8 major Scheme implementations via Geiser and works just fine. However, the Scheme implementations have either more or less comprehensive tooling. Tested on Debian Linux with Guile (most interactive experience) and Chicken (rather bare-bones).
 **** ontop-lua ★★☆☆☆
 Lua "IDE" with REPL and telemetry-free lua-language-server. Tiny setup, does what it is supposed to do. Doesn't come close to native Lua IDEs, like 
-**** ontop-webdev ★★☆☆☆
+**** ontop-webdev ★☆☆☆☆
 Just basic HTML, CSS and JavaScript editing and linting; includes web-mode. Highly under-developed.
 **** ontop-emacsdev ☆☆☆☆☆
 IDE for Emacs package development. Scheduled for later, not included yet.
