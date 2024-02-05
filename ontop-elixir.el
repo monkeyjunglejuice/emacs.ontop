@@ -61,25 +61,23 @@
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
 ;; Common keybindings are configured in `./ontop-shared.el'
 
-;; The Next-ls language server is used per default in this setup.
+;; The Elixir-ls language server is used per default in this setup.
 ;; Here's an Elixir language server comparison:
 ;; <https://gist.github.com/Nezteb/dc63f1d5ad9d88907dd103da2ca000b1>
 
 ;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; NEXT-LS
-;; <https://www.elixir-tools.dev/docs/next-ls/quickstart/>
-;; Credo-support is already built in (static code analyzer). Add Credo to your
-;; project file `mix.exs': <https://hex.pm/packages/credo>
-;; dependencies file `mix.exs' and issue the shell command 'mix deps.get'
+;;; ELIXIR-LS
+;; <https://github.com/elixir-lsp/elixir-ls>
 (use-package eglot
   :ensure t
+  :custom
+  ;; A longer timeout seems required for the first run in a new project
+  (eglot-connect-timeout 60)            ; default: 30
   :config
-  ;; Make sure to edit the path appropriately, use the .bat script for Windows
+  ;; Make sure to adapt the path and use the .bat script for Windows
   (add-to-list 'eglot-server-programs
                '((elixir-ts-mode heex-ts-mode elixir-mode) .
-                 ("nextls" "--stdio=true"
-                  :initializationOptions
-                  (:experimental (:completions (:enable t))))))
+                 ("elixir-ls" "--stdio=true")))
   :hook
   ;; Start language server automatically
   ((elixir-ts-mode heex-ts-mode elixir-mode) . eglot-ensure)
@@ -90,15 +88,20 @@
                #'eglot-format-buffer nil 'local))))
 
 ;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; ELIXIR-LS
-;; <https://github.com/elixir-lsp/elixir-ls>
+;;; NEXT-LS
+;; <https://www.elixir-tools.dev/docs/next-ls/quickstart/>
+;; Credo-support is already built in (static code analyzer). Add Credo to your
+;; project file `mix.exs': <https://hex.pm/packages/credo>
+;; dependencies file `mix.exs' and issue the shell command 'mix deps.get'
 ;; (use-package eglot
 ;;   :ensure t
 ;;   :config
-;;   ;; Make sure to adapt the path and use the .bat script for Windows
+;;   ;; Make sure to edit the path appropriately, use the .bat script for Windows
 ;;   (add-to-list 'eglot-server-programs
 ;;                '((elixir-ts-mode heex-ts-mode elixir-mode) .
-;;                  ("elixir-ls" "--stdio=true")))
+;;                  ("nextls" "--stdio=true"
+;;                   :initializationOptions
+;;                   (:experimental (:completions (:enable t))))))
 ;;   :hook
 ;;   ;; Start language server automatically
 ;;   ((elixir-ts-mode heex-ts-mode elixir-mode) . eglot-ensure)
