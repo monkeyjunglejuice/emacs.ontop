@@ -186,43 +186,42 @@
 
 (use-package project
   :ensure nil
+  :config
+  (setq project-switch-commands
+        '((project-find-file "File" 102)
+          (project-dired "Dired" 100)
+          ;; Ripgrep is much faster; must be installed on your computer
+          (rg-project "Ripgrep" 114)
+          (magit-project-status "Magit" 109)
+          (project-eshell "Eshell" 101)
+          (project-shell "Shell" 115)))
+  (setq project-switch-use-entire-map t)
+  ;; `project-find-dir' produces huge lists of all subdirectories, which can
+  ;; cause a huge lag and freeze Emacs for a while if the directory is large.
+  ;; Use `project-dired' instead; switch keybindings accordingly.
+  (defun eon--swap-project-key-bindings ()
+    "Swap key bindings for `project-dired` and `project-find-dir`."
+    ;; Unbind and rebind keys in project-prefix-map
+    (define-key project-prefix-map (kbd "D") #'project-find-dir)
+    (define-key project-prefix-map (kbd "d") #'project-dired)
+    ;; Handling global map bindings requires different strategy.
+    ;; Since these bindings are set up with a prefix, we'll unbind
+    ;; and rebind them manually
+    (global-unset-key (kbd "C-x p D"))
+    (global-set-key (kbd "C-x p D") #'project-find-dir)
+    (global-unset-key (kbd "C-x p d"))
+    (global-set-key (kbd "C-x p d") #'project-dired)
+    ;; Swap keys for term-raw-map if you're using term or ansi-term
+    (with-eval-after-load 'term
+      (define-key term-raw-map (kbd "C-c p D") #'project-find-dir)
+      (define-key term-raw-map (kbd "C-c p d") #'project-dired)))
+  ;; Call the function to perform the swap
+  (eon--swap-project-key-bindings)
   :bind
   ;; Some convenient keybindings.
   ("C-x f" . project-find-file)
   ("C-x d" . project-dired)
   ("M-SPC" . project-switch-to-buffer))
-
-(setq project-switch-commands
-      '((project-find-file "File" 102)
-        (project-dired "Dired" 100)
-        (rg-project "Ripgrep" 114)
-        (magit-project-status "Magit" 109)
-        (project-eshell "Eshell" 101)
-        (project-shell "Shell" 115)))
-
-(setq project-switch-use-entire-map t)
-
-;; `project-find-dir' produces huge lists of all subdirectories, which can cause
-;; huge lag and freeze emacs for a while if the project is large.
-;; Use `project-dired' instead and switch keybindings accordingly.
-(defun eon--swap-project-key-bindings ()
-  "Swap key bindings for `project-dired` and `project-find-dir`."
-  ;; Unbind and rebind keys in project-prefix-map
-  (define-key project-prefix-map (kbd "D") #'project-find-dir)
-  (define-key project-prefix-map (kbd "d") #'project-dired)
-  ;; Handling global map bindings requires different strategy.
-  ;; Since these bindings are set up with a prefix, we'll unbind
-  ;; and rebind them manually
-  (global-unset-key (kbd "C-x p D"))
-  (global-set-key (kbd "C-x p D") #'project-find-dir)
-  (global-unset-key (kbd "C-x p d"))
-  (global-set-key (kbd "C-x p d") #'project-dired)
-  ;; Swap keys for term-raw-map if you're using term or ansi-term
-  (with-eval-after-load 'term
-    (define-key term-raw-map (kbd "C-c p D") #'project-find-dir)
-    (define-key term-raw-map (kbd "C-c p d") #'project-dired)))
-;; Call the function to perform the swap
-(eon--swap-project-key-bindings)
 
 ;;  ____________________________________________________________________________
 ;;; PROJECTILE
