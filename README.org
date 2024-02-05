@@ -4,31 +4,31 @@
 
 /Currently in Alpha state./
 
-* Included IDEs, ranked by User Experience:
-
-- Once you tried [[https://magit.vc/][Magit]], you won't look at Git in the same way
-- [[https://orgmode.org/features.html#babel][Org]] provides functionality far beyond that of notebooks like Jypyter or R Markdown
+- Once you tried [[https://magit.vc/][Magit]], you'll never want to use Git in any other way
+- [[https://orgmode.org/features.html#babel][Org]] provides functionality far beyond that of notebooks such as Jypyter or R Markdown
 - Compilers, language servers and build systems must be installed separately
 
-**** ontop-lisp ★★★★★
+* Integrated Development Environments, ranked by User Experience
+
+*** ontop-lisp ★★★★★
 Complete Common Lisp IDE with [[https://github.com/joaotavora/sly][Sly]] (fork of Slime). Just install and setup [[https://roswell.github.io/Installation.html][Roswell]], and you're ready to go. Alternatively, install a Lisp implemtation (e.g. SBCL) in combination with [[https://www.quicklisp.org/beta/][Quicklisp]]. The IDE covers most needs, Seasoned Lispers though may still come up with improvements that I don't know about.
-**** ontop-ocaml ★★★★☆
+*** ontop-ocaml ★★★★☆
 Complete OCaml IDE in Emacs based on Tuareg and Merlin. The standard OCaml toplevel (M-x tuareg-run-ocaml) works perfectly in Emacs with Merlin, providing completion candidates (inkl. types) for Company/Corfu. I try to make Utop work equally well with Company/Corfu, but there are still some quirks.
-**** ontop-haskell ★★★★☆
+*** ontop-haskell ★★★★☆
 Interactive Haskell IDE based on Haskell language server. The REPL provides a much better experience within Emacs than in a terminal. Works well with Cabal and Stack projects, both on Linux and MacOS.
-**** ontop-elixir ★★★★☆
+*** ontop-elixir ★★★★☆
 The Elixir IDE comes with with two pre-configured language servers to choose from (Next-ls and Elixir-ls), REPL, Tree-sitter and Mix integration. Elisir is a pretty fresh addition to Emacs ONtop, but already working well. "Jump-to-definition" doesn't work unfortunately, but that seems to be limitation that comes from the language servers themselves.
-**** ontop-julia ★★★★☆
-The Julia IDE is based on the Julia language server, [[https://github.com/gcv/julia-snail][Snail]] and Tree-sitter. The REPL runs in the embedded terminal emulator [[Eat][Eat]], which could benefit from further tweaking.
-**** ontop-racket ★★★☆☆
+*** ontop-julia ★★★★☆
+The Julia IDE is based on the Julia language server, [[https://github.com/gcv/julia-snail][Snail]] and Tree-sitter. The REPL runs in the embedded terminal emulator [[Eat][Eat]].
+*** ontop-racket ★★★☆☆
 The Racket IDE based on [[https://github.com/greghendershott/racket-mode][Racket-mode]] provides more interactivity than DrRacket, and the new "racket-hash-lang-mode" supports arbitrary syntax for DSLs in Emacs. However, the syntax highlighting could be configured more in-depth.
-**** ontop-scheme ★★★☆☆
+*** ontop-scheme ★★★☆☆
 The Emacs Scheme IDE supports eight major Scheme implementations via Geiser and comes with SRFI-browser and structural editing. The Scheme implementations have either more or less comprehensive tooling, hence the user experience varies. Tested on Debian Linux with GNU Guile (most interactive experience and easy setup) and Chicken scheme (rather bare-bones).
-**** ontop-lua ★★☆☆☆
+*** ontop-lua ★★☆☆☆
 Basic Lua "IDE" with REPL and lua-language-server. Tiny setup that does what it is supposed to do. The available features don't come anywhere close to native Lua IDEs like [[https://studio.zerobrane.com/][ZeroBrane Studio]] or Neovim
-**** ontop-webdev ★☆☆☆☆
+*** ontop-webdev ★☆☆☆☆
 Just basic HTML, CSS and JavaScript editing and linting (linters have to be installed separately); includes web-mode. Highly under-developed.
-**** ontop-emacsdev ☆☆☆☆☆
+*** ontop-emacsdev ☆☆☆☆☆
 IDE for Emacs package development. Scheduled for later, not included yet.
 
 * FULL INSTALL -- Get ONtop:
