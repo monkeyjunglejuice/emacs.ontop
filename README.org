@@ -61,31 +61,21 @@ Setting up a programming environment in Emacs usually involves more than just in
 
 * Principles and Goals
 
-- Carefully pre-configured: the goal is not to pack as much features as possible for each language, but to identify the subtleties, refine iteratively, and offer best practices.
-
-- Towards un-opinionated: Where one opinion has to be followed, prepare or mention the alternatives -- e.g. via conditionals, code examples/templates in the documentation, or even a whole new module that can be activated separately -- but don't foster decision fatique.
-
-- Reading the documentation in the Elisp files shall be a reward in itself. Tipps, tricks, alternatives -- covering the whole experience working with Emacs in a certain programming language.
+- Don't be invasive: provide add-ons rather than replacements. In the large: Emacs ONtop tries to integrate into your existing Emacs config rather than aiming to replace it. And in the small: global variables are often used across packages. Be careful not to `setq' these variables, but do `add-to-list' insted (this negligence appears very often in instructions for how to setup packages).
 
 - Modular simplicity: Even though this is an extension to the [[https://github.com/monkeyjunglejuice/emacs.onboard][Emacs ONboard starterkit]], the language setups are largely self-contained and can be used independently -- thanks to use-package, you could just pick one module from Emacs ONTOP, load it and all dependent Emacs packages get installed automatically.
 
+- Towards un-opinionated: Where one opinion has to be followed, prepare or mention the alternatives -- e.g. via conditionals, code examples/templates in the documentation, or even a whole new module that can be activated separately -- but don't foster decision fatique.
+
+- Consistency: Adhering to Emacs conventions and doing common actions in the same way is crucial for the user experience (e.g. same Eglot keybindings across all languages; consistant keybindings for "evaluate expression", "compile", etc.). If in doubt, follow Emacs conventions, `ontop-commonlisp.el' or `ontop-ocaml.el'.
+
+- Reading the documentation in the Elisp files shall be a reward in itself. Tipps, tricks, alternatives -- covering the whole experience working with Emacs in a certain programming language.
+
+- Carefully pre-configured: the goal is not to pack as much features as possible for each language, but to identify the subtleties, refine iteratively, and work out best practices.
+
 - Portable: Emacs ONtop Should work on recent Linux/Unix, Windows and MacOS systems; Compatibility with Emacs versions from what's in Debian stable upwards (Debian is the measure of all things)
 
-- Consistency: global definitions and inheritance of language-independent features is crucial for the user experience (e.g. same Eglot keybindings across all languages; consistant keybindings for "evaluate buffer", "compile"; Helm and Consult, etc.). If in doubt, follow `ontop-lisp.el' or `ontop-ocaml.el'.
-
-- Beginner-friendly: novice Emacs users willing to touch Elisp code should be able to follow, adapt code and and immediately celebrate their achievements. Code should not be intertwined, but easily modificable, separately usable and stealable -- if that leads to redundancy, it's fine. 
-
-- Don't be invasive: try to provide add-ons rather than replacements -- in the large, and in the small. A concrete example: In Emacs, global variables are often used across packages. Be careful not to `setq' these variables, but do `add-to-list' insted (this negligence appears very often in instructions for how to setup packages).
-
-#+begin_src emacs-lisp
-  ;; 😖 Not like this:
-  (setq treesit-language-source-alist
-        '((elixir "https://github.com/elixir-lang/tree-sitter-elixir")))
-
-  ;; 🤓 But like that instead:
-  (add-to-list 'treesit-language-source-alist
-               '(elixir "https://github.com/elixir-lang/tree-sitter-elixir"))
-#+end_src
+- Beginner-friendly: novice Emacs users willing to touch Elisp code should be able to follow, adapt code and and immediately celebrate their achievements. Code should not be intertwined, but easily modificable, separately usable and stealable -- if that leads to redundancy, it's fine.
 
 - Rely only on Emacs features enabled by the GNU Emacs distribution's default build options (smallest common denominator).
 
