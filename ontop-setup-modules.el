@@ -16,15 +16,15 @@
 ;;     and unload manually loaded modules via "M-x unload-feature RET ontop-"
 
 (setq eon-modules
-      '(;; Visit module files to learn more: place the cursor and `M-x ffap RET'
-        onboard                         ; the Emacs ONBOAR starter-kit
+      '(;; To learn more, visit modules: place the cursor and do `M-x ffap RET'
+        onboard                         ; the Emacs ONBOARD starter-kit
         ontop-core                      ; shared settings and definitions
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         ontop-commonlisp                ; Common Lisp IDE
-        ;; ontop-company                   ; code autocomplete alternative
+        ontop-company                   ; code autocomplete alternative
         ontop-consult                   ; search and navigation
-        ontop-corfu                     ; code autocomplete alternative
+        ;; ontop-corfu                     ; code autocomplete alternative
         ontop-elixir                    ; Elixir IDE
         ;; ontop-evil                      ; modular editing, VIM keybindings
         ;; ontop-flycheck                  ; syntax checker alternative
