@@ -118,8 +118,8 @@
 (use-package mix
   :ensure t
   :bind
-  (:map elixir-ts-mode-map)
-  ("C-c C-k" . mix-compile))
+  (:map elixir-ts-mode-map
+        ("C-c C-k" . mix-compile)))
 
 ;;  ____________________________________________________________________________
 ;;; FLYCHECK CREDO
