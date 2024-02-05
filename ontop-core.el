@@ -449,9 +449,9 @@
 
 ;; Colorize color names in arbitrary buffers
 (use-package rainbow-mode
+  :ensure t
   :init
-  (rainbow-mode)
-  :ensure t)
+  (rainbow-mode))
 
 ;;  ____________________________________________________________________________
 ;;; ORG MODE
