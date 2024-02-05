@@ -6,27 +6,28 @@
 
 * Included IDEs, ranked by User Experience:
 
-/Notebook-like literate programming is provided via Org-mode./
-/Compilers, language servers and build systems must be installed separately./
+- Once you tried [[https://magit.vc/][Magit]], you won't look at Git in the same way
+- [[https://orgmode.org/features.html#babel][Org]] provides functionality far beyond that of notebooks like Jypyter or R Markdown
+- Compilers, language servers and build systems must be installed separately
 
 **** ontop-lisp ★★★★★
-Complete Common Lisp IDE with Sly (fork of Slime). Install [[https://roswell.github.io/Installation.html][Roswell]], or [[https://www.quicklisp.org/beta/][Quicklisp]] together with a Lisp implemtation (e.g. SBCL). Works well, but seasoned Lispers may still have improvements that I'm not aware of.
+Complete Common Lisp IDE with [[https://github.com/joaotavora/sly][Sly]] (fork of Slime). Just install and setup [[https://roswell.github.io/Installation.html][Roswell]], and you're ready to go. Alternatively, install a Lisp implemtation (e.g. SBCL) in combination with [[https://www.quicklisp.org/beta/][Quicklisp]]. The IDE covers most needs, Seasoned Lispers though may still come up with improvements that I don't know about.
 **** ontop-ocaml ★★★★☆
-Complete OCaml IDE in Emacs with Tuareg, Merlin, etc. The standard OCaml toplevel (M-x tuareg-run-ocaml) works perfectly with Merlin providing completion candidates (inkl. types) for Company. I try to get Utop to work with Company equally well, which doesn't when Utop is started from within a Tuareg buffer.
+Complete OCaml IDE in Emacs based on Tuareg and Merlin. The standard OCaml toplevel (M-x tuareg-run-ocaml) works perfectly in Emacs with Merlin, providing completion candidates (inkl. types) for Company/Corfu. I try to make Utop work equally well with Company/Corfu, but there are still some quirks.
 **** ontop-haskell ★★★★☆
-Interactive Haskell IDE with REPL and LSP. Works well with Cabal and Stack projects, both on Linux and MacOS.
+Interactive Haskell IDE based on Haskell language server. The REPL provides a much better experience within Emacs than in a terminal. Works well with Cabal and Stack projects, both on Linux and MacOS.
 **** ontop-elixir ★★★★☆
-Elixir IDE with REPL, LSPs, Tree-sitter, Mix. Pretty fresh and already working well. Pre-configured for elixir-ls and next-ls. "Jump-to-definition" doesn't work, but that seem to be limitations of the language servers themselves.
+The Elixir IDE comes with with two pre-configured language servers to choose from (Next-ls and Elixir-ls), REPL, Tree-sitter and Mix integration. Elisir is a pretty fresh addition to Emacs ONtop, but already working well. "Jump-to-definition" doesn't work unfortunately, but that seems to be limitation that comes from the language servers themselves.
 **** ontop-julia ★★★★☆
-Julia IDE built around Julia Snail and Tree-sitter. The embedded terminal emulator (Eat) where the REPL runs needs some keybinding tweaking to integrate seamlessly.
+The Julia IDE is based on the Julia language server, [[https://github.com/gcv/julia-snail][Snail]] and Tree-sitter. The REPL runs in the embedded terminal emulator [[Eat][Eat]], which could benefit from further tweaking.
 **** ontop-racket ★★★☆☆
-Racket IDE with the new `racket-hash-lang-mode' that supports arbitrary syntax for DSLs. Perfectly usable, but smartparens-mode could be configured more in-depth.
+The Racket IDE based on [[https://github.com/greghendershott/racket-mode][Racket-mode]] provides more interactivity than DrRacket, and the new "racket-hash-lang-mode" supports arbitrary syntax for DSLs in Emacs. However, the syntax highlighting could be configured more in-depth.
 **** ontop-scheme ★★★☆☆
-Scheme IDE with SRFI-browser and structural editing. Supports 8 major Scheme implementations via Geiser and works just fine. However, the Scheme implementations have either more or less comprehensive tooling. Tested on Debian Linux with Guile (most interactive experience) and Chicken (rather bare-bones).
+The Emacs Scheme IDE supports eight major Scheme implementations via Geiser and comes with SRFI-browser and structural editing. The Scheme implementations have either more or less comprehensive tooling, hence the user experience varies. Tested on Debian Linux with GNU Guile (most interactive experience and easy setup) and Chicken scheme (rather bare-bones).
 **** ontop-lua ★★☆☆☆
-Lua "IDE" with REPL and telemetry-free lua-language-server. Tiny setup, does what it is supposed to do. Doesn't come close to native Lua IDEs, like 
+Basic Lua "IDE" with REPL and lua-language-server. Tiny setup that does what it is supposed to do. The available features don't come anywhere close to native Lua IDEs like [[https://studio.zerobrane.com/][ZeroBrane Studio]] or Neovim
 **** ontop-webdev ★☆☆☆☆
-Just basic HTML, CSS and JavaScript editing and linting; includes web-mode. Highly under-developed.
+Just basic HTML, CSS and JavaScript editing and linting (linters have to be installed separately); includes web-mode. Highly under-developed.
 **** ontop-emacsdev ☆☆☆☆☆
 IDE for Emacs package development. Scheduled for later, not included yet.
 
