@@ -16,7 +16,7 @@
 ;; Copyright (C) 2021–2024 Dan Dee
 ;; Author: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
-;; Version: 1.2.1
+;; Version: 1.2.2
 ;; Package-Requires: ((EMACS "28.2"))
 ;; Keywords: convenience
 ;; SPDX-License-Identifier: MIT
@@ -199,7 +199,7 @@ or `system-configuration' directly."
 (define-prefix-command 'ctl-z-c-map)    ; commonly used commands
 (define-key ctl-z-map (kbd "c") 'ctl-z-c-map)
 
-(define-prefix-command 'ctl-z-e-map)    ; Emacs built-in
+(define-prefix-command 'ctl-z-e-map)    ; quick access to Emacs built-in's
 (define-key ctl-z-map (kbd "e") 'ctl-z-e-map)
 
 (define-prefix-command 'ctl-z-o-map)    ; org-mode
@@ -217,8 +217,10 @@ or `system-configuration' directly."
 ;;  ____________________________________________________________________________
 ;;; KEYBINDINGS
 
-;; Set the <Ctrl> key to <Command> key on MacOS
+;; Make the <Command> key on MacOS act as <Ctrl> key: "C- ..."
 (setq mac-command-modifier 'control)
+;; Make the <Option> key on MacOS act as <Meta> key for "M- ..."
+(setq mac-option-modifier 'meta)
 
 ;;  ____________________________________________________________________________
 ;;; SYSTEM
