@@ -46,7 +46,7 @@
   :ensure nil
   :bind
   ;; Reach REPL from anywhere via global key binding
-  (:map ctl-z-x
+  (:map ctl-z-x-map
         ("h" . haskell-interactive-bring))
   (:map interactive-haskell-mode-map
         ("C-c C-c" . haskell-compile)
