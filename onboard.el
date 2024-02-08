@@ -16,7 +16,7 @@
 ;; Copyright (C) 2021–2024 Dan Dee
 ;; Author: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
-;; Version: 1.2.2
+;; Version: 1.2.3
 ;; Package-Requires: ((EMACS "28.2"))
 ;; Keywords: convenience
 ;; SPDX-License-Identifier: MIT
@@ -221,6 +221,8 @@ or `system-configuration' directly."
 (setq mac-command-modifier 'control)
 ;; Make the <Option> key on MacOS act as <Meta> key for "M- ..."
 (setq mac-option-modifier 'meta)
+;; Don't bypass "C-h ..." keybindings
+(setq mac-pass-command-to-system nil)
 
 ;;  ____________________________________________________________________________
 ;;; SYSTEM
