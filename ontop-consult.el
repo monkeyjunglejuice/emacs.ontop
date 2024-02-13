@@ -93,16 +93,6 @@
    ("M-#"   . consult-register-load)
    ("M-'"   . consult-register-store)        ; orig. abbrev-prefix-mark (unrelated)
    ("C-M-#" . consult-register)
-   ;; Other custom bindings
-   ("M-y"   . consult-yank-pop)              ; orig. yank-pop
-   ("M-SPC" . consult-project-buffer)        ; orig. project-switch-to-buffer
-   ("C-r" . consult-ripgrep)                 ; orig. isearch-backward-regexp
-   ("C-s" . consult-line)                    ; orig. isearch-forward-regexp
-   ("C-M-s" . consult-line-multi)            ; orig. isearch-forward
-   ("M-s s" . isearch-forward-regexp)
-   ("M-s S" . isearch-forward)
-   ("M-s r" . isearch-backward-regexp)       ; orig. rg
-   ("M-s R" . isearch-backward)
    ;; M-g bindings (goto-map)
    ("M-g e"   . consult-compile-error)
    ("M-g f"   . consult-flymake)             ; Alternative: consult-flycheck
@@ -122,11 +112,15 @@
    ("M-s u" . consult-focus-lines)
    ;; Isearch integration
    ("M-s e" . consult-isearch-history)
+   ;; Other custom bindings
+   ("M-y"   . consult-yank-pop)              ; orig. yank-pop
+   ("M-SPC" . consult-project-buffer)        ; orig. project-switch-to-buffer
+   ("M-s M-s" . consult-line)
+   ("M-s s" . consult-line-multi)
+   ("M-s M-r" . consult-ripgrep)
    :map isearch-mode-map
    ("M-e"   . consult-isearch-history)       ; orig. isearch-edit-string
    ("M-s e" . consult-isearch-history)       ; orig. isearch-edit-string
-   ("M-s l" . consult-line)                  ; needed by consult-line to detect isearch
-   ("M-s L" . consult-line-multi)            ; needed by consult-line to detect isearch
    ;; Minibuffer history
    :map minibuffer-local-map
    ("M-s" . consult-history)                 ; orig. next-matching-history-element
