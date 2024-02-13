@@ -44,11 +44,11 @@
   (tuareg-interactive-read-only-input t)
   (tuareg-interactive-scroll-to-bottom-on-output t)
   :hook
-  ((tuareg-mode . (lambda ()
-                    (setq-local compile-command "dune build")))
-   (tuareg-interactive-mode . (lambda ()
-                                (set-process-query-on-exit-flag
-                                 (get-process "OCaml") nil))))
+  (tuareg-mode . (lambda ()
+                   (setq-local compile-command "dune build")))
+  (tuareg-interactive-mode . (lambda ()
+                               (set-process-query-on-exit-flag
+                                (get-process "OCaml") nil)))
   :bind
   ;; Reach the REPL from anywhere via global key binding
   (:map ctl-z-x-map
@@ -72,8 +72,8 @@
   (when (boundp 'eon-boring-buffers)
     (add-to-list 'eon-boring-buffers "\\`\\*merlin"))
   :hook
-  (((tuareg-mode tuareg-interactive-mode) . merlin-mode)
-   (tuareg-mode . merlin-use-merlin-imenu))
+  ((tuareg-mode tuareg-interactive-mode) . merlin-mode)
+  (tuareg-mode . merlin-use-merlin-imenu)
   :bind
   (:map merlin-mode-map
         ("C-M-p"      . merlin-phrase-prev)
