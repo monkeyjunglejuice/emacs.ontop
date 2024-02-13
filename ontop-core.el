@@ -334,7 +334,7 @@
 (use-package git-gutter-fringe
   :ensure t
   :custom
-  (git-gutter-fr:side 'right-fringe))
+  (git-gutter-fr:side 'left-fringe))
 
 ;;  ____________________________________________________________________________
 ;; STRUCTURAL EDITING
