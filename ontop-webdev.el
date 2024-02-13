@@ -90,18 +90,24 @@
 (use-package flymake
   :ensure nil
   ;; Syntax checkers don't work with web-mode, but the other modes
+  ;; Install the linter via: `npm install -g stylelint stylelint-config-standard'
   :hook
   ((html-mode css-mode js-mode) . flymake-mode))
 
 ;; <https://github.com/purcell/flymake-css>
+;; Install the linter via: `npm install -g csslint'
 (use-package flymake-css
+  :ensure t
+  :custom
+  (flymake-css-lint-command "csslint")
   :hook
-  ((css-mode web-mode) . flymake-css-load))
+  (css-mode . flymake-css-load))
 
 ;; <https://github.com/orzechowskid/flymake-eslint>
 (use-package flymake-eslint
+  :ensure t
   :hook
-  ((js-mode web-mode) . flymake-eslint-enable))
+  (js-mode . flymake-eslint-enable))
 
 ;;  ____________________________________________________________________________
 (provide 'ontop-webdev)
