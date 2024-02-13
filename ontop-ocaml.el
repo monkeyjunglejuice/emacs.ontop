@@ -188,7 +188,7 @@
 
 (defun opam-shell-command-to-string (command)
   "Similar to shell-command-to-string, but returns nil unless the process
-  returned 0, and ignores stderr (shell-command-to-string ignores return value)"
+ returned 0 and ignores stderr (shell-command-to-string ignores return value)."
   (let* ((return-value 0)
          (return-string
           (with-output-to-string
@@ -199,7 +199,7 @@
     (if (= return-value 0) return-string nil)))
 
 (defun opam-update-env (switch)
-  "Update the environment to follow current OPAM switch configuration"
+  "Update the environment to follow current Opam SWITCH configuration."
   (interactive
    (list
     (let ((default
