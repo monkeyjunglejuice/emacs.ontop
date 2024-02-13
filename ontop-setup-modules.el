@@ -17,25 +17,25 @@
 
 (setq eon-modules
       '(;; To learn more, visit modules: place the cursor and do `M-x ffap RET'
-        onboard                         ; the Emacs ONBOARD starter-kit
+        onboard                         ; include the Emacs ONBOARD starter-kit
         ontop-core                      ; shared settings and definitions
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        ontop-commonlisp                ; Common Lisp IDE
-        ontop-company                   ; code autocomplete alternative
+        ;; ontop-commonlisp                ; Common Lisp IDE
+        ;; ontop-company                   ; code autocomplete alternative
         ontop-consult                   ; search and navigation
-        ;; ontop-corfu                     ; code autocomplete alternative
+        ontop-corfu                     ; code autocomplete alternative
         ontop-elixir                    ; Elixir IDE
         ;; ontop-evil                      ; modular editing, VIM keybindings
         ;; ontop-flycheck                  ; syntax checker alternative
         ontop-fonts                     ; curated font sets
         ;; ontop-godmode                   ; modular editing, Emacs keybindings
-        ontop-haskell                   ; Haskell IDE
+        ;; ontop-haskell                   ; Haskell IDE
         ontop-helpful                   ; Extended help viewer
         ;; ontop-julia                     ; Julia IDE
         ;; ontop-lua                       ; Lua IDE
-        ontop-ocaml                     ; Ocaml IDE
-        ontop-pdftools                  ; PDF reader
+        ;; ontop-ocaml                     ; Ocaml IDE
+        ;; ontop-pdftools                  ; PDF reader
         ;; ontop-racket                    ; Racket IDE
         ;; ontop-scheme                    ; Scheme IDE
         ontop-vertico                   ; vertical completion
