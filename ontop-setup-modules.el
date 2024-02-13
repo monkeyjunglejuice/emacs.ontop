@@ -21,6 +21,7 @@
         ontop-core                      ; shared settings and definitions
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+        ;; ontop-clojure                   ; Clojure and ClojureScript IDE
         ;; ontop-commonlisp                ; Common Lisp IDE
         ;; ontop-company                   ; code autocomplete alternative
         ontop-consult                   ; search and navigation

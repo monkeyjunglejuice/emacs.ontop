@@ -22,6 +22,8 @@ The Elixir IDE comes with with two pre-configured language servers to choose fro
 *** ontop-julia ★★★★☆
 The Julia IDE is based on the Julia language server, [[https://github.com/gcv/julia-snail][Snail]] and Tree-sitter. The REPL runs in the embedded terminal emulator [[Eat][Eat]].
 *** ontop-racket ★★★☆☆
+The Clojure IDE is just a basic setup right now, but is very usable. Further tweaks might provide an even better experience.
+*** ontop-racket ★★★☆☆
 The Racket IDE based on [[https://github.com/greghendershott/racket-mode][Racket-mode]] provides more interactivity than DrRacket, and the new "racket-hash-lang-mode" supports arbitrary syntax for DSLs in Emacs. However, the syntax highlighting could be configured more in-depth.
 *** ontop-scheme ★★★☆☆
 The Emacs Scheme IDE supports eight major Scheme implementations via Geiser and comes with SRFI-browser and structural editing. The Scheme implementations have either more or less comprehensive tooling, hence the user experience varies. Tested on Debian Linux with GNU Guile (most interactive experience and easy setup) and Chicken scheme (rather bare-bones).
