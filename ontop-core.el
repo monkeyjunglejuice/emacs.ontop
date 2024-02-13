@@ -370,8 +370,8 @@
 (use-package aggressive-indent
   :ensure t
   :custom
-  (aggressive-indent-dont-electric-modes t)
-  (aggressive-indent-sit-for-time 0.01))
+  (aggressive-indent-dont-electric-modes t nil nil)
+  (aggressive-indent-sit-for-time 0.03))
 
 ;;  ____________________________________________________________________________
 ;;; EXPAND REGION
