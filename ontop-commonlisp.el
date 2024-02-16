@@ -56,9 +56,9 @@
   ;;               (unless (sly-connected-p) (save-excursion (sly)))))
   :config
   ;; Helm integration: don't show these buffers in Helm's buffer list:
-  (when (boundp 'helm-boring-buffer-regexp-list)
-    (add-to-list 'helm-boring-buffer-regexp-list "\\`\\*sly-inferior-lisp")
-    (add-to-list 'helm-boring-buffer-regexp-list "\\`\\*sly-events"))
+  (when (boundp 'eon-boring-buffers)
+    (add-to-list 'eon-boring-buffers "\\`\\*sly-inferior-lisp")
+    (add-to-list 'eon-boring-buffers "\\`\\*sly-events"))
   :bind
   (:map ctl-z-x-map
         ("l" . sly-mrepl))
