@@ -639,7 +639,7 @@ or `system-configuration' directly."
 (setq mouse-autoselect-window nil
       focus-follows-mouse nil)
 
-;; Default window navigation – simply switch to the next window in order
+;; Default window navigation – simply switch to the next window in order.
 ;; Added for convenience; the default keybinding is "C-x o"
 (global-set-key (kbd "M-o") #'other-window)
 
