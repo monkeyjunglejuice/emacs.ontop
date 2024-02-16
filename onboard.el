@@ -16,7 +16,7 @@
 ;; Copyright (C) 2021–2024 Dan Dee
 ;; Author: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
-;; Version: 1.2.5
+;; Version: 1.2.6
 ;; Package-Requires: ((EMACS "28.2"))
 ;; Keywords: convenience
 ;; SPDX-License-Identifier: MIT
@@ -73,8 +73,7 @@ The timer can be canceled with `eon-cancel-gc-timer'.")
   (setq eon-gc-timer
         (run-with-idle-timer 15 t
                              (lambda ()
-                               (message "Garbage collector has run for %.06fsec"
-                                        (eon-time (garbage-collect)))))))
+                               (eon-time (garbage-collect))))))
 
 (defun eon-cancel-gc-timer ()
   "Cancel the garbage collection timer."
@@ -274,6 +273,9 @@ or `system-configuration' directly."
   (interactive)
   (save-some-buffers)
   (kill-emacs))
+
+;; Start the server
+(server-start)
 
 ;;  ____________________________________________________________________________
 ;;; FONTS
@@ -682,10 +684,6 @@ or `system-configuration' directly."
   (let ((kill-buffer-query-functions '()))
     (mapc #'kill-buffer (buffer-list))))
 
-;; Alternative for "C-x <right>" and "C-x <left>"
-(define-key ctl-z-map (kbd "f") #'next-buffer)
-(define-key ctl-z-map (kbd "b") #'previous-buffer)
-
 ;; Define boring buffers globally, so they can be hidden.
 ;; These buffers remain accessible via Ibuffer "C-x C-b".
 (defvar eon-boring-buffers '("\\` "
@@ -697,7 +695,7 @@ or `system-configuration' directly."
                              "\\`\\*Backtrace"
                              "\\`\\*tramp"
                              ;; Some hidden buffers can be visited by ...
-                             "\\`\\*scratch"        ; "C-z s s"
+                             ;; "\\`\\*scratch"        ; "C-z s s"
                              "\\`\\*Messages"       ; "C-h e"
                              "\\`\\*Bookmark List"  ; "C-x r l"
                              "\\`\\*Ibuffer"        ; "C-x C-b"
@@ -717,8 +715,8 @@ The elements of the list are regular expressions.")
 
 (setq ibuffer-marked-face 'dired-marked)
 
-;; Don't show the boring buffers in Ibuffer
-(setq ibuffer-never-show-predicates eon-boring-buffers)
+;; Hide the boring buffers from Ibuffer too?
+;; (setq ibuffer-never-show-predicates eon-boring-buffers)
 
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
@@ -781,7 +779,7 @@ The elements of the list are regular expressions.")
 (when (fboundp #'xclip-mode) (xclip-mode 1))
 
 ;; Copy the full path of the current file
-(defun eon-copy-file-name-to-clipboard ()
+(defun eon-copy-file-name ()
   "Copy the full path of the current buffer's file to the clipboard."
   (interactive)
   (let ((filename (if (equal major-mode 'dired-mode)
