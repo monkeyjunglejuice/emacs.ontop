@@ -259,8 +259,6 @@
   (eglot-autoshutdown t)
   ;; Allow edits without confirmation?
   (eglot-confirm-server-initiated-edits nil)
-  :config
-  (add-to-list 'eon-boring-buffers "\\`\\*EGLOT")
   :bind
   (:map eglot-mode-map
         ("C-c c r" . eglot-rename)

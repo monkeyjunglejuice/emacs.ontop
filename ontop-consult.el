@@ -33,7 +33,8 @@
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
   :custom
-  ;; Hide certain buffers; the hidden buffers remain accessible via `ibuffer'
+  ;; Don't clutter buffer list with rarely used buffers;
+  ;; use `M-x ibuffer' or `C-x C-b' to access these "boring" buffers
   (consult-buffer-filter eon-boring-buffers)
   ;; :hook
   ;; Enable automatic preview at point in the *Completions* buffer. This is
