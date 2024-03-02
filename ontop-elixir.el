@@ -45,6 +45,8 @@
   :ensure t
   :custom
   (inf-elixir-switch-to-repl-on-send nil)
+  :hook
+  ((elixir-ts-mode heex-ts-mode elixir-mode) . inf-elixir-minor-mode)
   :bind
   ;; Reach the REPL from anywhere via global key binding
   (:map ctl-z-x-map
