@@ -348,9 +348,9 @@
   :init
   ;; Turn it off, because it clashes with Smartparens
   (electric-pair-mode -1)
-  ;; Enable non-strict delimiter handling globally;
+  ;; Enable non-strict delimiter handling globally?
   ;; Specific configurations can be found within the resp. language module files.
-  (smartparens-global-mode)
+  ;; (smartparens-global-mode)
   :custom
   ;; Smarparens comes without keybindings defined, it's totally up to you if you
   ;; go with the default config: 'sp; Paredit bindings: 'paredit; or your own.
