@@ -16,7 +16,7 @@
 ;; Copyright (C) 2021–2024 Dan Dee
 ;; Author: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
-;; Version: 1.2.8
+;; Version: 1.2.10
 ;; Package-Requires: ((EMACS "28.2"))
 ;; Keywords: convenience
 ;; SPDX-License-Identifier: MIT
@@ -118,7 +118,7 @@ The timer can be canceled with `eon-cancel-gc-timer'.")
 ;; There are also Gnu Elpa and Non-Gnu Elpa, which are enabled by default
 
 ;; Natively compile packages at first use or immediately after installation?
-;; (setq package-native-compile t)
+(setq package-native-compile t)
 
 ;; Highlight current line in the package manager
 (add-hook 'package-menu-mode-hook
@@ -275,7 +275,7 @@ or `system-configuration' directly."
   (kill-emacs))
 
 ;; Start the server
-(server-start)
+;; (server-start)
 
 ;;  ____________________________________________________________________________
 ;;; FONTS
@@ -667,6 +667,10 @@ or `system-configuration' directly."
 
 ;; Uniquify buffer names for buffers that would have identical names
 (setq uniquify-buffer-name-style 'forward)
+
+;; Fast buffer switching
+(global-set-key (kbd "M-[") #'previous-buffer)
+(global-set-key (kbd "M-]") #'next-buffer)
 
 ;; Kill the current buffer immediately instead of presenting a selection
 ;; It's the equivalent to "close tab" in a web browser or other editors
