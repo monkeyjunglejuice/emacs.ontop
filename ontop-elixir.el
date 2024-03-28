@@ -24,8 +24,7 @@
 ;; <https://github.com/wkirschbaum/elixir-ts-mode>
 
 (use-package elixir-ts-mode
-  :ensure t
-  :diminish "Ex")
+  :ensure t)
 
 ;; In order to use Tree Sitter, install the tree-sitter binary with your OS
 ;; package manager. Then install the language grammar via
@@ -46,7 +45,7 @@
   :custom
   (inf-elixir-switch-to-repl-on-send nil)
   :hook
-  ((elixir-ts-mode heex-ts-mode elixir-mode) . inf-elixir-minor-mode)
+  ((elixir-ts-mode heex-ts-mode) . inf-elixir-minor-mode)
   :bind
   ;; Reach the REPL from anywhere via global key binding
   (:map ctl-z-x-map
@@ -78,13 +77,13 @@
   :config
   ;; Make sure to adapt the path and use the .bat script for Windows
   (add-to-list 'eglot-server-programs
-               '((elixir-ts-mode heex-ts-mode elixir-mode) .
+               '((elixir-ts-mode heex-ts-mode) .
                  ("elixir-ls")))
   :hook
   ;; Start language server automatically
-  ((elixir-ts-mode heex-ts-mode elixir-mode) . eglot-ensure)
+  ((elixir-ts-mode heex-ts-mode) . eglot-ensure)
   ;; Tell the language server to format the buffer before saving
-  ((elixir-ts-mode heex-ts-mode elixir-mode) .
+  ((elixir-ts-mode heex-ts-mode) .
    (lambda ()
      (add-hook 'before-save-hook
                #'eglot-format-buffer nil 'local))))
@@ -100,15 +99,15 @@
 ;;   :config
 ;;   ;; Make sure to edit the path appropriately, use the .bat script for Windows
 ;;   (add-to-list 'eglot-server-programs
-;;                '((elixir-ts-mode heex-ts-mode elixir-mode) .
+;;                '((elixir-ts-mode heex-ts-mode) .
 ;;                  ("nextls" "--stdio=true"
 ;;                   :initializationOptions
 ;;                   (:experimental (:completions (:enable t))))))
 ;;   :hook
 ;;   ;; Start language server automatically
-;;   ((elixir-ts-mode heex-ts-mode elixir-mode) . eglot-ensure)
+;;   ((elixir-ts-mode heex-ts-mode) . eglot-ensure)
 ;;   ;; Tell the language server to format the buffer before saving
-;;   ((elixir-ts-mode heex-ts-mode elixir-mode) .
+;;   ((elixir-ts-mode heex-ts-mode) .
 ;;    (lambda ()
 ;;      (add-hook 'before-save-hook
 ;;                #'eglot-format-buffer nil 'local))))
@@ -157,7 +156,7 @@
 (use-package aggressive-indent
   :ensure t
   :hook
-  ((elixir-ts-mode heex-ts-mode elixir-mode) . aggressive-indent-mode))
+  ((elixir-ts-mode heex-ts-mode) . aggressive-indent-mode))
 
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
