@@ -51,7 +51,7 @@
   (:map ctl-z-x-map
         ("e" . 'inf-elixir))
   (:map elixir-ts-mode-map
-        ("C-c C-s" . 'inf-elixir-project)
+        ("C-c C-z" . 'inf-elixir-project)
         ("C-c C-l" . 'inf-elixir-send-line)
         ("C-c C-r" . 'inf-elixir-send-region)
         ("C-c C-b" . 'inf-elixir-send-buffer)
