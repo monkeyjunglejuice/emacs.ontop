@@ -23,6 +23,7 @@
   ;; Enable Corfu globally. This is recommended since Dabbrev
   ;; can be used globally (M-/). See also `corfu-excluded-modes'.
   (global-corfu-mode)
+  (corfu-popupinfo-mode)
   ;; Optional customizations
   :custom
   ;; Enable auto completion
