@@ -92,9 +92,9 @@
 ;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; NEXT-LS
 ;; <https://www.elixir-tools.dev/docs/next-ls/quickstart/>
-;; Credo-support is already built in (static code analyzer). Add Credo to your
-;; project file `mix.exs': <https://hex.pm/packages/credo>
-;; dependencies file `mix.exs' and issue the shell command 'mix deps.get'
+;; Credo-support is already built in <https://hex.pm/packages/credo>.
+;; Add Credo to your project file `mix.exs' and issue the shell command
+;; 'mix deps.get'
 ;; (use-package eglot
 ;;   :ensure t
 ;;   :config
