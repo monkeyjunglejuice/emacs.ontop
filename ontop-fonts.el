@@ -23,6 +23,47 @@
 ;;  ____________________________________________________________________________
 ;;; FONTS
 
+(defun eon-fonts-iosevka ()
+  "Set the Iosevka fonts."
+  (interactive)
+  (set-face-attribute 'default nil
+                      :family "Iosevka"
+                      :slant  'normal
+                      :weight 'normal
+                      :width  'normal
+                      :height 160)
+  (set-face-attribute 'fixed-pitch nil
+                      :family "Iosevka"
+                      :slant  'normal
+                      :weight 'normal
+                      :width  'normal
+                      :height 1.0)
+  (set-face-attribute 'fixed-pitch-serif nil
+                      :family "Iosevka Slab"
+                      :slant  'normal
+                      :weight 'normal
+                      :width  'normal
+                      :height 1.0)
+  (set-face-attribute 'variable-pitch nil
+                      :family "Iosevka Etoile"
+                      :slant  'normal
+                      :weight 'normal
+                      :width  'normal
+                      :height 1.0)
+  ;; Modeline
+  (set-face-attribute 'mode-line nil
+                      :family "Iosevka"
+                      :slant  'normal
+                      :weight 'normal
+                      :width  'normal
+                      :height 0.8)
+  (set-face-attribute 'mode-line-inactive nil
+                      :family "Iosevka"
+                      :slant  'normal
+                      :weight 'normal
+                      :width  'normal
+                      :height 0.8))
+
 (defun eon-fonts-recursive ()
   "Recursive fonts."
   (interactive)
