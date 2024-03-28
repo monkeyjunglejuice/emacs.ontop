@@ -346,22 +346,43 @@
 (use-package smartparens
   :ensure t
   :init
-  ;; Turn it off, because it clashes with Smartparens
+  ;; Turn off other modes that clash with Smartparens
   (electric-pair-mode -1)
-  ;; Enable non-strict delimiter handling globally?
+  (show-paren-mode -1)
+  ;; Globally enable non-strict delimiter handling?
   ;; Specific configurations can be found within the resp. language module files.
-  ;; (smartparens-global-mode)
-  :custom
-  ;; Smarparens comes without keybindings defined, it's totally up to you if you
-  ;; go with the default config: 'sp; Paredit bindings: 'paredit; or your own.
-  ;; Load default config:
-  (sp-base-key-bindings 'sp)
+  (smartparens-global-mode)
+  (show-smartparens-global-mode)
+  ;; :custom
+  ;; Smartparens comes without keybindings defined, it's totally up to you if you
+  ;; go with a pre-defined keybinding set or your set (see `:bind' down below).
+  ;; Load one of the default keybinding sets:
+  ;; (sp-base-key-bindings 'sp)
+  ;; (sp-base-key-bindings 'paredit)
   :config
   (sp-with-modes sp-lisp-modes
     ;; disable ' (apostrophe), it's the quote character
     (sp-local-pair "'" nil :actions nil)
     ;; also use the pseudo-quote inside strings where it serves as hyperlink
-    (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p))))
+    (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p)))
+  :bind
+  ;; Custom keybinding set, resembling standard Emacs sexp keybindings
+  (:map smartparens-mode-map
+        ("C-M-u" . sp-backward-up-sexp)
+        ("C-M-d" . sp-down-sexp)
+        ("C-M-f" . sp-forward-sexp)
+        ("C-M-b" . sp-backward-sexp)
+        ("C-M-n" . sp-next-sexp)
+        ("C-M-p" . sp-previous-sexp)
+        ("C-M-k" . sp-kill-sexp)
+        ("C-M-w" . sp-copy-sexp)
+        ("C-M-t" . sp-transpose-sexp)
+        ("C-M-<space>" . sp-mark-sexp)
+        ("C-M-<backspace>" . sp-unwrap-sexp)
+        ("C-<right>" . sp-forward-slurp-sexp)
+        ("C-<left>" . sp-forward-barf-sexp)
+        ("C-M-<left>" . sp-backward-slurp-sexp)
+        ("C-M-<right>" . sp-backward-barf-sexp)))
 
 ;;  ____________________________________________________________________________
 ;; INDENTATION
