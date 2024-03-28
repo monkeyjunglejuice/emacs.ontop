@@ -56,7 +56,7 @@
 ;;; EGLOT LANGUAGE SERVER
 ;;  <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
 ;;  <https://haskell-language-server.readthedocs.io/en/latest/configuration.html>
-;;  Common keybindings are configured in `./ontop-shared.el'
+;;  Common keybindings are configured in `./ontop-core.el'
 
 (use-package eglot
   :ensure t

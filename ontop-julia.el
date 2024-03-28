@@ -83,7 +83,7 @@
 ;;  ____________________________________________________________________________
 ;;; EGLOT LANGUAGE SERVER
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
-;; Common keybindings are configured in `./ontop-shared.el'
+;; Common keybindings are configured in `./ontop-core.el'
 
 ;; Setup Eglot for Julia and install the language server binary if necessary
 ;; <https://github.com/non-Jedi/eglot-jl>
