@@ -79,5 +79,23 @@
                               #'eglot-format-buffer t 'local))))
 
 ;;  ____________________________________________________________________________
+;;; ORG-MODE BABEL
+;; <https://org-babel.readthedocs.io/en/latest/eval/>
+;; Notebook-like literate programming in Emacs
+
+;; Starts a GHCi REPL in the background
+(use-package ob-haskell
+  :ensure nil)
+
+;; Evaluate Haskell code in Org source code blocks via "C-c C-c"
+(use-package org
+  :ensure nil
+  :hook
+  (org-mode . (lambda ()
+                (org-babel-do-load-languages
+                 'org-babel-load-languages
+                 (add-to-list 'org-babel-load-languages '(haskell . t))))))
+
+;;  ____________________________________________________________________________
 (provide 'ontop-haskell)
 ;;; ontop-haskell.el ends here
