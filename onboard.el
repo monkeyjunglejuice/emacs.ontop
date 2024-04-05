@@ -16,7 +16,7 @@
 ;; Copyright (C) 2021–2024 Dan Dee
 ;; Author: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
-;; Version: 1.2.10
+;; Version: 1.2.11
 ;; Package-Requires: ((EMACS "28.2"))
 ;; Keywords: convenience
 ;; SPDX-License-Identifier: MIT
@@ -70,6 +70,7 @@ The timer can be canceled with `eon-cancel-gc-timer'.")
 
 (defun eon-start-gc-timer ()
   "Start the garbage collection timer."
+  (interactive)
   (setq eon-gc-timer
         (run-with-idle-timer 15 t
                              (lambda ()
@@ -77,6 +78,7 @@ The timer can be canceled with `eon-cancel-gc-timer'.")
 
 (defun eon-cancel-gc-timer ()
   "Cancel the garbage collection timer."
+  (interactive)
   (when (timerp eon-gc-timer)
     (cancel-timer eon-gc-timer)
     (setq eon-gc-timer nil)))
