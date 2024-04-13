@@ -44,6 +44,19 @@
   (exec-path-from-shell-initialize))
 
 ;;  ____________________________________________________________________________
+;;; AUTO-UPDATE PACKAGES
+;; <https://github.com/rranelli/auto-package-update.el>
+
+(use-package auto-package-update
+  :ensure t
+  :init
+  (auto-package-update-maybe)
+  :custom
+  (auto-package-update-prompt-before-update t)
+  (auto-package-update-delete-old-versions t)
+  (auto-package-update-hide-results t))
+
+;;  ____________________________________________________________________________
 ;;; DIMINISH
 ;; <https://github.com/myrjola/diminish.el>
 
