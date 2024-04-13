@@ -43,7 +43,7 @@
 (use-package inf-elixir
   :ensure t
   :custom
-  (inf-elixir-switch-to-repl-on-send nil)
+  (inf-elixir-switch-to-repl-on-send t)
   :hook
   ((elixir-ts-mode heex-ts-mode) . inf-elixir-minor-mode)
   :bind
@@ -60,9 +60,9 @@
 ;;  ____________________________________________________________________________
 ;;; LANGUAGE SERVER
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
-;; Common keybindings are configured in `./ontop-shared.el'
+;; Common keybindings are configured in `./ontop-core.el'
 
-;; The Elixir-ls language server is used per default in this setup.
+;; Elixir-ls language server is used per default in this setup.
 ;; Here's an Elixir language server comparison:
 ;; <https://gist.github.com/Nezteb/dc63f1d5ad9d88907dd103da2ca000b1>
 
@@ -147,6 +147,18 @@
 ;;   (flycheck-elixir-credo-strict t)
 ;;   :hook
 ;;   (flycheck-mode . flycheck-credo-setup))
+
+;;  ____________________________________________________________________________
+;;; EXUNIT
+;; <https://github.com/ananthakumaran/exunit.el>
+
+(use-package exunit
+  :ensure t
+  :diminish exunit-mode
+  :custom
+  (transient-default-level 4)
+  :hook
+  (elixir-ts-mode . exunit-mode))
 
 ;;  ____________________________________________________________________________
 ;;; INDENTATION
