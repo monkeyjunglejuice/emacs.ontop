@@ -494,7 +494,7 @@
                       :height 0.7))
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
-(defun eon-fonts-ubuntu-mono ()
+(defun eon-fonts-ubuntu ()
   "Ubuntu Mono fonts."
   (interactive)
   (set-face-attribute 'default nil
