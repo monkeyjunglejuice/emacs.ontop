@@ -37,7 +37,6 @@
   (define-key company-active-map (kbd "RET") nil)
   (define-key company-active-map [return] nil)
   :bind
-  ("M-/" . company-complete)
   (:map company-active-map
         ("<tab>" . company-complete-selection)
         ("C-c C-d" . company-show-doc-buffer)
