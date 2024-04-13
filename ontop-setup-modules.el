@@ -14,18 +14,21 @@
 ;; --> Enable or disable modules below via commenting and uncommenting.
 ;;     You can also load modules on the fly via "M-x load-library RET ontop-"
 ;;     and unload manually loaded modules via "M-x unload-feature RET ontop-"
+;;     
+;; --> Documentation lives in the module files. To learn more, place the cursor
+;;     on a module entry below and do `M-x ffap RET' to visit the file.
 
 (setq eon-modules
-      '(;; To learn more, visit modules: place the cursor and do `M-x ffap RET'
+      '(;; Required modules
         onboard                         ; include the Emacs ONBOARD starter-kit
         ontop-core                      ; shared settings and definitions
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+        ;; Optional modules
         ;; ontop-clojure                   ; Clojure and ClojureScript IDE
         ;; ontop-commonlisp                ; Common Lisp IDE
         ;; ontop-company                   ; code autocomplete alternative
         ontop-consult                   ; search and navigation
-        ontop-corfu                     ; code autocomplete alternative
+        ontop-corfu                     ; code completion and templates
         ;; ontop-elixir                    ; Elixir IDE
         ;; ontop-evil                      ; modular editing, VIM keybindings
         ;; ontop-flycheck                  ; syntax checker alternative
@@ -41,7 +44,6 @@
         ;; ontop-scheme                    ; Scheme IDE
         ontop-vertico                   ; vertical completion
         ontop-webdev                    ; HTML/CSS/JS support
-
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         ;; Below is an empty extra module that can run your personal Elisp code.
         ;; Your code will load last, so that you can override or shadow
