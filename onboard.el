@@ -16,7 +16,7 @@
 ;; Copyright (C) 2021–2024 Dan Dee
 ;; Author: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
-;; Version: 1.2.11
+;; Version: 1.2.12
 ;; Package-Requires: ((EMACS "28.2"))
 ;; Keywords: convenience
 ;; SPDX-License-Identifier: MIT
@@ -621,7 +621,7 @@ or `system-configuration' directly."
 
 (setq eldoc-minor-mode-string nil
       eldoc-documentation-strategy 'eldoc-documentation-compose
-      eldoc-echo-area-display-truncation-message t
+      eldoc-echo-area-display-truncation-message nil
       eldoc-echo-area-prefer-doc-buffer 'maybe
       eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
 
