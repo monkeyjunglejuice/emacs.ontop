@@ -21,17 +21,57 @@
 
 ;;  ____________________________________________________________________________
 ;;; CLOJURE MODE
-;; <https://github.com/clojure-emacs/clojure-mode/>
+;; <https://github.com/clojure-emacs/clojure-ts-mode>
 
-(use-package clojure-mode
-  :ensure t)
+(use-package clojure-ts-mode
+  :ensure t
+  :custom
+  (clojure-ts-indent-style 'fixed)
+  (clojure-ts-comment-macro-font-lock-body t)
+  (clojure-ts-ensure-grammars t))
 
 ;;  ____________________________________________________________________________
 ;;; CIDER
 ;; <https://github.com/clojure-emacs/cider>
 
 (use-package cider
-  :ensure t)
+  :ensure t
+  :hook
+  (clojure-ts-mode . cider-mode))
+
+;;  ____________________________________________________________________________
+;;; STRUCTURAL EDITING
+
+;; SMARTPARENS
+;; <https://github.com/Fuco1/smartparens>
+;; <https://smartparens.readthedocs.io/en/latest/>
+
+(use-package smartparens
+  :ensure t
+  :hook
+  (clojure-ts-mode . smartparens-strict-mode))
+
+(use-package smartparens
+  :ensure t
+  :hook
+  ((cider-repl-mode) . smartparens-mode))
+
+;;  ____________________________________________________________________________
+;;; PARENTHESIS DISPLAY
+
+;; Color-code nested parens …
+;; <https://github.com/Fanael/rainbow-delimiters>
+(use-package rainbow-delimiters
+  :ensure t
+  :hook
+  ((clojure-ts-mode cider-repl-mode) . rainbow-delimiters-mode))
+
+;; … and/or make parens styleable, e.g. more or less prominent
+;; <https://github.com/tarsius/paren-face>
+(use-package paren-face
+  :ensure t
+  :hook
+  ((clojure-ts-mode cider-repl-mode) . paren-face-mode))
 
 ;;  ____________________________________________________________________________
 ;;; INDENTATION
@@ -41,7 +81,7 @@
 (use-package aggressive-indent
   :ensure t
   :hook
-  ((clojure-mode clojurescript-mode clojurec-mode) . aggressive-indent-mode))
+  ((clojure-ts-mode clojurescript-mode clojurec-mode) . aggressive-indent-mode))
 
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
