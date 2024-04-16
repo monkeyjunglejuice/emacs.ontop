@@ -6,7 +6,7 @@
 ;; You can also use this file/configuration independently from Emacs ONTOP
 ;; Load it from anywhere via `(load-file "/path/to/ontop-ocaml.el")'
 ;;
-;; The aim of Emacs ONTOP is to provide a comprehensive OCaml IDE.
+;; The aim of Emacs ONTOP is to provide a comprehensive OCaml setup.
 ;; Using this module, you will not need to load `opam-user-setup.el'
 ;; in Emacs, because the functionality is already included here.
 ;; It's nevertheless a good idea to install "user-setup" package
@@ -96,8 +96,7 @@
 (use-package merlin-eldoc
   :ensure t
   :custom
-  (eldoc-echo-area-use-multiline-p t)    ; use multiple lines when necessary
-  (merlin-eldoc-max-lines 5)             ; but not more than 8
+  (merlin-eldoc-max-lines 3)             ; but not more than 5
   (merlin-eldoc-type-verbosity 'min)     ; don't display verbose types
   (merlin-eldoc-function-arguments nil)  ; don't show function arguments
   (merlin-eldoc-doc nil)                 ; don't show the documentation
