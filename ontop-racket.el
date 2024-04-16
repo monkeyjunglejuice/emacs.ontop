@@ -26,7 +26,7 @@
 (use-package racket-mode
   :ensure t
   :init
-  (add-to-list 'auto-mode-alist '("\\.rkt\\'" . racket-hash-lang-mode))
+  ;; Use `racket-hash-lang-mode' for other syntax
   (add-to-list 'auto-mode-alist '("\\.scrbl\\'" . racket-hash-lang-mode))
   (add-to-list 'auto-mode-alist '("\\.rhm\\'" . racket-hash-lang-mode))
   :custom
