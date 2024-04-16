@@ -148,7 +148,7 @@
 (use-package aggressive-indent
   :ensure t
   :hook
-  ((lisp-mode sly-mrepl-mode) . aggressive-indent-mode))
+  (lisp-mode . aggressive-indent-mode))
 
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
