@@ -66,15 +66,6 @@
   :ensure nil)
 
 ;;  ____________________________________________________________________________
-;;; SEMANTIC
-;; <https://www.gnu.org/software/emacs/manual/html_mono/semantic.html>
-
-(use-package semantic
-  :ensure nil
-  :hook
-  ((html-mode js-mode) . semantic-mode))
-
-;;  ____________________________________________________________________________
 ;;; INDENTATION
 ;; <https://github.com/Malabarba/aggressive-indent-mode>
 
