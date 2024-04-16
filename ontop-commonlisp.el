@@ -65,6 +65,20 @@
   (:map ctl-z-s-map
         ("l" . sly-scratch)))
 
+;; Common Lisp documentation
+;; The hyperspec must be installed on your computer. Adapt the path below:
+(use-package hyperspec
+  :ensure nil
+  :after sly
+  :custom
+  (common-lisp-hyperspec-root
+   ;; Location when installed on MacOS via Homebrew
+   "/usr/local/share/doc/hyperspec/HyperSpec/")
+  (common-lisp-hyperspec-symbol-table
+   (concat common-lisp-hyperspec-root "Data/Map_Sym.txt"))
+  (common-lisp-hyperspec-issuex-table
+   (concat common-lisp-hyperspec-root "Data/Map_IssX.txt")))
+
 ;; <https://github.com/mmgeorge/sly-asdf>
 (use-package sly-asdf
   :ensure t)
