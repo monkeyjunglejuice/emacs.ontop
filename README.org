@@ -2,37 +2,39 @@
 
 ** Why?
 
-Setting up a programming environment in Emacs usually involves more than just installing a major mode. It's often about cherry-picking from a selection of complementing packages, making them work together seamlessly, and taking care about certain peculiarities.
+Setting up a programming environment in Emacs usually involves more than just installing a major mode – it's often about cherry-picking from a selection of complementing packages, making them work together seamlessly, and taking care about certain peculiarities.
 
-The goal of Emacs ONTOP is to reduce the amount of GNU-shaving by providing a comprehensive setup for each language, based on best practice.
+Emacs ONTOP is an extension layer to the [[https://github.com/monkeyjunglejuice/emacs.onboard][Emacs ONBOARD starterkit]]. The focus of Emacs ONTOP are comprehensive setups for several programming languages.
 
 - /Currently in Alpha state. There are only the languages included I tinker(ed) with./
 - /Compilers, language servers and build systems must be installed separately./
+- /Language configs are ranked by the user experience they provide./
 
-** Included Programming Languages:
-Ranked by user experience
-
-*** Emacs for Common Lisp ★★★★★
-*ontop-commonlisp*: Complete Common Lisp IDE with [[https://github.com/joaotavora/sly][Sly]] (fork of Slime). Just install and setup [[https://roswell.github.io/Installation.html][Roswell]], and you're ready to go. Alternatively, install SBCL with your package manager and then [[https://www.quicklisp.org/beta/][Quicklisp]]. The IDE covers most needs, seasoned Lispers though may still come up with improvements that I don't know about.
-*** Emacs for OCaml ★★★★☆
-*ontop-ocaml*: OCaml IDE in Emacs based on Tuareg and Merlin. The standard OCaml toplevel (M-x tuareg-run-ocaml) works fine in Emacs with Merlin, providing completion candidates (inkl. types) for Company/Corfu (I tried to make Utop work equally well in Emacs, but there are still some quirks with code completion via Company/Corfu).
-*** Emacs for Haskell ★★★★☆
-*ontop-haskell*: Interactive Haskell IDE based on Haskell language server. The GHCi provides a much better experience within Emacs than in a terminal. This configuration works well with both Cabal and Stack projects, both on Linux and MacOS.
-*** Emacs for Elixir ★★★★☆
-*ontop-elixir*: Elixir IDE and comes with two pre-configured language servers to choose from (Elixir-ls and Next-ls), REPL, Tree-sitter and Mix integration. Elixir is a pretty fresh addition to Emacs ONTOP, but already working well. "Jump-to-definition" doesn't work unfortunately, but that limitation seems to come from the language servers themselves.
-*** Emacs for Julia ★★★★☆
-*ontop-julia*: The Julia IDE is based on the Julia language server, [[https://github.com/gcv/julia-snail][Snail]] and Tree-sitter. The REPL runs in the embedded terminal emulator [[Eat][Eat]].
-*** Emacs for Clojure ★★★☆☆
-*ontop-racket*: The Clojure IDE is just a basic setup with Cider right now, but is very usable. Further tweaks might provide an even better experience.
-*** Emacs for Racket ★★★☆☆
-*ontop-racket*: The Racket IDE based on [[https://github.com/greghendershott/racket-mode][Racket-mode]] provides more interactivity than DrRacket, and the new "racket-hash-lang-mode" supports arbitrary syntax for DSLs in Emacs. However, the syntax highlighting could be configured more in-depth.
-*** Emacs for Scheme ★★★☆☆
-*ontop-scheme*: The Emacs Scheme IDE supports eight major Scheme implementations via Geiser and comes with SRFI-browser and structural editing. The Scheme implementations have either more or less comprehensive tooling, hence the user experience varies. Tested on Debian Linux with GNU Guile (most interactive experience and easy setup) and Chicken scheme (rather bare-bones).
-*** Emacs for Lua ★★☆☆☆
-*ontop-lua*: Basic Lua "IDE" with REPL and lua-language-server. Tiny setup that does what it is supposed to do. The available features don't come anywhere close to the native Lua IDE [[https://studio.zerobrane.com/][ZeroBrane Studio]] or Neovim.
-*** Emacs for Web Development ★☆☆☆☆
+** Emacs for Common Lisp ★★★★★
+*ontop-commonlisp*: Complete Common Lisp setup with [[https://github.com/joaotavora/sly][Sly]] (fork of Slime). Just install and setup [[https://roswell.github.io/Installation.html][Roswell]], and you're ready to go. Alternatively, install SBCL with your package manager and then [[https://www.quicklisp.org/beta/][Quicklisp]]. The setup covers most needs, seasoned Lispers though may still come up with improvements that I don't know about.
+** Emacs for OCaml ★★★★☆
+*ontop-ocaml*: OCaml setup in Emacs based on Tuareg and Merlin. The standard OCaml toplevel (M-x tuareg-run-ocaml) works fine in Emacs with Merlin, providing completion candidates (inkl. types) for Company/Corfu (I tried to make Utop work equally well in Emacs, but there are still some quirks with code completion via Company/Corfu).
+** Emacs for Clojure ★★★★☆
+*ontop-clojure*: The Clojure setup is just a basic setup with Cider right now, but is usable out-of-the-box. Further tweaks might provide an even better experience.
+** Emacs for Haskell ★★★★☆
+*ontop-haskell*: Interactive Haskell setup based on Haskell language server. The GHCi provides a much better experience within Emacs than in a terminal. This configuration works well with both Cabal and Stack projects, both on Linux and MacOS.
+** Emacs for Elixir ★★★☆☆
+*ontop-elixir*: Elixir setup and comes with two pre-configured language servers to choose from (Elixir-ls and Next-ls), REPL, Tree-sitter and Mix integration. Elixir is a pretty fresh addition to Emacs ONTOP, but working quite well. "Jump-to-definition" doesn't work unfortunately, but that limitation seems to come from the language servers themselves.
+** Emacs for Julia ★★★☆☆
+*ontop-julia*: The Julia setup is based on the Julia language server, [[https://github.com/gcv/julia-snail][Snail]] and Tree-sitter. The REPL runs in the embedded terminal emulator [[Eat][Eat]].
+** Emacs for Racket ★★★☆☆
+*ontop-racket*: The Racket setup based on [[https://github.com/greghendershott/racket-mode][Racket-mode]] provides more interactivity than DrRacket, and the new "racket-hash-lang-mode" supports arbitrary syntax for DSLs in Emacs. However, the syntax highlighting could be configured more in-depth.
+** Emacs for Scheme ★★★☆☆
+*ontop-scheme*: The Emacs Scheme setup supports eight major Scheme implementations via Geiser and comes with SRFI-browser and structural editing. The Scheme implementations have either more or less comprehensive tooling, hence the user experience varies. Tested on Debian Linux with GNU Guile (most interactive experience and easy setup) and Chicken scheme (rather bare-bones).
+** Emacs for Gerbil Scheme ★★☆☆☆
+*ontop-gerbil*: Basic Scheme setup with REPL, according to the suggestions on the Gerbil Scheme website.
+** Emacs for Lua ★★☆☆☆
+*ontop-lua*: Basic Lua "setup" with REPL and lua-language-server. Tiny setup that does what it is supposed to do. The available features don't come anywhere close to the native Lua IDE [[https://studio.zerobrane.com/][ZeroBrane Studio]] or Neovim.
+** Emacs for LFE (Lisp Flavoured Erlang) ★★☆☆☆
+*ontop-lfe*: Basic LFE setup with REPL.
+** Emacs for Web Development ★☆☆☆☆
 *ontop-webdev*: Just basic HTML, CSS and JavaScript editing and linting (linters have to be installed separately); includes web-mode. Highly under-developed, since I don't use JS.
-*** Emacs for Emacs Package Development ☆☆☆☆☆
+** Emacs for Emacs Package Development ☆☆☆☆☆
 *ontop-emacsdev*: Scheduled for later, not included yet.
 
 * FULL INSTALL -- Get ONTOP:
@@ -79,7 +81,7 @@ Look into the module files in order to learn about the commands and key bindings
 
 Here's what's deemed important right now (priority A = highest ... D = lowest):
 
-**** [#A] Refining current IDE modules
+**** [#A] Refining current language modules
 I'm no professional or expert. If you are an experienced programmer, you hold nuanced views that are highly valuable. You may be able to contribute little or larger improvements, so that we can craft useful programming language setups based on best practices.
 
 **** [#A] Ensure portability
@@ -93,9 +95,9 @@ Tested with:
 **** [#B] Add support for mainstream programming languages and other use-cases
 There are many programming languages that are heavily used, but not by me. If you think this project can benefit from your nifty language setup, you're welcome!
 
-**** [#D] Evil-mode compatibility (VIM keybindings)
+**** [#C] Evil-mode compatibility (VIM keybindings)
 VIM keybindings are popular, but I missed the train and settled for Emacs keybindings. Hence I can't ensure that /anything/ works under Evil-mode. Long-term Evil users may just use their own keybindings with ONTOP; but it may be sensible to create a common basic Evil config that caters to new Evil users.
 
 * Credits and Acknowledgements
 
-Emacs ONTOP is largely based on setup recommendations by the respective package authors, but also ideas from personal configs, starter-kits and my own GNU-shaving. It has been home-grown since 2014, and unfortunately I can't trace all code back to where it came from in order to give proper credit. I hope to spread some Emacs joy and make more people to consider Emacs.
+Emacs ONTOP is largely based on setup recommendations by the respective package authors, but also ideas from personal configs, starter-kits and my own GNU-shaving. It has been home-grown since 2014, and unfortunately I can't trace all code back to where it came from in order to give proper credit.
