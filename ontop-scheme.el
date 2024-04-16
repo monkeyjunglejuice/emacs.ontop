@@ -158,14 +158,5 @@
                  (add-to-list 'org-babel-load-languages '(scheme . t))))))
 
 ;;  ____________________________________________________________________________
-;;; SEMANTIC
-;; <https://www.gnu.org/software/emacs/manual/html_mono/semantic.html>
-
-(use-package semantic
-  :ensure nil
-  :hook
-  (scheme-mode . semantic-mode))
-
-;;  ____________________________________________________________________________
 (provide 'ontop-scheme)
 ;;; ontop-scheme.el ends here
