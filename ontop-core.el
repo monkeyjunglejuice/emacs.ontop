@@ -159,24 +159,12 @@
 
 (use-package eat
   :ensure t
+  :init
+  ;; Run Eshell always in Eat
+  (eat-eshell-mode)
   :custom
   (eat-term-name "xterm-256color")
-  (eat-kill-buffer-on-exit t)
-  :config
-  ;; Run Eshell always in Eat
-  (eat-eshell-mode 1)
-  ;; make C-u work in Eat terminals like in normal terminals
-  (delete [?\C-u] eat-semi-char-non-bound-keys)
-  (delete [?\C-g] eat-semi-char-non-bound-keys)
-  (eat-update-semi-char-mode-map)
-  ;; Awkward workaround for the need to call eat-reload after changing
-  ;; Eat's keymaps, but reloading from :config section causes infinite recursion
-  ;; because :config wraps with-eval-after-load.
-  (defvar eat--prevent-use-package-config-recursion nil)
-  (unless eat--prevent-use-package-config-recursion
-    (setq eat--prevent-use-package-config-recursion t)
-    (eat-reload))
-  (makunbound 'eat--prevent-use-package-config-recursion))
+  (eat-kill-buffer-on-exit t))
 
 ;;  ____________________________________________________________________________
 ;;; RIPGREP
