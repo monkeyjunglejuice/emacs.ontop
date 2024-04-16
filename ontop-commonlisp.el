@@ -55,7 +55,7 @@
   ;; (sly-mode . (lambda ()
   ;;               (unless (sly-connected-p) (save-excursion (sly)))))
   :config
-  ;; Helm integration: don't show these buffers in Helm's buffer list:
+  ;; Prevent these buffers from cluttering certain buffer lists:
   (when (boundp 'eon-boring-buffers)
     (add-to-list 'eon-boring-buffers "\\`\\*sly-inferior-lisp")
     (add-to-list 'eon-boring-buffers "\\`\\*sly-events"))
