@@ -161,6 +161,13 @@
   (elixir-ts-mode . exunit-mode))
 
 ;;  ____________________________________________________________________________
+;;; ERLANG
+;; <https://www.erlang.org/doc/apps/tools/erlang_mode_chapter.html>
+
+(use-package erlang
+  :ensure t)
+
+;;  ____________________________________________________________________________
 ;;; INDENTATION
 ;; <https://github.com/Malabarba/aggressive-indent-mode>
 
