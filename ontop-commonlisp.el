@@ -115,15 +115,6 @@
   ((inferior-lisp-mode sly-mrepl-mode) . smartparens-mode))
 
 ;;  ____________________________________________________________________________
-;;; MATCHING PARENTHESIS
-
-;; Emphasize the whole expression enclosed by matching parenthesis
-(use-package show-paren
-  :ensure nil
-  :hook
-  ((lisp-mode inferior-lisp-mode sly-mrepl-mode) . show-paren-local-mode))
-
-;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
 
 ;; Color-code nested parens …
