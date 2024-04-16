@@ -28,17 +28,20 @@
   (icomplete-vertical-mode -1)
   ;; Enable Vertico
   (vertico-mode)
-  ;; Don't display Vertico in the minibuffer, but in a regular buffer like Helm
+  ;; How to display Vertico per default?
+  (vertico-multiform-mode)
   ;; (vertico-buffer-mode)
   :custom
-  ;; Different scroll margin
-  ;; (vertico-scroll-margin 0)
-  ;; Show more candidates
+  ;; Display certain listings in another form?
+  (vertico-multiform-commands '((consult-imenu buffer)
+                                (consult-outline buffer)
+                                (consult-grep buffer)
+                                (consult-ripgrep buffer)))
+  ;; In the minibuffer
   (vertico-count 12)
-  ;; Grow and shrink the Vertico minibuffer
   (vertico-resize 'grow-only)
-  ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
-  (vertico-cycle nil)
+  ;; Enable cycling for `vertico-next' and `vertico-previous'?
+  (vertico-cycle t)
   :config
   (defun +embark-live-vertico ()
     "Shrink Vertico minibuffer when `embark-live' is active."
