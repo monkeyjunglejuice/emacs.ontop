@@ -115,18 +115,6 @@
   ((inferior-scheme-mode geiser-repl-mode) . smartparens-mode))
 
 ;;  ____________________________________________________________________________
-;;; MATCHING PARENTHESIS
-
-;; Emphasize the whole expression enclosed by matching parenthesis
-(use-package show-paren
-  :ensure nil
-  :custom
-  (show-paren-style 'expression)
-  :hook
-  ((scheme-mode inferior-scheme-mode geiser-repl-mode)
-   . show-paren-local-mode))
-
-;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
 
 ;; Color-code matching parens …
@@ -151,15 +139,7 @@
 (use-package aggressive-indent
   :ensure t
   :hook
-  ((scheme-mode)
-   . aggressive-indent-mode))
-
-;;  ____________________________________________________________________________
-;;; SRFI BROWSER
-;; <https://github.com/srfi-explorations/emacs-srfi>
-
-(use-package srfi
-  :ensure t)
+  (scheme-mode . aggressive-indent-mode))
 
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
