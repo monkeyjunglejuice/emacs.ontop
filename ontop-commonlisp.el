@@ -29,10 +29,6 @@
   ;; Set default Lisp implementation
   (inferior-lisp-program '("ros" "-Q" "run")))
 
-;; Where is the Common Lisp reference manual?
-;; Normally, you can install the Hyperspec with your distro's package manager
-(setq common-lisp-hyperspec-root "file:///usr/share/doc/hyperspec/")
-
 ;;  ____________________________________________________________________________
 ;;; SLY
 ;; <http://joaotavora.github.io/sly/>
