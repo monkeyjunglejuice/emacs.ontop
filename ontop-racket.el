@@ -67,16 +67,6 @@
   ((racket-hash-lang-mode racket-repl-mode) . smartparens-mode))
 
 ;;  ____________________________________________________________________________
-;;; MATCHING PARENTHESIS
-
-;; Emphasize the whole expression enclosed by matching parenthesis
-;; (use-package show-paren
-;;   :ensure nil
-;;   :hook
-;;   ((racket-mode racket-hash-lang-mode racket-repl-mode)
-;;   . show-paren-local-mode))
-
-;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
 
 ;; Color-code nested parens …
