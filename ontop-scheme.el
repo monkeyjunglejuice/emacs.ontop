@@ -84,11 +84,18 @@
 
 ;; <https://gitlab.com/emacs-geiser/racket>
 ;; (use-package geiser-racket
-;;   :ensure t)
+;;  :ensure t)
 
 ;; <https://gitlab.com/emacs-geiser/stklos>
 ;; (use-package geiser-stklos
 ;;   :ensure t)
+
+;;  ____________________________________________________________________________
+;;; SRFI BROWSER
+;; <https://github.com/srfi-explorations/emacs-srfi>
+
+(use-package srfi
+  :ensure t)
 
 ;;  ____________________________________________________________________________
 ;;; STRUCTURAL EDITING
