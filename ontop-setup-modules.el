@@ -19,11 +19,11 @@
 ;;     on a module entry below and do `M-x ffap RET' to visit the file.
 
 (setq eon-modules
-      '(;; Required modules
+      '(;;; REQUIRED MODULES
         onboard                         ; include the Emacs ONBOARD starter-kit
         ontop-core                      ; shared settings and definitions
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-        ;; Optional modules
+        ;;; OPTIONAL MODULES
         ;; ontop-company                   ; code completion alternative
         ontop-consult                   ; search and navigation
         ontop-corfu                     ; code completion and templates
@@ -35,7 +35,7 @@
         ;; ontop-pdftools                  ; PDF reader
         ontop-vertico                   ; vertical completion
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-        ;; Programming language support
+        ;;; PROGRAMMING LANGUAGE SUPPORT
         ;; ontop-clojure                   ; Clojure and ClojureScript programming
         ;; ontop-commonlisp                ; Common Lisp programming
         ;; ontop-elixir                    ; Elixir programming
@@ -50,6 +50,7 @@
         ;; ontop-scheme                    ; Scheme programming
         ontop-webdev                    ; HTML/CSS/JS support
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        ;;; PERSONAL MODULES
         ;; Below is an empty extra module that can run your personal Elisp code.
         ;; Your code will load last, so that you can override or shadow
         ;; any settings that have been defined within any of the files before.
