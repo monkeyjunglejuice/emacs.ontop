@@ -16,7 +16,7 @@
 ;; Copyright (C) 2021–2024 Dan Dee
 ;; Author: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
-;; Version: 1.2.13
+;; Version: 1.2.15
 ;; Package-Requires: ((EMACS "28.2"))
 ;; Keywords: convenience
 ;; SPDX-License-Identifier: MIT
@@ -621,7 +621,7 @@ or `system-configuration' directly."
 ;; <https://www.masteringemacs.org/article/seamlessly-merge-multiple-documentation-sources-eldoc>
 
 (setq eldoc-minor-mode-string nil
-      eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly
+      eldoc-documentation-strategy 'eldoc-documentation-compose
       eldoc-echo-area-display-truncation-message nil
       eldoc-echo-area-prefer-doc-buffer 'maybe
       eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
@@ -1217,8 +1217,8 @@ Kills the current Dired buffer when entering a new directory"
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Parentheses>
 
 ;; How to display matching parens generally?
-(setq show-paren-style 'expression
-      show-paren-delay 0.1)
+(setq show-paren-style 'parenthesis
+      show-paren-delay 0.125)
 
 ;; Auto-close parens, brackets and quotes?
 (electric-pair-mode 1)
