@@ -362,7 +362,7 @@
   ;; (sp-base-key-bindings 'paredit)
   :config
   (sp-with-modes sp-lisp-modes
-    ;; disable ' (apostrophe), it's the quote character
+    ;; disable ' (apostrophe) pairing, because it's the quote character
     (sp-local-pair "'" nil :actions nil)
     ;; also use the pseudo-quote inside strings where it serves as hyperlink
     (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p)))
