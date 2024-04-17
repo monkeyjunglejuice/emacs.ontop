@@ -379,7 +379,7 @@
         ("C-M-w" . sp-copy-sexp)
         ("C-M-t" . sp-transpose-sexp)
         ("C-M-<space>" . sp-mark-sexp)
-        ("C-M-<backspace>" . sp-unwrap-sexp)
+        ("C-M-<backspace>" . sp-backward-unwrap-sexp)
         ("C-<right>" . sp-forward-slurp-sexp)
         ("C-<left>" . sp-forward-barf-sexp)
         ("C-M-<left>" . sp-backward-slurp-sexp)
