@@ -101,9 +101,9 @@
   (merlin-eldoc-function-arguments nil)  ; don't show function arguments
   (merlin-eldoc-doc nil)                 ; don't show the documentation
   :hook
-  (merlin-mode . merlin-eldoc-setup)
+  (tuareg-mode . merlin-eldoc-setup)
   :bind
-  (:map merlin-mode-map
+  (:map tuareg-mode-map
         ("C-M-b" . merlin-eldoc-jump-to-prev-occurrence)
         ("C-M-f" . merlin-eldoc-jump-to-next-occurrence)))
 
