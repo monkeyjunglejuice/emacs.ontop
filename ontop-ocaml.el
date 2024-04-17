@@ -140,17 +140,21 @@
 
 ;; The keybindings are the same as with the standard toplevel.
 
-;; (use-package utop
-;;   :ensure t
-;;   :custom
-;;   ;; Utop will start with Dune project awareness:
-;;   (utop-command "opam exec -- dune utop . -- -emacs")
-;;   :hook
-;;   (merlin-mode . utop-minor-mode)
-;;   :bind
-;;   ;; Reach `utop' from anywhere via global key binding
-;;   (:map ctl-z-x-map
-;;         ("u" . utop)))
+(use-package utop
+  :ensure t
+  :custom
+  ;; Utop will start with Dune project awareness:
+  (utop-command "opam exec -- dune utop . -- -emacs")
+  :hook
+  (tuareg-mode . utop-minor-mode)
+  ;; HACK Workaround to get completions in Utop from Merlin
+  (utop-mode . (lambda ()
+                 (merlin-mode -1)
+                 (merlin-mode +1)))
+  :bind
+  ;; Reach `utop' from anywhere via global key binding
+  (:map ctl-z-x-map
+        ("u" . utop)))
 
 ;;  ____________________________________________________________________________
 ;;; INDENTATION

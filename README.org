@@ -13,7 +13,7 @@ Emacs ONTOP is an extension layer to the [[https://github.com/monkeyjunglejuice/
 ** Emacs for Common Lisp ★★★★★
 *ontop-commonlisp*: Complete Common Lisp setup with [[https://github.com/joaotavora/sly][Sly]] (fork of Slime). Just install and setup [[https://roswell.github.io/Installation.html][Roswell]], and you're ready to go. Alternatively, install SBCL with your package manager and then [[https://www.quicklisp.org/beta/][Quicklisp]]. The setup covers most needs, seasoned Lispers though may still come up with improvements that I don't know about.
 ** Emacs for OCaml ★★★★☆
-*ontop-ocaml*: OCaml setup in Emacs based on Tuareg and Merlin. The standard OCaml toplevel (M-x tuareg-run-ocaml) works fine in Emacs with Merlin, providing completion candidates (inkl. types) for Company/Corfu (I tried to make Utop work equally well in Emacs, but there are still some quirks with code completion via Company/Corfu).
+*ontop-ocaml*: OCaml setup in Emacs based on Tuareg and Merlin. Completion in Utop works now, with completion candidates provided by Merlin.
 ** Emacs for Clojure ★★★★☆
 *ontop-clojure*: The Clojure setup is just a basic setup with Cider right now, but is usable out-of-the-box. Further tweaks might provide an even better experience.
 ** Emacs for Haskell ★★★★☆
