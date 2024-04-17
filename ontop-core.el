@@ -550,20 +550,6 @@
    . smartparens-mode))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;; MATCHING PARENTHESIS
-
-;; Emphasize the whole expression enclosed by matching parens
-(use-package show-paren
-  :ensure nil
-  :custom
-  (show-paren-style 'mixed)
-  :hook
-  (( emacs-lisp-mode lisp-interaction-mode lisp-mode scheme-mode
-     ielm-mode inferior-lisp-mode inferior-scheme-mode
-     eval-expression-minibuffer-setup)
-   . show-paren-local-mode))
-
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;; PARENTHESIS DISPLAY
 
 ;; Color-code nested parens …
