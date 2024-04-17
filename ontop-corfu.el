@@ -1,4 +1,4 @@
-;;; ontop-corfu.el --- Auto-completion  -*- lexical-binding: t; -*-
+;;; ontop-corfu.el --- Code-completion  -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Code:
 
