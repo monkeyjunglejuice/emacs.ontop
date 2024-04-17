@@ -29,7 +29,8 @@
         ;; ontop-company                   ; code autocomplete alternative
         ontop-consult                   ; search and navigation
         ontop-corfu                     ; code completion and templates
-        ;; ontop-elixir                    ; Elixir IDE
+        ;; ontop-elixir                    ; Elixir programming
+        ;; ontop-elixir-ts                 ; Elixir programming (with Treesitter)
         ;; ontop-evil                      ; modular editing, VIM keybindings
         ;; ontop-flycheck                  ; syntax checker alternative
         ontop-fonts                     ; curated font sets

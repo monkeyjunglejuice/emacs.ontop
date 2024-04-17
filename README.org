@@ -19,7 +19,7 @@ Emacs ONTOP is an extension layer to the [[https://github.com/monkeyjunglejuice/
 ** Emacs for Haskell ★★★★☆
 *ontop-haskell*: Interactive Haskell setup based on Haskell language server. The GHCi provides a much better experience within Emacs than in a terminal. This configuration works well with both Cabal and Stack projects, both on Linux and MacOS.
 ** Emacs for Elixir ★★★☆☆
-*ontop-elixir*: Elixir setup and comes with two pre-configured language servers to choose from (Elixir-ls and Next-ls), REPL, Tree-sitter and Mix integration. Elixir is a pretty fresh addition to Emacs ONTOP, but working quite well. "Jump-to-definition" doesn't work unfortunately, but that limitation seems to come from the language servers themselves.
+*ontop-elixir*: Elixir setup and comes with two pre-configured language servers to choose from (Elixir-ls and Next-ls), REPL, +Tree-sitter+ and Mix integration. Elixir is a pretty fresh addition to Emacs ONTOP, but working quite well. "Jump-to-definition" doesn't work unfortunately, but that limitation seems to come from the language servers themselves.
 ** Emacs for Julia ★★★☆☆
 *ontop-julia*: The Julia setup is based on the Julia language server, [[https://github.com/gcv/julia-snail][Snail]] and Tree-sitter. The REPL runs in the embedded terminal emulator [[Eat][Eat]].
 ** Emacs for Racket ★★★☆☆

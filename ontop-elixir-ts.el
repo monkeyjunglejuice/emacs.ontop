@@ -1,10 +1,10 @@
-;;; ontop-elixir.el --- Elixir configuration  -*- lexical-binding: t; -*-
+;;; ontop-elixir-ts.el --- Elixir configuration  -*- lexical-binding: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
 ;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/ontop-elixir.el")'.
+;; Load it from anywhere via `(load-file "/path/to/ontop-elixir-ts.el")'.
 
 ;;; Code:
 
@@ -20,11 +20,22 @@
   (require 'use-package))
 
 ;;  ____________________________________________________________________________
-;;; ELIXIR MODE
-;; <https://github.com/wkirschbaum/elixir-mode>
+;;; ELIXIR TREESIT MODE
+;; <https://github.com/wkirschbaum/elixir-ts-mode>
 
-(use-package elixir-mode
+(use-package elixir-ts-mode
   :ensure t)
+
+;; In order to use Tree Sitter, install the tree-sitter binary with your OS
+;; package manager. Then install the language grammar via
+;; 'M-x treesit-install-language-grammar'
+(use-package treesit
+  :ensure nil
+  :config
+  (add-to-list 'treesit-language-source-alist
+               '(elixir "https://github.com/elixir-lang/tree-sitter-elixir"))
+  (add-to-list 'treesit-language-source-alist
+               '(heex "https://github.com/phoenixframework/tree-sitter-heex")))
 
 ;;  ____________________________________________________________________________
 ;;; REPL
@@ -34,12 +45,12 @@
   :custom
   (inf-elixir-switch-to-repl-on-send t)
   :hook
-  ((elixir-mode heex-mode) . inf-elixir-minor-mode)
+  ((elixir-ts-mode heex-ts-mode) . inf-elixir-minor-mode)
   :bind
   ;; Reach the REPL from anywhere via global key binding
   (:map ctl-z-x-map
         ("e" . 'inf-elixir))
-  (:map elixir-mode-map
+  (:map elixir-ts-mode-map
         ("C-c C-z" . 'inf-elixir-project)
         ("C-c C-l" . 'inf-elixir-send-line)
         ("C-c C-r" . 'inf-elixir-send-region)
@@ -67,13 +78,13 @@
   :config
   ;; Make sure to adapt the path and use the .bat script for Windows
   (add-to-list 'eglot-server-programs
-               '((elixir-mode heex-mode) .
+               '((elixir-ts-mode heex-ts-mode) .
                  ("elixir-ls")))
   :hook
   ;; Start language server automatically
-  ((elixir-mode heex-mode) . eglot-ensure)
+  ((elixir-ts-mode heex-ts-mode) . eglot-ensure)
   ;; Tell the language server to format the buffer before saving
-  ((elixir-mode heex-mode) .
+  ((elixir-ts-mode heex-ts-mode) .
    (lambda ()
      (add-hook 'before-save-hook
                #'eglot-format-buffer nil 'local))))
@@ -90,15 +101,15 @@
 ;;   :config
 ;;   ;; Make sure to edit the path appropriately, use the .bat script for Windows
 ;;   (add-to-list 'eglot-server-programs
-;;                '((elixir-mode heex-mode) .
+;;                '((elixir-ts-mode heex-ts-mode) .
 ;;                  ("nextls" "--stdio=true"
 ;;                   :initializationOptions
 ;;                   (:experimental (:completions (:enable t))))))
 ;;   :hook
 ;;   ;; Start language server automatically
-;;   ((elixir-mode heex-mode) . eglot-ensure)
+;;   ((elixir-ts-mode heex-ts-mode) . eglot-ensure)
 ;;   ;; Tell the language server to format the buffer before saving
-;;   ((elixir-mode heex-mode) .
+;;   ((elixir-ts-mode heex-ts-mode) .
 ;;    (lambda ()
 ;;      (add-hook 'before-save-hook
 ;;                #'eglot-format-buffer nil 'local))))
@@ -110,7 +121,7 @@
 (use-package mix
   :ensure t
   :bind
-  (:map elixir-mode-map
+  (:map elixir-ts-mode-map
         ("C-c C-k" . mix-compile)))
 
 ;;  ____________________________________________________________________________
@@ -130,7 +141,7 @@
 ;; (use-package flycheck
 ;;   :ensure t
 ;;   :hook
-;;   (elixir-mode . flycheck-mode))
+;;   (elixir-ts-mode . flycheck-mode))
 
 ;; (use-package flycheck-credo
 ;;   :ensure t
@@ -149,7 +160,7 @@
   :custom
   (transient-default-level 4)
   :hook
-  (elixir-mode . exunit-mode))
+  (elixir-ts-mode . exunit-mode))
 
 ;;  ____________________________________________________________________________
 ;;; ERLANG
@@ -166,7 +177,7 @@
 (use-package aggressive-indent
   :ensure t
   :hook
-  ((elixir-mode heex-mode) . aggressive-indent-mode))
+  ((elixir-ts-mode heex-ts-mode) . aggressive-indent-mode))
 
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
@@ -187,5 +198,5 @@
                  (add-to-list 'org-babel-load-languages '(elixir . t))))))
 
 ;; _____________________________________________________________________________
-(provide 'ontop-elixir)
-;;; ontop-elixir.el ends here
+(provide 'ontop-elixir-ts)
+;;; ontop-elixir-ts.el ends here
