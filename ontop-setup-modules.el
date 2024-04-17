@@ -24,8 +24,8 @@
         ontop-core                      ; shared settings and definitions
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         ;; Optional modules
-        ;; ontop-clojure                   ; Clojure and ClojureScript IDE
-        ;; ontop-commonlisp                ; Common Lisp IDE
+        ;; ontop-clojure                   ; Clojure and ClojureScript programming
+        ;; ontop-commonlisp                ; Common Lisp programming
         ;; ontop-company                   ; code autocomplete alternative
         ontop-consult                   ; search and navigation
         ontop-corfu                     ; code completion and templates
@@ -34,15 +34,17 @@
         ;; ontop-evil                      ; modular editing, VIM keybindings
         ;; ontop-flycheck                  ; syntax checker alternative
         ontop-fonts                     ; curated font sets
+        ;; ontop-gerbil                    ; Gerbil Scheme programming
         ;; ontop-godmode                   ; modular editing, Emacs keybindings
-        ;; ontop-haskell                   ; Haskell IDE
+        ;; ontop-haskell                   ; Haskell programming
         ontop-helpful                   ; Extended help viewer
-        ;; ontop-julia                     ; Julia IDE
-        ;; ontop-lua                       ; Lua IDE
-        ;; ontop-ocaml                     ; Ocaml IDE
+        ;; ontop-julia                     ; Julia programming
+        ;; ontop-lfe                       ; Lisp Flavoured Erlang programming
+        ;; ontop-lua                       ; Lua programming
+        ;; ontop-ocaml                     ; Ocaml programming
         ;; ontop-pdftools                  ; PDF reader
-        ;; ontop-racket                    ; Racket IDE
-        ;; ontop-scheme                    ; Scheme IDE
+        ;; ontop-racket                    ; Racket programming
+        ;; ontop-scheme                    ; Scheme programming
         ontop-vertico                   ; vertical completion
         ontop-webdev                    ; HTML/CSS/JS support
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
