@@ -24,28 +24,30 @@
         ontop-core                      ; shared settings and definitions
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         ;; Optional modules
-        ;; ontop-clojure                   ; Clojure and ClojureScript programming
-        ;; ontop-commonlisp                ; Common Lisp programming
-        ;; ontop-company                   ; code autocomplete alternative
+        ;; ontop-company                   ; code completion alternative
         ontop-consult                   ; search and navigation
         ontop-corfu                     ; code completion and templates
-        ;; ontop-elixir                    ; Elixir programming
-        ;; ontop-elixir-ts                 ; Elixir programming (with Treesitter)
         ;; ontop-evil                      ; modular editing, VIM keybindings
         ;; ontop-flycheck                  ; syntax checker alternative
         ontop-fonts                     ; curated font sets
-        ;; ontop-gerbil                    ; Gerbil Scheme programming
         ;; ontop-godmode                   ; modular editing, Emacs keybindings
-        ;; ontop-haskell                   ; Haskell programming
         ontop-helpful                   ; Extended help viewer
+        ;; ontop-pdftools                  ; PDF reader
+        ontop-vertico                   ; vertical completion
+        ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        ;; Programming language support
+        ;; ontop-clojure                   ; Clojure and ClojureScript programming
+        ;; ontop-commonlisp                ; Common Lisp programming
+        ;; ontop-elixir                    ; Elixir programming
+        ;; ontop-elixir-ts                 ; Elixir programming (with Treesitter)
+        ;; ontop-gerbil                    ; Gerbil Scheme programming
+        ;; ontop-haskell                   ; Haskell programming
         ;; ontop-julia                     ; Julia programming
         ;; ontop-lfe                       ; Lisp Flavoured Erlang programming
         ;; ontop-lua                       ; Lua programming
         ;; ontop-ocaml                     ; Ocaml programming
-        ;; ontop-pdftools                  ; PDF reader
         ;; ontop-racket                    ; Racket programming
         ;; ontop-scheme                    ; Scheme programming
-        ontop-vertico                   ; vertical completion
         ontop-webdev                    ; HTML/CSS/JS support
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         ;; Below is an empty extra module that can run your personal Elisp code.
