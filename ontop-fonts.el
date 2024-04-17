@@ -23,6 +23,47 @@
 ;;  ____________________________________________________________________________
 ;;; FONTS
 
+(defun eon-fonts-fira ()
+  "Set the Fira fonts."
+  (interactive)
+  (set-face-attribute 'default nil
+                      :family "Fira Code"
+                      :slant  'normal
+                      :weight 'normal
+                      :width  'normal
+                      :height 150)
+  (set-face-attribute 'fixed-pitch nil
+                      :family "Fira Mono"
+                      :slant  'normal
+                      :weight 'normal
+                      :width  'normal
+                      :height 1.0)
+  (set-face-attribute 'fixed-pitch-serif nil
+                      :family "Fira Mono"
+                      :slant  'normal
+                      :weight 'normal
+                      :width  'normal
+                      :height 1.0)
+  (set-face-attribute 'variable-pitch nil
+                      :family "Fira Sans"
+                      :slant  'normal
+                      :weight 'normal
+                      :width  'normal
+                      :height 1.0)
+  ;; Modeline
+  (set-face-attribute 'mode-line nil
+                      :family "Fira Code"
+                      :slant  'normal
+                      :weight 'normal
+                      :width  'normal
+                      :height 0.8)
+  (set-face-attribute 'mode-line-inactive nil
+                      :family "Fira Code"
+                      :slant  'normal
+                      :weight 'normal
+                      :width  'normal
+                      :height 0.8))
+
 (defun eon-fonts-iosevka ()
   "Set the Iosevka fonts."
   (interactive)
