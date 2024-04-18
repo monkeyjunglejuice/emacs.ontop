@@ -67,8 +67,7 @@
   :config
   ;; Make sure to adapt the path and use the .bat script for Windows
   (add-to-list 'eglot-server-programs
-               '((elixir-mode heex-mode) .
-                 ("elixir-ls")))
+               '((elixir-mode heex-mode) . ("elixir-ls")))
   :hook
   ;; Start language server automatically
   ((elixir-mode heex-mode) . eglot-ensure)
