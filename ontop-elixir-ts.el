@@ -43,7 +43,14 @@
 (use-package inf-elixir
   :ensure t
   :custom
-  (inf-elixir-switch-to-repl-on-send t)
+  (inf-elixir-switch-to-repl-on-send nil)
+  :config
+  (defun inf-elixir-recompile ()
+    "Send command to recompile the current Mix project using `IEx.Helpers.recompile/1'.
+Note this function simply recompiles Elixir modules, without reloading configuration
+or restarting applications."
+    (interactive)
+    (inf-elixir--send (format "recompile()")))
   :hook
   ((elixir-ts-mode heex-ts-mode) . inf-elixir-minor-mode)
   :bind
@@ -55,7 +62,8 @@
         ("C-c C-l" . 'inf-elixir-send-line)
         ("C-c C-r" . 'inf-elixir-send-region)
         ("C-c C-b" . 'inf-elixir-send-buffer)
-        ("C-c C-c" . 'inf-elixir-reload-module)))
+        ("C-c C-c" . 'inf-elixir-reload-module)
+        ("C-c C-k" . 'inf-elixir-recompile)))
 
 ;;  ____________________________________________________________________________
 ;;; LANGUAGE SERVER
@@ -121,7 +129,7 @@
   :ensure t
   :bind
   (:map elixir-ts-mode-map
-        ("C-c C-k" . mix-compile)))
+        ("C-c M-k" . mix-compile)))
 
 ;;  ____________________________________________________________________________
 ;;; FLYCHECK CREDO
