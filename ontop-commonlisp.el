@@ -27,7 +27,7 @@
   :ensure nil
   :custom
   ;; Set default Lisp implementation
-  (inferior-lisp-program '("ros" "-Q" "run")))
+  (inferior-lisp-program "ros -Q run"))
 
 ;;  ____________________________________________________________________________
 ;;; SLY
