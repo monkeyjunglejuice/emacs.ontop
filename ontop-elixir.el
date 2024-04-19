@@ -24,7 +24,13 @@
 ;; <https://github.com/wkirschbaum/elixir-mode>
 
 (use-package elixir-mode
-  :ensure t)
+  :ensure t
+  :bind
+  (:map elixir-mode-map
+        ("C-M-a" . #'elixir-beginning-of-defun)
+        ("C-M-e" . #'elixir-end-of-defun)
+        ("M-q" . #'elixir-mode-fill-doc-string)
+        ("C-c C-d" . #'elixir-mode-open-docs-stable)))
 
 ;;  ____________________________________________________________________________
 ;;; REPL
@@ -47,12 +53,12 @@ or restarting applications."
   (:map ctl-z-x-map
         ("e" . 'inf-elixir))
   (:map elixir-mode-map
-        ("C-c C-z" . 'inf-elixir-project)
-        ("C-c C-l" . 'inf-elixir-send-line)
-        ("C-c C-r" . 'inf-elixir-send-region)
-        ("C-c C-b" . 'inf-elixir-send-buffer)
-        ("C-c C-c" . 'inf-elixir-reload-module)
-        ("C-c C-k" . 'inf-elixir-recompile)))
+        ("C-c C-z" . #'inf-elixir-project)
+        ("C-c C-l" . #'inf-elixir-send-line)
+        ("C-c C-r" . #'inf-elixir-send-region)
+        ("C-c C-b" . #'inf-elixir-send-buffer)
+        ("C-c C-c" . #'inf-elixir-reload-module)
+        ("C-c C-k" . #'inf-elixir-recompile)))
 
 ;;  ____________________________________________________________________________
 ;;; LANGUAGE SERVER
