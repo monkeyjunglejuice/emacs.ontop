@@ -97,38 +97,24 @@
 (use-package smartparens
   :ensure t
   :hook
-  ((scheme-mode gerbil-mode) . smartparens-strict-mode))
-
-(use-package smartparens
-  :ensure t
-  :hook
-  ((inferior-scheme-mode) . smartparens-mode))
+  ((gerbil-mode) . smartparens-strict-mode))
 
 ;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
 
-;; Color-code matching parens …
+;; Color-code nested parens
 ;; <https://github.com/Fanael/rainbow-delimiters>
 (use-package rainbow-delimiters
   :ensure t
   :hook
-  ((scheme-mode inferior-scheme-mode gerbil-mode) . rainbow-delimiters-mode))
+  (gerbil-mode . rainbow-delimiters-mode))
 
-;; … and/or make parens styleable, e.g. more or less prominent
+;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
-(use-package paren-face
-  :ensure t
-  :hook
-  ((scheme-mode inferior-scheme-mode gerbil-mode) . paren-face-mode))
-
-;;  ____________________________________________________________________________
-;;; INDENTATION
-;; <https://github.com/Malabarba/aggressive-indent-mode>
-
-(use-package aggressive-indent
-  :ensure t
-  :hook
-  ((scheme-mode gerbil-mode) . aggressive-indent-mode))
+;; (use-package paren-face
+;;   :ensure t
+;;   :hook
+;;   ((gerbil-mode inferior-scheme-mode) . paren-face-mode))
 
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
