@@ -46,42 +46,30 @@
 ;; <https://github.com/Fuco1/smartparens>
 ;; <https://smartparens.readthedocs.io/en/latest/>
 
+;; Smartparens is configured and enabled globally in `ontop-core.el'
+
+;; Enable strict mode in Lisp buffers
 (use-package smartparens
   :ensure t
   :hook
   (clojure-ts-mode . smartparens-strict-mode))
 
-(use-package smartparens
-  :ensure t
-  :hook
-  ((cider-repl-mode) . smartparens-mode))
-
 ;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
 
-;; Color-code nested parens …
+;; Color-code nested parens
 ;; <https://github.com/Fanael/rainbow-delimiters>
 (use-package rainbow-delimiters
   :ensure t
   :hook
-  ((clojure-ts-mode cider-repl-mode) . rainbow-delimiters-mode))
+  (cider-repl-mode . rainbow-delimiters-mode))
 
-;; … and/or make parens styleable, e.g. more or less prominent
+;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
-(use-package paren-face
-  :ensure t
-  :hook
-  ((clojure-ts-mode cider-repl-mode) . paren-face-mode))
-
-;;  ____________________________________________________________________________
-;;; INDENTATION
-;; <https://github.com/Malabarba/aggressive-indent-mode>
-
-;; Reindent immediately after change
-(use-package aggressive-indent
-  :ensure t
-  :hook
-  ((clojure-ts-mode clojurescript-mode clojurec-mode) . aggressive-indent-mode))
+;; (use-package paren-face
+;;   :ensure t
+;;   :hook
+;;   ((clojure-ts-mode cider-repl-mode) . paren-face-mode))
 
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
