@@ -98,44 +98,26 @@
 ;; <https://github.com/Fuco1/smartparens>
 ;; <https://smartparens.readthedocs.io/en/latest/>
 
-;; Lisp buffers
+;; Smartparens is configured and enabled globally in `ontop-core.el'
+
+;; Enable strict mode in Lisp buffers
 (use-package smartparens
   :ensure t
   :hook
   (lisp-mode . smartparens-strict-mode))
 
-;; Lisp REPLS and other special buffers
-(use-package smartparens
-  :ensure t
-  :hook
-  ((inferior-lisp-mode sly-mrepl-mode) . smartparens-mode))
-
 ;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
 
-;; Color-code nested parens …
-;; <https://github.com/Fanael/rainbow-delimiters>
-(use-package rainbow-delimiters
-  :ensure t
-  :hook
-  ((lisp-mode inferior-lisp-mode sly-mrepl-mode) . rainbow-delimiters-mode))
+;; Rainbow-delimiters color-coding of nested parens is enabled
+;; for all prog-modes in `ontop-core.el'
 
-;; … and/or make parens styleable, e.g. more or less prominent
+;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
-(use-package paren-face
-  :ensure t
-  :hook
-  ((lisp-mode inferior-lisp-mode sly-mrepl-mode) . paren-face-mode))
-
-;;  ____________________________________________________________________________
-;;; INDENTATION
-;; <https://github.com/Malabarba/aggressive-indent-mode>
-
-;; Reindent immediately after change
-(use-package aggressive-indent
-  :ensure t
-  :hook
-  (lisp-mode . aggressive-indent-mode))
+;; (use-package paren-face
+;;   :ensure t
+;;   :hook
+;;   ((lisp-mode inferior-lisp-mode sly-mrepl-mode) . paren-face-mode))
 
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
