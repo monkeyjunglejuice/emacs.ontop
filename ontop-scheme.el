@@ -25,8 +25,8 @@
 (use-package scheme
   :ensure nil
   :custom
-  ;; Set Emacs' default interpreter binary ...
-  (scheme-program-name "guile")  ; <-- here
+  ;; Set Emacs' default interpreter binary:
+  (scheme-program-name "guile")
   (scheme-mit-dialect nil))
 
 ;;  ____________________________________________________________________________
@@ -38,13 +38,14 @@
   :custom
   (geiser-repl-send-on-return-p t)
   (geiser-repl-use-other-window nil)
-  ;; Set Geiser's default implementation, unquote and configure the
-  ;; corresponding package(s) for your Scheme(s) below, and then then
-  ;; evaluate the expression(s) or restart Emacs.
+  ;; Set Geiser's default implementation:
   (geiser-default-implementation 'guile))
 
 ;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; GEISER IMPLEMENTATION PACKAGES
+
+;; Unquote and configure the corresponding package(s) for your Scheme(s) below,
+;; and then then evaluate the expression(s) or restart Emacs.
 
 ;; <https://gitlab.com/emacs-geiser/chez>
 ;; (use-package geiser-chez
@@ -109,43 +110,24 @@
   :hook
   (scheme-mode . smartparens-strict-mode))
 
-(use-package smartparens
-  :ensure t
-  :hook
-  ((inferior-scheme-mode geiser-repl-mode) . smartparens-mode))
-
 ;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
 
-;; Color-code matching parens …
-;; <https://github.com/Fanael/rainbow-delimiters>
-(use-package rainbow-delimiters
-  :ensure t
-  :hook
-  ((scheme-mode inferior-scheme-mode geiser-repl-mode)
-   . rainbow-delimiters-mode))
+;; Rainbow-delimiters color-coding of nested parens is already enabled
+;; for all prog-modes in `ontop-core.el'
 
-;; … and/or make parens styleable, e.g. more or less prominent
+;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
-(use-package paren-face
-  :ensure t
-  :hook
-  ((scheme-mode inferior-scheme-mode geiser-repl-mode) . paren-face-mode))
-
-;;  ____________________________________________________________________________
-;;; INDENTATION
-;; <https://github.com/Malabarba/aggressive-indent-mode>
-
-(use-package aggressive-indent
-  :ensure t
-  :hook
-  (scheme-mode . aggressive-indent-mode))
+;; (use-package paren-face
+;;   :ensure t
+;;   :hook
+;;   ((scheme-mode inferior-scheme-mode geiser-repl-mode) . paren-face-mode))
 
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://www.orgmode.org/worg/org-contrib/babel/languages/ob-doc-scheme.html>
 
-;; TODO: This seems not to work; neither with Chicken nor Racket
+;; TODO This seems not to work; neither with Chicken nor Racket
 
 ;; Support literate programming in Emacs with Scheme
 ;; Evaluate Scheme code in Org blocks via "C-c C-c"
