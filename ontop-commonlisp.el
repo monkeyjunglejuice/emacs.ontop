@@ -98,7 +98,8 @@
 ;; <https://github.com/Fuco1/smartparens>
 ;; <https://smartparens.readthedocs.io/en/latest/>
 
-;; Smartparens is configured and enabled globally in `ontop-core.el'
+;; Smartparens non-strict mode is already enabled globally
+;; and configured in `ontop-core.el'
 
 ;; Enable strict mode in Lisp buffers
 (use-package smartparens
@@ -109,7 +110,7 @@
 ;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
 
-;; Rainbow-delimiters color-coding of nested parens is enabled
+;; Rainbow-delimiters color-coding of nested parens is alredy enabled
 ;; for all prog-modes in `ontop-core.el'
 
 ;; Make parens styleable, e.g. more or less prominent

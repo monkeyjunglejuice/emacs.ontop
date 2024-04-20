@@ -94,6 +94,9 @@
 ;; <https://github.com/Fuco1/smartparens>
 ;; <https://smartparens.readthedocs.io/en/latest/>
 
+;; Smartparens non-strict mode is already enabled globally
+;; and configured in `ontop-core.el'
+
 (use-package smartparens
   :ensure t
   :hook
