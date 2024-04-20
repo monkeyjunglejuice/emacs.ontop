@@ -38,5 +38,37 @@
   :ensure t)
 
 ;;  ____________________________________________________________________________
+;;; STRUCTURAL EDITING
+
+;; SMARTPARENS
+;; <https://github.com/Fuco1/smartparens>
+;; <https://smartparens.readthedocs.io/en/latest/>
+
+;; Smartparens is configured and enabled globally in `ontop-core.el'
+
+;; Enable strict mode in Lisp buffers
+(use-package smartparens
+  :ensure t
+  :hook
+  (lfe-mode . smartparens-strict-mode))
+
+;;  ____________________________________________________________________________
+;;; PARENTHESIS DISPLAY
+
+;; Color-code nested parens
+;; <https://github.com/Fanael/rainbow-delimiters>
+(use-package rainbow-delimiters
+  :ensure t
+  :hook
+  ((lfe-mode inferior-lfe-mode) . rainbow-delimiters-mode))
+
+;; Make parens styleable, e.g. more or less prominent
+;; <https://github.com/tarsius/paren-face>
+;; (use-package paren-face
+;;   :ensure t
+;;   :hook
+;;   ((lfe-mode inferior-lfe-mode) . paren-face-mode))
+
+;;  ____________________________________________________________________________
 (provide 'ontop-lfe)
 ;;; ontop-lfe.el ends here
