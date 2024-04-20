@@ -103,16 +103,6 @@
                                #'eglot-format-buffer nil 'local))))
 
 ;;  ____________________________________________________________________________
-;;; INDENTATION
-;; <https://github.com/Malabarba/aggressive-indent-mode>
-
-;; ;; Reindent immediately after change
-;; (use-package aggressive-indent
-;;   :ensure t
-;;   :hook
-;;   (julia-ts-mode . aggressive-indent-mode))
-
-;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://www.orgmode.org/worg/org-contrib/babel/languages/ob-doc-scheme.html>
 ;; Notebook-like literate programming in Emacs
