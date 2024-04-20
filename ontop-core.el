@@ -366,6 +366,9 @@
     (sp-local-pair "'" nil :actions nil)
     ;; also use the pseudo-quote inside strings where it serves as hyperlink
     (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p)))
+  :hook
+  ((emacs-lisp-mode lisp-interaction-mode) . smartparens-strict-mode)
+  ((eshell-mode eval-expression-minibuffer-setup) . smartparens-mode)
   :bind
   ;; Custom keybinding set, resembling standard Emacs sexp keybindings
   (:map smartparens-mode-map
@@ -386,14 +389,32 @@
         ("C-M-<right>" . sp-backward-barf-sexp)))
 
 ;;  ____________________________________________________________________________
+;; PARENTHESIS DISPLAY
+
+;; Color-code nested parens …
+;; <https://github.com/Fanael/rainbow-delimiters>
+(use-package rainbow-delimiters
+  :ensure t
+  :hook
+  ((prog-mode comint-mode eval-expression-minibuffer-setup)
+   . rainbow-delimiters-mode))
+
+;; … and/or make parens styleable, e.g. more or less prominent
+;; <https://github.com/tarsius/paren-face>
+;; (use-package paren-face
+;;   :ensure t
+;;   :hook
+;;   ((prog-mode comint-mode eval-expression-minibuffer-setup)
+;;    . paren-face-mode))
+
+;;  ____________________________________________________________________________
 ;; INDENTATION
 ;; <https://github.com/Malabarba/aggressive-indent-mode>
 
 (use-package aggressive-indent
   :ensure t
-  :custom
-  (aggressive-indent-dont-electric-modes t nil nil)
-  (aggressive-indent-sit-for-time 0.03))
+  :hook
+  (prog-mode . aggressive-indent-mode))
 
 ;;  ____________________________________________________________________________
 ;;; EXPAND REGION
@@ -435,9 +456,6 @@
   ;; Show the Embark target at point via Eldoc.
   (eldoc-documentation-functions . embark-eldoc-first-target)
   :config
-  ;; You may adjust the Eldoc strategy if you want to see the documentation
-  ;; from multiple providers.
-  (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
   ;; Hide the mode line of the Embark live/completions buffers
   (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
@@ -518,69 +536,6 @@
 ;; <https://github.com/yoshiki/yaml-mode>
 (use-package yaml-mode
   :ensure t)
-
-;;  ____________________________________________________________________________
-;;; LISP
-
-;; This is a general setup for languages from the Lisp family,
-;; which replaces the basic Emacs ONBOARD config with 3rd-party packages.
-;; Specific configuration can be activated by loading the corresponding
-;; language modules coming with Emacs ONTOP.
-
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;; STRUCTURAL EDITING
-
-;; SMARTPARENS
-;; <https://github.com/Fuco1/smartparens>
-;; <https://smartparens.readthedocs.io/en/latest/>
-
-;; Lisp buffers
-(use-package smartparens
-  :ensure t
-  :hook
-  (( emacs-lisp-mode lisp-interaction-mode lisp-mode scheme-mode)
-   . smartparens-strict-mode))
-
-;; Lisp REPLS and other special buffers
-(use-package smartparens
-  :ensure t
-  :hook
-  (( ielm-mode inferior-lisp-mode inferior-scheme-mode
-     eval-expression-minibuffer-setup)
-   . smartparens-mode))
-
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;; PARENTHESIS DISPLAY
-
-;; Color-code nested parens …
-;; <https://github.com/Fanael/rainbow-delimiters>
-(use-package rainbow-delimiters
-  :ensure t
-  :hook
-  (( emacs-lisp-mode lisp-interaction-mode lisp-mode scheme-mode
-     ielm-mode inferior-lisp-mode inferior-scheme-mode
-     eval-expression-minibuffer-setup)
-   . rainbow-delimiters-mode))
-
-;; … and/or make parens styleable, e.g. more or less prominent
-;; <https://github.com/tarsius/paren-face>
-(use-package paren-face
-  :ensure t
-  :hook
-  (( emacs-lisp-mode lisp-interaction-mode lisp-mode scheme-mode
-     ielm-mode inferior-lisp-mode inferior-scheme-mode
-     eval-expression-minibuffer-setup)
-   . paren-face-mode))
-
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;; INDENTATION
-;; <https://github.com/Malabarba/aggressive-indent-mode>
-
-(use-package aggressive-indent
-  :ensure t
-  :hook
-  (( emacs-lisp-mode lisp-interaction-mode lisp-mode scheme-mode)
-   . aggressive-indent-mode))
 
 ;;  ____________________________________________________________________________
 (provide 'ontop-core)
