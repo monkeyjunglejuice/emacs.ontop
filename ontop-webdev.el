@@ -66,15 +66,6 @@
   :ensure nil)
 
 ;;  ____________________________________________________________________________
-;;; INDENTATION
-;; <https://github.com/Malabarba/aggressive-indent-mode>
-
-(use-package aggressive-indent
-  :ensure t
-  :hook
-  ((css-mode js-mode) . aggressive-indent-mode))
-
-;;  ____________________________________________________________________________
 ;;; SYNTAX-CHECKER / LINTER
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/flymake.html>
 
@@ -86,7 +77,7 @@
   ((html-mode css-mode js-mode) . flymake-mode))
 
 ;; <https://github.com/purcell/flymake-css>
-;; Install the linter via: `npm install -g csslint'
+;; Install the linter via `npm install -g csslint'
 (use-package flymake-css
   :ensure t
   :custom
