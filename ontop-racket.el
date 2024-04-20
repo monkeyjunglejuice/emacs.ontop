@@ -61,40 +61,19 @@
   :hook
   (racket-mode . smartparens-strict-mode))
 
-(use-package smartparens
-  :ensure t
-  :hook
-  ((racket-hash-lang-mode racket-repl-mode) . smartparens-mode))
-
 ;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
 
-;; Color-code nested parens …
-;; <https://github.com/Fanael/rainbow-delimiters>
-(use-package rainbow-delimiters
-  :ensure t
-  :hook
-  ((racket-mode racket-hash-lang-mode racket-repl-mode)
-   . rainbow-delimiters-mode))
+;; Rainbow-delimiters color-coding of nested parens is enabled
+;; for all prog-modes in `ontop-core.el'
 
-;; … and/or make parens styleable, e.g. more or less prominent
+;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
-(use-package paren-face
-  :ensure t
-  :hook
-  ((racket-mode racket-hash-lang-mode racket-repl-mode)
-   . paren-face-mode))
-
-;;  ____________________________________________________________________________
-;;; INDENTATION
-;; <https://github.com/Malabarba/aggressive-indent-mode>
-
-;; Reindent immediately after change
-(use-package aggressive-indent
-  :ensure t
-  :hook
-  ((racket-mode racket-hash-lang-mode racket-repl-mode)
-   . aggressive-indent-mode))
+;; (use-package paren-face
+;;   :ensure t
+;;   :hook
+;;   ((racket-mode racket-hash-lang-mode racket-repl-mode)
+;;    . paren-face-mode))
 
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
