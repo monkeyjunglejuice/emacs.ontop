@@ -177,16 +177,6 @@ or restarting applications."
   :ensure t)
 
 ;;  ____________________________________________________________________________
-;;; INDENTATION
-;; <https://github.com/Malabarba/aggressive-indent-mode>
-
-;; Reindent immediately after change
-(use-package aggressive-indent
-  :ensure t
-  :hook
-  ((elixir-ts-mode heex-ts-mode) . aggressive-indent-mode))
-
-;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://org-babel.readthedocs.io/en/latest/eval/>
 ;; Notebook-like literate programming in Emacs
