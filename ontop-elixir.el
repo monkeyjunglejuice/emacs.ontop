@@ -36,14 +36,18 @@
 (use-package inf-elixir
   :ensure t
   :custom
-  (inf-elixir-switch-to-repl-on-send nil)
+  (inf-elixir-switch-to-repl-on-send t)
   :config
   (defun inf-elixir-recompile ()
-    "Send command to recompile the current Mix project using `IEx.Helpers.recompile/1'.
-Note this function simply recompiles Elixir modules, without reloading configuration
-or restarting applications."
+    "Recompile the current Mix project using `IEx.Helpers.recompile/1'.
+Don't use in production/live systems. This function simply recompiles Elixir
+modules, without reloading configuration or restarting applications."
     (interactive)
     (inf-elixir--send (format "recompile()")))
+  (defun inf-elixir-observer ()
+    "Start the Erlang Observer in IEx."
+    (interactive)
+    (inf-elixir--send (format ":observer.start()")))
   :hook
   ((elixir-mode heex-mode) . inf-elixir-minor-mode)
   :bind
@@ -51,12 +55,13 @@ or restarting applications."
   (:map ctl-z-x-map
         ("e" . 'inf-elixir))
   (:map elixir-mode-map
-        ("C-c C-z" . #'inf-elixir-project)
-        ("C-c C-l" . #'inf-elixir-send-line)
-        ("C-c C-r" . #'inf-elixir-send-region)
-        ("C-c C-b" . #'inf-elixir-send-buffer)
-        ("C-c C-c" . #'inf-elixir-reload-module)
-        ("C-c C-k" . #'inf-elixir-recompile)))
+        ("C-c C-z" . inf-elixir-project)
+        ("C-c C-l" . inf-elixir-send-line)
+        ("C-c C-r" . inf-elixir-send-region)
+        ("C-c C-b" . inf-elixir-send-buffer)
+        ("C-c C-c" . inf-elixir-reload-module)
+        ("C-c C-k" . inf-elixir-recompile)
+        ("C-c C-o" . inf-elixir-observer)))
 
 ;;  ____________________________________________________________________________
 ;;; LANGUAGE SERVER
