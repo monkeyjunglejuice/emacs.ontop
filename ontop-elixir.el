@@ -27,10 +27,8 @@
   :ensure t
   :bind
   (:map elixir-mode-map
-        ("C-M-a" . #'elixir-beginning-of-defun)
-        ("C-M-e" . #'elixir-end-of-defun)
-        ("M-q" . #'elixir-mode-fill-doc-string)
-        ("C-c C-d" . #'elixir-mode-open-docs-stable)))
+        ("M-q" . elixir-mode-fill-doc-string)
+        ("C-c C-d" . elixir-mode-open-docs-stable)))
 
 ;;  ____________________________________________________________________________
 ;;; REPL
