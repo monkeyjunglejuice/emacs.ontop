@@ -533,6 +533,7 @@
                       :weight 'normal
                       :width  'normal
                       :height 0.7))
+
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
 (defun eon-fonts-ubuntu ()
