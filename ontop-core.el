@@ -361,11 +361,8 @@
   ;; (sp-base-key-bindings 'sp)
   ;; (sp-base-key-bindings 'paredit)
   :config
-  (sp-with-modes sp-lisp-modes
-    ;; disable ' (apostrophe) pairing, because it's the quote character
-    (sp-local-pair "'" nil :actions nil)
-    ;; also use the pseudo-quote inside strings where it serves as hyperlink
-    (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p)))
+  ;; Enable language-specific configurations
+  (require 'smartparens-config)
   :hook
   ((emacs-lisp-mode lisp-interaction-mode) . smartparens-strict-mode)
   ((eshell-mode eval-expression-minibuffer-setup) . smartparens-mode)
@@ -378,14 +375,16 @@
         ("C-M-b" . sp-backward-sexp)
         ("C-M-n" . sp-next-sexp)
         ("C-M-p" . sp-previous-sexp)
+        ("C-M-a" . sp-beginning-of-sexp)
+        ("C-M-a" . sp-end-of-sexp)
         ("C-M-k" . sp-kill-sexp)
         ("C-M-w" . sp-copy-sexp)
         ("C-M-t" . sp-transpose-sexp)
-        ("C-M-<space>" . sp-mark-sexp)
+        ("C-M-SPC" . sp-mark-sexp)
         ("C-M-<backspace>" . sp-backward-unwrap-sexp)
         ("C-<right>" . sp-forward-slurp-sexp)
-        ("C-<left>" . sp-forward-barf-sexp)
-        ("C-M-<left>" . sp-backward-slurp-sexp)
+        ("C-<left>" . sp-backward-slurp-sexp)
+        ("C-M-<left>" . sp-forward-barf-sexp)
         ("C-M-<right>" . sp-backward-barf-sexp)))
 
 ;;  ____________________________________________________________________________
