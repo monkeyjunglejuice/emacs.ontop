@@ -501,7 +501,7 @@
 ;; ‘org-babel-load-file’ triggers the built-in Org version clashing
 ;; the newer Org version attempt to be loaded later.
 ;; It is recommended to move the Org loading code before the
-;; ‘org-babel-load-file’ call.
+;; ‘org-babel-load-file’ calls.
 
 (use-package org
   :ensure t)
