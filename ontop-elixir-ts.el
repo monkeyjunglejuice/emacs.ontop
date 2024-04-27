@@ -51,6 +51,10 @@ Note this function simply recompiles Elixir modules, without reloading configura
 or restarting applications."
     (interactive)
     (inf-elixir--send (format "recompile()")))
+  (defun inf-elixir-observer ()
+    "Start the Erlang Observer in IEx."
+    (interactive)
+    (inf-elixir--send (format ":observer.start()")))
   :hook
   ((elixir-ts-mode heex-ts-mode) . inf-elixir-minor-mode)
   :bind
@@ -58,12 +62,13 @@ or restarting applications."
   (:map ctl-z-x-map
         ("e" . 'inf-elixir))
   (:map elixir-ts-mode-map
-        ("C-c C-z" . 'inf-elixir-project)
-        ("C-c C-l" . 'inf-elixir-send-line)
-        ("C-c C-r" . 'inf-elixir-send-region)
-        ("C-c C-b" . 'inf-elixir-send-buffer)
-        ("C-c C-c" . 'inf-elixir-reload-module)
-        ("C-c C-k" . 'inf-elixir-recompile)))
+        ("C-c C-z" . inf-elixir-project)
+        ("C-c C-l" . inf-elixir-send-line)
+        ("C-c C-r" . inf-elixir-send-region)
+        ("C-c C-b" . inf-elixir-send-buffer)
+        ("C-c C-c" . inf-elixir-reload-module)
+        ("C-c C-k" . inf-elixir-recompile)
+        ("C-c C-o" . inf-elixir-observer)))
 
 ;;  ____________________________________________________________________________
 ;;; LANGUAGE SERVER
