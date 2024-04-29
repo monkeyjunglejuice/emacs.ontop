@@ -132,6 +132,7 @@ configuration or restarting applications."
 
 (use-package mix
   :ensure t
+  :diminish mix-minor-mode
   :hook
   ((elixir-ts-mode heex-ts-mode) . mix-minor-mode))
 

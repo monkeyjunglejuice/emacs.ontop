@@ -413,6 +413,7 @@
 
 (use-package aggressive-indent
   :ensure t
+  :diminish aggressive-indent-mode
   :hook
   (prog-mode . aggressive-indent-mode))
 
