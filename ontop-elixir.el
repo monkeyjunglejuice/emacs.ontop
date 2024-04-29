@@ -39,9 +39,9 @@
   (inf-elixir-switch-to-repl-on-send t)
   :config
   (defun inf-elixir-recompile ()
-    "Recompile the current Mix project using `IEx.Helpers.recompile/1'.
-Don't use in production/live systems. This function simply recompiles Elixir
-modules, without reloading configuration or restarting applications."
+    "Send `IEx.Helpers.recompile/1' to recompile the current Mix project.
+Note this function simply recompiles Elixir modules, without reloading
+configuration or restarting applications."
     (interactive)
     (inf-elixir--send (format "recompile()")))
   (defun inf-elixir-observer ()
