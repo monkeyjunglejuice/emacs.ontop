@@ -66,8 +66,8 @@ configuration or restarting applications."
         ("C-c C-l" . inf-elixir-send-line)
         ("C-c C-r" . inf-elixir-send-region)
         ("C-c C-b" . inf-elixir-send-buffer)
-        ("C-c C-c" . inf-elixir-reload-module)
-        ("C-c C-k" . inf-elixir-recompile)
+        ("C-c C-c" . inf-elixir-recompile)
+        ("C-c c" . inf-elixir-reload-module)
         ("C-c C-o" . inf-elixir-observer)))
 
 ;;  ____________________________________________________________________________
