@@ -132,9 +132,8 @@ configuration or restarting applications."
 
 (use-package mix
   :ensure t
-  :bind
-  (:map elixir-ts-mode-map
-        ("C-c M-k" . mix-compile)))
+  :hook
+  ((elixir-ts-mode heex-ts-mode) . mix-minor-mode))
 
 ;;  ____________________________________________________________________________
 ;;; FLYCHECK CREDO
