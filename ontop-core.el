@@ -369,8 +369,8 @@
   :bind
   ;; Custom keybinding set, resembling standard Emacs sexp keybindings
   (:map smartparens-mode-map
-        ("C-M-u" . sp-backward-up-sexp)
-        ("C-M-d" . sp-down-sexp)
+        ("C-M-o" . sp-backward-up-sexp)  ; out
+        ("C-M-i" . sp-down-sexp)  ; in
         ("C-M-f" . sp-forward-sexp)
         ("C-M-b" . sp-backward-sexp)
         ("C-M-n" . sp-next-sexp)
@@ -378,10 +378,11 @@
         ("C-M-a" . sp-beginning-of-sexp)
         ("C-M-a" . sp-end-of-sexp)
         ("C-M-k" . sp-kill-sexp)
+        ("C-M-<backspace>" . sp-backward-kill-sexp)
         ("C-M-w" . sp-copy-sexp)
         ("C-M-t" . sp-transpose-sexp)
         ("C-M-SPC" . sp-mark-sexp)
-        ("C-M-<backspace>" . sp-backward-unwrap-sexp)
+        ("C-M-u" . sp-backward-unwrap-sexp)
         ("C-<right>" . sp-forward-slurp-sexp)
         ("C-<left>" . sp-backward-slurp-sexp)
         ("C-M-<left>" . sp-forward-barf-sexp)
