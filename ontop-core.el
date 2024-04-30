@@ -396,16 +396,14 @@
 (use-package rainbow-delimiters
   :ensure t
   :hook
-  ((prog-mode comint-mode eval-expression-minibuffer-setup)
-   . rainbow-delimiters-mode))
+  (prog-mode . rainbow-delimiters-mode))
 
 ;; … and/or make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
 ;; (use-package paren-face
 ;;   :ensure t
 ;;   :hook
-;;   ((prog-mode comint-mode eval-expression-minibuffer-setup)
-;;    . paren-face-mode))
+;;   (prog-mode . paren-face-mode))
 
 ;;  ____________________________________________________________________________
 ;; INDENTATION
