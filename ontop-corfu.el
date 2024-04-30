@@ -28,6 +28,7 @@
   (corfu-auto-prefix 2)
   (corfu-auto-delay 0.2)
   (corfu-popupinfo-delay '(0.4 . 0.1))
+  (corfu-popupinfo-max-height 10)
   (corfu-quit-at-boundary 'separator)
   (corfu-quit-no-match 'separator)
   (corfu-preview-current nil)
