@@ -36,7 +36,7 @@
 (use-package inf-elixir
   :ensure t
   :custom
-  (inf-elixir-switch-to-repl-on-send t)
+  (inf-elixir-switch-to-repl-on-send nil)
   :config
   (defun inf-elixir-recompile ()
     "Send `IEx.Helpers.recompile/1' to recompile the current Mix project.
