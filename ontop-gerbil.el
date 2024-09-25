@@ -20,55 +20,66 @@
   (require 'use-package))
 
 ;;  ____________________________________________________________________________
-;;; GERBIL
+;;; GERBIL SCHEME
 ;; <https://cons.io/guide/emacs.html>
 
 (defvar *gerbil-path*
   (shell-command-to-string "gxi -e '(display (path-expand \"~~\"))'\
-      -e '(flush-output-port)'"))
+      -e '(flush-output-port)'")
+  "Let Gerbil figure out its installation path.")
+
+(defvar *gerbil-emacs-path*
+  (expand-file-name "share/emacs/site-lisp/" *gerbil-path*)
+  "Emacs packages coming with your Gerbil installation.")
+
+(use-package scheme
+  :ensure nil
+  :custom
+  ;; Set Gerbil Scheme as the default Scheme implementation for Emacs (optional)
+  (scheme-program-name (expand-file-name "bin/gxi" *gerbil-path*)))
 
 (use-package gerbil-mode
-  :when (file-directory-p *gerbil-path*)
   :ensure nil
-  ;; :straight nil
-  :defer t
-  :mode (("\\.ss\\'"  . gerbil-mode)
-         ("\\.pkg\\'" . gerbil-mode))
-  :bind (:map comint-mode-map
-		          (("C-S-n" . comint-next-input)
-		           ("C-S-p" . comint-previous-input)
-		           ("C-S-l" . clear-comint-buffer))
-		          :map gerbil-mode-map
-		          (("C-S-l" . clear-comint-buffer)))
-  :init
-  (autoload 'gerbil-mode
-    (expand-file-name "share/emacs/site-lisp/gerbil-mode.el" *gerbil-path*)
-    "Gerbil editing mode." t)
-  :hook
-  ((gerbil-mode-hook . linum-mode)
-   (inferior-scheme-mode-hook . gambit-inferior-mode))
+  :load-path *gerbil-emacs-path*
+  :mode
+  (("\\.ss\\'"  . gerbil-mode)
+   ("\\.pkg\\'" . gerbil-mode))
   :config
-  (require 'gambit
-           (expand-file-name "share/emacs/site-lisp/gambit.el" *gerbil-path*))
-  (setf scheme-program-name (expand-file-name "bin/gxi" *gerbil-path*))
-
   (let ((tags (locate-dominating-file default-directory "TAGS")))
     (when tags (visit-tags-table tags)))
   (let ((tags (expand-file-name "src/TAGS" *gerbil-path*)))
     (when (file-exists-p tags) (visit-tags-table tags)))
 
-  (when (package-installed-p 'smartparens)
-    (sp-pair "'" nil :actions :rem)
-    (sp-pair "`" nil :actions :rem))
-
-  (defun clear-comint-buffer ()
+  (defun scheme-clear-repl ()
+    "Clear the REPL without leaving the code buffer."
     (interactive)
     (with-current-buffer "*scheme*"
 	    (let ((comint-buffer-maximum-size 0))
-        (comint-truncate-buffer)))))
+        (comint-truncate-buffer))))
+  :bind
+  (:map comint-mode-map
+		    (("C-S-n" . comint-next-input)
+		     ("C-S-p" . comint-previous-input)
+		     ("C-S-l" . scheme-clear-repl))
+		    :map gerbil-mode-map
+		    (("C-S-l" . scheme-clear-repl))))
 
+;;  ____________________________________________________________________________
+;;; GAMBIT REPL SUPPORT
+
+(use-package gambit
+  :ensure nil
+  :load-path *gerbil-emacs-path*
+  :hook
+  ;; "Use the Gambit REPL for Gerbil Scheme"
+  (inferior-scheme-mode . gambit-inferior-mode))
+
+;;  ____________________________________________________________________________
+;;; CONVENIENCE
+
+;; Quickly launch a Gerbil buffer setup from everywhere
 (defun gerbil-setup-buffers ()
-  "Change current buffer mode to gerbil-mode and start a REPL."
+  "Change current buffer mode to `gerbil-mode' and start a REPL."
   (interactive)
   (gerbil-mode)
   (split-window-below)
@@ -100,7 +111,7 @@
 (use-package smartparens
   :ensure t
   :hook
-  ((gerbil-mode) . smartparens-strict-mode))
+  (gerbil-mode . smartparens-strict-mode))
 
 ;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
@@ -110,7 +121,7 @@
 (use-package rainbow-delimiters
   :ensure t
   :hook
-  (gerbil-mode . rainbow-delimiters-mode))
+  ((gerbil-mode inferior-scheme-mode) . rainbow-delimiters-mode))
 
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
