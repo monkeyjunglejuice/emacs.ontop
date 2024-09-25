@@ -19,7 +19,7 @@
 ;;     on a module entry below and do `M-x ffap RET' to visit the file.
 
 (setq eon-modules
-      '(;;; REQUIRED MODULES
+      '(;;; NECCESSARY MODULES
         onboard                         ; include the Emacs ONBOARD starter-kit
         ontop-core                      ; shared settings and definitions
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
