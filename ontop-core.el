@@ -75,6 +75,7 @@
   (switch-window-minibuffer-shortcut 109)
   (switch-window-multiple-frames nil)
   (switch-window-threshold 1)
+  (switch-window-mvborder-increment 1)
   :config
   ;; Set Vim/Xmonad-like keybindings for window resizing
   (setq switch-window-extra-map
