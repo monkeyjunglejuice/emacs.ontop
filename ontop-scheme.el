@@ -20,16 +20,6 @@
   (require 'use-package))
 
 ;;  ____________________________________________________________________________
-;;; SCHEME MODE
-
-(use-package scheme
-  :ensure nil
-  :custom
-  ;; Set Emacs' default interpreter binary:
-  (scheme-program-name "guile")
-  (scheme-mit-dialect nil))
-
-;;  ____________________________________________________________________________
 ;;; GEISER
 ;; <https://www.nongnu.org/geiser/>
 
