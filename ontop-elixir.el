@@ -43,7 +43,9 @@
 Note this function simply recompiles Elixir modules, without reloading
 configuration or restarting applications."
     (interactive)
-    (inf-elixir--send (format "recompile()")))
+    (inf-elixir--send (format "recompile()"))
+    (if inf-elixir-switch-to-repl-on-send
+        (goto-char (point-max))))
   (defun inf-elixir-observer ()
     "Start the Erlang Observer in IEx."
     (interactive)
