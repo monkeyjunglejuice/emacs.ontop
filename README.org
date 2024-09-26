@@ -26,6 +26,8 @@ Emacs ONTOP is an extension layer to the [[https://github.com/monkeyjunglejuice/
 *ontop-racket*: The Racket setup based on [[https://github.com/greghendershott/racket-mode][Racket-mode]] provides more interactivity than DrRacket, and the new "racket-hash-lang-mode" supports arbitrary syntax for DSLs in Emacs. However, the syntax highlighting could be configured more in-depth.
 ** Emacs for Scheme ★★★☆☆
 *ontop-scheme*: The Emacs Scheme setup supports eight major Scheme implementations via Geiser and comes with SRFI-browser and structural editing. The Scheme implementations have either more or less comprehensive tooling, hence the user experience varies. Tested on Debian Linux with GNU Guile (most interactive experience and easy setup) and Chicken scheme (rather bare-bones).
+** Emacs for Gleam ★★☆☆☆
+*ontop-gleam*: Basic setup for the Gleam language with LSP and Treesitter support.
 ** Emacs for Gerbil Scheme ★★☆☆☆
 *ontop-gerbil*: Basic Scheme setup with REPL, according to the suggestions on the Gerbil Scheme website.
 ** Emacs for Lua ★★☆☆☆
