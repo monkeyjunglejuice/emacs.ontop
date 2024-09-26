@@ -41,6 +41,7 @@
         ;; ontop-elixir                    ; Elixir programming
         ;; ontop-elixir-ts                 ; Elixir programming (with Treesitter)
         ;; ontop-gerbil                    ; Gerbil Scheme programming
+        ;; ontop-gleam                     ; Gleam programming
         ;; ontop-haskell                   ; Haskell programming
         ;; ontop-julia                     ; Julia programming
         ;; ontop-lfe                       ; Lisp Flavoured Erlang programming
