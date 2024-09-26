@@ -54,7 +54,7 @@
   (eglot-connect-timeout 60)            ; default: 30
   :config
   (add-to-list 'eglot-server-programs
-               '((gleam-ts-mode) . ("gleam lsp")))
+               '((gleam-ts-mode) . ("gleam" "lsp")))
   :hook
   ;; Start language server automatically
   ((gleam-ts-mode) . eglot-ensure)
