@@ -81,20 +81,6 @@
 (use-package erlang
   :ensure t)
 
-;;  ____________________________________________________________________________
-;;; ORG-MODE BABEL
-;; <https://org-babel.readthedocs.io/en/latest/eval/>
-;; Notebook-like literate programming in Emacs
-
-;; Evaluate Elixir code in Org source code blocks via "C-c C-c"
-(use-package org
-  :ensure nil
-  :hook
-  (org-mode . (lambda ()
-                (org-babel-do-load-languages
-                 'org-babel-load-languages
-                 (add-to-list 'org-babel-load-languages '(gleam . t))))))
-
 ;; _____________________________________________________________________________
 (provide 'ontop-gleam)
 ;;; ontop-gleam.el ends here
