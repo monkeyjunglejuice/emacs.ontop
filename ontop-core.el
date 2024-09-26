@@ -194,7 +194,7 @@
           (project-dired "Dired" 100)
           ;; Ripgrep is much faster; must be installed on your computer
           (rg-project "Ripgrep" 114)
-          (magit-project-status "Magit" 109)
+          (magit-project-status "Magit" 103)
           (project-eshell "Eshell" 101)
           (project-shell "Shell" 115)))
   (setq project-switch-use-entire-map t)
