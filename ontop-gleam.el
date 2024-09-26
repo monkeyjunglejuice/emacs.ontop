@@ -65,14 +65,14 @@
                #'eglot-format-buffer nil 'local))))
 
 ;;  ____________________________________________________________________________
-;;; MIX
-;; <https://hexdocs.pm/mix/1.12/Mix.html>
+;;; MIX GLEAM
+;; <https://github.com/gleam-lang/mix_gleam>
 
-(use-package mix
-  :ensure t
-  :diminish mix-minor-mode
-  :hook
-  ((gleam-ts-mode) . mix-minor-mode))
+;; (use-package mix
+;;   :ensure t
+;;   :diminish mix-minor-mode
+;;   :hook
+;;   ((gleam-ts-mode) . mix-minor-mode))
 
 ;;  ____________________________________________________________________________
 ;;; ERLANG
