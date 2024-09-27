@@ -27,8 +27,8 @@
 (use-package lfe-mode
   :ensure t
   :custom
-  (inferior-lfe-program "lfe")
-  (inferior-lfe-program-options nil))
+  (inferior-lfe-program "rebar3")
+  (inferior-lfe-program-options '("lfe" "repl")))
 
 ;;  ____________________________________________________________________________
 ;;; ERLANG
