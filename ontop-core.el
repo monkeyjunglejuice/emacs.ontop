@@ -377,7 +377,7 @@
         ("C-M-n" . sp-next-sexp)
         ("C-M-p" . sp-previous-sexp)
         ("C-M-a" . sp-beginning-of-sexp)
-        ("C-M-a" . sp-end-of-sexp)
+        ("C-M-e" . sp-end-of-sexp)
         ("C-M-k" . sp-kill-sexp)
         ("C-M-<backspace>" . sp-backward-kill-sexp)
         ("C-M-g" . sp-unwrap-sexp)
