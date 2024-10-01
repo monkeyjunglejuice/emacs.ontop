@@ -27,8 +27,9 @@
 (use-package lfe-mode
   :ensure t
   :custom
-  (inferior-lfe-program "rebar3")
-  (inferior-lfe-program-options '("lfe" "repl")))
+  (inferior-lfe-program "lfe")
+  (inferior-lfe-program-options '("-nobanner"))
+  (inferior-lfe-check-if-rebar-project t))
 
 ;;  ____________________________________________________________________________
 ;;; ERLANG
