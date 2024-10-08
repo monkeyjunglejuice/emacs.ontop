@@ -59,8 +59,8 @@
 ;;   :ensure t)
 
 ;; <https://gitlab.com/emacs-geiser/guile>
-(use-package geiser-guile
-  :ensure t)
+;; (use-package geiser-guile
+;;   :ensure t)
 
 ;; <https://gitlab.com/emacs-geiser/kawa>
 ;; (use-package geiser-kawa
