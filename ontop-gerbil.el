@@ -35,7 +35,7 @@
 (use-package scheme
   :ensure nil
   :custom
-  ;; Set Gerbil Scheme as the default Scheme implementation for Emacs (optional)
+  ;; Set Gerbil Scheme as the default Scheme implementation for Emacs?
   (scheme-program-name (expand-file-name "bin/gxi" *gerbil-path*)))
 
 (use-package gerbil-mode
