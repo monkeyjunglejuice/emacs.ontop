@@ -27,7 +27,7 @@
   :ensure t
   :custom
   (geiser-repl-send-on-return-p t)
-  (geiser-repl-use-other-window t)
+  (geiser-repl-use-other-window nil)
   ;; Set Geiser's default implementation?
   ;; (geiser-default-implementation 'guile)
   )
