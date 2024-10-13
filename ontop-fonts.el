@@ -501,7 +501,7 @@
                       :slant  'normal
                       :weight 'normal
                       :width  'normal
-                      :height 160)
+                      :height 170)
   (set-face-attribute 'fixed-pitch nil
                       :family "Anonymous Pro"
                       :slant  'normal
