@@ -28,6 +28,7 @@
   :custom
   (geiser-repl-send-on-return-p t)
   (geiser-repl-use-other-window nil)
+  (scheme-mit-dialect nil)
   ;; Set Geiser's default implementation?
   ;; (geiser-default-implementation 'guile)
   )
