@@ -76,7 +76,7 @@
 
 ;; <https://gitlab.com/emacs-geiser/racket>
 ;; (use-package geiser-racket
-;;  :ensure t)
+;;   :ensure t)
 
 ;; <https://gitlab.com/emacs-geiser/stklos>
 ;; (use-package geiser-stklos
