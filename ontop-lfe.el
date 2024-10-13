@@ -57,12 +57,12 @@
 ;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
 
-;; Color-code nested parens
-;; <https://github.com/Fanael/rainbow-delimiters>
+;; Rainbow-delimiters color-coding of nested parens is already enabled
+;; for all prog-modes in `ontop-core.el'
 (use-package rainbow-delimiters
   :ensure t
   :hook
-  ((lfe-mode inferior-lfe-mode) . rainbow-delimiters-mode))
+  ((inferior-lfe-mode) . rainbow-delimiters-mode))
 
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>

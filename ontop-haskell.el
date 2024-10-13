@@ -79,6 +79,23 @@
                               #'eglot-format-buffer t 'local))))
 
 ;;  ____________________________________________________________________________
+;;; PARENTHESIS DISPLAY
+
+;; Rainbow-delimiters color-coding of nested parens is already enabled
+;; for all prog-modes in `ontop-core.el'
+(use-package rainbow-delimiters
+  :ensure t
+  :hook
+  (interactive-haskell-mode . rainbow-delimiters-mode))
+
+;; Make parens styleable, e.g. more or less prominent
+;; <https://github.com/tarsius/paren-face>
+;; (use-package paren-face
+;;   :ensure t
+;;   :hook
+;;   ((haskell-mode interactive-haskell-mode) . paren-face-mode))
+
+;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://org-babel.readthedocs.io/en/latest/eval/>
 ;; Notebook-like literate programming in Emacs

@@ -58,8 +58,8 @@
 ;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
 
-;; Color-code nested parens
-;; <https://github.com/Fanael/rainbow-delimiters>
+;; Rainbow-delimiters color-coding of nested parens is already enabled
+;; for all prog-modes in `ontop-core.el'
 (use-package rainbow-delimiters
   :ensure t
   :hook

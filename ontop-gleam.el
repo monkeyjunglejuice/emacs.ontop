@@ -81,6 +81,19 @@
 (use-package erlang
   :ensure t)
 
+;;  ____________________________________________________________________________
+;;; PARENTHESIS DISPLAY
+
+;; Rainbow-delimiters color-coding of nested parens is already enabled
+;; for all prog-modes in `ontop-core.el'
+
+;; Make parens styleable, e.g. more or less prominent
+;; <https://github.com/tarsius/paren-face>
+;; (use-package paren-face
+;;   :ensure t
+;;   :hook
+;;   (gleam-ts-mode . paren-face-mode))
+
 ;; _____________________________________________________________________________
 (provide 'ontop-gleam)
 ;;; ontop-gleam.el ends here
