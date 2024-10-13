@@ -26,10 +26,12 @@
 
 (use-package lfe-mode
   :ensure t
+  :config
+  (setq inferior-lfe-check-if-rebar-project t)
+  (setq inferior-lfe-indent-on-Cj t)
   :custom
   (inferior-lfe-program "lfe")
-  (inferior-lfe-program-options '("-nobanner"))
-  (inferior-lfe-check-if-rebar-project t))
+  (inferior-lfe-program-options '("-nobanner")))
 
 ;;  ____________________________________________________________________________
 ;;; ERLANG
