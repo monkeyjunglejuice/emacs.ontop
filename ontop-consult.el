@@ -144,6 +144,7 @@
 ;; Consult users will also want the embark-consult package.
 (use-package embark-consult
   :ensure t
+  :after embark
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 

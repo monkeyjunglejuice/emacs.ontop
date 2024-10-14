@@ -27,6 +27,7 @@
         ;; ontop-company                   ; code completion alternative
         ontop-consult                   ; search and navigation
         ontop-corfu                     ; code completion and templates
+        ;; ontop-embark                    ; minibuffer actions
         ;; ontop-evil                      ; modular editing, VIM keybindings
         ;; ontop-flycheck                  ; syntax checker alternative
         ontop-fonts                     ; curated font sets

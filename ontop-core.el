@@ -451,31 +451,6 @@
         ("M-n" . goto-last-change-reverse)))
 
 ;;  ____________________________________________________________________________
-;;; EMBARK
-;; <https://github.com/oantolin/embark>
-
-(use-package embark
-  :ensure t
-  :init
-  ;; Optionally replace the key help with a completing-read interface
-  (setq prefix-help-command #'embark-prefix-help-command)
-  :hook
-  ;; Show the Embark target at point via Eldoc.
-  (eldoc-documentation-functions . embark-eldoc-first-target)
-  :config
-  ;; Hide the mode line of the Embark live/completions buffers
-  (add-to-list 'display-buffer-alist
-               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                 nil
-                 (window-parameters (mode-line-format . none))))
-  :bind
-  ;; ("<menu>" . embark-act)
-  ;; ("M-<menu>" . embark-dwim)
-  ("C-." . embark-act)
-  ("C-;" . embark-dwim)
-  ("C-h B" . embark-bindings))
-
-;;  ____________________________________________________________________________
 ;;; ORDERLESS
 ;; <https://github.com/oantolin/orderless>
 ;; <https://github.com/minad/corfu?tab=readme-ov-file#orderless-completion>
