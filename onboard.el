@@ -16,7 +16,7 @@
 ;; Copyright (C) 2021–2024 Dan Dee
 ;; Author: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
-;; Version: 1.2.16
+;; Version: 1.2.17
 ;; Package-Requires: ((EMACS "28.2"))
 ;; Keywords: convenience
 ;; SPDX-License-Identifier: MIT
@@ -621,9 +621,9 @@ or `system-configuration' directly."
 ;; <https://www.masteringemacs.org/article/seamlessly-merge-multiple-documentation-sources-eldoc>
 
 (setq eldoc-minor-mode-string nil
-      eldoc-documentation-strategy 'eldoc-documentation-compose
+      eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly
       eldoc-echo-area-display-truncation-message nil
-      eldoc-echo-area-prefer-doc-buffer 'maybe
+      eldoc-echo-area-prefer-doc-buffer nil
       eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
 
 ;;  ____________________________________________________________________________
@@ -1157,8 +1157,11 @@ Kills the current Dired buffer when entering a new directory"
 ;; the selection with the typed characters (default: -1 = off)
 (delete-selection-mode -1)
 
-;; Save always with a final new line
+;; Save always with a final new line?
 (setq require-final-newline t)
+
+;; Visually indicate unused lines at the end of the buffer?
+(setq indicate-empty-lines t)
 
 ;; Better than the default 'just-one-space' (was M-SPC before)
 (global-set-key (kbd "M-S-SPC") #'cycle-spacing)
@@ -1186,11 +1189,10 @@ Kills the current Dired buffer when entering a new directory"
 ;; Truncate long lines in programming modes?
 ;; By default, lines are continued visually on the next screen-line
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Continuation-Lines>
-;; For default behavior, do "M-x toggle-truncate-lines", or set the variable to nil
-;; and restart Emacs to make it permanent.
+;; For default behavior, do "M-x toggle-truncate-lines", or set the variable to nil.
 (add-hook 'prog-mode-hook
           (lambda ()
-            (setq-local truncate-lines nil)))
+            (setq-local truncate-lines t)))
 
 ;;  ____________________________________________________________________________
 ;;; FOLDING
