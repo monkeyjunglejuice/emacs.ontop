@@ -40,9 +40,10 @@
 ;; <https://github.com/purcell/exec-path-from-shell>
 
 ;; Make Emacs use the $PATH set up by the user's shell, especially helpful
-;; when starting Emacs via Systemd or similar which doesn't adopt all
-;; shell environment variables
+;; when on MacOS or starting Emacs via Systemd or similar which
+;; doesn't adopt all shell environment variables
 (use-package exec-path-from-shell
+  :if (eon-macp)
   :ensure t
   :init
   (exec-path-from-shell-initialize))
