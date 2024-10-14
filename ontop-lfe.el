@@ -74,5 +74,24 @@
 ;;   ((lfe-mode inferior-lfe-mode) . paren-face-mode))
 
 ;;  ____________________________________________________________________________
+;;; ORG-MODE BABEL
+;; <https://orgmode.org/worg/org-contrib/babel/index.html>
+;; Notebook-like literate programming in Emacs
+;; Evaluate LFE code in Org source code blocks via "C-c C-c"
+
+;; TODO -- not working, package might be outdated
+;; <https://github.com/zweifisch/ob-lfe>
+;; (use-package ob-lfe
+;;   :ensure t)
+
+;; (use-package org
+;;   :ensure nil
+;;   :hook
+;;   (org-mode . (lambda ()
+;;                 (org-babel-do-load-languages
+;;                  'org-babel-load-languages
+;;                  (add-to-list 'org-babel-load-languages '(lfe . t))))))
+
+;;  ____________________________________________________________________________
 (provide 'ontop-lfe)
 ;;; ontop-lfe.el ends here

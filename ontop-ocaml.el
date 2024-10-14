@@ -262,15 +262,15 @@
 
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
-;; Support literate programming in Emacs with OCaml
+;; <https://orgmode.org/worg/org-contrib/babel/index.html>
+;; Notebook-like literate programming in Emacs
+;; Evaluate OCaml code in Org source code blocks via "C-c C-c"
 
-;; OCaml command to use
 (use-package ob-ocaml
   :ensure nil
   :custom
   (org-babel-ocaml-command "ocaml -nopromptcont"))
 
-;; Evaluate OCaml code in Org blocks via "C-c C-c"
 (use-package org
   :ensure nil
   :hook

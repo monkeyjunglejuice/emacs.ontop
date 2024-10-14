@@ -83,19 +83,20 @@
 ;;; ORG-MODE BABEL
 ;; <https://org-babel.readthedocs.io/en/latest/eval/>
 ;; Notebook-like literate programming in Emacs
-
-;; <https://github.com/xfwduke/ob-erlang>
-(use-package ob-erlang
-  :ensure t)
-
 ;; Evaluate Erlang code in Org source code blocks via "C-c C-c"
-(use-package org
-  :ensure nil
-  :hook
-  (org-mode . (lambda ()
-                (org-babel-do-load-languages
-                 'org-babel-load-languages
-                 (add-to-list 'org-babel-load-languages '(erlang . t))))))
+
+;; Only available from Github, therefore not installed
+;; <https://github.com/xfwduke/ob-erlang>
+;; (use-package ob-erlang
+;;   :ensure t)
+
+;; (use-package org
+;;   :ensure nil
+;;   :hook
+;;   (org-mode . (lambda ()
+;;                 (org-babel-do-load-languages
+;;                  'org-babel-load-languages
+;;                  (add-to-list 'org-babel-load-languages '(erlang . t))))))
 
 ;; _____________________________________________________________________________
 (provide 'ontop-erlang)

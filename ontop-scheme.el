@@ -124,12 +124,13 @@
 
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
-;; <https://www.orgmode.org/worg/org-contrib/babel/languages/ob-doc-scheme.html>
+;; <https://orgmode.org/worg/org-contrib/babel/index.html>
+;; Notebook-like literate programming in Emacs
+;; Evaluate Scheme code in Org source code blocks via "C-c C-c"
 
 ;; TODO This seems not to work; neither with Chicken nor Racket
 
-;; Support literate programming in Emacs with Scheme
-;; Evaluate Scheme code in Org blocks via "C-c C-c"
+;; <https://www.orgmode.org/worg/org-contrib/babel/languages/ob-doc-scheme.html>
 (use-package org
   :ensure nil
   :hook

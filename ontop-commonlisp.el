@@ -127,16 +127,16 @@
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://orgmode.org/worg/org-contrib/babel/intro.html>
-
 ;; Support literate programming in Emacs with Common Lisp
+;; Evaluate Common Lisp code in Org source code blocks via "C-c C-c"
 
 ;; Make the function aware of Sly (defaults to Slime)
+;; <https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-lisp.html>
 (use-package ob-lisp
   :ensure nil
   :custom
   (org-babel-lisp-eval-fn #'sly-eval))
 
-;; Evaluate Common Lisp code in Org blocks via "C-c C-c"
 (use-package org
   :ensure nil
   :hook

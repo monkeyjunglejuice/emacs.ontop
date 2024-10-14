@@ -121,10 +121,10 @@
 
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
-;; <https://www.orgmode.org/worg/org-contrib/babel/languages/ob-doc-scheme.html>
+;; <https://orgmode.org/worg/org-contrib/babel/index.html>
 ;; Notebook-like literate programming in Emacs
-
 ;; Evaluate Julia code in Org source code blocks via "C-c C-c".
+
 ;; 2 Julia packages must be added for this to work: DataFrames and CSV.
 ;; <https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-julia.html>
 (use-package org

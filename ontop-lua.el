@@ -66,5 +66,20 @@
   (lua-mode . flymake-mode))
 
 ;;  ____________________________________________________________________________
+;;; ORG-MODE BABEL
+;; <https://orgmode.org/worg/org-contrib/babel/index.html>
+;; Notebook-like literate programming in Emacs
+;; Evaluate Lua code in Org source code blocks via "C-c C-c".
+
+;; <https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-lua.html>
+(use-package org
+  :ensure nil
+  :hook
+  (org-mode . (lambda ()
+                (org-babel-do-load-languages
+                 'org-babel-load-languages
+                 (add-to-list 'org-babel-load-languages '(lua . t))))))
+
+;;  ____________________________________________________________________________
 (provide 'ontop-lua)
 ;;; ontop-lua.el ends here
