@@ -32,7 +32,7 @@
         ;; ontop-flycheck                  ; syntax checker alternative
         ontop-fonts                     ; curated font sets
         ;; ontop-godmode                   ; modular editing, Emacs keybindings
-        ontop-helpful                   ; Extended help viewer
+        ontop-helpful                   ; extended help viewer
         ;; ontop-pdftools                  ; PDF reader
         ;; ontop-projectile                ; project management alternative
         ontop-vertico                   ; vertical completion
@@ -51,7 +51,7 @@
         ;; ontop-ocaml                     ; Ocaml programming
         ;; ontop-racket                    ; Racket programming
         ;; ontop-scheme                    ; Scheme programming
-        ontop-webdev                    ; HTML/CSS/JS editing
+        ;; ontop-webdev                    ; HTML/CSS/JS editing
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         ;;; PERSONAL MODULES
         ;; Below is an empty extra module that can run your personal Elisp code.
