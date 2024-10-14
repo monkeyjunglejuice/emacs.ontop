@@ -39,7 +39,6 @@
         ;; ontop-clojure                   ; Clojure and ClojureScript programming
         ;; ontop-commonlisp                ; Common Lisp programming
         ;; ontop-elixir                    ; Elixir programming
-        ;; ontop-elixir-ts                 ; Elixir programming (with Treesitter)
         ;; ontop-erlang                    ; Erlang programming
         ;; ontop-gerbil                    ; Gerbil Scheme programming
         ;; ontop-gleam                     ; Gleam programming
