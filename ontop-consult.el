@@ -137,17 +137,6 @@
                  #'completion--in-region)
                args)))
 
-;;  ____________________________________________________________________________
-;;; EMBARK
-;; <https://github.com/oantolin/embark>
-
-;; Consult users will also want the embark-consult package.
-(use-package embark-consult
-  :ensure t
-  :after embark
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
-
 ;;; ___________________________________________________________________________
 (provide 'ontop-consult)
 ;;; ontop-consult.el ends here

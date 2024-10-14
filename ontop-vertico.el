@@ -41,17 +41,7 @@
   (vertico-count 12)
   (vertico-resize 'grow-only)
   ;; Enable cycling for `vertico-next' and `vertico-previous'?
-  (vertico-cycle t)
-  :config
-  (defun +embark-live-vertico ()
-    "Shrink Vertico minibuffer when `embark-live' is active."
-    (when-let (win (and (string-prefix-p "*Embark Live" (buffer-name))
-                        (active-minibuffer-window)))
-      (with-selected-window win
-        (when (and (bound-and-true-p vertico--input)
-                   (fboundp 'vertico-multiform-unobtrusive))
-          (vertico-multiform-unobtrusive)))))
-  (add-hook 'embark-collect-mode-hook #'+embark-live-vertico))
+  (vertico-cycle t))
 
 ;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; EMACS (built-in)
