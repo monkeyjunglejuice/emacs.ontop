@@ -49,7 +49,7 @@
         ;; ontop-ocaml                     ; Ocaml programming
         ;; ontop-racket                    ; Racket programming
         ;; ontop-scheme                    ; Scheme programming
-        ontop-webdev                    ; HTML/CSS/JS support
+        ontop-webdev                    ; HTML/CSS/JS editing
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         ;;; PERSONAL MODULES
         ;; Below is an empty extra module that can run your personal Elisp code.
