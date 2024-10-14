@@ -103,7 +103,7 @@
   ;; The :init configuration is always executed (Not lazy!)
   ;; Must be in the :init section of use-package such that the mode gets
   ;; enabled right away. Note that this forces loading the package.
-  (marginalia-mode 1)
+  (marginalia-mode)
   :bind
   ;; Either bind `marginalia-cycle' globally or only in the minibuffer
   (:map minibuffer-local-map
