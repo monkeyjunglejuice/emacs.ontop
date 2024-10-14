@@ -38,6 +38,7 @@
 ;; <https://www.erlang.org/doc/apps/tools/erlang_mode_chapter.html>
 
 (use-package erlang
+  :defer t
   :ensure t)
 
 ;;  ____________________________________________________________________________
