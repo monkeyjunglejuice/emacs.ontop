@@ -464,7 +464,8 @@
 ;; ‘org-babel-load-file’ calls.
 
 (use-package org
-  :ensure t)
+  :ensure t
+  :pin gnu)
 
 ;;  ____________________________________________________________________________
 ;;; COMMON MARKUP- / SERIALIZATION FORMATS
