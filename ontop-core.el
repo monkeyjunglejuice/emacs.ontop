@@ -18,11 +18,9 @@
 (eval-when-compile
   (require 'use-package)
   (setq use-package-compute-statistics t)
+  (setq use-package-verbose t)
   ;; Lazy-load all packages? --> may cause problems
-  (setq use-package-always-defer nil)
-  ;; Speed up further? --> may cause problems
-  (setq use-package-expand-minimally nil)
-  (setq use-package-always-ensure nil))
+  (setq use-package-always-defer nil))
 
 ;;  ____________________________________________________________________________
 ;;; GARBAGE COLLECTION
