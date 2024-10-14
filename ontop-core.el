@@ -233,31 +233,6 @@
   ("M-SPC" . project-switch-to-buffer))
 
 ;;  ____________________________________________________________________________
-;;; PROJECTILE
-;; <https://docs.projectile.mx/projectile/index.html>
-;; If you prefer to use Projectile instead,
-;; copy/paste this config template to your `ontop-setup-personal.el':
-
-;; (use-package projectile
-;;   :ensure t
-;;   :init
-;;   (projectile-mode)
-;;   :custom
-;;   ;; Shorter mode-line
-;;   (projectile-mode-line-prefix " P")
-;;   ;; Don't hide current project
-;;   (projectile-current-project-on-switch 'move-to-end)
-;;   ;; Hide buffers
-;;   (projectile-globally-ignored-buffers eon-boring-buffers)
-;;   :config
-;;   ;; Enable sorting
-;;   (when (not (eon-winp))
-;;     (setq projectile-indexing-method 'hybrid  ; no Windows support
-;;           projectile-sort-order 'recently-active))
-;;   :bind-keymap
-;;   ("C-x p" . projectile-command-map))
-
-;;  ____________________________________________________________________________
 ;;; EGLOT LANGUAGE SERVER
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md/>
 

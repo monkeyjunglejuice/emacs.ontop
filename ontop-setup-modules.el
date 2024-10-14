@@ -34,6 +34,7 @@
         ;; ontop-godmode                   ; modular editing, Emacs keybindings
         ontop-helpful                   ; Extended help viewer
         ;; ontop-pdftools                  ; PDF reader
+        ;; ontop-projectile                ; project management alternative
         ontop-vertico                   ; vertical completion
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         ;;; PROGRAMMING LANGUAGE SUPPORT
