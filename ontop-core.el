@@ -407,6 +407,7 @@
 
 (use-package expand-region
   :ensure t
+  :defer t
   :bind
   ("M-=" . er/expand-region)
   ("M--" . er/contract-region))
@@ -417,6 +418,7 @@
 
 (use-package goto-chg
   :ensure t
+  :defer t
   :bind
   (:map prog-mode-map
         ("M-p" . goto-last-change)
@@ -445,6 +447,7 @@
 
 ;; Colorize color names in arbitrary buffers
 (use-package rainbow-mode
+  :defer t
   :ensure t)
 
 ;;  ____________________________________________________________________________
@@ -468,20 +471,24 @@
 ;; <https://github.com/emacsorphanage/adoc-mode>
 (use-package adoc-mode
   :ensure t
+  :defer t
   :config
   (add-to-list 'auto-mode-alist (cons "\\.asciidoc\\'" 'adoc-mode)))
 
 ;; <https://elpa.gnu.org/packages/csv-mode.html>
 (use-package csv-mode
+  :defer t
   :ensure t)
 
 ;; <https://github.com/dhall-lang/dhall-lang>
 (use-package dhall-mode
+  :defer t
   :ensure t)
 
 ;; <https://jblevins.org/projects/markdown-mode/>
 (use-package markdown-mode
   :ensure t
+  :defer t
   ;; Turn on visual word wrapping
   ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Visual-Line-Mode>
   :hook

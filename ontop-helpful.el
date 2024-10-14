@@ -28,6 +28,7 @@
 
 (use-package helpful
   :ensure t
+  :defer t
   :bind
   ;; Lookup the current symbol at point
   ("C-h o" . #'helpful-at-point)

@@ -25,6 +25,7 @@
 
 (use-package web-mode
   :ensure t
+  :defer t
   :custom
   (web-mode-attr-indent-offset 2)
   (web-mode-attr-value-indent-offset 2)
@@ -49,13 +50,15 @@
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#HTML-Mode>
 
 (use-package sgml-mode
-  :ensure nil)
+  :ensure nil
+  :defer t)
 
 ;;  ____________________________________________________________________________
 ;;; CSS-MODE
 
 (use-package css-mode
   :ensure nil
+  :defer t
   :custom
   (css-indent-offset 2))
 
@@ -63,7 +66,8 @@
 ;;; JS-MODE
 
 (use-package js
-  :ensure nil)
+  :ensure nil
+  :defer t)
 
 ;;  ____________________________________________________________________________
 ;;; SYNTAX-CHECKER / LINTER
@@ -80,6 +84,7 @@
 ;; Install the linter via `npm install -g csslint'
 (use-package flymake-css
   :ensure t
+  :defer t
   :custom
   (flymake-css-lint-command "csslint")
   :hook
@@ -88,6 +93,7 @@
 ;; <https://github.com/orzechowskid/flymake-eslint>
 (use-package flymake-eslint
   :ensure t
+  :defer t
   :hook
   (js-mode . flymake-eslint-enable))
 

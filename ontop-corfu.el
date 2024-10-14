@@ -73,6 +73,7 @@
 ;; <https://github.com/joaotavora/yasnippet>
 (use-package yasnippet
   :ensure t
+  :defer t
   :diminish yas-minor-mode
   :config
   (add-to-list 'hippie-expand-try-functions-list #'yas-hippie-try-expand)
@@ -81,7 +82,8 @@
 
 ;; <https://github.com/AndreaCrotti/yasnippet-snippets>
 (use-package yasnippet-snippets
-  :ensure t)
+  :ensure t
+  :defer t)
 
 ;; <https://github.com/elken/yasnippet-capf>
 ;; (use-package yasnippet-capf
