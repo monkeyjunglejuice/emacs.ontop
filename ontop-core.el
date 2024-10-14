@@ -180,6 +180,8 @@
 ;; <https://github.com/dajva/rg.el>
 (use-package rg
   :ensure t
+  :ensure-system-package
+  (rg . ripgrep)
   :bind
   ("M-s r" . rg))
 
