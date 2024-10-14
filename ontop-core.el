@@ -27,8 +27,10 @@
   :ensure t
   :diminish
   :init
+  ;; Turn off the garbage collection tuning from Emacs ONTOP ...
   (when (fboundp #'eon-cancel-gc-timer)
     (eon-cancel-gc-timer))
+  ;; ... and use the more sophisticated GCMH package instead
   (gcmh-mode))
 
 ;;  ____________________________________________________________________________
@@ -495,7 +497,6 @@
 ;; <https://orgmode.org/>
 
 ;; Loading the latest Org version rather than the one built into Emacs:
-
 ;; If Emacs is loaded using literate Org config and more recent Org
 ;; version is loaded inside the file loaded by ‘org-babel-load-file’.
 ;; ‘org-babel-load-file’ triggers the built-in Org version clashing
