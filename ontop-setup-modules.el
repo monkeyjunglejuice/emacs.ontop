@@ -11,10 +11,11 @@
 ;;  ____________________________________________________________________________
 ;;; SETUP
 
-;; --> Enable or disable modules below via commenting and uncommenting.
-;;     You can also load modules on the fly via "M-x load-library RET ontop-"
+;; --> Enable or disable modules below via commenting and uncommenting ...
+;;     ... then apply your changes via "M-x eon-require-modules".
+;;     You can also load single modules via "M-x load-library RET ontop-"
 ;;     and unload manually loaded modules via "M-x unload-feature RET ontop-"
-;;     
+;;
 ;; --> Documentation lives in the module files. To learn more, place the cursor
 ;;     on a module entry below and do `M-x ffap RET' to visit the file.
 

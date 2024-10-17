@@ -55,8 +55,12 @@ It is empty per default, and will be set in `ontop-setup-modules.el'.")
 (eon-require-with-error-handling 'ontop-setup-modules)
 
 ;; Require the selected modules; install Emacs packages when necessary
-(dolist (module eon-modules)
-  (eon-require-with-error-handling module))
+(defun eon-require-modules ()
+  (interactive)
+  (dolist (module eon-modules)
+    (eon-require-with-error-handling module)))
+
+(eon-require-modules)
 
 ;;  ____________________________________________________________________________
 (provide 'ontop)
