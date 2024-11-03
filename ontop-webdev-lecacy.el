@@ -1,10 +1,10 @@
-;;; ontop-webdev.el --- HTML and CSS configuration  -*- lexical-binding: t; -*-
+;;; ontop-webdev-legacy.el --- HTML and CSS configuration  -*- lexical-binding: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
 ;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/ontop-webdev.el")'.
+;; Load it from anywhere via `(load-file "/path/to/ontop-webdev-legacy.el")'.
 
 ;;; Code:
 
@@ -58,7 +58,6 @@
 
 (use-package css-mode
   :ensure nil
-  :defer t
   :custom
   (css-indent-offset 2))
 
@@ -66,8 +65,7 @@
 ;;; JS-MODE
 
 (use-package js
-  :ensure nil
-  :defer t)
+  :ensure nil)
 
 ;;  ____________________________________________________________________________
 ;;; SYNTAX-CHECKER / LINTER
@@ -98,5 +96,5 @@
   (js-mode . flymake-eslint-enable))
 
 ;;  ____________________________________________________________________________
-(provide 'ontop-webdev)
-;;; ontop-webdev.el ends here
+(provide 'ontop-webdev-legacy)
+;;; ontop-webdev-legacy.el ends here
