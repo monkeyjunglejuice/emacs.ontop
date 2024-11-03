@@ -370,9 +370,9 @@
   (set-face-attribute 'default nil
                       :family "Source Code Pro"
                       :slant  'normal
-                      :weight 'normal
+                      :weight 'medium
                       :width  'normal
-                      :height 150)
+                      :height 160)
   (set-face-attribute 'fixed-pitch nil
                       :family "Source Code Pro"
                       :slant  'normal
