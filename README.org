@@ -30,10 +30,10 @@ Emacs ONTOP is an extension layer to the [[https://github.com/monkeyjunglejuice/
 *ontop-gerbil*: Gerbil Scheme setup with REPL, according to the suggestions on the Gerbil Scheme website.
 ** Emacs for Racket ★★★☆☆
 *ontop-racket*: The Racket setup based on [[https://github.com/greghendershott/racket-mode][Racket-mode]] provides more interactivity than DrRacket, and the new "racket-hash-lang-mode" supports arbitrary syntax for DSLs in Emacs. However, the syntax highlighting could be configured more in-depth.
-** Emacs for LFE (Lisp Flavoured Erlang) ★★☆☆☆
-*ontop-lfe*: Basic LFE setup with REPL.
 ** Emacs for Gleam ★★☆☆☆
 *ontop-gleam*: Basic setup for the Gleam language with LSP and Treesitter support. No interactive programming, since Gleam doesn't come with a REPL.
+** Emacs for LFE (Lisp Flavoured Erlang) ★★☆☆☆
+*ontop-lfe*: Basic LFE setup with REPL.
 ** Emacs for Lua ★★☆☆☆
 *ontop-lua*: Basic Lua "setup" with REPL and lua-language-server. Rudimentary setup suitable for editing Lua code. The available features don't come anywhere close to the native Lua IDE [[https://studio.zerobrane.com/][ZeroBrane Studio]] or Neovim.
 ** Emacs for Web Development ★☆☆☆☆
