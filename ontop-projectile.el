@@ -9,17 +9,6 @@
 ;;; Code:
 
 ;;  ____________________________________________________________________________
-;;; USE-PACKAGE
-;; <https://github.com/jwiegley/use-package>
-
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package nil))
-
-(eval-when-compile
-  (require 'use-package))
-
-;;  ____________________________________________________________________________
 ;;; PROJECTILE
 ;; <https://docs.projectile.mx/projectile/index.html>
 ;; Drop-in replacement for Emacs'; built-in project management

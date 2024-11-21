@@ -9,17 +9,6 @@
 ;;; Code:
 
 ;;  ____________________________________________________________________________
-;;; USE-PACKAGE
-;; <https://github.com/jwiegley/use-package>
-
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package nil))
-
-(eval-when-compile
-  (require 'use-package))
-
-;;  ____________________________________________________________________________
 ;;; ERLANG MODE
 ;; <https://github.com/erlang/otp/tree/master/lib/tools/emacs>
 ;; <https://www.erlang.org/doc/apps/tools/erlang_mode_chapter.html>

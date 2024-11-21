@@ -9,17 +9,6 @@
 ;;; Code:
 
 ;;  ____________________________________________________________________________
-;;; USE-PACKAGE
-;; <https://github.com/jwiegley/use-package>
-
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package nil))
-
-(eval-when-compile
-  (require 'use-package))
-
-;;  ____________________________________________________________________________
 ;;; COMMON LISP
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Executing-Lisp>
 
