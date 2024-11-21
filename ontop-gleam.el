@@ -13,7 +13,6 @@
 ;; <https://github.com/gleam-lang/gleam-mode>
 
 (use-package gleam-ts-mode
-  :ensure t
   :mode (rx ".gleam" eos))
 
 ;; Unless you have the Gleam tree-sitter grammar installed and treesit knows
@@ -37,7 +36,6 @@
 ;; <https://gleam.run/language-server>
 
 (use-package eglot
-  :ensure t
   :custom
   ;; A longer timeout seems required for the first run in a new project
   (eglot-connect-timeout 60)            ; default: 30
@@ -58,7 +56,6 @@
 ;; <https://github.com/gleam-lang/mix_gleam>
 
 ;; (use-package mix
-;;   :ensure t
 ;;   :diminish mix-minor-mode
 ;;   :hook
 ;;   ((gleam-ts-mode) . mix-minor-mode))
@@ -67,8 +64,7 @@
 ;;; ERLANG
 ;; <https://www.erlang.org/doc/apps/tools/erlang_mode_chapter.html>
 
-(use-package erlang
-  :ensure t)
+(use-package erlang)
 
 ;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
@@ -79,7 +75,6 @@
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
 ;; (use-package paren-face
-;;   :ensure t
 ;;   :hook
 ;;   (gleam-ts-mode . paren-face-mode))
 

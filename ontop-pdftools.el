@@ -15,7 +15,6 @@
 
 ;; Sophisticated PDF viewer
 (use-package pdf-tools
-  :ensure t
   :magic
   ("%PDF" . pdf-view-mode)
   :config

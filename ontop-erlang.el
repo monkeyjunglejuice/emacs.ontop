@@ -13,14 +13,12 @@
 ;; <https://github.com/erlang/otp/tree/master/lib/tools/emacs>
 ;; <https://www.erlang.org/doc/apps/tools/erlang_mode_chapter.html>
 
-(use-package erlang
-  :ensure t)
+(use-package erlang)
 
 ;; In order to use Tree Sitter, install the tree-sitter binary with your
 ;; OS package manager. Then install the language grammar via
 ;; 'M-x treesit-install-language-grammar'
 (use-package treesit
-  :ensure nil
   :config
   (add-to-list 'treesit-language-source-alist
                '(erlang "https://github.com/WhatsApp/tree-sitter-erlang")))
@@ -35,7 +33,6 @@
 ;; <https://github.com/erlang-ls/erlang_ls>
 
 (use-package eglot
-  :ensure t
   :custom
   ;; A longer timeout seems required for the first run in a new project
   (eglot-connect-timeout 30)            ; default: 30
@@ -57,14 +54,12 @@
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
 ;; for all prog-modes in `ontop-core.el'
 (use-package rainbow-delimiters
-  :ensure t
   :hook
   (erlang-shell-mode . rainbow-delimiters-mode))
 
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
 ;; (use-package paren-face
-;;   :ensure t
 ;;   :hook
 ;;   ((erlang-mode erlang-shell-mode) . paren-face-mode))
 
@@ -76,11 +71,9 @@
 
 ;; Only available from Github, therefore not installed
 ;; <https://github.com/xfwduke/ob-erlang>
-;; (use-package ob-erlang
-;;   :ensure t)
+;; (use-package ob-erlang)
 
 ;; (use-package org
-;;   :ensure nil
 ;;   :hook
 ;;   (org-mode . (lambda ()
 ;;                 (org-babel-do-load-languages

@@ -13,7 +13,6 @@
 ;; <https://github.com/clojure-emacs/clojure-ts-mode>
 
 (use-package clojure-ts-mode
-  :ensure t
   :custom
   (clojure-ts-indent-style 'fixed)
   (clojure-ts-comment-macro-font-lock-body t)
@@ -24,7 +23,6 @@
 ;; <https://github.com/clojure-emacs/cider>
 
 (use-package cider
-  :ensure t
   :hook
   (clojure-ts-mode . cider-mode))
 
@@ -40,7 +38,6 @@
 
 ;; Enable strict mode in Lisp buffers
 (use-package smartparens
-  :ensure t
   :hook
   (clojure-ts-mode . smartparens-strict-mode))
 
@@ -50,14 +47,12 @@
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
 ;; for all prog-modes in `ontop-core.el'
 (use-package rainbow-delimiters
-  :ensure t
   :hook
   (cider-repl-mode . rainbow-delimiters-mode))
 
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
 ;; (use-package paren-face
-;;   :ensure t
 ;;   :hook
 ;;   ((clojure-ts-mode cider-repl-mode) . paren-face-mode))
 
@@ -68,7 +63,6 @@
 
 ;; Evaluate Clojure code in Org source code blocks via "C-c C-c"
 (use-package org
-  :ensure nil
   :hook
   (org-mode . (lambda ()
                 (org-babel-do-load-languages

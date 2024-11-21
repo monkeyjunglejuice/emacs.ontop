@@ -13,14 +13,12 @@
 ;; <https://github.com/ronisbr/julia-ts-mode>
 
 (use-package julia-ts-mode
-  :ensure t
   :mode "\\.jl$")
 
 ;; In order to use Tree Sitter, install the tree-sitter binary with your OS
 ;; package manager. Then install the language grammar via
 ;; 'M-x treesit-install-language-grammar'
 (use-package treesit
-  :ensure nil
   :config
   (add-to-list 'treesit-language-source-alist
                '(julia "https://github.com/tree-sitter/tree-sitter-julia")))
@@ -31,7 +29,6 @@
 ;; Interactive Julia with REPL
 
 (use-package julia-snail
-  :ensure t
   :custom
 ;; Needs a terminal emulator within Emacs; alternative: vterm
   (julia-snail-terminal-type :eat)
@@ -51,7 +48,6 @@
 ;; Julia Snail requires a terminal emulator within Emacs for the REPL
 
 (use-package eat
-  :ensure t
   :custom
   (eat-kill-buffer-on-exit t)
   :config
@@ -77,12 +73,10 @@
 ;; Setup Eglot for Julia and install the language server binary if necessary
 ;; <https://github.com/non-Jedi/eglot-jl>
 (use-package eglot-jl
-  :ensure t
   :init
   (eglot-jl-init))
 
 (use-package eglot
-  :ensure t
   :hook
   ;; Start language server automatically
   (julia-ts-mode . eglot-ensure)
@@ -97,14 +91,12 @@
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
 ;; for all prog-modes in `ontop-core.el'
 (use-package rainbow-delimiters
-  :ensure t
   :hook
   (julia-snail-mode . rainbow-delimiters-mode))
 
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
 ;; (use-package paren-face
-;;   :ensure t
 ;;   :hook
 ;;   ((julia-ts-mode julia-snail-mode) . paren-face-mode))
 
@@ -117,7 +109,6 @@
 ;; 2 Julia packages must be added for this to work: DataFrames and CSV.
 ;; <https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-julia.html>
 (use-package org
-  :ensure nil
   :hook
   (org-mode . (lambda ()
                 (org-babel-do-load-languages

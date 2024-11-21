@@ -42,7 +42,11 @@
 
 ;; Enable strict mode in Lisp buffers
 (use-package smartparens
-  :ensure t
+  :config
+  ;; As of version 20240713.1002, smartparens doesn't recognize LFE as a lisp,
+  ;; so let's add it manually
+  (add-to-list 'sp-lisp-modes 'lfe-mode)
+  (add-to-list 'sp-lisp-modes 'inferior-lfe-mode)
   :hook
   (lfe-mode . smartparens-strict-mode))
 
@@ -52,14 +56,12 @@
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
 ;; for all prog-modes in `ontop-core.el'
 (use-package rainbow-delimiters
-  :ensure t
   :hook
   ((inferior-lfe-mode) . rainbow-delimiters-mode))
 
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
 ;; (use-package paren-face
-;;   :ensure t
 ;;   :hook
 ;;   ((lfe-mode inferior-lfe-mode) . paren-face-mode))
 
@@ -71,11 +73,9 @@
 
 ;; TODO -- not working, package might be outdated
 ;; <https://github.com/zweifisch/ob-lfe>
-;; (use-package ob-lfe
-;;   :ensure t)
+;; (use-package ob-lfe)
 
 ;; (use-package org
-;;   :ensure nil
 ;;   :hook
 ;;   (org-mode . (lambda ()
 ;;                 (org-babel-do-load-languages

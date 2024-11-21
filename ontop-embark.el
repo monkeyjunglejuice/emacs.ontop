@@ -7,7 +7,6 @@
 ;; <https://github.com/oantolin/embark>
 
 (use-package embark
-  :ensure t
   :init
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
@@ -36,7 +35,6 @@
   ("C-;" . embark-dwim))
 
 (use-package embark
-  :ensure t
   :after vertico
   :config
   (defun +embark-live-vertico ()
@@ -51,7 +49,6 @@
 
 ;; Consult users will also want the embark-consult package
 (use-package embark-consult
-  :ensure t
   :after consult
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))

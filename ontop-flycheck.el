@@ -14,7 +14,6 @@
 
 ;; Alternative for the built-in Flymake
 (use-package flycheck
-  :ensure t
   :init
   ;; Remove Flymake from that hook, as we're going to use Flycheck instead
   (remove-hook 'emacs-lisp-mode-hook #'flymake-mode)

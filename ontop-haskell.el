@@ -13,7 +13,6 @@
 ;;  <http://haskell.github.io/haskell-mode>
 
 (use-package haskell-mode
-  :ensure t
   :custom
   (haskell-completing-read-function 'completing-read)
   (haskell-process-auto-import-loaded-modules t)
@@ -32,7 +31,6 @@
   (haskell-mode . interactive-haskell-mode))
 
 (use-package haskell
-  :ensure nil
   :bind
   ;; Reach REPL from anywhere via global key binding
   (:map ctl-z-x-map
@@ -48,7 +46,6 @@
 ;;  Common keybindings are configured in `./ontop-core.el'
 
 (use-package eglot
-  :ensure t
   :config
   (setq-default eglot-workspace-configuration
                 '((haskell
@@ -73,14 +70,12 @@
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
 ;; for all prog-modes in `ontop-core.el'
 (use-package rainbow-delimiters
-  :ensure t
   :hook
   (interactive-haskell-mode . rainbow-delimiters-mode))
 
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
 ;; (use-package paren-face
-;;   :ensure t
 ;;   :hook
 ;;   ((haskell-mode interactive-haskell-mode) . paren-face-mode))
 
@@ -90,12 +85,10 @@
 ;; Notebook-like literate programming in Emacs
 
 ;; Starts a GHCi REPL in the background
-(use-package ob-haskell
-  :ensure nil)
+(use-package ob-haskell)
 
 ;; Evaluate Haskell code in Org source code blocks via "C-c C-c"
 (use-package org
-  :ensure nil
   :hook
   (org-mode . (lambda ()
                 (org-babel-do-load-languages

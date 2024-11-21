@@ -13,7 +13,6 @@
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Executing-Lisp>
 
 (use-package inf-lisp
-  :ensure nil
   :custom
   ;; Set default Lisp implementation
   (inferior-lisp-program "ros -Q run"))
@@ -24,7 +23,6 @@
 ;; <https://github.com/joaotavora/sly>
 
 (use-package sly
-  :ensure t
   :init
   ;; Set Sly Lisp implementations
   (setq sly-lisp-implementations
@@ -48,7 +46,6 @@
 ;; Common Lisp documentation
 ;; The hyperspec must be installed on your computer. Adapt the path below:
 (use-package hyperspec
-  :ensure nil
   :after sly
   :custom
   (common-lisp-hyperspec-root
@@ -60,20 +57,16 @@
    (concat common-lisp-hyperspec-root "Data/Map_IssX.txt")))
 
 ;; <https://github.com/mmgeorge/sly-asdf>
-(use-package sly-asdf
-  :ensure t)
+(use-package sly-asdf)
 
 ;; <https://github.com/joaotavora/sly-macrostep>
-(use-package sly-macrostep
-  :ensure t)
+(use-package sly-macrostep)
 
 ;; <https://github.com/joaotavora/sly-named-readtables>
-(use-package sly-named-readtables
-  :ensure t)
+(use-package sly-named-readtables)
 
 ;; <https://github.com/joaotavora/sly-quicklisp>
-(use-package sly-quicklisp
-  :ensure t)
+(use-package sly-quicklisp)
 
 ;;  ____________________________________________________________________________
 ;;; STRUCTURAL EDITING
@@ -87,7 +80,6 @@
 
 ;; Enable strict mode in Lisp buffers
 (use-package smartparens
-  :ensure t
   :hook
   (lisp-mode . smartparens-strict-mode))
 
@@ -97,14 +89,12 @@
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
 ;; for all prog-modes in `ontop-core.el'
 (use-package rainbow-delimiters
-  :ensure t
   :hook
   (sly-repl-mode . rainbow-delimiters-mode))
 
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
 ;; (use-package paren-face
-;;   :ensure t
 ;;   :hook
 ;;   ((lisp-mode inferior-lisp-mode sly-mrepl-mode) . paren-face-mode))
 
@@ -117,12 +107,10 @@
 ;; Make the function aware of Sly (defaults to Slime)
 ;; <https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-lisp.html>
 (use-package ob-lisp
-  :ensure nil
   :custom
   (org-babel-lisp-eval-fn #'sly-eval))
 
 (use-package org
-  :ensure nil
   :hook
   (org-mode . (lambda () (org-babel-do-load-languages
                           'org-babel-load-languages

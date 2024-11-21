@@ -22,13 +22,11 @@
   "Emacs packages coming with your Gerbil installation.")
 
 (use-package scheme
-  :ensure nil
   :custom
   ;; Set Gerbil Scheme as the default Scheme implementation for Emacs?
   (scheme-program-name (expand-file-name "bin/gxi" *gerbil-path*)))
 
 (use-package gerbil-mode
-  :ensure nil
   :load-path *gerbil-emacs-path*
   :mode
   (("\\.ss\\'"  . gerbil-mode)
@@ -57,7 +55,6 @@
 ;;; GAMBIT REPL SUPPORT
 
 (use-package gambit
-  :ensure nil
   :load-path *gerbil-emacs-path*
   :hook
   ;; "Use the Gambit REPL for Gerbil Scheme"
@@ -84,8 +81,7 @@
 ;;; SRFI BROWSER
 ;; <https://github.com/srfi-explorations/emacs-srfi>
 
-(use-package srfi
-  :ensure t)
+(use-package srfi)
 
 ;;  ____________________________________________________________________________
 ;;; STRUCTURAL EDITING
@@ -98,7 +94,6 @@
 ;; and configured in `ontop-core.el'
 
 (use-package smartparens
-  :ensure t
   :hook
   (gerbil-mode . smartparens-strict-mode))
 
@@ -108,14 +103,12 @@
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
 ;; for all prog-modes in `ontop-core.el'
 (use-package rainbow-delimiters
-  :ensure t
   :hook
   (inferior-scheme-mode . rainbow-delimiters-mode))
 
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
 ;; (use-package paren-face
-;;   :ensure t
 ;;   :hook
 ;;   ((gerbil-mode inferior-scheme-mode) . paren-face-mode))
 
@@ -128,7 +121,6 @@
 ;; TODO -- This seems not to work
 ;; <https://www.orgmode.org/worg/org-contrib/babel/languages/ob-doc-scheme.html>
 (use-package org
-  :ensure nil
   :hook
   (org-mode . (lambda ()
                 (org-babel-do-load-languages

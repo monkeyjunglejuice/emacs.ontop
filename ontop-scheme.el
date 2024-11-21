@@ -13,7 +13,6 @@
 ;; <https://www.nongnu.org/geiser/>
 
 (use-package geiser
-  :ensure t
   :custom
   (geiser-repl-send-on-return-p t)
   (geiser-repl-use-other-window nil)
@@ -29,55 +28,44 @@
 ;; and then then evaluate the expression(s) or restart Emacs.
 
 ;; <https://gitlab.com/emacs-geiser/chez>
-;; (use-package geiser-chez
-;;   :ensure t)
+;; (use-package geiser-chez)
 
 ;; <https://gitlab.com/emacs-geiser/chicken>
-;; (use-package geiser-chicken
-;;   :ensure t)
+;; (use-package geiser-chicken)
 
 ;; <https://gitlab.com/emacs-geiser/chibi>
-;; (use-package geiser-chibi
-;;   :ensure t)
+;; (use-package geiser-chibi)
 
 ;; <https://gitlab.com/emacs-geiser/gambit>
-;; (use-package geiser-gambit
-;;   :ensure t)
+;; (use-package geiser-gambit)
 
 ;; <https://gitlab.com/emacs-geiser/gauche>
-;; (use-package geiser-gauche
-;;   :ensure t)
+;; (use-package geiser-gauche)
 
 ;; <https://gitlab.com/emacs-geiser/guile>
-(use-package geiser-guile
-  :ensure t)
+(use-package geiser-guile)
 
 ;; <https://gitlab.com/emacs-geiser/kawa>
-;; (use-package geiser-kawa
-;;   :ensure t)
+;; (use-package geiser-kawa)
 
 ;; <https://gitlab.com/emacs-geiser/mit>
 ;; (use-package geiser-mit
-;;   :ensure t
 ;;   :config
 ;;   (use-package scheme
 ;;     :custom
 ;;     (scheme-mit-dialect t)))
 
 ;; <https://gitlab.com/emacs-geiser/racket>
-;; (use-package geiser-racket
-;;   :ensure t)
+;; (use-package geiser-racket)
 
 ;; <https://gitlab.com/emacs-geiser/stklos>
-;; (use-package geiser-stklos
-;;   :ensure t)
+;; (use-package geiser-stklos)
 
 ;;  ____________________________________________________________________________
 ;;; SRFI BROWSER
 ;; <https://github.com/srfi-explorations/emacs-srfi>
 
-(use-package srfi
-  :ensure t)
+(use-package srfi)
 
 ;;  ____________________________________________________________________________
 ;;; STRUCTURAL EDITING
@@ -90,7 +78,6 @@
 ;; and configured in `ontop-core.el'
 
 (use-package smartparens
-  :ensure t
   :hook
   (scheme-mode . smartparens-strict-mode))
 
@@ -100,14 +87,12 @@
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
 ;; for all prog-modes in `ontop-core.el'
 (use-package rainbow-delimiters
-  :ensure t
   :hook
   ((inferior-scheme-mode geiser-repl-mode) . rainbow-delimiters-mode))
 
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
 ;; (use-package paren-face
-;;   :ensure t
 ;;   :hook
 ;;   ((scheme-mode inferior-scheme-mode geiser-repl-mode) . paren-face-mode))
 
@@ -121,7 +106,6 @@
 
 ;; <https://www.orgmode.org/worg/org-contrib/babel/languages/ob-doc-scheme.html>
 (use-package org
-  :ensure nil
   :hook
   (org-mode . (lambda ()
                 (org-babel-do-load-languages

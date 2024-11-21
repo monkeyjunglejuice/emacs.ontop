@@ -12,14 +12,12 @@
 ;;; ELIXIR TREESIT MODE
 ;; <https://github.com/wkirschbaum/elixir-ts-mode>
 
-(use-package elixir-ts-mode
-  :ensure t)
+(use-package elixir-ts-mode)
 
 ;; In order to use Tree Sitter, install the tree-sitter binary with your OS
 ;; package manager. Then install the language grammar via
 ;; 'M-x treesit-install-language-grammar'
 (use-package treesit
-  :ensure nil
   :config
   (add-to-list 'treesit-language-source-alist
                '(elixir "https://github.com/elixir-lang/tree-sitter-elixir"))
@@ -30,7 +28,6 @@
 ;;; REPL
 
 (use-package inf-elixir
-  :ensure t
   :custom
   (inf-elixir-switch-to-repl-on-send nil)
   :config
@@ -75,7 +72,6 @@ configuration or restarting applications."
 ;; <https://github.com/elixir-lsp/elixir-ls>
 
 (use-package eglot
-  :ensure t
   :custom
   ;; A longer timeout seems required for the first run in a new project
   (eglot-connect-timeout 60)            ; default: 30
@@ -100,7 +96,6 @@ configuration or restarting applications."
 ;; 'mix deps.get'
 
 ;; (use-package eglot
-;;   :ensure t
 ;;   :config
 ;;   ;; Make sure to edit the path appropriately, use the .bat script for Windows
 ;;   (add-to-list 'eglot-server-programs
@@ -122,7 +117,6 @@ configuration or restarting applications."
 ;; <https://hexdocs.pm/mix/1.12/Mix.html>
 
 (use-package mix
-  :ensure t
   :diminish mix-minor-mode
   :hook
   ((elixir-ts-mode heex-ts-mode) . mix-minor-mode))
@@ -142,12 +136,10 @@ configuration or restarting applications."
 ;; Run `mix deps.get' afterwards, and then `mix credo'
 
 ;; (use-package flycheck
-;;   :ensure t
 ;;   :hook
 ;;   (elixir-ts-mode . flycheck-mode))
 
 ;; (use-package flycheck-credo
-;;   :ensure t
 ;;   :custom
 ;;   (flycheck-elixir-credo-strict t)
 ;;   :hook
@@ -158,7 +150,6 @@ configuration or restarting applications."
 ;; <https://github.com/ananthakumaran/exunit.el>
 
 (use-package exunit
-  :ensure t
   :diminish exunit-mode
   :custom
   (transient-default-level 4)
@@ -170,7 +161,6 @@ configuration or restarting applications."
 ;; <https://www.erlang.org/doc/apps/tools/erlang_mode_chapter.html>
 
 (use-package erlang
-  :ensure t
   :defer t)
 
 ;;  ____________________________________________________________________________
@@ -179,14 +169,12 @@ configuration or restarting applications."
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
 ;; for all prog-modes in `ontop-core.el'
 (use-package rainbow-delimiters
-  :ensure t
   :hook
   (inf-elxir-mode . rainbow-delimiters-mode))
 
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
 ;; (use-package paren-face
-;;   :ensure t
 ;;   :hook
 ;;   ((elixir-ts-mode inf-elixir-mode) . paren-face-mode))
 
@@ -198,11 +186,9 @@ configuration or restarting applications."
 
 ;; TODO -- not working, package might be outdated
 ;; <https://github.com/zweifisch/ob-elixir>
-;; (use-package ob-elixir
-;;   :ensure t)
+;; (use-package ob-elixir)
 
 ;; (use-package org
-;;   :ensure nil
 ;;   :hook
 ;;   (org-mode . (lambda ()
 ;;                 (org-babel-do-load-languages

@@ -13,7 +13,6 @@
 ;; <https://www.racket-mode.com/>
 
 (use-package racket-mode
-  :ensure t
   :init
   ;; Use `racket-hash-lang-mode' for other syntax
   (add-to-list 'auto-mode-alist '("\\.scrbl\\'" . racket-hash-lang-mode))
@@ -32,7 +31,6 @@
    . racket-smart-open-bracket-mode))
 
 (use-package racket-xp
-  :ensure nil
   :config
   (setq-local racket-xp-add-binding-faces t)
   :hook
@@ -49,7 +47,6 @@
 ;; and configured in `ontop-core.el'
 
 (use-package smartparens
-  :ensure t
   :hook
   (racket-mode . smartparens-strict-mode))
 
@@ -59,14 +56,12 @@
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
 ;; for all prog-modes in `ontop-core.el'
 (use-package rainbow-delimiters
-  :ensure t
   :hook
   (racket-repl-mode . rainbow-delimiters-mode))
 
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
 ;; (use-package paren-face
-;;   :ensure t
 ;;   :hook
 ;;   ((racket-mode racket-hash-lang-mode racket-repl-mode)
 ;;    . paren-face-mode))
@@ -77,8 +72,7 @@
 
 ;; Support literate programming in Emacs with Racket
 ;; Evaluate Racket code in Org blocks via "C-c C-c"
-'(use-package org
-   :ensure nil
+(use-package org
    :hook
    (org-mode . (lambda ()
                  (org-babel-do-load-languages

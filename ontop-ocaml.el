@@ -24,7 +24,6 @@
 ;;; TUAREG
 
 (use-package tuareg
-  :ensure t
   :custom
   (tuareg-electric-indent t)
   (tuareg-display-buffer-on-eval t)
@@ -52,7 +51,6 @@
 ;;; MERLIN
 
 (use-package merlin
-  :ensure t
   :custom
   (merlin-completion-with-doc t)
   (merlin-report-errors-in-lighter t)
@@ -84,7 +82,6 @@
 ;; <https://github.com/Khady/merlin-eldoc>
 
 (use-package merlin-eldoc
-  :ensure t
   :custom
   (merlin-eldoc-max-lines 3)             ; but not more than 5
   (merlin-eldoc-type-verbosity 'min)     ; don't display verbose types
@@ -131,7 +128,6 @@
 ;; The keybindings are the same as with the standard toplevel.
 
 (use-package utop
-  :ensure t
   :custom
   ;; Utop will start with Dune project awareness:
   (utop-command "opam exec -- dune utop . -- -emacs")
@@ -151,7 +147,6 @@
 ;; <https://github.com/OCamlPro/ocp-indent>
 
 (use-package ocp-indent
-  :ensure t
   :after merlin-mode
   :hook
   (tuareg-mode . ocp-setup-indent))
@@ -161,7 +156,6 @@
 ;; <https://github.com/ocaml-ppx/ocamlformat>
 
 (use-package ocamlformat
-  :ensure t
   :after merlin-mode
   :hook
   (tuareg-mode . ocamlformat-setup-indent))
@@ -170,8 +164,7 @@
 ;;; DUNE
 
 ;; Major mode for Dune files
-(use-package dune
-  :ensure t)
+(use-package dune)
 
 ;;  ____________________________________________________________________________
 ;;; OPAM
@@ -239,14 +232,12 @@
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
 ;; for all prog-modes in `ontop-core.el'
 (use-package rainbow-delimiters
-  :ensure t
   :hook
   (tuareg-interactive-mode . rainbow-delimiters-mode))
 
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
 ;; (use-package paren-face
-;;   :ensure t
 ;;   :hook
 ;;   ((tuareg-mode tuareg-interactive-mode) . paren-face-mode))
 
@@ -257,12 +248,10 @@
 ;; Evaluate OCaml code in Org source code blocks via "C-c C-c"
 
 (use-package ob-ocaml
-  :ensure nil
   :custom
   (org-babel-ocaml-command "ocaml -nopromptcont"))
 
 (use-package org
-  :ensure nil
   :hook
   (org-mode . (lambda ()
                 (org-babel-do-load-languages

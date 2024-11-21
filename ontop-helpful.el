@@ -16,7 +16,6 @@
 ;; much more contextual information
 
 (use-package helpful
-  :ensure t
   :defer t
   :bind
   ;; Lookup the current symbol at point

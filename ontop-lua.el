@@ -13,7 +13,6 @@
 ;; <https://github.com/immerrr/lua-mode>
 
 (use-package lua-mode
-  :ensure t
   :custom
   (lua-default-application "lua")
   (lua-default-command-switches '("-i"))
@@ -34,7 +33,6 @@
 ;; Common keybindings are configured in `./ontop-eglot.el'
 
 (use-package eglot
-  :ensure t
   :hook
   (lua-mode . eglot-ensure)
   :config
@@ -50,7 +48,6 @@
 ;; Depends on luacheck: `luarocks --local install luacheck'
 
 (use-package flymake
-  :ensure nil
   :hook
   (lua-mode . flymake-mode))
 
@@ -62,7 +59,6 @@
 
 ;; <https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-lua.html>
 (use-package org
-  :ensure nil
   :hook
   (org-mode . (lambda ()
                 (org-babel-do-load-languages
