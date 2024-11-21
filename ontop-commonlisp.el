@@ -43,12 +43,7 @@
   ;; Prevent these buffers from cluttering certain buffer lists:
   (when (boundp 'eon-boring-buffers)
     (add-to-list 'eon-boring-buffers "\\`\\*sly-inferior-lisp")
-    (add-to-list 'eon-boring-buffers "\\`\\*sly-events"))
-  :bind
-  (:map ctl-z-x-map
-        ("l" . sly-mrepl))
-  (:map ctl-z-s-map
-        ("l" . sly-scratch)))
+    (add-to-list 'eon-boring-buffers "\\`\\*sly-events")))
 
 ;; Common Lisp documentation
 ;; The hyperspec must be installed on your computer. Adapt the path below:
