@@ -90,7 +90,7 @@
 ;; for all prog-modes in `ontop-core.el'
 (use-package rainbow-delimiters
   :hook
-  (sly-repl-mode . rainbow-delimiters-mode))
+  (sly-mrepl-mode . rainbow-delimiters-mode))
 
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
