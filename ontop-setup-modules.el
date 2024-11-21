@@ -26,7 +26,7 @@
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         ;;; OPTIONAL MODULES
         ;; ontop-embark                    ; minibuffer actions
-        ;; ontop-evil                      ; modular editing, VIM keybindings
+        ontop-evil                      ; modular editing, VIM keybindings
         ;; ontop-flycheck                  ; syntax checker alternative
         ontop-fonts                     ; curated font sets
         ontop-helpful                   ; extended help viewer

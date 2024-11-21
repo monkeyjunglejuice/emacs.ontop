@@ -14,10 +14,9 @@
 ;; <https://github.com/noctuid/evil-guide>
 
 (use-package evil
-  :ensure t
-  :custom
-  (evil-want-integration t)
-  (evil-want-keybinding nil)
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
   :config
   (evil-mode 1)
   ;; Set leader key in all states
@@ -28,7 +27,9 @@
   (evil-set-leader 'normal ",")
   ;; Leader bindings
   (evil-define-key 'normal 'global (kbd "<leader>x") #'execute-extended-command)
-  ;; Projectssjs
+  ;; Emacs ONBOARD/ONTOP-specific keybindings
+  (evil-define-key 'normal 'global (kbd "<leader>z") #'ctl-z-map)
+  ;; Projects
   (evil-define-key 'normal 'global (kbd "<leader>p") #'project-switch-project)
   (evil-define-key 'normal 'global (kbd "<leader>k") #'project-kill-buffers)
   ;; Buffers
@@ -40,6 +41,7 @@
   ;; Dired
   (evil-define-key 'normal 'global (kbd "<leader>d") #'project-dired)
   (evil-define-key 'normal 'global (kbd "<leader>D") #'dired)
+  (evil-define-key 'normal 'dired-mode-map (kbd ".") #'dired-hide-dotfiles-mode)
   ;; Search
   (evil-define-key 'normal 'global (kbd "<leader>l") #'consult-line)
   (evil-define-key 'normal 'global (kbd "<leader>i") #'consult-imenu)
@@ -58,20 +60,19 @@
   (evil-define-key 'normal 'global (kbd "<leader>E") #'eshell)
   (evil-define-key 'normal 'global (kbd "<leader>:") #'eshell-command)
   ;; Org
-  (evil-define-key 'normal 'global (kbd "<leader>op") #'org-publish))
-
+  (evil-define-key 'normal 'global (kbd "<leader>op") #'org-publish)
+  ;; Escape from Evil Emacs state
+  (evil-define-key 'emacs 'global [escape] #'evil-normal-state)
+  )
 
 ;; <https://github.com/emacs-evil/evil-collection>
 (use-package evil-collection
-  :ensure t
   :after evil
   :diminish evil-collection-unimpaired-mode
-  :config
-  (evil-collection-init))
-
-(use-package evil-cleverparens
-  :ensure t
-  :after evil)
+  :init
+  (evil-collection-init)
+  :custom
+  (evil-collection-setup-minibuffer t))
 
 ;;  ____________________________________________________________________________
 (provide 'ontop-evil)
