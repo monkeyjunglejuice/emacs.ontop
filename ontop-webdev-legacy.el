@@ -9,22 +9,10 @@
 ;;; Code:
 
 ;;  ____________________________________________________________________________
-;;; USE-PACKAGE
-;; <https://github.com/jwiegley/use-package>
-
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package nil))
-
-(eval-when-compile
-  (require 'use-package))
-
-;;  ____________________________________________________________________________
 ;;; WEB-MODE
 ;; <https://web-mode.org>
 
 (use-package web-mode
-  :ensure t
   :defer t
   :custom
   (web-mode-attr-indent-offset 2)
@@ -50,29 +38,25 @@
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#HTML-Mode>
 
 (use-package sgml-mode
-  :ensure nil
   :defer t)
 
 ;;  ____________________________________________________________________________
 ;;; CSS-MODE
 
 (use-package css-mode
-  :ensure nil
   :custom
   (css-indent-offset 2))
 
 ;;  ____________________________________________________________________________
 ;;; JS-MODE
 
-(use-package js
-  :ensure nil)
+(use-package js)
 
 ;;  ____________________________________________________________________________
 ;;; SYNTAX-CHECKER / LINTER
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/flymake.html>
 
 (use-package flymake
-  :ensure nil
   ;; Syntax checkers don't work with web-mode, but the other modes
   ;; Install the linter via: `npm install -g stylelint stylelint-config-standard'
   :hook
@@ -81,7 +65,6 @@
 ;; <https://github.com/purcell/flymake-css>
 ;; Install the linter via `npm install -g csslint'
 (use-package flymake-css
-  :ensure t
   :defer t
   :custom
   (flymake-css-lint-command "csslint")
@@ -90,7 +73,6 @@
 
 ;; <https://github.com/orzechowskid/flymake-eslint>
 (use-package flymake-eslint
-  :ensure t
   :defer t
   :hook
   (js-mode . flymake-eslint-enable))
