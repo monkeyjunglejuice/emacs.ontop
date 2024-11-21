@@ -25,15 +25,12 @@
         ontop-core                      ; shared settings and definitions
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         ;;; OPTIONAL MODULES
-        ontop-consult                   ; search and navigation
-        ontop-corfu                     ; code completion and templates
         ;; ontop-embark                    ; minibuffer actions
         ;; ontop-evil                      ; modular editing, VIM keybindings
         ;; ontop-flycheck                  ; syntax checker alternative
         ontop-fonts                     ; curated font sets
         ontop-helpful                   ; extended help viewer
         ;; ontop-pdftools                  ; PDF reader
-        ontop-vertico                   ; vertical completion
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         ;;; PROGRAMMING LANGUAGE SUPPORT
         ;; ontop-clojure                   ; Clojure and ClojureScript programming
