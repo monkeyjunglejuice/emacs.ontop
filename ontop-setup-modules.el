@@ -32,7 +32,7 @@
         ontop-helpful                   ; extended help viewer
         ;; ontop-pdftools                  ; PDF reader
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-        ;;; PROGRAMMING LANGUAGE SUPPORT
+        ;;; PROGRAMMING LANGUAGES
         ;; ontop-clojure                   ; Clojure and ClojureScript programming
         ;; ontop-commonlisp                ; Common Lisp programming
         ;; ontop-elixir                    ; Elixir programming
