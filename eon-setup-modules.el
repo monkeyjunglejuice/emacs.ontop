@@ -27,10 +27,10 @@
         ;;; OPTIONAL MODULES
 
         ;; eon-embark                    ; minibuffer actions
-        eon-evil                      ; modular editing, VIM keybindings
+        ;; eon-evil                      ; modular editing, VIM keybindings
         ;; eon-flycheck                  ; syntax checker alternative
-        eon-fonts                     ; curated font sets
-        eon-helpful                   ; extended help viewer
+        ;; eon-fonts                     ; curated font sets
+        ;; eon-helpful                   ; extended help viewer
         ;; eon-meow                      ; modular editing, Meow keybindings
         ;; eon-pdftools                  ; PDF reader
         ;; eon-smartparens               ; Structural editing
@@ -39,19 +39,19 @@
         ;;; PROGRAMMING LANGUAGES
 
         ;; eon-clojure                   ; Clojure and ClojureScript programming
-        eon-commonlisp                ; Common Lisp programming
-        eon-elixir                    ; Elixir programming
-        eon-erlang                    ; Erlang programming
+        ;; eon-commonlisp                ; Common Lisp programming
+        ;; eon-elixir                    ; Elixir programming
+        ;; eon-erlang                    ; Erlang programming
         ;; eon-gerbil                    ; Gerbil Scheme programming
         ;; eon-gleam                     ; Gleam programming
         ;; eon-haskell                   ; Haskell programming
         ;; eon-julia                     ; Julia programming
         ;; eon-lfe                       ; Lisp Flavoured Erlang programming
         ;; eon-lua                       ; Lua programming
-        eon-ocaml                     ; Ocaml programming
+        ;; eon-ocaml                     ; Ocaml programming
         ;; eon-racket                    ; Racket programming
         ;; eon-scheme                    ; Scheme programming
-        eon-webdev                    ; HTML/CSS editing
+        ;; eon-webdev                    ; HTML/CSS editing
 
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         ;;; PERSONAL MODULES
