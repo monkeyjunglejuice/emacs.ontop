@@ -48,7 +48,7 @@ git clone https://github.com/monkeyjunglejuice/emacs.ontop.git ~/.emacs.ontop
 
 - *2.* Put this line into your Emacs init file (=~/.emacs.d/init.el= or =~/.emacs=):
 #+begin_src emacs-lisp
-(load-file "~/.emacs.ontop/ontop.el")
+(load-file "~/.emacs.ontop/eon-init.el")
 #+end_src
 
 - *3.* Edit =~/.emacs.ontop/ontop-setup-modules.el= to select your desired modules, then restart Emacs. The installation process begins: Emacs will download and install the required Emacs packages from MELPA. It will take approx. 1--3 min, depending on your module selection and internet speed. If the process gets interupted, that's no problem -- just restart Emacs, and it will continue. There will be some warnings, which can be ignored -- these are related to the compilation of the downloaded Emacs packages.
