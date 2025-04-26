@@ -16,7 +16,7 @@
 ;; Copyright (C) 2021–2025 Dan Dee
 ;; Author: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
-;; Version: 1.3.4
+;; Version: 1.4.1
 ;; Package-Requires: ((EMACS "28.2"))
 ;; Keywords: convenience
 ;; SPDX-License-Identifier: MIT
@@ -125,8 +125,8 @@ The timer can be canceled with `eon-cancel-gc-timer'.")
           (lambda ()
             (hl-line-mode 1)))
 
-;; Install packages declaratively within an Emacs Lisp file
-;; Better use `use-package' instead (Emacs >= 29)
+;; Install packages declaratively within an Emacs Lisp file, but
+;; better use `use-package' instead (Emacs >= 29)
 (defun eon-package (action package-list)
   "Helper function to install 3rd-party packages declaratively.
 PACKAGE-LIST will be installed if \='install is passed as an argument to ACTION.
@@ -145,8 +145,8 @@ When ACTION receives \='ignore, then nothing will happen."
 ;; (eon-package 'ignore '(the-matrix-theme))   ; does nothing (default)
 ;;
 ;; The installation will be performed when you restart Emacs or
-;; when you evaluate a function manually – eg. via pressing "C-M-x"
-;; while the cursor is placed somewhere within a function application form.
+;; when you evaluate the function manually – eg. via pressing "C-M-x"
+;; while the cursor is placed somewhere within the function application form.
 
 ;;  ____________________________________________________________________________
 ;; HELPERS
@@ -173,7 +173,7 @@ or `system-configuration' directly."
 
 ;; Open the '~/.emacs.d' directory in the Dired file manager
 (defun eon-visit-user-emacs-directory ()
-  "Open the Emacs directory in Dired, which is ~/.emacs.d usually."
+  "Open the Emacs directory in Dired, which is usually '~/.emacs.d'."
   (interactive)
   (dired user-emacs-directory))
 
@@ -293,7 +293,7 @@ or `system-configuration' directly."
                       :slant  'normal
                       :weight 'normal
                       :width  'normal
-                      :height 140)
+                      :height 150)
   ;; Set an alternative monospaced font. Can be the same as above.
   ;; It should have the same character width as the default font
   (set-face-attribute 'fixed-pitch nil
@@ -343,13 +343,13 @@ or `system-configuration' directly."
   :group 'convenience)
 
 (defcustom eon-light-theme-name
-  (setq eon-light-theme-name 'modus-operandi)
+  (setq eon-light-theme-name 'modus-operandi-tinted)
   "Name of the light theme."
   :group 'toggle-theme
   :type 'symbol)
 
 (defcustom eon-dark-theme-name
-  (setq eon-dark-theme-name 'modus-vivendi)
+  (setq eon-dark-theme-name 'modus-vivendi-tinted)
   "Name of the dark theme."
   :group 'toggle-theme
   :type 'symbol)
@@ -501,8 +501,8 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; Comment out the following expression to change the curser into to a bar
 ;; (add-to-list 'default-frame-alist '(cursor-type . bar))
 
-;; Turn on/off cursor blinking by default?
-(blink-cursor-mode -1)  ; 1 means 'on' / -1 means 'off'
+;; Turn on/off cursor blinking by default? 1 means 'on' and -1 means 'off'
+(blink-cursor-mode -1)
 
 ;; Cursor blinking interval in seconds
 (setq blink-cursor-interval 0.4)
@@ -516,10 +516,10 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;;  ____________________________________________________________________________
 ;;; USER INTERFACE
 
-;; Show a help window with possible keys?
+;; Show a help window with possible key bindings?
 (when (>= emacs-major-version 30)
   (setq which-key-lighter ""
-        which-key-idle-delay 0.0
+        which-key-idle-delay 0.4
         which-key-sort-uppercase-first nil)
   (which-key-mode 1))
 
@@ -555,9 +555,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
               mouse-wheel-progressive-speed t
               mouse-wheel-follow-mouse t
               scroll-preserve-screen-position t
-              ;; scroll-conservatively 10000
-              ;; scroll-step 1  ; may lock up display in some cases
-              ;; scroll-margin 1  ; leave n lines on both screen ends
+              scroll-margin 1  ; leave n lines on both screen ends
               scroll-up-aggressively 0.01
               scroll-down-aggressively 0.01
               auto-window-vscroll nil)
@@ -573,7 +571,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; Compress the mode line? If non-nil, repeating spaces are compressed into
 ;; a single space. If 'long', this is only done when the mode line is longer
 ;; than the current window width (in columns).
-(setq mode-line-compact 'nil)
+(setq mode-line-compact nil)
 
 ;; Show the buffer size in the modeline
 (size-indication-mode 1)
@@ -593,19 +591,19 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (setq enable-recursive-minibuffers t)
 (minibuffer-depth-indicate-mode 1)
 
-;; Use the minibuffer instead of dialog boxes
+;; Use the minibuffer instead of dialog boxes?
 (setq use-dialog-box nil)
 
-;; Grow and shrink the minibuffer according to its content
+;; Grow and shrink the minibuffer according to its content?
 (setq resize-mini-windows 'grow-only)
 
-;; Save minibuffer history between Emacs sessions
+;; Save minibuffer history between Emacs sessions?
 (savehist-mode 1)
 
-;; Delete duplicates from the command history
+;; Delete duplicates from the command history?
 (setq history-delete-duplicates t)
 
-;; Change all yes/no style questions to y/n style
+;; Change all yes/no style questions to y/n style?
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;;  ____________________________________________________________________________
@@ -626,9 +624,8 @@ Some themes may come as functions -- wrap these ones in lambdas."
       icomplete-show-matches-on-no-input t
       icomplete-hide-common-prefix nil)
 
-;; Emacs version 28 and later: vertical completion with fido-vertical
-(when (>= emacs-major-version 28)
-  (fido-vertical-mode 1))
+;; Vertical completion with `fido-vertical' (Emacs version 28 and later)
+(fido-vertical-mode 1)
 
 ;;  ____________________________________________________________________________
 ;;; ELDOC
@@ -681,7 +678,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;;; BUFFERS
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Buffers>
 
-(setq switch-to-buffer-obey-display-actions nil)
+(setq switch-to-buffer-obey-display-actions t)
 
 ;; Uniquify buffer names for buffers that would have identical names
 (setq uniquify-buffer-name-style 'forward)
@@ -770,7 +767,7 @@ The elements of the list are regular expressions.")
 ;;; VISITING FILES AT POINT
 
 ;; "C-x C-v"       – Visit any resource under the cursor
-;; "M-x ffap-menu" – Display a list of all ressources mentioned in this buffer
+;; "M-x ffap-menu" – Display a list of all resources mentioned in this buffer
 
 (define-key ctl-z-map (kbd "C-.") #'find-file-at-point)
 
@@ -796,7 +793,7 @@ The elements of the list are regular expressions.")
 ;; when running in a text terminal
 ;; --> recommended 3rd-party package 'xclip'
 ;; If you would like to install this 3rd-party package, change 'ignore
-;; into 'install and evaluate the expression – either via "C-z-x",
+;; into 'install and evaluate the expression – either via "C-M-x",
 ;; or simply restart Emacs:
 (eon-package 'ignore '(xclip))
 (when (fboundp #'xclip-mode) (xclip-mode 1))
@@ -851,7 +848,7 @@ The elements of the list are regular expressions.")
 
 ;; Make backup before editing
 (setq backup-by-copying t
-      kept-new-versions 10
+      kept-new-versions 5
       kept-old-versions 5
       delete-old-versions t
       version-control t)
@@ -1081,34 +1078,34 @@ Kills the current Dired buffer when entering a new directory"
 ;; EWW BUILT-IN BROWSER
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/eww.html#Top>
 
-(setq! url-privacy-level '(email lastloc cookies))
+(setq url-privacy-level '(email lastloc cookies))
 (url-setup-privacy-info)
 
 (defun eon-user-agent (browser-name)
   (cond
    ((equal browser-name 'safari-macos)
-    (setq! url-user-agent
-           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/603.3.8 (KHTML, like Gecko) Version/11.0.1 Safari/603.3.8"))
+    (setq url-user-agent
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/603.3.8 (KHTML, like Gecko) Version/11.0.1 Safari/603.3.8"))
    ((equal browser-name 'safari-iphone)
-    (setq! url-user-agent
-           "Mozilla/5.0 (iPhone; CPU iPhone OS 18_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.2 Mobile/15E148 Safari/604.1"))
+    (setq url-user-agent
+          "Mozilla/5.0 (iPhone; CPU iPhone OS 18_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.2 Mobile/15E148 Safari/604.1"))
    ((equal browser-name 'w3m)
-    (setq! url-user-agent
-           "w3m/0.5.3+git2020050"))
+    (setq url-user-agent
+          "w3m/0.5.3+git2020050"))
    (t
-    (setq! url-user-agent
-           'default))))
+    (setq url-user-agent
+          'default))))
 
 ;; Set the user agent for the internal web browser
 (eon-user-agent 'safari-iphone)
 
 ;; Per default, open links with the internal web browser
-(setq! browse-url-browser-function #'eww-browse-url)
+(setq browse-url-browser-function #'eww-browse-url)
 
 ;; Secondary web browser
-(setq! browse-url-secondary-browser-function #'browse-url-default-browser)
-;; (setq! browse-url-browser-function #'browse-url-firefox)
-;; (setq! browse-url-generic-program (executable-find "nyxt")
+(setq browse-url-secondary-browser-function #'browse-url-default-browser)
+;; (setq browse-url-browser-function #'browse-url-firefox)
+;; (setq browse-url-generic-program (executable-find "nyxt")
 ;;        browse-url-browser-function #'browse-url-generic)
 
 ;; Keybindings
