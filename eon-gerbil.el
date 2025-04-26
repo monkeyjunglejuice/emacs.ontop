@@ -1,10 +1,10 @@
-;;; ontop-gerbil.el --- Gerbil Scheme  -*- lexical-binding: t; -*-
+;;; eon-gerbil.el --- Gerbil Scheme  -*- lexical-binding: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
 ;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/ontop-gerbil.el")'.
+;; Load it from anywhere via `(load-file "/path/to/eon-gerbil.el")'.
 
 ;;; Code:
 
@@ -12,29 +12,29 @@
 ;;; GERBIL SCHEME
 ;; <https://cons.io/guide/emacs.html>
 
-(defvar *gerbil-path*
+(defvar gerbil-path
   (shell-command-to-string "gxi -e '(display (path-expand \"~~\"))'\
       -e '(flush-output-port)'")
   "Let Gerbil figure out its installation path.")
 
-(defvar *gerbil-emacs-path*
-  (expand-file-name "share/emacs/site-lisp/" *gerbil-path*)
+(defvar gerbil-emacs-path
+  (expand-file-name "share/emacs/site-lisp/" gerbil-path)
   "Emacs packages coming with your Gerbil installation.")
 
 (use-package scheme
   :custom
   ;; Set Gerbil Scheme as the default Scheme implementation for Emacs?
-  (scheme-program-name (expand-file-name "bin/gxi" *gerbil-path*)))
+  (scheme-program-name (expand-file-name "bin/gxi" gerbil-path)))
 
 (use-package gerbil-mode
-  :load-path *gerbil-emacs-path*
+  :load-path gerbil-emacs-path
   :mode
   (("\\.ss\\'"  . gerbil-mode)
    ("\\.pkg\\'" . gerbil-mode))
   :config
   (let ((tags (locate-dominating-file default-directory "TAGS")))
     (when tags (visit-tags-table tags)))
-  (let ((tags (expand-file-name "src/TAGS" *gerbil-path*)))
+  (let ((tags (expand-file-name "src/TAGS" gerbil-path)))
     (when (file-exists-p tags) (visit-tags-table tags)))
 
   (defun scheme-clear-repl ()
@@ -45,17 +45,17 @@
         (comint-truncate-buffer))))
   :bind
   (:map comint-mode-map
-		    (("C-S-n" . comint-next-input)
-		     ("C-S-p" . comint-previous-input)
-		     ("C-S-l" . scheme-clear-repl))
-		    :map gerbil-mode-map
-		    (("C-S-l" . scheme-clear-repl))))
+   (("C-S-n" . comint-next-input)
+    ("C-S-p" . comint-previous-input)
+    ("C-S-l" . scheme-clear-repl))
+   :map gerbil-mode-map
+   (("C-S-l" . scheme-clear-repl))))
 
 ;;  ____________________________________________________________________________
 ;;; GAMBIT REPL SUPPORT
 
 (use-package gambit
-  :load-path *gerbil-emacs-path*
+  :load-path gerbil-emacs-path
   :hook
   ;; "Use the Gambit REPL for Gerbil Scheme"
   (inferior-scheme-mode . gambit-inferior-mode))
@@ -75,8 +75,6 @@
     (switch-to-buffer-other-window "*scheme*" nil)
     (switch-to-buffer buf)))
 
-(define-key 'ctl-z-x-map (kbd "g") #'gerbil-setup-buffers)
-
 ;;  ____________________________________________________________________________
 ;;; SRFI BROWSER
 ;; <https://github.com/srfi-explorations/emacs-srfi>
@@ -91,7 +89,7 @@
 ;; <https://smartparens.readthedocs.io/en/latest/>
 
 ;; Smartparens non-strict mode is already enabled globally
-;; and configured in `ontop-core.el'
+;; and configured in `eon-core.el'
 
 (use-package smartparens
   :hook
@@ -101,7 +99,7 @@
 ;;; PARENTHESIS DISPLAY
 
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
-;; for all prog-modes in `ontop-core.el'
+;; for all prog-modes in `eon-core.el'
 (use-package rainbow-delimiters
   :hook
   (inferior-scheme-mode . rainbow-delimiters-mode))
@@ -128,5 +126,5 @@
                  (add-to-list 'org-babel-load-languages '(scheme . t))))))
 
 ;;  ____________________________________________________________________________
-(provide 'ontop-gerbil)
-;;; ontop-gerbil.el ends here
+(provide 'eon-gerbil)
+;;; eon-gerbil.el ends here

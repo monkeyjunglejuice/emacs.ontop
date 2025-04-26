@@ -1,10 +1,10 @@
-;;; ontop-clojure.el --- Clojure configuration  -*- lexical-binding: t; -*-
+;;; eon-clojure.el --- Clojure configuration  -*- lexical-binding: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
 ;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/ontop-clojure.el")'.
+;; Load it from anywhere via `(load-file "/path/to/eon-clojure.el")'.
 
 ;;; Code:
 
@@ -34,7 +34,7 @@
 ;; <https://smartparens.readthedocs.io/en/latest/>
 
 ;; Smartparens non-strict mode is already enabled globally
-;; and configured in `ontop-core.el'
+;; and configured in `eon-core.el'
 
 ;; Enable strict mode in Lisp buffers
 (use-package smartparens
@@ -45,7 +45,7 @@
 ;;; PARENTHESIS DISPLAY
 
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
-;; for all prog-modes in `ontop-core.el'
+;; for all prog-modes in `eon-core.el'
 (use-package rainbow-delimiters
   :hook
   (cider-repl-mode . rainbow-delimiters-mode))
@@ -70,5 +70,5 @@
                  (add-to-list 'org-babel-load-languages '(clojure . t))))))
 
 ;; _____________________________________________________________________________
-(provide 'ontop-clojure)
-;;; ontop-clojure.el ends here
+(provide 'eon-clojure)
+;;; eon-clojure.el ends here

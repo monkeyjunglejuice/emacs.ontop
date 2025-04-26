@@ -1,10 +1,10 @@
-;;; ontop-lua.el --- Lua configuration  -*- lexical-binding: t; -*-
+;;; eon-lua.el --- Lua configuration  -*- lexical-binding: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
 ;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/ontop-lua.el")'.
+;; Load it from anywhere via `(load-file "/path/to/eon-lua.el")'.
 
 ;;; Code:
 
@@ -30,7 +30,7 @@
 ;;  ____________________________________________________________________________
 ;;; EGLOT LANGUAGE SERVER
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
-;; Common keybindings are configured in `./ontop-eglot.el'
+;; Common keybindings are configured in `./eon-eglot.el'
 
 (use-package eglot
   :hook
@@ -66,5 +66,5 @@
                  (add-to-list 'org-babel-load-languages '(lua . t))))))
 
 ;;  ____________________________________________________________________________
-(provide 'ontop-lua)
-;;; ontop-lua.el ends here
+(provide 'eon-lua)
+;;; eon-lua.el ends here

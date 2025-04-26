@@ -1,10 +1,10 @@
-;;; ontop-erlang.el --- Erlang configuration  -*- lexical-binding: t; -*-
+;;; eon-erlang.el --- Erlang configuration  -*- lexical-binding: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
 ;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/ontop-erlang.el")'.
+;; Load it from anywhere via `(load-file "/path/to/eon-erlang.el")'.
 
 ;;; Code:
 
@@ -19,6 +19,7 @@
 ;; OS package manager. Then install the language grammar via
 ;; 'M-x treesit-install-language-grammar'
 (use-package treesit
+  :ensure nil
   :config
   (add-to-list 'treesit-language-source-alist
                '(erlang "https://github.com/WhatsApp/tree-sitter-erlang")))
@@ -26,7 +27,7 @@
 ;;  ____________________________________________________________________________
 ;;; LANGUAGE SERVER
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
-;; Common keybindings are configured in `./ontop-core.el'
+;; Common keybindings are configured in `./eon-core.el'
 
 ;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; ERLANG_LS
@@ -52,7 +53,7 @@
 ;;; PARENTHESIS DISPLAY
 
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
-;; for all prog-modes in `ontop-core.el'
+;; for all prog-modes in `eon-core.el'
 (use-package rainbow-delimiters
   :hook
   (erlang-shell-mode . rainbow-delimiters-mode))
@@ -81,5 +82,5 @@
 ;;                  (add-to-list 'org-babel-load-languages '(erlang . t))))))
 
 ;; _____________________________________________________________________________
-(provide 'ontop-erlang)
-;;; ontop-erlang.el ends here
+(provide 'eon-erlang)
+;;; eon-erlang.el ends here

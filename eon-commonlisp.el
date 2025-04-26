@@ -1,10 +1,10 @@
-;;; ontop-commonlisp.el --- Common Lisp with Sly  -*- lexical-binding: t; -*-
+;;; eon-commonlisp.el --- Common Lisp with Sly  -*- lexical-binding: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
 ;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/ontop-commonlisp.el")'.
+;; Load it from anywhere via `(load-file "/path/to/eon-commonlisp.el")'.
 
 ;;; Code:
 
@@ -26,11 +26,10 @@
   :init
   ;; Set Sly Lisp implementations
   (setq sly-lisp-implementations
-        '((roswell ("ros" "-Q" "run"))
-          (sbcl ("sbcl" "--no-inform") :coding-system utf-8-unix)))
+        '((sbcl ("sbcl" "--no-inform") :coding-system utf-8-unix)))
   :custom
   ;; Select Sly default Lisp implementation
-  (sly-default-lisp 'roswell)
+  (sly-default-lisp 'sbcl)
   ;; General configuration
   (sly-net-coding-system 'utf-8-unix)
   ;; :hook
@@ -46,6 +45,7 @@
 ;; Common Lisp documentation
 ;; The hyperspec must be installed on your computer. Adapt the path below:
 (use-package hyperspec
+  :ensure nil
   :after sly
   :custom
   (common-lisp-hyperspec-root
@@ -76,7 +76,7 @@
 ;; <https://smartparens.readthedocs.io/en/latest/>
 
 ;; Smartparens non-strict mode is already enabled globally
-;; and configured in `ontop-core.el'
+;; and configured in `eon-core.el'
 
 ;; Enable strict mode in Lisp buffers
 (use-package smartparens
@@ -87,7 +87,7 @@
 ;;; PARENTHESIS DISPLAY
 
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
-;; for all prog-modes in `ontop-core.el'
+;; for all prog-modes in `eon-core.el'
 (use-package rainbow-delimiters
   :hook
   (sly-mrepl-mode . rainbow-delimiters-mode))
@@ -107,6 +107,7 @@
 ;; Make the function aware of Sly (defaults to Slime)
 ;; <https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-lisp.html>
 (use-package ob-lisp
+  :ensure nil
   :custom
   (org-babel-lisp-eval-fn #'sly-eval))
 
@@ -118,5 +119,5 @@
                                        '(lisp . t))))))
 
 ;;  ____________________________________________________________________________
-(provide 'ontop-commonlisp)
-;;; ontop-commonlisp.el ends here
+(provide 'eon-commonlisp)
+;;; eon-commonlisp.el ends here

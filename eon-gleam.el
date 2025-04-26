@@ -1,10 +1,10 @@
-;;; ontop-gleam.el --- Gleam configuration  -*- lexical-binding: t; -*-
+;;; eon-gleam.el --- Gleam configuration  -*- lexical-binding: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
 ;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/ontop-gleam.el")'.
+;; Load it from anywhere via `(load-file "/path/to/eon-gleam.el")'.
 
 ;;; Code:
 
@@ -29,7 +29,7 @@
 ;;  ____________________________________________________________________________
 ;;; LANGUAGE SERVER
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
-;; Common keybindings are configured in `./ontop-core.el'
+;; Common keybindings are configured in `./eon-core.el'
 
 ;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; GLEAM LSP
@@ -70,7 +70,7 @@
 ;;; PARENTHESIS DISPLAY
 
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
-;; for all prog-modes in `ontop-core.el'
+;; for all prog-modes in `eon-core.el'
 
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
@@ -79,5 +79,5 @@
 ;;   (gleam-ts-mode . paren-face-mode))
 
 ;; _____________________________________________________________________________
-(provide 'ontop-gleam)
-;;; ontop-gleam.el ends here
+(provide 'eon-gleam)
+;;; eon-gleam.el ends here

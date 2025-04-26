@@ -1,10 +1,10 @@
-;;; ontop-pdftools.el --- Sophisticated PDF reader  -*- lexical-binding: t; -*-
+;;; eon-pdftools.el --- Sophisticated PDF reader  -*- lexical-binding: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
 ;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/ontop-pdftools.el")'.
+;; Load it from anywhere via `(load-file "/path/to/eon-pdftools.el")'.
 
 ;;; Code:
 
@@ -22,5 +22,5 @@
   (pdf-tools-install :no-query))
 
 ;;  ____________________________________________________________________________
-(provide 'ontop-pdftools)
-;;; ontop-pdftools.el ends here
+(provide 'eon-pdftools)
+;;; eon-pdftools.el ends here

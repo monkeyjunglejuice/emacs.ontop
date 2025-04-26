@@ -1,4 +1,4 @@
-;;; ontop-setup-personal.el --- Personal Elisp  -*- lexical-binding: t; -*-
+;;; eon-setup-personal.el --- Personal Elisp  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 ;; The code within this file will load last, so that you can shadow or override
@@ -29,5 +29,5 @@
 
 
 ;;  ____________________________________________________________________________
-(provide 'ontop-setup-personal)
-;;; ontop-setup-personal.el ends here
+(provide 'eon-setup-personal)
+;;; eon-setup-personal.el ends here

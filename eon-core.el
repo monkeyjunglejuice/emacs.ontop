@@ -1,4 +1,4 @@
-;;; ontop-core.el --- Shared settings and definitions  -*- lexical-binding: t; -*-
+;;; eon-core.el --- Shared settings and definitions  -*- lexical-binding: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
@@ -9,25 +9,19 @@
 
 ;;  ____________________________________________________________________________
 ;;; USE-PACKAGE
-;; <https://github.com/jwiegley/use-package>
-
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package nil))
+;; <>
 
 (eval-when-compile
   (require 'use-package)
-  (setq use-package-compute-statistics t)
-  (setq use-package-verbose t)
-  ;; Lazy-load all packages? --> may cause problems
-  (setq use-package-always-defer nil))
+  (setq use-package-always-ensure t
+        use-package-compute-statistics nil
+        use-package-verbose nil))
 
 ;;  ____________________________________________________________________________
 ;;; GARBAGE COLLECTION
 ;; <https://gitlab.com/koral/gcmh>
 
 (use-package gcmh
-  :ensure t
   :diminish
   :init
   ;; Turn off the garbage collection tuning from Emacs ONTOP ...
@@ -45,7 +39,6 @@
 ;; doesn't adopt all shell environment variables
 (use-package exec-path-from-shell
   :if (or (eon-macp) (daemonp))
-  :ensure t
   :init
   (exec-path-from-shell-initialize))
 
@@ -54,7 +47,6 @@
 ;; <https://github.com/rranelli/auto-package-update.el>
 
 (use-package auto-package-update
-  :ensure t
   :init
   (auto-package-update-maybe)
   :custom
@@ -67,8 +59,7 @@
 ;; <https://github.com/myrjola/diminish.el>
 
 ;; Hide or alter the mode-line strings of certain minor modes
-(use-package diminish
-  :ensure t)
+(use-package diminish)
 
 ;;;  ____________________________________________________________________________
 ;;; MARGINALIA
@@ -76,7 +67,6 @@
 
 ;; Enable rich annotations using the Marginalia package
 (use-package marginalia
-  :ensure t
   :init
   ;; The :init configuration is always executed (Not lazy!)
   ;; Must be in the :init section of use-package such that the mode gets
@@ -87,13 +77,12 @@
   (:map minibuffer-local-map
         ("M-A" . marginalia-cycle)))
 
-;  ____________________________________________________________________________
+;;  ____________________________________________________________________________
 ;;; ORDERLESS
 ;; <https://github.com/oantolin/orderless>
 ;; <https://github.com/minad/corfu?tab=readme-ov-file#orderless-completion>
 
 (use-package orderless
-  :ensure t
   :custom
   (completion-styles '(orderless basic))
   (completion-category-defaults nil)
@@ -107,7 +96,6 @@
 ;; <https://github.com/minad/consult/wiki>
 
 (use-package consult
-  :ensure t
   :after orderless
   :init
   ;; Optionally configure the register formatting. This improves the register
@@ -232,7 +220,6 @@
 ;; <https://github.com/minad/vertico#key-bindings>
 
 (use-package vertico
-  :ensure t
   :after orderless
   :init
   ;; Disable ONBOARD completion
@@ -298,7 +285,6 @@
 ;; <https://github.com/minad/corfu>
 
 (use-package corfu
-  :ensure t
   :after orderless
   :init
   (global-corfu-mode)
@@ -333,7 +319,6 @@
 ;; <https://github.com/minad/cape>
 
 (use-package cape
-  :ensure t
   :init
   (add-to-list 'completion-at-point-functions #'cape-file)
   ;; Continuously update the candidates - deactivate if lagging
@@ -354,7 +339,6 @@
 ;; <https://github.com/joaotavora/yasnippet>
 
 (use-package yasnippet
-  :ensure t
   :defer t
   :diminish yas-minor-mode
   :config
@@ -364,12 +348,10 @@
 
 ;; <https://github.com/AndreaCrotti/yasnippet-snippets>
 (use-package yasnippet-snippets
-  :ensure t
   :defer t)
 
 ;; <https://github.com/elken/yasnippet-capf>
 ;; (use-package yasnippet-capf
-;;   :ensure t
 ;;   :after cape
 ;;   :config
 ;;   (add-to-list 'completion-at-point-functions #'yasnippet-capf))
@@ -398,13 +380,12 @@
 ;; <https://github.com/dimitri/switch-window>
 
 (use-package switch-window
-  :ensure t
   :custom
   (switch-window-background t)
-  (switch-window-minibuffer-shortcut 109)
   (switch-window-multiple-frames nil)
   (switch-window-threshold 1)
   (switch-window-mvborder-increment 1)
+  (switch-window-minibuffer-shortcut 109) ; "m"
   :config
   ;; Set Vim/Xmonad-like keybindings for window resizing
   (setq switch-window-extra-map
@@ -416,17 +397,26 @@
           (define-key map (kbd "b") 'balance-windows)
           (define-key map (kbd "SPC") 'switch-window-resume-auto-resize-window)
           map))
+  (setq switch-window-qwerty-shortcuts
+        '("a" "s" "d" "f" "g"
+          "q" "w" "e" "r" "t" "y"
+          "u" "i" "o" "p"
+          "z" "x" "c" "v"
+          "b" "n"))
   (set-face-attribute 'switch-window-background nil
-                      :foreground nil
+                      :foreground 'unspecified
                       :inherit 'shadow)
+  (set-face-attribute 'switch-window-label nil
+                      :inherit 'show-paren-match-expression
+                      :height 1.0)
   :bind
-  ;; Navigate windows by numbers
+  ;; Bind `switch-window' commands to regular Emacs keybindings
   ("C-x o"   . switch-window)
   ("C-x 1"   . switch-window-then-maximize)
   ("C-x 2"   . switch-window-then-split-below)
   ("C-x 3"   . switch-window-then-split-right)
   ("C-x 0"   . switch-window-then-delete)
-  ;; ("C-x 4 0" . switch-window-then-kill-buffer)
+  ("C-x 4 0" . switch-window-then-kill-buffer)
   ("C-x 4 d" . switch-window-then-dired)
   ("C-x 4 f" . switch-window-then-find-file)
   ("C-x 4 b" . switch-window-then-display-buffer)
@@ -438,8 +428,7 @@
 
 ;; Allow Emacs to copy/paste from/to the GUI clipboard when running
 ;; in a terminal emulator
-(use-package xclip
-  :ensure t)
+(use-package xclip)
 
 ;;  ____________________________________________________________________________
 ;;; DIRED
@@ -448,7 +437,6 @@
 ;; Show/hide dotfiles
 ;; <https://github.com/mattiasb/dired-hide-dotfiles>
 (use-package dired-hide-dotfiles
-  :ensure t
   :config
   (setq dired-hide-dotfiles-verbose nil)
   :hook
@@ -459,14 +447,12 @@
 
 ;; Filter Dired listings
 (use-package dired-narrow
-  :ensure t
   :bind
   (:map dired-mode-map
         ("/" . dired-narrow-regexp)))
 
 ;; Ranger-like features
 (use-package dired-ranger
-  :ensure t
   :bind
   (:map dired-mode-map
         ("w" . dired-ranger-copy)  ; was dired-copy-filename-as-kill
@@ -474,7 +460,6 @@
         ("Y" . dired-ranger-move)))
 
 (use-package dired-subtree
-  :ensure t
   :bind
   (:map dired-mode-map
         ("i" . dired-subtree-insert)
@@ -483,18 +468,28 @@
         ("<backtab>" . dired-subtree-cycle)))
 
 ;;  ____________________________________________________________________________
-;;; EAT
+;;; SHELLS
+
 ;; <https://codeberg.org/akib/emacs-eat>
 ;; <https://elpa.nongnu.org/nongnu-devel/doc/eat.html>
-
 (use-package eat
-  :ensure t
-  :init
-  ;; Run Eshell always in Eat
-  (eat-eshell-mode)
+  :defer t
   :custom
   (eat-term-name "xterm-256color")
-  (eat-kill-buffer-on-exit t))
+  (eat-kill-buffer-on-exit t)
+  :config
+  ;; Run Eshell always in Eat?
+  (eat-eshell-mode))
+
+;; <https://github.com/LemonBreezes/emacs-fish-completion>
+(use-package fish-completion
+  :if (executable-find "fish")
+  :config
+  (global-fish-completion-mode))
+
+;; <https://github.com/wwwjfy/emacs-fish>
+(use-package fish-mode
+  :if (executable-find "fish"))
 
 ;;  ____________________________________________________________________________
 ;;; RIPGREP
@@ -503,15 +498,15 @@
 
 ;; <https://github.com/dajva/rg.el>
 (use-package rg
-  :ensure t
   :ensure-system-package
   (rg . ripgrep)
+  :defer t
   :bind
   ("M-s r" . rg))
 
 ;; <https://github.com/mhayashi1120/Emacs-wgrep/>
 (use-package wgrep
-  :ensure t)
+  :defer t)
 
 ;;  ____________________________________________________________________________
 ;;; PROJECT
@@ -519,6 +514,7 @@
 
 (use-package project
   :ensure nil
+  :defer t
   :config
   (setq project-switch-commands
         '((project-find-file "File" 102)
@@ -551,7 +547,7 @@
   ;; Call the function to perform the swap
   (eon--swap-project-key-bindings)
   :bind
-  ;; Some convenient keybindings.
+  ;; Some convenient keybindings
   ("C-x f" . project-find-file)
   ("C-x d" . project-dired)
   ("M-SPC" . project-switch-to-buffer))
@@ -561,7 +557,7 @@
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md/>
 
 (use-package eglot
-  :ensure t
+  :defer t
   :custom
   ;; Shutdown language server after closing last file
   (eglot-autoshutdown t)
@@ -605,95 +601,33 @@
 ;; <https://magit.vc/>
 
 (use-package magit
-  :ensure t
-  :init
-  (define-prefix-command 'ctl-z-g-map)  ; Magit
-  (define-key ctl-z-map (kbd "g") 'ctl-z-g-map)
+  :defer t
   :custom
   ;; How many directoriess deep Magit looks for Git repos
   (magit-repository-directories '(("~/" . 1)))
   :config
-  (defun magit-kill-buffers ()
+  (defun magit-kill-magit-buffers ()
     "Restore window configuration and kill all Magit buffers."
     (interactive)
     (let ((buffers (magit-mode-get-buffers)))
       (magit-restore-window-configuration)
-      (mapc #'kill-buffer buffers)))
-  :bind
-  (:map ctl-z-g-map
-        ;; The Magit main keybinding
-        ("g" . magit-status)
-        ;; Kill useless Magit buffers that have been left open
-        ("k" . magit-kill-buffers))
-  (:map  magit-status-mode-map
-         ("q" . magit-kill-buffers)))
+      (mapc #'kill-buffer buffers))))
 
 ;;  ____________________________________________________________________________
 ;;; GIT-GUTTER
 
 ;; <https://github.com/emacsorphanage/git-gutter>
 (use-package git-gutter
-  :ensure t
+  :defer t
   :diminish
   :hook
   ((text-mode prog-mode) . git-gutter-mode))
 
 ;; <https://github.com/emacsorphanage/git-gutter-fringe>
 (use-package git-gutter-fringe
-  :ensure t
+  :after git-gutter
   :custom
   (git-gutter-fr:side 'left-fringe))
-
-;;  ____________________________________________________________________________
-;; STRUCTURAL EDITING
-
-;; SMARTPARENS
-;; <https://github.com/Fuco1/smartparens>
-;; <https://smartparens.readthedocs.io/en/latest/>
-
-(use-package smartparens
-  :ensure t
-  :init
-  ;; Turn off other modes that clash with Smartparens
-  (electric-pair-mode -1)
-  (show-paren-mode -1)
-  ;; Globally enable non-strict delimiter handling?
-  ;; Specific configurations can be found within the resp. language module files.
-  (smartparens-global-mode)
-  (show-smartparens-global-mode)
-  ;; :custom
-  ;; Smartparens comes without keybindings defined, it's totally up to you if you
-  ;; go with a pre-defined keybinding set or your set (see `:bind' down below).
-  ;; Load one of the default keybinding sets:
-  ;; (sp-base-key-bindings 'sp)
-  ;; (sp-base-key-bindings 'paredit)
-  :config
-  ;; Enable language-specific configurations
-  (require 'smartparens-config)
-  :hook
-  ((emacs-lisp-mode lisp-interaction-mode) . smartparens-strict-mode)
-  ((eshell-mode eval-expression-minibuffer-setup) . smartparens-mode)
-  :bind
-  ;; Custom keybinding set, resembling standard Emacs sexp keybindings
-  (:map smartparens-mode-map
-        ("C-M-u" . sp-backward-up-sexp)
-        ("C-M-d" . sp-down-sexp)
-        ("C-M-f" . sp-forward-sexp)
-        ("C-M-b" . sp-backward-sexp)
-        ("C-M-n" . sp-next-sexp)
-        ("C-M-p" . sp-previous-sexp)
-        ("C-M-a" . sp-beginning-of-sexp)
-        ("C-M-e" . sp-end-of-sexp)
-        ("C-M-k" . sp-kill-sexp)
-        ("C-M-<backspace>" . sp-backward-kill-sexp)
-        ("C-M-g" . sp-unwrap-sexp)
-        ("C-M-w" . sp-copy-sexp)
-        ("C-M-t" . sp-transpose-sexp)
-        ("C-M-SPC" . sp-mark-sexp)
-        ("C-<right>" . sp-forward-slurp-sexp)
-        ("C-<left>" . sp-backward-slurp-sexp)
-        ("C-M-<left>" . sp-forward-barf-sexp)
-        ("C-M-<right>" . sp-backward-barf-sexp)))
 
 ;;  ____________________________________________________________________________
 ;; PARENTHESIS DISPLAY
@@ -701,47 +635,40 @@
 ;; Color-code nested parens …
 ;; <https://github.com/Fanael/rainbow-delimiters>
 (use-package rainbow-delimiters
-  :ensure t
+  :defer t
   :hook
   (prog-mode . rainbow-delimiters-mode))
 
 ;; … and/or make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
 ;; (use-package paren-face
-;;   :ensure t
+;;   :defer t
 ;;   :hook
 ;;   (prog-mode . paren-face-mode))
+
+;;  ____________________________________________________________________________
+;;; COLOR NAMES
+;; <https://elpa.gnu.org/packages/rainbow-mode.html>
+
+;; Colorize color names in arbitrary buffers
+(use-package rainbow-mode
+  :defer t)
 
 ;;  ____________________________________________________________________________
 ;; INDENTATION
 ;; <https://github.com/Malabarba/aggressive-indent-mode>
 
 (use-package aggressive-indent
-  :ensure t
+  :defer t
   :diminish aggressive-indent-mode
   :hook
   (prog-mode . aggressive-indent-mode))
-
-;;  ____________________________________________________________________________
-;;; EXPAND REGION
-;; <https://github.com/magnars/expand-region.el>
-
-;; Expand region increases the selected region by semantic units.
-;; Just keep pressing the key until it selects what you want.
-
-(use-package expand-region
-  :ensure t
-  :defer t
-  :bind
-  ("M-=" . er/expand-region)
-  ("M--" . er/contract-region))
 
 ;;  ____________________________________________________________________________
 ;;; GOTO LAST CHANGE
 ;; <https://github.com/emacs-evil/goto-chg>
 
 (use-package goto-chg
-  :ensure t
   :defer t
   :bind
   (:map prog-mode-map
@@ -752,67 +679,24 @@
         ("M-n" . goto-last-change-reverse)))
 
 ;;  ____________________________________________________________________________
-;;; ORDERLESS
-;; <https://github.com/oantolin/orderless>
-;; <https://github.com/minad/corfu?tab=readme-ov-file#orderless-completion>
-
-(use-package orderless
-  :ensure t
-  :custom
-  (completion-styles '(orderless basic))
-  (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles basic
-                                                 partial-completion
-                                                 emacs22)))))
-
-;;  ____________________________________________________________________________
-;;; COLOR NAMES
-;; <https://elpa.gnu.org/packages/rainbow-mode.html>
-
-;; Colorize color names in arbitrary buffers
-(use-package rainbow-mode
-  :defer t
-  :ensure t)
-
-;;  ____________________________________________________________________________
-;;; ORG MODE
-;; <https://orgmode.org/>
-
-;; Loading the latest Org version rather than the one built into Emacs:
-;; If Emacs is loaded using literate Org config and more recent Org
-;; version is loaded inside the file loaded by ‘org-babel-load-file’.
-;; ‘org-babel-load-file’ triggers the built-in Org version clashing
-;; the newer Org version attempt to be loaded later.
-;; It is recommended to move the Org loading code before the
-;; ‘org-babel-load-file’ calls.
-
-(use-package org
-  :ensure t
-  :pin gnu)
-
-;;  ____________________________________________________________________________
 ;;; COMMON MARKUP- / SERIALIZATION FORMATS
 
 ;; <https://github.com/emacsorphanage/adoc-mode>
 (use-package adoc-mode
-  :ensure t
   :defer t
   :config
   (add-to-list 'auto-mode-alist (cons "\\.asciidoc\\'" 'adoc-mode)))
 
 ;; <https://elpa.gnu.org/packages/csv-mode.html>
 (use-package csv-mode
-  :defer t
-  :ensure t)
+  :defer t)
 
 ;; <https://github.com/dhall-lang/dhall-lang>
 (use-package dhall-mode
-  :defer t
-  :ensure t)
+  :defer t)
 
 ;; <https://jblevins.org/projects/markdown-mode/>
 (use-package markdown-mode
-  :ensure t
   :defer t
   ;; Turn on visual word wrapping
   ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Visual-Line-Mode>
@@ -821,8 +705,8 @@
 
 ;; <https://github.com/yoshiki/yaml-mode>
 (use-package yaml-mode
-  :ensure t)
+  :defer t)
 
 ;;  ____________________________________________________________________________
-(provide 'ontop-core)
-;;; ontop-core.el ends here
+(provide 'eon-core)
+;;; eon-core.el ends here

@@ -1,10 +1,10 @@
-;;; ontop-lfe.el --- Lisp Flavoured Erlang  -*- lexical-binding: t; -*-
+;;; eon-lfe.el --- Lisp Flavoured Erlang  -*- lexical-binding: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
 ;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/ontop-lfe.el")'.
+;; Load it from anywhere via `(load-file "/path/to/eon-lfe.el")'.
 
 ;;; Code:
 
@@ -13,22 +13,36 @@
 ;; <https://github.com/lfe/lfe>
 ;; <https://github.com/lfe/rebar3>
 
-(use-package lfe-mode
-  :ensure t
+;; Personal Elisp directory
+(add-to-list 'load-path (expand-file-name "~/code/lfe/emacs/"))
+(require 'lfe-start)
+
+(use-package inferior-lfe
+  :load-path "~/code/lfe/emacs/"
+  :custom
+  (inferior-lfe-program "lfe")
+  (inferior-lfe-program-options '("-nobanner"))
   :config
   (setq inferior-lfe-check-if-rebar-project t)
   (setq inferior-lfe-indent-on-Cj t)
-  :custom
-  (inferior-lfe-program "lfe")
-  (inferior-lfe-program-options '("-nobanner")))
+  (setq comint-process-echoes nil))
+
+(use-package lfe-indent
+  :load-path "~/code/lfe/emacs/")
+
+(use-package lfe-mode
+  :load-path "~/code/lfe/emacs/")
+
+(use-package lfe-start
+  :load-path "~/code/lfe/emacs/"
+  :requires (inferior-lfe lfe-indent lfe-mode))
 
 ;;  ____________________________________________________________________________
 ;;; ERLANG
 ;; <https://www.erlang.org/doc/apps/tools/erlang_mode_chapter.html>
 
 (use-package erlang
-  :defer t
-  :ensure t)
+  :defer t)
 
 ;;  ____________________________________________________________________________
 ;;; STRUCTURAL EDITING
@@ -38,7 +52,7 @@
 ;; <https://smartparens.readthedocs.io/en/latest/>
 
 ;; Smartparens non-strict mode is already enabled globally
-;; and configured in `ontop-core.el'
+;; and configured in `eon-core.el'
 
 ;; Enable strict mode in Lisp buffers
 (use-package smartparens
@@ -54,10 +68,10 @@
 ;;; PARENTHESIS DISPLAY
 
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
-;; for all prog-modes in `ontop-core.el'
+;; for all prog-modes in `eon-core.el'
 (use-package rainbow-delimiters
   :hook
-  ((inferior-lfe-mode) . rainbow-delimiters-mode))
+  (inferior-lfe-mode . rainbow-delimiters-mode))
 
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
@@ -83,5 +97,5 @@
 ;;                  (add-to-list 'org-babel-load-languages '(lfe . t))))))
 
 ;;  ____________________________________________________________________________
-(provide 'ontop-lfe)
-;;; ontop-lfe.el ends here
+(provide 'eon-lfe)
+;;; eon-lfe.el ends here

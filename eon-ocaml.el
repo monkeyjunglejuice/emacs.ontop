@@ -1,10 +1,10 @@
-;;; ontop-ocaml.el --- OCaml setup  -*- lexical-binding: t; -*-
+;;; eon-ocaml.el --- OCaml setup  -*- lexical-binding: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
 ;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/ontop-ocaml.el")'
+;; Load it from anywhere via `(load-file "/path/to/eon-ocaml.el")'
 ;;
 ;; The aim of Emacs ONTOP is to provide a comprehensive OCaml setup.
 ;; Using this module, you will not need to load `opam-user-setup.el'
@@ -14,11 +14,6 @@
 ;; because some of its dependencies are quite useful.
 
 ;;; Code:
-
-
-;; Alternatively, use the Emacs packages installed by Opam
-;; (add-to-list 'load-path
-;;               (expand-file-name "~/.opam/default/share/emacs/site-lisp"))
 
 ;;  ____________________________________________________________________________
 ;;; TUAREG
@@ -39,9 +34,6 @@
                                (set-process-query-on-exit-flag
                                 (get-process "OCaml") nil)))
   :bind
-  ;; Reach the REPL from anywhere via global key binding
-  (:map ctl-z-x-map
-        ("o" . tuareg-run-ocaml))
   (:map tuareg-mode-map
         ("C-c C-e" . tuareg-eval-phrase)
         ("C-c C-r" . tuareg-eval-region)
@@ -136,11 +128,7 @@
   ;; HACK Workaround to get completions in Utop from Merlin
   (utop-mode . (lambda ()
                  (merlin-mode -1)
-                 (merlin-mode +1)))
-  :bind
-  ;; Reach `utop' from anywhere via global key binding
-  (:map ctl-z-x-map
-        ("u" . utop)))
+                 (merlin-mode +1))))
 
 ;;  ____________________________________________________________________________
 ;;; INDENTATION
@@ -230,7 +218,7 @@
 ;;; PARENTHESIS DISPLAY
 
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
-;; for all prog-modes in `ontop-core.el'
+;; for all prog-modes in `eon-core.el'
 (use-package rainbow-delimiters
   :hook
   (tuareg-interactive-mode . rainbow-delimiters-mode))
@@ -248,6 +236,7 @@
 ;; Evaluate OCaml code in Org source code blocks via "C-c C-c"
 
 (use-package ob-ocaml
+  :ensure nil
   :custom
   (org-babel-ocaml-command "ocaml -nopromptcont"))
 
@@ -259,5 +248,5 @@
                  (add-to-list 'org-babel-load-languages '(ocaml . t))))))
 
 ;;  ____________________________________________________________________________
-(provide 'ontop-ocaml)
-;;; ontop-ocaml.el ends here
+(provide 'eon-ocaml)
+;;; eon-ocaml.el ends here

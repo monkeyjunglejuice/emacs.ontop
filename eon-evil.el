@@ -1,10 +1,10 @@
-;;; ontop-evil.el --- EVIL settings  -*- lexical-binding: t; -*-
+;;; eon-evil.el --- EVIL settings  -*- lexical-binding: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
 ;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/ontop-evil.el")'.
+;; Load it from anywhere via `(load-file "/path/to/eon-evil.el")'.
 
 ;;; Code:
 
@@ -15,8 +15,8 @@
 
 (use-package evil
   :init
-  (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
+  (setq evil-want-integration t)
   :config
   (evil-mode 1)
   ;; Set leader key in all states
@@ -27,7 +27,7 @@
   (evil-set-leader 'normal ",")
   ;; Leader bindings
   (evil-define-key 'normal 'global (kbd "<leader>x") #'execute-extended-command)
-  ;; Emacs ONBOARD/ONTOP-specific keybindings
+  ;; Emacs ONBOARD/EON-specific keybindings
   (evil-define-key 'normal 'global (kbd "<leader>z") #'ctl-z-map)
   ;; Projects
   (evil-define-key 'normal 'global (kbd "<leader>p") #'project-switch-project)
@@ -75,5 +75,5 @@
   (evil-collection-setup-minibuffer t))
 
 ;;  ____________________________________________________________________________
-(provide 'ontop-evil)
-;;; ontop-evil.el ends here
+(provide 'eon-evil)
+;;; eon-evil.el ends here

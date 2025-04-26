@@ -1,10 +1,10 @@
-;;; ontop-fonts.el --- Font configuration  -*- lexical-binding: t; -*-
+;;; eon-fonts.el --- Font configuration  -*- lexical-binding: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
 ;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/ontop-fonts.el")'.
+;; Load it from anywhere via `(load-file "/path/to/eon-fonts.el")'.
 
 ;;; Code:
 
@@ -652,5 +652,5 @@
                       :height 0.8))
 
 ;;  ____________________________________________________________________________
-(provide 'ontop-fonts)
-;;; ontop-fonts.el ends here
+(provide 'eon-fonts)
+;;; eon-fonts.el ends here

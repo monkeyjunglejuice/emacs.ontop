@@ -1,4 +1,4 @@
-;;; ontop.el --- Emacs ONTOP extension layer  -*- lexical-binding: t; -*-
+;;; eon-init.el --- Emacs ONTOP extension layer  -*- lexical-binding: t; -*-
 ;;
 ;;    ▒░▒░▒░   ▒░     ▒░ ▒░▒░▒░▒░▒░  ▒░▒░▒░   ▒░▒░▒░▒░
 ;;   ▒░    ▒░  ▒░▒░   ▒░ ▒░  ▒░  ▒░ ▒░    ▒░  ▒░     ▒░
@@ -13,10 +13,10 @@
 ;;
 ;;  
 ;;  ---> LOAD THIS FILE from your init file `~/.emacs.d/init.el' or `~/.emacs'
-;;       via (load-file (expand-file-name "~/.emacs.ontop/ontop.el"))
+;;       via (load-file (expand-file-name "~/.emacs.ontop/eon-init.el"))
 ;;
 ;;
-;; Copyright (C) 2022-2024 Dan Dee
+;; Copyright (C) 2022-2025 Dan Dee
 ;; Author: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Version: 0.7.0
@@ -42,7 +42,7 @@
 ;; Define the initial module list
 (defvar eon-modules '()
   "List of selected modules, implemented as Emacs features.
-It is empty per default, and will be set in `ontop-setup-modules.el'.")
+It is empty per default, and will be set in `eon-setup-modules.el'.")
 
 ;; Don't block if an error occurs
 (defun eon-require-with-error-handling (feature)
@@ -52,7 +52,7 @@ It is empty per default, and will be set in `ontop-setup-modules.el'.")
     (error (message "Failed to load %s: %s" feature err))))
 
 ;; Require and read your module selection
-(eon-require-with-error-handling 'ontop-setup-modules)
+(eon-require-with-error-handling 'eon-setup-modules)
 
 ;; Require the selected modules; install Emacs packages when necessary
 (defun eon-require-modules ()
@@ -63,5 +63,5 @@ It is empty per default, and will be set in `ontop-setup-modules.el'.")
 (eon-require-modules)
 
 ;;  ____________________________________________________________________________
-(provide 'ontop)
-;;; ontop.el ends here
+(provide 'eon-init)
+;;; eon-init.el ends here

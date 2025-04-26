@@ -1,10 +1,10 @@
-;;; ontop-scheme.el --- Scheme with Geiser  -*- lexical-binding: t; -*-
+;;; eon-scheme.el --- Scheme with Geiser  -*- lexical-binding: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
 ;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/ontop-scheme.el")'.
+;; Load it from anywhere via `(load-file "/path/to/eon-scheme.el")'.
 
 ;;; Code:
 
@@ -15,11 +15,10 @@
 (use-package geiser
   :custom
   (geiser-repl-send-on-return-p t)
-  (geiser-repl-use-other-window nil)
+  (geiser-repl-use-other-window t)
   (scheme-mit-dialect nil)
   ;; Set Geiser's default implementation?
-  ;; (geiser-default-implementation 'guile)
-  )
+  (geiser-default-implementation 'guile))
 
 ;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; GEISER IMPLEMENTATION PACKAGES
@@ -75,7 +74,7 @@
 ;; <https://smartparens.readthedocs.io/en/latest/>
 
 ;; Smartparens non-strict mode is already enabled globally
-;; and configured in `ontop-core.el'
+;; and configured in `eon-core.el'
 
 (use-package smartparens
   :hook
@@ -85,7 +84,7 @@
 ;;; PARENTHESIS DISPLAY
 
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
-;; for all prog-modes in `ontop-core.el'
+;; for all prog-modes in `eon-core.el'
 (use-package rainbow-delimiters
   :hook
   ((inferior-scheme-mode geiser-repl-mode) . rainbow-delimiters-mode))
@@ -113,5 +112,5 @@
                  (add-to-list 'org-babel-load-languages '(scheme . t))))))
 
 ;;  ____________________________________________________________________________
-(provide 'ontop-scheme)
-;;; ontop-scheme.el ends here
+(provide 'eon-scheme)
+;;; eon-scheme.el ends here

@@ -1,10 +1,10 @@
-;;; ontop-elixir.el --- Elixir configuration  -*- lexical-binding: t; -*-
+;;; eon-elixir.el --- Elixir configuration  -*- lexical-binding: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
 ;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/ontop-elixir.el")'.
+;; Load it from anywhere via `(load-file "/path/to/eon-elixir.el")'.
 
 ;;; Code:
 
@@ -18,6 +18,7 @@
 ;; package manager. Then install the language grammar via
 ;; 'M-x treesit-install-language-grammar'
 (use-package treesit
+  :ensure nil
   :config
   (add-to-list 'treesit-language-source-alist
                '(elixir "https://github.com/elixir-lang/tree-sitter-elixir"))
@@ -46,9 +47,6 @@ configuration or restarting applications."
   :hook
   ((elixir-ts-mode heex-ts-mode) . inf-elixir-minor-mode)
   :bind
-  ;; Reach the REPL from anywhere via global key binding
-  (:map ctl-z-x-map
-        ("e" . 'inf-elixir))
   (:map elixir-ts-mode-map
         ("C-c C-z" . inf-elixir-project)
         ("C-c C-l" . inf-elixir-send-line)
@@ -61,7 +59,7 @@ configuration or restarting applications."
 ;;  ____________________________________________________________________________
 ;;; LANGUAGE SERVER
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
-;; Common keybindings are configured in `./ontop-core.el'
+;; Common keybindings are configured in `./eon-core.el'
 
 ;; Elixir-ls language server is used per default in this setup.
 ;; Here's an Elixir language server comparison:
@@ -87,30 +85,6 @@ configuration or restarting applications."
    (lambda ()
      (add-hook 'before-save-hook
                #'eglot-format-buffer nil 'local))))
-
-;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; NEXT-LS
-;; <https://www.elixir-tools.dev/docs/next-ls/quickstart/>
-;; Credo-support is already built in <https://hex.pm/packages/credo>.
-;; Add Credo to your project file `mix.exs' and issue the shell command
-;; 'mix deps.get'
-
-;; (use-package eglot
-;;   :config
-;;   ;; Make sure to edit the path appropriately, use the .bat script for Windows
-;;   (add-to-list 'eglot-server-programs
-;;                '((elixir-ts-mode heex-ts-mode) .
-;;                  ("nextls" "--stdio=true"
-;;                   :initializationOptions
-;;                   (:experimental (:completions (:enable t))))))
-;;   :hook
-;;   ;; Start language server automatically
-;;   ((elixir-ts-mode heex-ts-mode) . eglot-ensure)
-;;   ;; Tell the language server to format the buffer before saving
-;;   ((elixir-ts-mode heex-ts-mode) .
-;;    (lambda ()
-;;      (add-hook 'before-save-hook
-;;                #'eglot-format-buffer nil 'local))))
 
 ;;  ____________________________________________________________________________
 ;;; MIX
@@ -167,7 +141,7 @@ configuration or restarting applications."
 ;;; PARENTHESIS DISPLAY
 
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
-;; for all prog-modes in `ontop-core.el'
+;; for all prog-modes in `eon-core.el'
 (use-package rainbow-delimiters
   :hook
   (inf-elxir-mode . rainbow-delimiters-mode))
@@ -196,5 +170,5 @@ configuration or restarting applications."
 ;;                  (add-to-list 'org-babel-load-languages '(elixir . t))))))
 
 ;; _____________________________________________________________________________
-(provide 'ontop-elixir)
-;;; ontop-elixir.el ends here
+(provide 'eon-elixir)
+;;; eon-elixir.el ends here

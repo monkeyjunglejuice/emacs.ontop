@@ -1,4 +1,4 @@
-;;; ontop-embark.el --- Embark settings  -*- lexical-binding: t; -*-
+;;; eon-embark.el --- Embark settings  -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Code:
 
@@ -54,5 +54,5 @@
   (embark-collect-mode . consult-preview-at-point-mode))
 
 ;;; ___________________________________________________________________________
-(provide 'ontop-embark)
-;;; ontop-embark.el ends here
+(provide 'eon-embark)
+;;; eon-embark.el ends here

@@ -1,10 +1,10 @@
-;;; ontop-helpful.el --- Helpful configuration  -*- lexical-binding: t; -*-
+;;; eon-helpful.el --- Helpful configuration  -*- lexical-binding: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
 ;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/ontop-helpful.el")'.
+;; Load it from anywhere via `(load-file "/path/to/eon-helpful.el")'.
 
 ;;; Code:
 
@@ -38,5 +38,5 @@
   ("C-h C" . #'helpful-command))
 
 ;;  ____________________________________________________________________________
-(provide 'ontop-helpful)
-;;; ontop-helpful.el ends here
+(provide 'eon-helpful)
+;;; eon-helpful.el ends here

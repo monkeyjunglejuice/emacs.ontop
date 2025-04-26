@@ -1,4 +1,4 @@
-;;; onboard.el --- Emacs ONBOARD Starter Kit  -*- lexical-binding: t; -*-
+;;; eon.el --- Emacs Onboard Starter Kit  -*- lexical-binding: t; -*-
 ;;
 ;;    ▒░▒░▒░   ▒░     ▒░ ▒░▒░▒░▒░     ▒░▒░▒░      ▒░    ▒░▒░▒░▒░    ▒░▒░▒░▒░
 ;;   ▒░    ▒░  ▒░▒░   ▒░  ▒░     ▒░  ▒░    ▒░    ▒░▒░    ▒░     ▒░   ▒░    ▒░
@@ -13,10 +13,10 @@
 ;; It stays as close as possible to vanilla Emacs, but offers some convenience
 ;; and a better user experience, while only relying on built-in packages.
 ;;
-;; Copyright (C) 2021–2024 Dan Dee
+;; Copyright (C) 2021–2025 Dan Dee
 ;; Author: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
-;; Version: 1.2.17
+;; Version: 1.3.4
 ;; Package-Requires: ((EMACS "28.2"))
 ;; Keywords: convenience
 ;; SPDX-License-Identifier: MIT
@@ -72,9 +72,7 @@ The timer can be canceled with `eon-cancel-gc-timer'.")
   "Start the garbage collection timer."
   (interactive)
   (setq eon-gc-timer
-        (run-with-idle-timer 15 t
-                             (lambda ()
-                               (eon-time (garbage-collect))))))
+        (run-with-idle-timer 15 t (lambda () (eon-time (garbage-collect))))))
 
 (defun eon-cancel-gc-timer ()
   "Cancel the garbage collection timer."
@@ -131,8 +129,8 @@ The timer can be canceled with `eon-cancel-gc-timer'.")
 ;; Better use `use-package' instead (Emacs >= 29)
 (defun eon-package (action package-list)
   "Helper function to install 3rd-party packages declaratively.
-PACKAGE-LIST will be installed if 'install is passed as an argument to ACTION.
-When ACTION receives 'ignore, then nothing will happen."
+PACKAGE-LIST will be installed if \='install is passed as an argument to ACTION.
+When ACTION receives \='ignore, then nothing will happen."
   (when (eq action 'install)
     (mapc #'(lambda (package)
               (unless (package-installed-p package)
@@ -190,29 +188,28 @@ or `system-configuration' directly."
 
 ;; Make "C-z" available as a prefix key in the same manner as "C-x" and "C-c".
 ;; To avoid clashes, new keybindings introduced by Emacs Onboard will usually
-;; begin with the prefix "C-z" instead of "C-c" (with only a few exceptions).
-;; Keybindings starting with "C-z" may not work in terminals.
+;; begin with the prefix "C-z" (with only a few exceptions).
 (global-unset-key (kbd "C-z"))
 
-(define-prefix-command 'ctl-z-map)      ; the additional prefix key "C-z"
+(define-prefix-command 'ctl-z-map nil "Additional prefix key C-z")
 (global-set-key (kbd "C-z") 'ctl-z-map)
 
-(define-prefix-command 'ctl-z-c-map)    ; commonly used commands
+(define-prefix-command 'ctl-z-c-map nil "Commonly used commands")
 (define-key ctl-z-map (kbd "c") 'ctl-z-c-map)
 
-(define-prefix-command 'ctl-z-e-map)    ; quick access to Emacs built-in's
+(define-prefix-command 'ctl-z-e-map nil "Emacs built-ins")
 (define-key ctl-z-map (kbd "e") 'ctl-z-e-map)
 
-(define-prefix-command 'ctl-z-o-map)    ; org-mode
+(define-prefix-command 'ctl-z-o-map nil "Org-mode")
 (define-key ctl-z-map (kbd "o") 'ctl-z-o-map)
 
-(define-prefix-command 'ctl-z-s-map)    ; scratch buffers
+(define-prefix-command 'ctl-z-s-map nil "Scratch buffers")
 (define-key ctl-z-map (kbd "s") 'ctl-z-s-map)
 
-(define-prefix-command 'ctl-z-w-map)    ; web-related
+(define-prefix-command 'ctl-z-w-map nil "Web-related")
 (define-key ctl-z-map (kbd "w") 'ctl-z-w-map)
 
-(define-prefix-command 'ctl-z-x-map)    ; global bindings for REPLs, etc.
+(define-prefix-command 'ctl-z-x-map nil "Global REPL bindings")
 (define-key ctl-z-map (kbd "x") 'ctl-z-x-map)
 
 ;;  ____________________________________________________________________________
@@ -276,7 +273,7 @@ or `system-configuration' directly."
   (save-some-buffers)
   (kill-emacs))
 
-;; Start the server
+;; Start the server?
 ;; (server-start)
 
 ;;  ____________________________________________________________________________
@@ -386,20 +383,28 @@ or `system-configuration' directly."
   :type 'hook)
 
 (defun eon-load-theme-light ()
-  "Load the light theme and apply some modifications."
+  "Load the light theme and apply some modifications.
+Some themes may come as functions -- wrap these ones in lambdas."
   (interactive)
   (mapc #'disable-theme custom-enabled-themes)
   (run-hooks 'eon-load-before-light-theme-hook)
-  (load-theme eon-light-theme-name t)
+  (cond ((symbolp eon-light-theme-name)
+         (load-theme eon-light-theme-name t))
+        ((functionp eon-light-theme-name)
+         (funcall eon-light-theme-name)))
   (setq eon-active-theme-variant 'light)
   (run-hooks 'eon-load-after-light-theme-hook))
 
 (defun eon-load-theme-dark ()
-  "Load the dark theme and apply some modifications."
+  "Load the dark theme and apply some modifications.
+Some themes may come as functions -- wrap these ones in lambdas."
   (interactive)
   (mapc #'disable-theme custom-enabled-themes)
   (run-hooks 'eon-load-before-dark-theme-hook)
-  (load-theme eon-dark-theme-name t)
+  (cond ((symbolp eon-dark-theme-name)
+         (load-theme eon-dark-theme-name t))
+        ((functionp eon-dark-theme-name)
+         (funcall eon-dark-theme-name)))
   (setq eon-active-theme-variant 'dark)
   (run-hooks 'eon-load-after-dark-theme-hook))
 
@@ -511,6 +516,13 @@ or `system-configuration' directly."
 ;;  ____________________________________________________________________________
 ;;; USER INTERFACE
 
+;; Show a help window with possible keys?
+(when (>= emacs-major-version 30)
+  (setq which-key-lighter ""
+        which-key-idle-delay 0.0
+        which-key-sort-uppercase-first nil)
+  (which-key-mode 1))
+
 ;; Menu bar: on/off by default?
 (menu-bar-mode 1)
 
@@ -528,6 +540,9 @@ or `system-configuration' directly."
 
 ;; Alarms: turn off?
 (setq ring-bell-function 'ignore)
+
+;; Visually indicate unused lines at the end of the buffer?
+(setq-default indicate-empty-lines t)
 
 ;; Redraw the display – useful when running Emacs in a Windows terminal emulator
 (define-key ctl-z-map (kbd "C-r") #'redraw-display)
@@ -574,7 +589,7 @@ or `system-configuration' directly."
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Recursive-Edit>
 ;; Allow minibuffer commands while in the minibuffer
 ;; There are two commands to get out of recursive minibuffers:
-;; "C-M-c" exit-recursive-edit and "C-]" abort-recursive-edit
+;; "C-z-c" exit-recursive-edit and "C-]" abort-recursive-edit
 (setq enable-recursive-minibuffers t)
 (minibuffer-depth-indicate-mode 1)
 
@@ -781,7 +796,7 @@ The elements of the list are regular expressions.")
 ;; when running in a text terminal
 ;; --> recommended 3rd-party package 'xclip'
 ;; If you would like to install this 3rd-party package, change 'ignore
-;; into 'install and evaluate the expression – either via "C-M-x",
+;; into 'install and evaluate the expression – either via "C-z-x",
 ;; or simply restart Emacs:
 (eon-package 'ignore '(xclip))
 (when (fboundp #'xclip-mode) (xclip-mode 1))
@@ -837,7 +852,7 @@ The elements of the list are regular expressions.")
 ;; Make backup before editing
 (setq backup-by-copying t
       kept-new-versions 10
-      kept-old-versions 3
+      kept-old-versions 5
       delete-old-versions t
       version-control t)
 
@@ -879,7 +894,7 @@ The elements of the list are regular expressions.")
 (global-set-key (kbd "C-S-r") #'isearch-backward)
 
 ;; Search and replace
-;; The 'query-' variant  asks with each string. Confirm with "SPC",
+;; The 'query-' variant asks for each string. Confirm with "SPC",
 ;; or jump to the next via "n"
 (global-set-key (kbd "M-%") #'query-replace-regexp)
 (global-set-key (kbd "C-M-%") #'replace-regexp)
@@ -893,7 +908,7 @@ The elements of the list are regular expressions.")
 (recentf-mode 1)
 
 (setq recentf-max-menu-items 10
-      recentf-max-saved-items 10)
+      recentf-max-saved-items 100)
 
 ;; Ignore some recently visited files, eg. to prevent them from showing up
 ;; amongst recent files after package upgrades
@@ -967,9 +982,8 @@ Kills the current Dired buffer when entering a new directory"
             ;; Highlight current line?
             (hl-line-mode 1)))
 
-;; Listing columns; Switch arguments with "C-u s"
-;; Show all files: -DlhFA and hide backups with -B
-(setq-default dired-listing-switches "-lhFA")
+;; Listing columns; Switch arguments with "C-u s" e.g. hide backups with -B
+(setq-default dired-listing-switches "-lhFA -v --group-directories-first")
 
 ;; Copying files/directories
 (setq dired-recursive-copies 'always)
@@ -1005,7 +1019,8 @@ Kills the current Dired buffer when entering a new directory"
 (require 'comint)
 
 (setq comint-input-ignoredups t
-      comint-prompt-read-only t)
+      comint-prompt-read-only t
+      comint-scroll-to-bottom-on-input 'this)
 
 ;;  ____________________________________________________________________________
 ;;; ESHELL
@@ -1060,47 +1075,44 @@ Kills the current Dired buffer when entering a new directory"
       netstat-program-options '("-atupe"))
 
 ;;  ____________________________________________________________________________
-;;; BUILT-IN WEB BROWSER "EWW"
+;;; WEB BROWSERS
+
+;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;; EWW BUILT-IN BROWSER
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/eww.html#Top>
 
-;; Pretend to be an iPhone
-(setq url-user-agent
-      "Mozilla/5.0 (iPhone; CPU iPhone OS 13_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.2 Mobile/15E148 Safari/604.1")
-
-;; Or pretend to be the W3m text-mode browser
-;; (setq url-user-agent "w3m/0.5.3+git20190105")
-
-(setq url-privacy-level '(email lastloc os emacs))
+(setq! url-privacy-level '(email lastloc cookies))
 (url-setup-privacy-info)
 
-;;  ____________________________________________________________________________
-;;; PRIMARY WEB BROWSER
-;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Hyperlinking>
+(defun eon-user-agent (browser-name)
+  (cond
+   ((equal browser-name 'safari-macos)
+    (setq! url-user-agent
+           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/603.3.8 (KHTML, like Gecko) Version/11.0.1 Safari/603.3.8"))
+   ((equal browser-name 'safari-iphone)
+    (setq! url-user-agent
+           "Mozilla/5.0 (iPhone; CPU iPhone OS 18_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.2 Mobile/15E148 Safari/604.1"))
+   ((equal browser-name 'w3m)
+    (setq! url-user-agent
+           "w3m/0.5.3+git2020050"))
+   (t
+    (setq! url-user-agent
+           'default))))
 
-;; This can be any graphical web browser, but also a built-in web browser
+;; Set the user agent for the internal web browser
+(eon-user-agent 'safari-iphone)
 
-;; Set Emacs' `browse-url' function …
+;; Per default, open links with the internal web browser
+(setq! browse-url-browser-function #'eww-browse-url)
 
-;; … to the system-wide default browser
-(setq browse-url-browser-function #'browse-url-default-browser)
+;; Secondary web browser
+(setq! browse-url-secondary-browser-function #'browse-url-default-browser)
+;; (setq! browse-url-browser-function #'browse-url-firefox)
+;; (setq! browse-url-generic-program (executable-find "nyxt")
+;;        browse-url-browser-function #'browse-url-generic)
 
-;; … to Firefox explicitly
-;; (setq browse-url-browser-function #'browse-url-firefox)
-
-;; … or to the Nyxt browser <https://nyxt.atlas.engineer/>
-;; (setq browse-url-generic-program "nyxt")
-;; (setq browse-url-browser-function #'browse-url-generic)
-
-;; Keybinding
+;; Keybindings
 (define-key ctl-z-w-map (kbd "w") #'browse-url)
-
-;;  ____________________________________________________________________________
-;;; SECONDARY WEB BROWSER
-
-;; Set an alternative browser — currently set to Emacs' built-in EWW
-(setq browse-url-secondary-browser-function #'browse-web)
-
-;; Keybinding
 (define-key ctl-z-w-map (kbd "W") #'browse-web)
 
 ;;  ____________________________________________________________________________
@@ -1160,9 +1172,6 @@ Kills the current Dired buffer when entering a new directory"
 ;; Save always with a final new line?
 (setq require-final-newline t)
 
-;; Visually indicate unused lines at the end of the buffer?
-(setq indicate-empty-lines t)
-
 ;; Better than the default 'just-one-space' (was M-SPC before)
 (global-set-key (kbd "M-S-SPC") #'cycle-spacing)
 
@@ -1211,8 +1220,8 @@ Kills the current Dired buffer when entering a new directory"
               tab-width 2)          ; set display width for tab characters
 
 ;; Delete the whole indentation instead spaces one-by-one via <backspace>?
-;; (Possibly shadowed by 3rd-party packages like 'smartparens-mode'
-(setq backward-delete-char-untabify-method 'hungry)
+;; (Possibly shadowed by 3rd-party packages like `smartparens-mode'
+(setq backward-delete-char-untabify-method 'all)
 
 ;;  ____________________________________________________________________________
 ;;; BRACKETS / PARENTHESIS
@@ -1338,12 +1347,9 @@ Kills the current Dired buffer when entering a new directory"
 
 ;; Set some sensible default states for todo-items
 (setq org-todo-keywords
-      '((sequence "TODO(t)"
-                  "STARTED(s)"
-                  "WAITING(w)"
-                  "|"
-                  "DONE(d)"
-                  "CANCELED(c)")))
+      '((sequence "TODO(t)" "PROJ(p)" "LOOP(r)" "STRT(s)" "WAIT(w)" "HOLD(h)" "IDEA(i)" "|" "DONE(d)" "KILL(k)")
+        (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)")
+        (sequence "|" "OKAY(o)" "YES(y)" "NO(n)")))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; ORG AGENDA
@@ -1386,7 +1392,7 @@ Kills the current Dired buffer when entering a new directory"
 (defun eon-org-publish-use-timestamps ()
   "Toggle wether to re-export Org files that haven't been changed."
   (interactive)
-  (if (equal org-publish-use-timestamps-flag t)
+  (if org-publish-use-timestamps-flag
       (progn (setq org-publish-use-timestamps-flag nil)
              (message "Re-export unchanged files"))
     (progn (setq org-publish-use-timestamps-flag t)
@@ -1440,5 +1446,5 @@ Kills the current Dired buffer when entering a new directory"
 (global-set-key (kbd "C-M-<backspace>") #'backward-kill-sexp)
 
 ;;  ____________________________________________________________________________
-(provide 'onboard)
-;;; onboard.el ends here
+(provide 'eon)
+;;; eon.el ends here

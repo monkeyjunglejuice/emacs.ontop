@@ -1,10 +1,10 @@
-;;; ontop-haskell.el --- Haskell configuration  -*- lexical-binding: t; -*-
+;;; eon-haskell.el --- Haskell configuration  -*- lexical-binding: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
 ;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/ontop-haskell.el")'.
+;; Load it from anywhere via `(load-file "/path/to/eon-haskell.el")'.
 
 ;;; Code:
 
@@ -32,9 +32,6 @@
 
 (use-package haskell
   :bind
-  ;; Reach REPL from anywhere via global key binding
-  (:map ctl-z-x-map
-        ("h" . haskell-interactive-bring))
   (:map interactive-haskell-mode-map
         ("C-c C-c" . haskell-compile)
         ("C-c C-e" . haskell-process-load-file)))
@@ -43,14 +40,13 @@
 ;;; EGLOT LANGUAGE SERVER
 ;;  <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
 ;;  <https://haskell-language-server.readthedocs.io/en/latest/configuration.html>
-;;  Common keybindings are configured in `./ontop-core.el'
+;;  Common keybindings are configured in `./eon-core.el'
 
 (use-package eglot
   :config
   (setq-default eglot-workspace-configuration
                 '((haskell
-                   (formatting-provider . "ormolu")
-                   )))
+                   (formatting-provider . "ormolu"))))
   :custom
   ;; Shutdown language server after closing last file?
   (eglot-autoshutdown t)
@@ -68,7 +64,7 @@
 ;;; PARENTHESIS DISPLAY
 
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
-;; for all prog-modes in `ontop-core.el'
+;; for all prog-modes in `eon-core.el'
 (use-package rainbow-delimiters
   :hook
   (interactive-haskell-mode . rainbow-delimiters-mode))
@@ -96,5 +92,5 @@
                  (add-to-list 'org-babel-load-languages '(haskell . t))))))
 
 ;;  ____________________________________________________________________________
-(provide 'ontop-haskell)
-;;; ontop-haskell.el ends here
+(provide 'eon-haskell)
+;;; eon-haskell.el ends here

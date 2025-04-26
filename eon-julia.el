@@ -1,10 +1,10 @@
-;;; ontop-julia.el --- Julia configuration  -*- lexical-binding: t; -*-
+;;; eon-julia.el --- Julia configuration  -*- lexical-binding: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
 ;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/ontop-julia.el")'.
+;; Load it from anywhere via `(load-file "/path/to/eon-julia.el")'.
 
 ;;; Code:
 
@@ -19,6 +19,7 @@
 ;; package manager. Then install the language grammar via
 ;; 'M-x treesit-install-language-grammar'
 (use-package treesit
+  :ensure nil
   :config
   (add-to-list 'treesit-language-source-alist
                '(julia "https://github.com/tree-sitter/tree-sitter-julia")))
@@ -68,7 +69,7 @@
 ;;  ____________________________________________________________________________
 ;;; EGLOT LANGUAGE SERVER
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
-;; Common keybindings are configured in `./ontop-core.el'
+;; Common keybindings are configured in `./eon-core.el'
 
 ;; Setup Eglot for Julia and install the language server binary if necessary
 ;; <https://github.com/non-Jedi/eglot-jl>
@@ -89,7 +90,7 @@
 ;;; PARENTHESIS DISPLAY
 
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
-;; for all prog-modes in `ontop-core.el'
+;; for all prog-modes in `eon-core.el'
 (use-package rainbow-delimiters
   :hook
   (julia-snail-mode . rainbow-delimiters-mode))
@@ -116,5 +117,5 @@
                  (add-to-list 'org-babel-load-languages '(julia . t))))))
 
 ;;  ____________________________________________________________________________
-(provide 'ontop-julia)
-;;; ontop-julia.el ends here
+(provide 'eon-julia)
+;;; eon-julia.el ends here
