@@ -192,26 +192,27 @@
           (setq exec-path (split-string (cadr var) path-separator)))))))
 
 ;; Install the basic package selection for convenience
-(defun opam-install-dev-packages ()
+(defun opam-install-basic-packages ()
   "Install standard package selection for editor support and development."
   (interactive)
+  (message (concat "Installing basic packages for switch: "
+                   (opam-switch--get-current-switch)))
   (start-process
-   "opam-install-dev-packages"          ; Emacs process name
+   "opam-install-basic-packages"        ; Emacs process name
    "*opam-install*"                     ; Emacs output buffer
    "opam" "install"                     ; shell command
-   ;; Packages
+   "--yes"                              ; answer "yes" to all questions
+   ;; Package selection
    "dune"
+   "dune-release"
    "merlin"
+   "tuareg"
    "ocaml-lsp-server"
-   "odoc"
    "ocamlformat"
    "utop"
-   "dune-release"
-   "tuareg"
+   "odoc"
    "omod"
    "domainslib"
-   "user-setup"
-   "-yes"                                ; answer "yes" to all questions
    ))
 
 ;;  ____________________________________________________________________________
