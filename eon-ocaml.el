@@ -75,7 +75,7 @@
 
 (use-package merlin-eldoc
   :custom
-  (merlin-eldoc-max-lines 3)             ; but not more than 5
+  (merlin-eldoc-max-lines 3)             ; but not more than 3
   (merlin-eldoc-type-verbosity 'min)     ; don't display verbose types
   (merlin-eldoc-function-arguments nil)  ; don't show function arguments
   (merlin-eldoc-doc nil)                 ; don't show the documentation
