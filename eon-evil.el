@@ -17,14 +17,14 @@
   :init
   (setq evil-want-keybinding nil)
   (setq evil-want-integration t)
+  :custom
+  (evil-move-cursor-back nil)
   :config
   (evil-mode 1)
   ;; Set leader key in all states
   (evil-set-leader nil (kbd "M-SPC"))
   ;; Set leader key in normal state
   (evil-set-leader 'normal (kbd "SPC"))
-  ;; Set local leader
-  (evil-set-leader 'normal ",")
   ;; Leader bindings
   (evil-define-key 'normal 'global (kbd "<leader>x") #'execute-extended-command)
   ;; Emacs ONBOARD/EON-specific keybindings
