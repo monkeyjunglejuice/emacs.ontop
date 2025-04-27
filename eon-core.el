@@ -55,6 +55,16 @@
   (auto-package-update-hide-results t))
 
 ;;  ____________________________________________________________________________
+;;; OS INTEGRATION
+
+;; Use the MacOS trash instead of freedesktop.org ~/.local/share/Trash
+;; <https://github.com/emacsorphanage/osx-trash>
+(use-package osx-trash
+  :when (eon-macp)
+  :config
+  (osx-trash-setup))
+
+;;  ____________________________________________________________________________
 ;;; DIMINISH
 ;; <https://github.com/myrjola/diminish.el>
 
