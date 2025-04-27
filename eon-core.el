@@ -252,7 +252,7 @@
   (vertico-count 12)
   (vertico-resize 'grow-only)
   ;; Enable cycling for `vertico-next' and `vertico-previous'?
-  (vertico-cycle t))
+  (vertico-cycle nil))
 
 ;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; EMACS (built-in)
