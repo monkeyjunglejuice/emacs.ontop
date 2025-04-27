@@ -16,7 +16,7 @@
 ;; Copyright (C) 2021–2025 Dan Dee
 ;; Author: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
-;; Version: 1.4.1
+;; Version: 1.4.2
 ;; Package-Requires: ((EMACS "28.2"))
 ;; Keywords: convenience
 ;; SPDX-License-Identifier: MIT
@@ -129,9 +129,9 @@ The timer can be canceled with `eon-cancel-gc-timer'.")
 ;; better use `use-package' instead (Emacs >= 29)
 (defun eon-package (action package-list)
   "Helper function to install 3rd-party packages declaratively.
-PACKAGE-LIST will be installed if \='install is passed as an argument to ACTION.
+PACKAGE-LIST will be installed if \='ensure is passed as an argument to ACTION.
 When ACTION receives \='ignore, then nothing will happen."
-  (when (eq action 'install)
+  (when (eq action 'ensure)
     (mapc #'(lambda (package)
               (unless (package-installed-p package)
                 (package-refresh-contents)
@@ -141,15 +141,15 @@ When ACTION receives \='ignore, then nothing will happen."
 ;; Example: You can install suggested 3rd-party packages from within this file
 ;; with single function calls like so:
 ;;
-;; (eon-package 'install '(the-matrix-theme))  ; installs the package
-;; (eon-package 'ignore '(the-matrix-theme))   ; does nothing (default)
+;; (eon-package 'ensure '(the-matrix-theme))  ; installs the package
+;; (eon-package 'ignore '(the-matrix-theme))  ; does nothing (default)
 ;;
 ;; The installation will be performed when you restart Emacs or
 ;; when you evaluate the function manually – eg. via pressing "C-M-x"
 ;; while the cursor is placed somewhere within the function application form.
 
 ;;  ____________________________________________________________________________
-;; HELPERS
+;;; HELPERS
 
 ;; Simplify writing of operating-system-specific Elisp code
 
@@ -217,8 +217,10 @@ or `system-configuration' directly."
 
 ;; Make the <Command> key on MacOS act as <Ctrl> key: "C- ..."
 (setq mac-command-modifier 'control)
+
 ;; Make the <Option> key on MacOS act as <Meta> key for "M- ..."
 (setq mac-option-modifier 'meta)
+
 ;; Don't bypass "C-h ..." keybindings
 (setq mac-pass-command-to-system nil)
 
@@ -541,9 +543,6 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; Alarms: turn off?
 (setq ring-bell-function 'ignore)
 
-;; Visually indicate unused lines at the end of the buffer?
-(setq-default indicate-empty-lines t)
-
 ;; Redraw the display – useful when running Emacs in a Windows terminal emulator
 (define-key ctl-z-map (kbd "C-r") #'redraw-display)
 
@@ -561,7 +560,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
               auto-window-vscroll nil)
 
 ;; Enable pixel-based scrolling
-(if (fboundp 'pixel-scroll-precision-mode)
+(if (fboundp #'pixel-scroll-precision-mode)
     (pixel-scroll-precision-mode 1))
 
 ;;  ____________________________________________________________________________
@@ -738,7 +737,7 @@ The elements of the list are regular expressions.")
 ;; Hide the boring buffers from Ibuffer too?
 ;; (setq ibuffer-never-show-predicates eon-boring-buffers)
 
-(global-set-key (kbd "C-x C-b") 'ibuffer)
+(global-set-key (kbd "C-x C-b") #'ibuffer)
 
 ;;  ____________________________________________________________________________
 ;;; SCRATCH BUFFER
@@ -827,7 +826,7 @@ The elements of the list are regular expressions.")
     (interactive "r")
     (let ((default-directory "/mnt/c/"))
       (shell-command-on-region start end "clip.exe")))
-  (define-key ctl-z-map (kbd "C-w") 'eon-wsl-copy))
+  (define-key ctl-z-map (kbd "C-w") #'eon-wsl-copy))
 
 ;; Paste "yank" text into Emacs buffer that has been copied from a Windows app
 (when (eon-linp)
@@ -840,7 +839,7 @@ The elements of the list are regular expressions.")
        (substring
         (shell-command-to-string "powershell.exe -command 'Get-Clipboard'")
         0  -1))))
-  (define-key ctl-z-map (kbd "C-y") 'eon-wsl-paste))
+  (define-key ctl-z-map (kbd "C-y") #'eon-wsl-paste))
 
 ;;  ____________________________________________________________________________
 ;;; BACKUP
@@ -1195,7 +1194,8 @@ Kills the current Dired buffer when entering a new directory"
 ;; Truncate long lines in programming modes?
 ;; By default, lines are continued visually on the next screen-line
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Continuation-Lines>
-;; For default behavior, do "M-x toggle-truncate-lines", or set the variable to nil.
+;; For default behavior, do "M-x toggle-truncate-lines",
+;; or set this variable to nil.
 (add-hook 'prog-mode-hook
           (lambda ()
             (setq-local truncate-lines t)))
@@ -1213,12 +1213,12 @@ Kills the current Dired buffer when entering a new directory"
 ;;; INDENTATION
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Indentation>
 
-(setq-default indent-tabs-mode nil      ; don't use tabs but spaces
+(setq-default indent-tabs-mode nil  ; don't use tabs but spaces
               tab-width 2)          ; set display width for tab characters
 
 ;; Delete the whole indentation instead spaces one-by-one via <backspace>?
 ;; (Possibly shadowed by 3rd-party packages like `smartparens-mode'
-(setq backward-delete-char-untabify-method 'all)
+(setq backward-delete-char-untabify-method 'hungry)
 
 ;;  ____________________________________________________________________________
 ;;; BRACKETS / PARENTHESIS
@@ -1414,7 +1414,7 @@ Kills the current Dired buffer when entering a new directory"
 
 ;; In case you're using the Emacs ONTOP extensions, further languages
 ;; should not be configured here, but within their specific ONTOP modules
-;; ("onboard-*.el" files)
+;; ("eon-*.el" files)
 
 ;;  ____________________________________________________________________________
 ;;; LISP LANGUAGES
