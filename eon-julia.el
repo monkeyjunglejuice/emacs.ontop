@@ -31,7 +31,7 @@
 
 (use-package julia-snail
   :custom
-;; Needs a terminal emulator within Emacs; alternative: vterm
+  ;; Needs a terminal emulator within Emacs; alternative: vterm
   (julia-snail-terminal-type :eat)
   ;; Print the result of evaluating code to the REPL
   (julia-snail-repl-display-eval-results t)  ; `nil' to disable
