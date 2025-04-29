@@ -26,6 +26,7 @@
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         ;;; OPTIONAL MODULES
 
+        eon-nativecomp                ; improved native compilation
         ;; eon-embark                    ; minibuffer actions
         ;; eon-evil                      ; modular editing, VIM keybindings
         ;; eon-flycheck                  ; syntax checker alternative
