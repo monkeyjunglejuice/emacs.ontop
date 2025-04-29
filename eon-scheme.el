@@ -51,6 +51,7 @@
 ;; (use-package geiser-mit
 ;;   :config
 ;;   (use-package scheme
+;;     :ensure nil
 ;;     :custom
 ;;     (scheme-mit-dialect t)))
 
@@ -105,6 +106,7 @@
 
 ;; <https://www.orgmode.org/worg/org-contrib/babel/languages/ob-doc-scheme.html>
 (use-package org
+  :ensure nil
   :hook
   (org-mode . (lambda ()
                 (org-babel-do-load-languages

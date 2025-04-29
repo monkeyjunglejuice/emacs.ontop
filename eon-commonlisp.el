@@ -13,6 +13,7 @@
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Executing-Lisp>
 
 (use-package inf-lisp
+  :ensure nil
   :custom
   ;; Set default Lisp implementation
   (inferior-lisp-program "ros -Q run"))
@@ -112,6 +113,7 @@
   (org-babel-lisp-eval-fn #'sly-eval))
 
 (use-package org
+  :ensure nil
   :hook
   (org-mode . (lambda () (org-babel-do-load-languages
                           'org-babel-load-languages

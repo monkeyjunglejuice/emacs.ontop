@@ -12,7 +12,8 @@
 ;;; ELIXIR TREESIT MODE
 ;; <https://github.com/wkirschbaum/elixir-ts-mode>
 
-(use-package elixir-ts-mode)
+(use-package elixir-ts-mode
+  :ensure nil)
 
 ;; In order to use Tree Sitter, install the tree-sitter binary with your OS
 ;; package manager. Then install the language grammar via
@@ -70,6 +71,7 @@ configuration or restarting applications."
 ;; <https://github.com/elixir-lsp/elixir-ls>
 
 (use-package eglot
+  :ensure nil
   :custom
   ;; A longer timeout seems required for the first run in a new project
   (eglot-connect-timeout 60)            ; default: 30

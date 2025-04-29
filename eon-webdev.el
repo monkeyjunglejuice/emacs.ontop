@@ -38,19 +38,22 @@
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#HTML-Mode>
 
 (use-package sgml-mode
+  :ensure nil
   :defer t)
 
 ;;  ____________________________________________________________________________
 ;;; CSS-MODE
 
 (use-package css-mode
+  :ensure nil
   :custom
   (css-indent-offset 2))
 
 ;;  ____________________________________________________________________________
 ;;; JS-MODE
 
-(use-package js)
+(use-package js
+  :ensure nil)
 
 ;;  ____________________________________________________________________________
 ;;; SYNTAX-CHECKER / LINTER
@@ -59,6 +62,7 @@
 (use-package flymake
   ;; Syntax checkers don't work with web-mode, but the other modes
   ;; Install the linter via: `npm install -g stylelint stylelint-config-standard'
+  :ensure nil
   :hook
   ((html-mode css-mode js-mode) . flymake-mode))
 

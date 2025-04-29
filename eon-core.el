@@ -50,6 +50,7 @@
   :init
   (auto-package-update-maybe)
   :custom
+  (auto-package-package-update-show-preview t)
   (auto-package-update-prompt-before-update t)
   (auto-package-update-delete-old-versions t)
   (auto-package-update-hide-results t))
@@ -379,6 +380,7 @@
 
 ;; Use Dabbrev with Corfu
 (use-package dabbrev
+  :ensure nil
   :config
   (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
   ;; Since 29.1, use `dabbrev-ignored-buffer-regexps' on older.
@@ -567,6 +569,7 @@
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md/>
 
 (use-package eglot
+  :ensure nil
   :defer t
   :custom
   ;; Shutdown language server after closing last file

@@ -33,6 +33,7 @@
 ;; Common keybindings are configured in `./eon-eglot.el'
 
 (use-package eglot
+  :ensure nil
   :hook
   (lua-mode . eglot-ensure)
   :config
@@ -48,6 +49,7 @@
 ;; Depends on luacheck: `luarocks --local install luacheck'
 
 (use-package flymake
+  :ensure nil
   :hook
   (lua-mode . flymake-mode))
 
@@ -59,6 +61,7 @@
 
 ;; <https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-lua.html>
 (use-package org
+  :ensure nil
   :hook
   (org-mode . (lambda ()
                 (org-babel-do-load-languages

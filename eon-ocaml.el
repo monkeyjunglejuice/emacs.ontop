@@ -242,6 +242,7 @@
   (org-babel-ocaml-command "ocaml -nopromptcont"))
 
 (use-package org
+  :ensure nil
   :hook
   (org-mode . (lambda ()
                 (org-babel-do-load-languages

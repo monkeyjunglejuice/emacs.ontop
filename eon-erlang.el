@@ -34,6 +34,7 @@
 ;; <https://github.com/erlang-ls/erlang_ls>
 
 (use-package eglot
+  :ensure nil
   :custom
   ;; A longer timeout seems required for the first run in a new project
   (eglot-connect-timeout 30)            ; default: 30

@@ -73,11 +73,12 @@
 ;; Support literate programming in Emacs with Racket
 ;; Evaluate Racket code in Org blocks via "C-c C-c"
 (use-package org
-   :hook
-   (org-mode . (lambda ()
-                 (org-babel-do-load-languages
-                  'org-babel-load-languages
-                  (add-to-list 'org-babel-load-languages '(racket . t))))))
+  :ensure nil
+  :hook
+  (org-mode . (lambda ()
+                (org-babel-do-load-languages
+                 'org-babel-load-languages
+                 (add-to-list 'org-babel-load-languages '(racket . t))))))
 
 ;;  ____________________________________________________________________________
 (provide 'eon-racket)

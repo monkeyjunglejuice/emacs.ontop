@@ -97,58 +97,6 @@ The timer can be canceled with `eon-cancel-gc-timer'.")
                      gcs-done)))
 
 ;;  ____________________________________________________________________________
-;;; PACKAGE MANAGEMENT
-;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Packages>
-;; ... or do "M-x info-emacs-manual s packages RET" to read it within Emacs
-
-;; Browse, select and install 3rd-party packages with "M-x list-packages RET"
-
-(require 'package)
-
-;; 1st priority
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t)
-
-;; 2nd priority
-;; Install form melpa-stable' only when the package from 'melpa' is broken
-;; (add-to-list 'package-archives
-;;              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-
-;; 3rd priority
-;; There are also Gnu Elpa and Non-Gnu Elpa, which are enabled by default
-
-;; Natively compile packages at first use or immediately after installation?
-(setq package-native-compile t)
-
-;; Highlight current line in the package manager
-(add-hook 'package-menu-mode-hook
-          (lambda ()
-            (hl-line-mode 1)))
-
-;; Install packages declaratively within an Emacs Lisp file, but
-;; better use `use-package' instead (Emacs >= 29)
-(defun eon-package (action package-list)
-  "Helper function to install 3rd-party packages declaratively.
-PACKAGE-LIST will be installed if \='ensure is passed as an argument to ACTION.
-When ACTION receives \='ignore, then nothing will happen."
-  (when (eq action 'ensure)
-    (mapc #'(lambda (package)
-              (unless (package-installed-p package)
-                (package-refresh-contents)
-                (package-install package nil)))
-          package-list)))
-
-;; Example: You can install suggested 3rd-party packages from within this file
-;; with single function calls like so:
-;;
-;; (eon-package 'ensure '(the-matrix-theme))  ; installs the package
-;; (eon-package 'ignore '(the-matrix-theme))  ; does nothing (default)
-;;
-;; The installation will be performed when you restart Emacs or
-;; when you evaluate the function manually – eg. via pressing "C-M-x"
-;; while the cursor is placed somewhere within the function application form.
-
-;;  ____________________________________________________________________________
 ;;; HELPERS
 
 ;; Simplify writing of operating-system-specific Elisp code

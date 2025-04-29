@@ -90,6 +90,7 @@
 ;; (use-package ob-lfe)
 
 ;; (use-package org
+;;   :ensure nil
 ;;   :hook
 ;;   (org-mode . (lambda ()
 ;;                 (org-babel-do-load-languages

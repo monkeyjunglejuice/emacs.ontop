@@ -110,6 +110,7 @@
 ;; 2 Julia packages must be added for this to work: DataFrames and CSV.
 ;; <https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-julia.html>
 (use-package org
+  :ensure nil
   :hook
   (org-mode . (lambda ()
                 (org-babel-do-load-languages

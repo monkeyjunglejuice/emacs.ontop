@@ -43,6 +43,7 @@
 ;;  Common keybindings are configured in `./eon-core.el'
 
 (use-package eglot
+  :ensure nil
   :config
   (setq-default eglot-workspace-configuration
                 '((haskell
