@@ -50,7 +50,6 @@
   (evil-define-key 'normal 'global (kbd "<leader>R") #'consult-ripgrep)
   ;; Git
   (evil-define-key 'normal 'global (kbd "<leader>g") #'magit-project-status)
-  (evil-define-key 'normal 'global (kbd "<leader>cgk") #'magit-kill-buffers)
   ;; Shell
   (evil-define-key 'normal 'global (kbd "<leader>s") #'eat-project)
   (evil-define-key 'normal 'global (kbd "<leader>S") #'eat)
