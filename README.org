@@ -1,8 +1,4 @@
-* 🚀 Emacs ONTOP: Pre-configured Programming Languages
-
-** Why?
-
-Setting up a programming environment in Emacs usually involves more than just installing a major mode – it's often about cherry-picking from a selection of complementing packages, making them work together seamlessly, and taking care about certain peculiarities.
+* 🚀 Emacs ONTOP
 
 Emacs ONTOP is an extension to the [[https://github.com/monkeyjunglejuice/emacs.onboard][Emacs ONBOARD starterkit]] with certain niceties and setups for several programming languages. It stays close to original Emacs though in how things are achieved - there are no fancy new macros and other stuff like that.
 
