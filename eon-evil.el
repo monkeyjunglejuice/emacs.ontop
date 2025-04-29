@@ -26,7 +26,7 @@
   ;; Set leader key in normal state
   (evil-set-leader 'normal (kbd "SPC"))
   ;; Leader bindings
-  (evil-define-key 'normal 'global (kbd "<leader>x") #'execute-extended-command)
+  (evil-define-key 'normal 'global (kbd "<leader>m") #'execute-extended-command)
   ;; Emacs ONBOARD/EON-specific keybindings
   (evil-define-key 'normal 'global (kbd "<leader>z") #'ctl-z-map)
   ;; Projects
@@ -43,7 +43,7 @@
   (evil-define-key 'normal 'global (kbd "<leader>D") #'dired)
   (evil-define-key 'normal 'dired-mode-map (kbd ".") #'dired-hide-dotfiles-mode)
   ;; Search
-  (evil-define-key 'normal 'global (kbd "<leader>l") #'consult-line)
+  (evil-define-key 'normal 'global (kbd "<leader>s") #'consult-line)
   (evil-define-key 'normal 'global (kbd "<leader>i") #'consult-imenu)
   (evil-define-key 'normal 'global (kbd "<leader>I") #'consult-imenu-multi)
   (evil-define-key 'normal 'global (kbd "<leader>r") #'rg-menu)
@@ -58,7 +58,13 @@
   ;; Eshell
   (evil-define-key 'normal 'global (kbd "<leader>e") #'project-eshell)
   (evil-define-key 'normal 'global (kbd "<leader>E") #'eshell)
-  (evil-define-key 'normal 'global (kbd "<leader>:") #'eshell-command)
+  ;; Eval
+  (evil-define-key 'normal 'global (kbd "<leader>:") #'eval-expression)
+  ;; Helpful
+  (evil-define-key 'normal 'global (kbd "<leader>hv") #'helpful-variable)
+  (evil-define-key 'normal 'global (kbd "<leader>hf") #'helpful-callable)
+  (evil-define-key 'normal 'global (kbd "<leader>hF") #'helpful-function)
+  (evil-define-key 'normal 'global (kbd "<leader>ho") #'helpful-at-point)
   ;; Org
   (evil-define-key 'normal 'global (kbd "<leader>op") #'org-publish)
   ;; Escape from Evil Emacs state
