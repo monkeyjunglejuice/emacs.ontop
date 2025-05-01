@@ -13,18 +13,19 @@
 ;; <https://evil.readthedocs.io/en/latest/settings.html#>
 ;; <https://github.com/noctuid/evil-guide>
 
+(setq evil-want-keybinding nil)
+(setq evil-want-integration t)
+
 (use-package evil
-  :init
-  (setq evil-want-keybinding nil)
-  (setq evil-want-integration t)
-  :custom
-  (evil-move-cursor-back nil)
   :config
   (evil-mode 1)
+
   ;; Set leader key in all states
   (evil-set-leader nil (kbd "M-SPC"))
+
   ;; Set leader key in normal state
   (evil-set-leader 'normal (kbd "SPC"))
+
   ;; Leader bindings
   (evil-define-key 'normal 'global (kbd "<leader>m") #'execute-extended-command)
   ;; Emacs ONBOARD/EON-specific keybindings
@@ -67,8 +68,13 @@
   ;; Org
   (evil-define-key 'normal 'global (kbd "<leader>op") #'org-publish)
   ;; Escape from Evil Emacs state
-  (evil-define-key 'emacs 'global [escape] #'evil-normal-state)
-  )
+  (evil-define-key 'emacs 'global [escape] #'evil-normal-state))
+
+(use-package evil-vars :ensure nil
+  :after evil
+  :custom
+  (evil-move-cursor-back nil)
+  (evil-undo-system 'undo-fu))
 
 ;; <https://github.com/emacs-evil/evil-collection>
 (use-package evil-collection
