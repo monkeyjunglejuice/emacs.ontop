@@ -37,6 +37,7 @@
 ;; <https://github.com/rranelli/auto-package-update.el>
 
 (use-package auto-package-update
+  :when package-enable-at-startup
   :init
   (auto-package-update-maybe)
   :custom
