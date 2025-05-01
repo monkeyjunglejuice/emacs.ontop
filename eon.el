@@ -16,7 +16,7 @@
 ;; Copyright (C) 2021–2025 Dan Dee
 ;; Author: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
-;; Version: 1.4.3
+;; Version: 1.4.4
 ;; Package-Requires: ((EMACS "28.2"))
 ;; Keywords: convenience
 ;; SPDX-License-Identifier: MIT
@@ -103,6 +103,10 @@ The timer can be canceled with `eon-cancel-gc-timer'.")
 
 ;; Browse, select and install 3rd-party packages with "M-x list-packages RET"
 
+;; The package setup respects when `package-enable-at-setup' is set to nil
+;; in `early-init-el', so that you can use other package managers like Straight
+;; or Elpaca without issues.
+
 (when package-enable-at-startup
   (require 'package)
 
@@ -126,9 +130,6 @@ The timer can be canceled with `eon-cancel-gc-timer'.")
             (lambda ()
               (hl-line-mode 1)))
 
-  ;; DEPRECATED Will be removed when Emacs 29 becomes the minimum version,
-  ;; because `use-package' provides that functionality and much more.
-  ;;
   ;; Install packages declaratively within an Emacs Lisp file.
   ;;
   ;; Example: You can install suggested 3rd-party packages from within this file
@@ -140,6 +141,9 @@ The timer can be canceled with `eon-cancel-gc-timer'.")
   ;; The installation will be performed when you restart Emacs or
   ;; when you evaluate the function manually – eg. via pressing "C-M-x"
   ;; while the cursor is placed somewhere within the function application form.
+  ;;
+  ;; DEPRECATED Will be removed when Emacs 29 becomes the minimum version,
+  ;; because `use-package' provides that functionality and much more.
   (defun eon-package (action package-list)
     "Helper function to install 3rd-party packages declaratively.
 PACKAGE-LIST will be installed if \='ensure is passed as an argument to ACTION.
@@ -253,7 +257,6 @@ or `system-configuration' directly."
 ;; to see easily to which server process a client is connected to
 ;; Further information:
 ;; <https://monkeyjunglejuice.github.io/blog/emacs-server-name-frame-title.howto.html>
-
 (defun eon-frame-title ()
   "Set a custom frame title."
   (setq frame-title-format
@@ -328,14 +331,14 @@ or `system-configuration' directly."
                       :slant  'normal
                       :weight 'normal
                       :width  'normal
-                      :height 0.8)
+                      :height 0.9)
   ;; Set the fonts for the inactive mode line
   (set-face-attribute 'mode-line-inactive nil
                       ;; :family "Iosevka Curly"
                       :slant  'normal
                       :weight 'normal
                       :width  'normal
-                      :height 0.8))
+                      :height 0.9))
 
 ;;  ____________________________________________________________________________
 ;;; TOGGLE THEME
@@ -348,13 +351,13 @@ or `system-configuration' directly."
   :group 'convenience)
 
 (defcustom eon-light-theme-name
-  (setq eon-light-theme-name 'modus-operandi-tinted)
+  (setq eon-light-theme-name 'modus-operandi)
   "Name of the light theme."
   :group 'toggle-theme
   :type 'symbol)
 
 (defcustom eon-dark-theme-name
-  (setq eon-dark-theme-name 'modus-vivendi-tinted)
+  (setq eon-dark-theme-name 'modus-vivendi)
   "Name of the dark theme."
   :group 'toggle-theme
   :type 'symbol)
@@ -434,14 +437,22 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;;; THEME CONFIG
 ;; Either configure the themes here, or "M-x customize-group RET toggle-theme"
 
-;; Set the light theme:
-;; (setq eon-light-theme-name 'modus-operandi)
+;; Set some defaults for the Modus themes; doesn't affect other themes
+(setq modus-themes-bold-constructs t
+      modus-themes-italic-constructs nil
+      modus-themes-mixed-fonts t)
+(setq modus-themes-common-palette-overrides
+      '((border-mode-line-active bg-mode-line-active)
+        (border-mode-line-inactive bg-mode-line-inactive)))
 
-;; Set the dark theme:
-;; (setq eon-dark-theme-name 'modus-vivendi)
+;; Set your light theme:
+(setq eon-light-theme-name 'modus-operandi-tinted)
 
-;; Set the default variant here:
-;; (setq eon-default-theme-variant 'light)
+;; Set your dark theme:
+(setq eon-dark-theme-name 'modus-vivendi-tinted)
+
+;; Set your default variant here - 'light or 'dark
+(setq eon-default-theme-variant 'light)
 
 ;; Set the keybinding to toggle between light and dark:
 (global-set-key (kbd "<f12>") #'eon-toggle-theme)
@@ -495,6 +506,9 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Fringes>
 ;; (add-to-list 'default-frame-alist '(right-fringe . 0))
 
+;; Bring frame to the front
+(select-frame-set-input-focus (selected-frame))
+
 ;;  ____________________________________________________________________________
 ;;; CURSOR
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Cursor-Display>
@@ -524,7 +538,8 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; Show a help window with possible key bindings?
 (when (>= emacs-major-version 30)
   (setq which-key-lighter ""
-        which-key-idle-delay 0.4
+        which-key-idle-delay 1.5
+        which-key-idle-secondary-delay 0.0
         which-key-sort-uppercase-first nil)
   (which-key-mode 1))
 
@@ -615,14 +630,14 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; There are many matching styles available, see `completion-styles-alist'
 ;; <https://www.gnu.org/software/emacs/manual/html_node/emacs/Completion-Styles.html>
 ;; Below is the standard combo from Emacs 29 plus `substring'
-(require 'minibuffer
-         (setq completion-styles '(basic partial-completion emacs22 substring)))
+(require 'minibuffer)
+(setq completion-styles '(basic partial-completion emacs22 substring))
 
 ;; Tweaking Icomplete
 (require 'icomplete)
 (setq icomplete-in-buffer t
       icomplete-compute-delay 0.01
-      icomplete-delay-completions-threshold 10000
+      icomplete-delay-completions-threshold 5000
       icomplete-show-matches-on-no-input t
       icomplete-hide-common-prefix nil)
 
@@ -839,7 +854,7 @@ The elements of the list are regular expressions.")
       (insert
        (substring
         (shell-command-to-string "powershell.exe -command 'Get-Clipboard'")
-        0  -1))))
+        0 -1))))
   (define-key ctl-z-map (kbd "C-y") #'eon-wsl-paste))
 
 ;;  ____________________________________________________________________________
@@ -1109,8 +1124,8 @@ Kills the current Dired buffer when entering a new directory"
 ;;        browse-url-browser-function #'browse-url-generic)
 
 ;; Keybindings
-(define-key ctl-z-w-map (kbd "w") #'browse-url)
-(define-key ctl-z-w-map (kbd "W") #'browse-web)
+(define-key ctl-z-w-map (kbd "W") #'browse-url)
+(define-key ctl-z-w-map (kbd "w") #'browse-web)
 
 ;;  ____________________________________________________________________________
 ;;; EMAIL SENDING
@@ -1318,6 +1333,13 @@ Kills the current Dired buffer when entering a new directory"
 ;; Alignment of tags at the end of headlines
 (setq  org-auto-align-tags t
        org-tags-column 0)
+
+;; Toggle indicator for headlines
+(setq org-ellipsis " ▼ ")
+
+;; Don't add leading indentation to code blocks, remove them during export
+(setq org-edit-src-content-indentation 0
+      org-src-preserve-indentation nil)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; ORG CAPTURE
