@@ -8,16 +8,6 @@
 ;;; Code:
 
 ;;  ____________________________________________________________________________
-;;; USE-PACKAGE
-;; <>
-
-(eval-when-compile
-  (require 'use-package)
-  (setq use-package-always-ensure t
-        use-package-compute-statistics nil
-        use-package-verbose nil))
-
-;;  ____________________________________________________________________________
 ;;; GARBAGE COLLECTION
 ;; <https://gitlab.com/koral/gcmh>
 

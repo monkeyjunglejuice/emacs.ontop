@@ -26,6 +26,12 @@
 ;; This file is not part of GNU Emacs.
 
 ;;; Code:
+;;  ____________________________________________________________________________
+;;; USE-PACKAGE
+;; Setup `use-package' options before loading the modules
+
+(require 'use-package)
+(setq use-package-always-ensure t)
 
 ;;  ____________________________________________________________________________
 ;;; LOADER
