@@ -19,13 +19,14 @@
 ;; Copyright (C) 2022-2025 Dan Dee
 ;; Author: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
-;; Version: 1.0.1
+;; Version: 1.1.0
 ;; Package-Requires: ((EMACS "28.2"))
 ;; Keywords: convenience
 ;; SPDX-License-Identifier: MIT
 ;; This file is not part of GNU Emacs.
-
+;;
 ;;; Code:
+
 ;;  ____________________________________________________________________________
 ;;; USE-PACKAGE
 ;; Setup `use-package' options before loading the modules
