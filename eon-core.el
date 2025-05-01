@@ -665,7 +665,7 @@
 (use-package rainbow-delimiters
   :defer t
   :hook
-  (prog-mode . rainbow-delimiters-mode))
+  ((prog-mode conf-mode) . rainbow-delimiters-mode))
 
 ;; … and/or make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
@@ -690,7 +690,7 @@
   :defer t
   :diminish aggressive-indent-mode
   :hook
-  (prog-mode . aggressive-indent-mode))
+  ((prog-mode conf-mode) . aggressive-indent-mode))
 
 ;;  ____________________________________________________________________________
 ;;; GOTO LAST CHANGE
