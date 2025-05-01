@@ -42,8 +42,7 @@
 ;;  <https://haskell-language-server.readthedocs.io/en/latest/configuration.html>
 ;;  Common keybindings are configured in `./eon-core.el'
 
-(use-package eglot
-  :ensure nil
+(use-package eglot :ensure nil
   :config
   (setq-default eglot-workspace-configuration
                 '((haskell
@@ -85,7 +84,7 @@
 (use-package ob-haskell)
 
 ;; Evaluate Haskell code in Org source code blocks via "C-c C-c"
-(use-package org
+(use-package org :ensure nil
   :hook
   (org-mode . (lambda ()
                 (org-babel-do-load-languages
