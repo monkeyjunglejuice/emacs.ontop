@@ -9,17 +9,15 @@
 ;;; Code:
 
 ;;  ____________________________________________________________________________
-;;; ELIXIR TREESIT MODE
+;;; ELIXIR TS MODE
 ;; <https://github.com/wkirschbaum/elixir-ts-mode>
 
-(use-package elixir-ts-mode
-  :ensure nil)
+(use-package elixir-ts-mode :ensure nil)
 
 ;; In order to use Tree Sitter, install the tree-sitter binary with your OS
 ;; package manager. Then install the language grammar via
 ;; 'M-x treesit-install-language-grammar'
-(use-package treesit
-  :ensure nil
+(use-package treesit :ensure nil
   :config
   (add-to-list 'treesit-language-source-alist
                '(elixir "https://github.com/elixir-lang/tree-sitter-elixir"))
@@ -70,8 +68,7 @@ configuration or restarting applications."
 ;;; ELIXIR-LS
 ;; <https://github.com/elixir-lsp/elixir-ls>
 
-(use-package eglot
-  :ensure nil
+(use-package eglot :ensure nil
   :custom
   ;; A longer timeout seems required for the first run in a new project
   (eglot-connect-timeout 60)            ; default: 30
@@ -133,13 +130,6 @@ configuration or restarting applications."
   (elixir-ts-mode . exunit-mode))
 
 ;;  ____________________________________________________________________________
-;;; ERLANG
-;; <https://www.erlang.org/doc/apps/tools/erlang_mode_chapter.html>
-
-(use-package erlang
-  :defer t)
-
-;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
 
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
@@ -162,14 +152,14 @@ configuration or restarting applications."
 
 ;; TODO -- not working, package might be outdated
 ;; <https://github.com/zweifisch/ob-elixir>
-;; (use-package ob-elixir)
+(use-package ob-elixir)
 
-;; (use-package org
-;;   :hook
-;;   (org-mode . (lambda ()
-;;                 (org-babel-do-load-languages
-;;                  'org-babel-load-languages
-;;                  (add-to-list 'org-babel-load-languages '(elixir . t))))))
+(use-package org :ensure nil
+  :hook
+  (org-mode . (lambda ()
+                (org-babel-do-load-languages
+                 'org-babel-load-languages
+                 (add-to-list 'org-babel-load-languages '(elixir . t))))))
 
 ;; _____________________________________________________________________________
 (provide 'eon-elixir)
