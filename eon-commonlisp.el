@@ -50,12 +50,12 @@
   :after sly
   :custom
   (common-lisp-hyperspec-root
-   ;; Location when installed on MacOS via Homebrew
-   "/usr/local/share/doc/hyperspec/HyperSpec/")
-  (common-lisp-hyperspec-symbol-table
-   (concat common-lisp-hyperspec-root "Data/Map_Sym.txt"))
-  (common-lisp-hyperspec-issuex-table
-   (concat common-lisp-hyperspec-root "Data/Map_IssX.txt")))
+   (concat "file://"
+           (expand-file-name "~/common-lisp/.hyperspec/HyperSpec/"))
+   (common-lisp-hyperspec-symbol-table
+    (concat common-lisp-hyperspec-root "Data/Map_Sym.txt"))
+   (common-lisp-hyperspec-issuex-table
+    (concat common-lisp-hyperspec-root "Data/Map_IssX.txt"))))
 
 ;; <https://github.com/mmgeorge/sly-asdf>
 (use-package sly-asdf)
