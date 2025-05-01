@@ -34,6 +34,15 @@
 (setq use-package-always-ensure t)
 
 ;;  ____________________________________________________________________________
+;;; DEBUG / BENCHMARK
+
+;; (use-package benchmark-init
+;;   :when init-file-debug
+;;   ;; Disable collection of benchmark data after init is done
+;;   :config
+;;   (add-hook 'after-init-hook #'benchmark-init/deactivate))
+
+;;  ____________________________________________________________________________
 ;;; LOADER
 
 ;; Define the path of the Emacs ONTOP directory
