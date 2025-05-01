@@ -67,7 +67,10 @@
 (use-package sly-named-readtables)
 
 ;; <https://github.com/joaotavora/sly-quicklisp>
-(use-package sly-quicklisp)
+(use-package sly-quicklisp
+  :after sly-mrepl
+  :config
+  (add-to-list 'sly-mrepl-shortcut-alist '("quickload" . sly-quickload)))
 
 ;;  ____________________________________________________________________________
 ;;; STRUCTURAL EDITING
