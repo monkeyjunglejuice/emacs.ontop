@@ -87,7 +87,7 @@
         ("C-M-f" . merlin-eldoc-jump-to-next-occurrence)))
 
 ;;  ____________________________________________________________________________
-;;; REPL
+;;; STANDARD REPL (OCAML)
 
 ;; Run the standard OCaml toplevel via `tuareg-run-ocaml' "C-c C-s".
 ;; It’s possible to integrate any toplevel with Dune projects:
@@ -104,7 +104,7 @@
 ;; "C-c C-b": `tuareg-eval-buffer'
 
 ;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; ALTERNATIVE REPL
+;;; ALTERNATIVE REPL (UTOP)
 
 ;; Alternatively, there's Utop that also intergrates with Dune projects.
 ;; <https://github.com/ocaml-community/utop>
