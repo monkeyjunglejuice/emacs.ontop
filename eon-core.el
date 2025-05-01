@@ -425,12 +425,35 @@
   ("C-x 4 s" . switch-window-then-swap-buffer))
 
 ;;  ____________________________________________________________________________
-;;; COPY/PASTE
-;; <https://elpa.gnu.org/packages/xclip.html>
+;;; COPY / PASTE
 
 ;; Allow Emacs to copy/paste from/to the GUI clipboard when running
 ;; in a terminal emulator
+;; <https://elpa.gnu.org/packages/xclip.html>
 (use-package xclip)
+
+;; No empty lines etc. in the kill ring
+;; <https://github.com/NicholasBHubbard/clean-kill-ring.el>
+(use-package clean-kill-ring
+  :config
+  (clean-kill-ring-mode 1))
+
+;;  ____________________________________________________________________________
+;;; UNDO / REDO
+
+(use-package undo-fu
+  :custom
+  (undo-limit 67108864) ; 64mb
+  (undo-strong-limit 100663296) ; 96mb
+  (setq undo-outer-limit 1006632960) ; 960mb
+  )
+
+(use-package undo-fu-session
+  :custom
+  (undo-fu-session-incompatible-files
+   '("\\.gpg$" "/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'"))
+  :config
+  (undo-fu-session-global-mode))
 
 ;;  ____________________________________________________________________________
 ;;; DIRED
