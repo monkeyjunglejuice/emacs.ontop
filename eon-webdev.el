@@ -22,7 +22,7 @@
   (web-mode-markup-indent-offset 2)
   (web-mode-enable-auto-expanding t)
   (web-mode-enable-block-face t)
-  ;; TODO: styling required for web-mode-current-element-highlight-face
+  ;; TODO styling required for web-mode-current-element-highlight-face
   (web-mode-enable-current-element-highlight t)
   ':mode
   ;; Associate Web-mode with the following file types?
@@ -34,37 +34,40 @@
         ("C-M-b" . web-mode-backward-sexp)))
 
 ;;  ____________________________________________________________________________
-;;; HTML-MODE
+;;; HTML
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#HTML-Mode>
 
-(use-package sgml-mode
-  :ensure nil
+(use-package sgml-mode :ensure nil
+  :defer t)
+
+(use-package html-ts-mode :ensure nil
   :defer t)
 
 ;;  ____________________________________________________________________________
-;;; CSS-MODE
+;;; CSS
 
-(use-package css-mode
-  :ensure nil
+(use-package css-mode :ensure nil
+  :defer t
   :custom
   (css-indent-offset 2))
 
 ;;  ____________________________________________________________________________
-;;; JS-MODE
+;;; JS
 
-(use-package js
-  :ensure nil)
+(use-package js :ensure nil
+  :defer t)
 
 ;;  ____________________________________________________________________________
 ;;; SYNTAX-CHECKER / LINTER
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/flymake.html>
 
-(use-package flymake
-  ;; Syntax checkers don't work with web-mode, but the other modes
-  ;; Install the linter via: `npm install -g stylelint stylelint-config-standard'
-  :ensure nil
+(use-package flymake :ensure nil
+  ;; Syntax checkers don't work with web-mode, but the other modes. Install the
+  ;; linter via: `npm install -g stylelint stylelint-config-standard'
   :hook
-  ((html-mode css-mode js-mode) . flymake-mode))
+  (( html-mode html-ts-mode
+     css-mode css-ts-mode
+     js-mode js-ts-mode) . flymake-mode))
 
 ;; <https://github.com/purcell/flymake-css>
 ;; Install the linter via `npm install -g csslint'
@@ -73,13 +76,13 @@
   :custom
   (flymake-css-lint-command "csslint")
   :hook
-  (css-mode . flymake-css-load))
+  ((css-mode css-ts-mode) . flymake-css-load))
 
 ;; <https://github.com/orzechowskid/flymake-eslint>
 (use-package flymake-eslint
   :defer t
   :hook
-  (js-mode . flymake-eslint-enable))
+  ((js-mode js-ts-mode) . flymake-eslint-enable))
 
 ;;  ____________________________________________________________________________
 (provide 'eon-webdev)
