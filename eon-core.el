@@ -88,8 +88,8 @@
   (completion-styles '(orderless basic))
   (completion-category-defaults nil)
   (completion-category-overrides '((file (styles basic
-                                                 partial-completion
-                                                 emacs22)))))
+					                                       partial-completion
+					                                       emacs22)))))
 
 ;;  ____________________________________________________________________________
 ;;; CONSULT
