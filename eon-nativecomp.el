@@ -10,9 +10,17 @@
 ;;; COMPILE-ANGEL
 ;; <https://github.com/jamescherti/compile-angel.el>
 
+;; Don't kill Emacs as long as compiling processes are running
 (setq native-comp-async-query-on-exit t)
 
+;; Turn off Emacs' native copilation on demand and use Compile-angel instead
+(setq native-comp-jit-compilation nil)
+
+;; Load the newer file
+(setq load-prefer-newer t)
+
 (use-package compile-angel
+  :demand t
   :config
   ;; Exclude the custom-file, recentf, and savehist files
   ;; Ensure that the value of `savehist-file` is updated before proceeding
@@ -36,10 +44,11 @@
   ;; (When set to nil, compile-angel won't show which file is being compiled.)
   (setq compile-angel-verbose nil)
 
-  ;; Uncomment the line below to compile automatically when an Elisp file is saved
-  (add-hook 'emacs-lisp-mode-hook #'compile-angel-on-save-local-mode)
+  ;; Compile automatically when an Elisp file is saved?
+  ;; (add-hook 'emacs-lisp-mode-hook #'compile-angel-on-save-local-mode)
+  ;; (setq compile-angel-display-buffer t)
 
-  ;; A global mode that compiles .el files before they are loaded
+  ;; Global mode that compiles .el files before they are loaded
   ;; using `load' or `require'.
   (compile-angel-on-load-mode))
 
