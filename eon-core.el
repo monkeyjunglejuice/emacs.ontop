@@ -705,7 +705,16 @@
         ("M-n" . goto-last-change-reverse)))
 
 ;;  ____________________________________________________________________________
-;;; COMMON MARKUP- / SERIALIZATION FORMATS
+;;; ORG MODE EXTENSIONS
+
+;; <https://github.com/alphapapa/org-sticky-header>
+(use-package org-sticky-header
+  :after org
+  :hook
+  (org-mode . org-sticky-header-mode))
+
+;;  ____________________________________________________________________________
+;;; MARKUP- / SERIALIZATION FORMATS
 
 ;; <https://github.com/emacsorphanage/adoc-mode>
 (use-package adoc-mode
