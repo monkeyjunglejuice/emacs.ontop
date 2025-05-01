@@ -19,19 +19,25 @@
 ;;     on a module entry below and do `M-x ffap RET' to visit the file.
 
 (setq eon-modules
-      '(;;; NECESSARY MODULES
+      '(;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        ;;; NATIVE ELISP COMPILATION
+
+        ;; eon-nativecomp                ; improved native compilation
+
+        ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        ;;; NECESSARY MODULES
+
         eon                           ; include the Emacs ONBOARD starter-kit
         eon-core                      ; shared settings and definitions
-        
+
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         ;;; OPTIONAL MODULES
 
-        eon-nativecomp                ; improved native compilation
         ;; eon-embark                    ; minibuffer actions
         ;; eon-evil                      ; modular editing, VIM keybindings
         ;; eon-flycheck                  ; syntax checker alternative
         ;; eon-fonts                     ; curated font sets
-        ;; eon-helpful                   ; extended help viewer
+        eon-helpful                   ; extended help viewer
         ;; eon-meow                      ; modular editing, Meow keybindings
         ;; eon-pdftools                  ; PDF reader
         ;; eon-smartparens               ; Structural editing
@@ -52,7 +58,7 @@
         ;; eon-ocaml                     ; Ocaml programming
         ;; eon-racket                    ; Racket programming
         ;; eon-scheme                    ; Scheme programming
-        ;; eon-webdev                    ; HTML/CSS editing
+        eon-webdev                    ; HTML/CSS editing
 
         ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         ;;; PERSONAL MODULES
