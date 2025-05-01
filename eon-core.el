@@ -589,6 +589,8 @@
   (eglot-autoshutdown t)
   ;; Allow edits without confirmation?
   (eglot-confirm-server-initiated-edits nil)
+  ;; Show code action indicators?
+  (eglot-code-action-indications nil)
   :bind
   (:map eglot-mode-map
         ("C-c c r" . eglot-rename)
