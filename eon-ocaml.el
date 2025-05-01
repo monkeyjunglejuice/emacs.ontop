@@ -152,7 +152,8 @@
 ;;; DUNE
 
 ;; Major mode for Dune files
-(use-package dune)
+(use-package dune
+  :defer t)
 
 ;;  ____________________________________________________________________________
 ;;; OPAM
