@@ -206,15 +206,6 @@
    ("M-r" . consult-history))                ; orig. previous-matching-history-element
   )
 
-;; Use `consult-completion-in-region' if a vertical completion is enabled.
-;; Otherwise use the default `completion--in-region' function.
-(setq completion-in-region-function
-      (lambda (&rest args)
-        (apply (if (or vertico-mode fido-vertical-mode)
-                   #'consult-completion-in-region
-                 #'completion--in-region)
-               args)))
-
 ;;  ____________________________________________________________________________
 ;;; VERTICO
 ;; <https://github.com/minad/vertico>
@@ -244,6 +235,15 @@
   (vertico-resize 'grow-only)
   ;; Enable cycling for `vertico-next' and `vertico-previous'?
   (vertico-cycle nil))
+
+;; Use `consult-completion-in-region' if a vertical completion is enabled.
+;; Otherwise use the default `completion--in-region' function.
+(setq completion-in-region-function
+      (lambda (&rest args)
+        (apply (if (or vertico-mode fido-vertical-mode)
+                   #'consult-completion-in-region
+                 #'completion--in-region)
+               args)))
 
 ;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; EMACS (built-in)
