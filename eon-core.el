@@ -745,5 +745,53 @@
   :defer t)
 
 ;;  ____________________________________________________________________________
+;;; LISP
+
+;; Listing of Lisp-related modes, can be used to enable/disable hooks all at
+;; once
+
+(defun my-lisp-src-modes ()
+  "Generates a non-exhaustive list of loaded Lisp-related modes.
+Entries are derived from the smartparens package."
+  (seq-filter #'fboundp '(clojure-mode
+                          clojurec-mode
+                          clojurescript-mode
+                          clojurex-mode
+                          clojure-ts-mode
+                          clojurescript-ts-mode
+                          clojurec-ts-mode
+                          common-lisp-mode
+                          emacs-lisp-mode
+                          fennel-mode
+                          gerbil-mode
+                          lfe-mode ; addition
+                          lisp-mode
+                          lisp-data-mode ; addition
+                          racket-mode
+                          scheme-mode
+                          stumpwm-mode
+                          )))
+
+(defun my-lisp-repl-modes ()
+  "Generates a non-exhaustive list of loaded Lisp-related REPLs.
+Entries are derived from the smartparens package."
+  (seq-filter #'fboundp '(cider-repl-mode
+                          eshell-mode
+                          fennel-repl-mode
+                          geiser-repl-mode
+                          inf-clojure-mode
+                          inferior-emacs-lisp-mode
+                          inferior-lfe-mode ; addition
+                          inferior-lisp-mode
+                          inferior-scheme-mode
+                          lisp-interaction-mode
+                          monroe-mode
+                          racket-repl-mode
+                          scheme-interaction-mode
+                          slime-repl-mode
+                          sly-mrepl-mode
+                          )))
+
+;;  ____________________________________________________________________________
 (provide 'eon-core)
 ;;; eon-core.el ends here
