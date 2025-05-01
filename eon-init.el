@@ -69,8 +69,9 @@ It is empty per default, and will be set in `eon-setup-modules.el'.")
 ;; Require and read your module selection
 (eon-require-with-error-handling 'eon-setup-modules)
 
-;; Require the selected modules; install Emacs packages when necessary
+;; Require the module selection
 (defun eon-require-modules ()
+  "Loads the selected modules and install Emacs packages if necessary."
   (interactive)
   (dolist (module eon-modules)
     (eon-require-with-error-handling module)))
