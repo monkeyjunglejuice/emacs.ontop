@@ -158,63 +158,36 @@
 ;;  ____________________________________________________________________________
 ;;; OPAM
 
-;; Use the command "M-x opam-update-env" to select the opam switch for your
-;; OCaml project (stolen from Opam's user-setup).
-
-(defun opam-shell-command-to-string (command)
-  "Similar to shell-command-to-string, but returns nil unless the process
- returned 0 and ignores stderr (shell-command-to-string ignores return value)."
-  (let* ((return-value 0)
-         (return-string
-          (with-output-to-string
-            (setq return-value
-                  (with-current-buffer standard-output
-                    (process-file shell-file-name nil '(t nil) nil
-                                  shell-command-switch command))))))
-    (if (= return-value 0) return-string nil)))
-
-(defun opam-update-env (switch)
-  "Update the environment to follow current Opam SWITCH configuration."
-  (interactive
-   (list
-    (let ((default
-           (car (split-string (opam-shell-command-to-string "opam switch show --safe")))))
-      (completing-read
-       (concat "opam switch (" default "): ")
-       (split-string (opam-shell-command-to-string "opam switch list -s --safe") "\n")
-       nil t nil nil default))))
-  (let* ((switch-arg (if (= 0 (length switch)) "" (concat "--switch " switch)))
-         (command (concat "opam config env --safe --sexp " switch-arg))
-         (env (opam-shell-command-to-string command)))
-    (when (and env (not (string= env "")))
-      (dolist (var (car (read-from-string env)))
-        (setenv (car var) (cadr var))
-        (when (string= (car var) "PATH")
-          (setq exec-path (split-string (cadr var) path-separator)))))))
-
-;; Install the basic package selection for convenience
-(defun opam-install-basic-packages ()
-  "Install standard package selection for editor support and development."
-  (interactive)
-  (message (concat "Installing basic packages for switch: "
-                   (opam-switch--get-current-switch)))
-  (start-process
-   "opam-install-basic-packages"        ; Emacs process name
-   "*opam-install*"                     ; Emacs output buffer
-   "opam" "install"                     ; shell command
-   "--yes"                              ; answer "yes" to all questions
-   ;; Package selection
-   "dune"
-   "dune-release"
-   "merlin"
-   "tuareg"
-   "ocaml-lsp-server"
-   "ocamlformat"
-   "utop"
-   "odoc"
-   "omod"
-   "domainslib"
-   ))
+;; Use the command "M-x opam-switch-set-switch" to select the opam switch for
+;; your OCaml project
+(use-package opam-switch-mode
+  :after tuareg
+  :config
+  (setq tuareg-opam-insinuate t)
+  (opam-switch-set-switch (tuareg-opam-current-compiler))
+  ;; Install basic package selection via Opam
+  (defun opam-switch-install-packages ()
+    "Install standard package selection for editor support and development."
+    (interactive)
+    (message (concat "Opam: installing packages for switch: "
+                     (opam-switch--get-current-switch)))
+    (start-process
+     "opam install"       ; Emacs process name
+     "*opam install*"     ; Emacs output buffer
+     "opam" "install"     ; shell command
+     "--yes"              ; answer "yes" to all questions
+     ;; Package selection
+     "dune"
+     "dune-release"
+     "merlin"
+     "tuareg"
+     "ocaml-lsp-server"
+     "ocamlformat"
+     "utop"
+     "odoc"
+     "omod"
+     "domainslib"
+     )))
 
 ;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
