@@ -9,10 +9,9 @@
 ;;; Code:
 
 ;;  ____________________________________________________________________________
-;;; LUA-MODE
-;; <https://github.com/immerrr/lua-mode>
+;;; LUA TS MODE
 
-(use-package lua-mode
+(use-package lua-ts-mode :ensure nil
   :custom
   (lua-default-application "lua")
   (lua-default-command-switches '("-i"))
@@ -32,26 +31,24 @@
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
 ;; Common keybindings are configured in `./eon-eglot.el'
 
-(use-package eglot
-  :ensure nil
+(use-package eglot :ensure nil
   :hook
-  (lua-mode . eglot-ensure)
+  (lua-ts-mode . eglot-ensure)
   :config
   (with-eval-after-load 'eglot
     (add-to-list 'eglot-server-programs
                  ;; <https://github.com/LuaLS/lua-language-server/wiki>
-                 `(lua-mode . ,(eglot-alternatives
-                                '(("lua-language-server")))))))
+                 `(lua-ts-mode . ,(eglot-alternatives
+                                   '(("lua-language-server")))))))
 
 ;;  ____________________________________________________________________________
 ;;; SYNTAX-CHECKER / LINTER
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/flymake.html>
 ;; Depends on luacheck: `luarocks --local install luacheck'
 
-(use-package flymake
-  :ensure nil
+(use-package flymake :ensure nil
   :hook
-  (lua-mode . flymake-mode))
+  (lua-ts-mode . flymake-mode))
 
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
@@ -60,8 +57,7 @@
 ;; Evaluate Lua code in Org source code blocks via "C-c C-c".
 
 ;; <https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-lua.html>
-(use-package org
-  :ensure nil
+(use-package org :ensure nil
   :hook
   (org-mode . (lambda ()
                 (org-babel-do-load-languages
