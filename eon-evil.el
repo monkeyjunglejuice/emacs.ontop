@@ -85,6 +85,17 @@
   :custom
   (evil-collection-setup-minibuffer t))
 
+;; <https://github.com/meain/evil-textobj-tree-sitter>
+(use-package evil-textobj-tree-sitter
+  :config
+  (evil-define-key 'nil evil-outer-text-objects-map
+    "f" (evil-textobj-tree-sitter-get-textobj "function.outer")
+    "c" (evil-textobj-tree-sitter-get-textobj "class.outer"))
+  (evil-define-key 'nil evil-inner-text-objects-map
+    "f" (evil-textobj-tree-sitter-get-textobj "function.inner")
+    "c" (evil-textobj-tree-sitter-get-textobj "class.inner"))
+  )
+
 ;;  ____________________________________________________________________________
 ;; STRUCTURAL EDITING
 ;; <https://github.com/noctuid/lispyville>
