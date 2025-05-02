@@ -16,7 +16,7 @@
 ;; Copyright (C) 2021–2025 Dan Dee
 ;; Author: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
-;; Version: 1.4.4
+;; Version: 1.5.0
 ;; Package-Requires: ((EMACS "28.2"))
 ;; Keywords: convenience
 ;; SPDX-License-Identifier: MIT
@@ -52,7 +52,7 @@
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/elisp.html#Garbage-Collection>
 
 ;; Set a high value of 1 GB to prevent frequent garbage collections
-;; during initialization.
+;; during initialization
 (setq gc-cons-threshold #x40000000)  ; default threshold is 800 KB
 
 ;; Prevent longer GC pauses and experience less mini-interruptions.
@@ -122,9 +122,6 @@ The timer can be canceled with `eon-cancel-gc-timer'.")
   ;; 3rd priority
   ;; There are also Gnu Elpa and Non-Gnu Elpa, which are enabled by default
 
-  ;; Natively compile packages at first use or immediately after installation?
-  (setq package-native-compile t)
-
   ;; Highlight current line in the package manager
   (add-hook 'package-menu-mode-hook
             (lambda ()
@@ -154,6 +151,15 @@ When ACTION receives \='ignore, then nothing will happen."
                   (package-refresh-contents)
                   (package-install package nil)))
             package-list))))
+
+;;  ____________________________________________________________________________
+;;; NATIVE ELISP COMPILATION
+
+;; Natively compile packages at first use or immediately after installation?
+(setq package-native-compile t)
+
+;; Ask whether to terminate asynchronous compilations on exit
+(setq native-comp-async-query-on-exit t)
 
 ;;  ____________________________________________________________________________
 ;;; HELPERS
@@ -231,6 +237,14 @@ or `system-configuration' directly."
 ;; Don't bypass "C-h ..." keybindings
 (setq mac-pass-command-to-system nil)
 
+;; Show a help window with possible key bindings?
+(when (>= emacs-major-version 30)
+  (setq which-key-lighter ""
+        which-key-idle-delay 1.5
+        which-key-idle-secondary-delay 0.0
+        which-key-sort-uppercase-first nil)
+  (which-key-mode 1))
+
 ;;  ____________________________________________________________________________
 ;;; SYSTEM
 
@@ -240,8 +254,10 @@ or `system-configuration' directly."
 ;; Increase warning threshold
 (setq large-file-warning-threshold (* 64 1000000))
 
-;; Set undo limit to 64 MB
-(setq undo-outer-limit (* 64 1000000))
+;; Increase undo limit
+(setq undo-limit 67108864          ; 64mb
+      undo-strong-limit 100663296  ; 96mb
+      undo-outer-limit 1006632960) ; 960mb
 
 ;; Increase the amount of data which Emacs reads from subprocesses
 (setq read-process-output-max (* 1024 1024))  ; 1 MB
@@ -524,24 +540,29 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (blink-cursor-mode -1)
 
 ;; Cursor blinking interval in seconds
-(setq blink-cursor-interval 0.4)
+(setq blink-cursor-interval 0.3)
+
+;; Blink cursor that often before going into solid state
+(setq blink-cursor-blinks 3)
 
 ;; Emphasize the cursor when running Emacs in a text terminal?
 (setq visible-cursor nil)
 
+;; Keep cursor outside of any cursor-intangible text property
+(cursor-intangible-mode 1)
+
 ;; Make sure to highlight the current line only in the active window.
 (setq hl-line-sticky-flag nil)
+(add-hook 'special-mode-hook
+          (lambda ()
+            ;; Highlight current line in special modes?
+            (hl-line-mode 1)))
+
+;; Render cursors or regions in non-focused windows?
+(setq-default cursor-in-non-selected-windows nil)
 
 ;;  ____________________________________________________________________________
 ;;; USER INTERFACE
-
-;; Show a help window with possible key bindings?
-(when (>= emacs-major-version 30)
-  (setq which-key-lighter ""
-        which-key-idle-delay 1.5
-        which-key-idle-secondary-delay 0.0
-        which-key-sort-uppercase-first nil)
-  (which-key-mode 1))
 
 ;; Menu bar: on/off by default?
 (menu-bar-mode 1)
@@ -565,17 +586,22 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (define-key ctl-z-map (kbd "C-r") #'redraw-display)
 
 ;;  ____________________________________________________________________________
-;;; SMOOTH SCROLLING
+;;; SCROLLING
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Scrolling>
 
 (setq-default mouse-wheel-scroll-amount '(1 ((shift) . 1))
               mouse-wheel-progressive-speed t
-              mouse-wheel-follow-mouse t
-              scroll-preserve-screen-position t
-              scroll-margin 1  ; leave n lines on both screen ends
+              mouse-wheel-follow-mouse t)
+
+(setq-default scroll-preserve-screen-position t
+              scroll-margin 1
               scroll-up-aggressively 0.01
-              scroll-down-aggressively 0.01
-              auto-window-vscroll nil)
+              scroll-down-aggressively 0.01)
+
+;; Horizontal scrolling
+(setq auto-window-vscroll nil
+      hscroll-margin 1
+      hscroll-step 1)
 
 ;; Enable pixel-based scrolling
 (if (fboundp #'pixel-scroll-precision-mode)
@@ -615,13 +641,17 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (setq resize-mini-windows 'grow-only)
 
 ;; Save minibuffer history between Emacs sessions?
+(setq history-length 300)
 (savehist-mode 1)
 
 ;; Delete duplicates from the command history?
 (setq history-delete-duplicates t)
 
-;; Change all yes/no style questions to y/n style?
-(fset 'yes-or-no-p 'y-or-n-p)
+;; Allow for shorter responses? "y" for "yes" and "n" for "no"
+(setq read-answer-short t)
+(if (boundp 'use-short-answers)
+    (setq use-short-answers t)
+  (advice-add 'yes-or-no-p :override #'y-or-n-p))
 
 ;;  ____________________________________________________________________________
 ;;; MINIBUFFER COMPLETION
@@ -790,6 +820,9 @@ The elements of the list are regular expressions.")
 ;;; CLIPBOARD, COPY & PASTE
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Killing>
 
+;; Prevent duplicates to avoid cluttering the kill ring
+(setq kill-do-not-save-duplicates t)
+
 (require 'select)
 
 (setq
@@ -861,17 +894,26 @@ The elements of the list are regular expressions.")
 ;;; BACKUP
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Backup>
 
-;; Make backup before editing
+;; Make backup before editing?
+(setq make-backup-files t)
+
+;; Backup settings
 (setq backup-by-copying t
+      backup-by-copying-when-linked t
       kept-new-versions 5
       kept-old-versions 5
       delete-old-versions t
-      version-control t)
+      version-control t
+      vc-make-backup-files t)
 
 ;; Where to save the backups?
 ;; Specify file name/path patterns and directories ("REGEXP" . "DIRECTORY")
 (setq backup-directory-alist
       `(("." . ,(concat user-emacs-directory "backup/"))))
+
+;; Apply the same backup policy for Tramp files on their hosts like the
+;; policy for local files
+(setq tramp-backup-directory-alist backup-directory-alist)
 
 ;;  ____________________________________________________________________________
 ;;; LOCKFILES
@@ -884,8 +926,23 @@ The elements of the list are regular expressions.")
 ;;; AUTO-SAVE
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Auto-Save>
 
-(setq auto-save-default nil
-      auto-save-interval 0)
+;; Enable auto-save to safeguard against data loss. The
+;; `recover-file' or `recover-session' functions can be used
+;; to restore auto-saved data
+(setq auto-save-default nil)
+(setq auto-save-no-message t)
+
+;; Do not auto-disable auto-save after deleting large chunks of text
+(setq auto-save-include-big-deletions t)
+
+;; Auto-save locations
+(setq auto-save-list-file-prefix
+      (expand-file-name "autosave/" user-emacs-directory))
+(setq tramp-auto-save-directory
+      (expand-file-name "autosave-tramp/" user-emacs-directory))
+
+;; Auto save options
+(setq kill-buffer-delete-auto-save-files t)
 
 ;;  ____________________________________________________________________________
 ;;; HELP
@@ -925,7 +982,8 @@ The elements of the list are regular expressions.")
 ;; Ignore some recently visited files, eg. to prevent them from showing up
 ;; amongst recent files after package upgrades
 (add-to-list 'recentf-exclude
-             (expand-file-name (concat user-emacs-directory "elpa/")))
+             (expand-file-name (concat user-emacs-directory "elpa/"))
+             "^/\\(?:ssh\\|su\\|sudo\\)?:")
 
 ;; Use 'completing-read' to choose between recent files
 (defun eon-find-recentf ()
@@ -935,7 +993,7 @@ The elements of the list are regular expressions.")
 (global-set-key (kbd "C-x f") #'eon-find-recentf)
 
 ;;  ____________________________________________________________________________
-;;; DIRED
+;;; DIRED / FILES
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Dired>
 
 (require 'dired)
@@ -948,43 +1006,7 @@ The elements of the list are regular expressions.")
 (define-key dired-mode-map (kbd "e") #'dired-toggle-read-only)
 
 ;; Don't accumulate useless Dired buffers
-(defun eon-dired-single-buffer (s)
-  "When S is non-nil, prevent superfluous Dired buffers from accumulating.
-Kills the current Dired buffer when entering a new directory"
-  (when (not (null s))
-    (cond
-     ((version< emacs-version "28.1")
-      (progn (put 'dired-find-alternate-file 'disabled nil)
-             (define-key dired-mode-map (kbd "RET") #'dired-find-alternate-file)
-             (define-key dired-mode-map (kbd "^") (lambda ()
-                                                    (interactive)
-                                                    (find-alternate-file "..")))))
-     (t (setq dired-kill-when-opening-new-dired-buffer t)))))
-
-(eon-dired-single-buffer t)  ; set the default
-
-;; Use the system trash when deleting files
-
-(defun eon-trash-on ()
-  "Delete files by moving to the system trash."
-  (interactive)
-  (setq delete-by-moving-to-trash t)
-  (setq dired-recursive-deletes 'always)  ; don't ask when directory not empty
-  (message "Trash on: Deleted files will go to system trash."))
-
-(defun eon-trash-off ()
-  "Delete files immediately."
-  (interactive)
-  (setq delete-by-moving-to-trash nil)
-  (setq dired-recursive-deletes 'top)  ; ask when directory not empty
-  (message "Trash off: Files will be deleted immediately!"))
-
-(eon-trash-on)  ; set the default
-
-;; Auto refresh dired when contents of a directory change
-(require 'autorevert)
-(setq auto-revert-verbose nil)
-(add-hook 'dired-mode-hook #'auto-revert-mode)
+(setq dired-kill-when-opening-new-dired-buffer t)
 
 ;; Directory listings
 (add-hook 'dired-mode-hook
@@ -1026,12 +1048,49 @@ Kills the current Dired buffer when entering a new directory"
   (define-key dired-mode-map (kbd "M-RET") #'eon-dired-xdg-open))
 
 ;;  ____________________________________________________________________________
+;;; FILE HANDLING
+
+(defun eon-trash-on ()
+  "Delete files by moving to the system trash."
+  (interactive)
+  (setq delete-by-moving-to-trash t)
+  (setq dired-recursive-deletes 'always)  ; don't ask when directory not empty
+  (message "Trash on: Deleted files will go to system trash."))
+
+(defun eon-trash-off ()
+  "Delete files immediately."
+  (interactive)
+  (setq delete-by-moving-to-trash nil)
+  (setq dired-recursive-deletes 'top)  ; ask when directory not empty
+  (message "Trash off: Files will be deleted immediately!"))
+
+(eon-trash-on)  ; set the default
+
+;; Use the system trash when deleting files
+(setq remote-file-name-inhibit-delete-by-moving-to-trash t)
+
+;; Resolve symlinks so that operations are conducted from the file's directory
+(setq find-file-visit-truename t
+      vc-follow-symlinks t)
+
+;; Auto refresh dired (and others) when contents change
+(require 'autorevert)
+(setq global-auto-revert-non-file-buffers t
+      auto-revert-stop-on-user-input nil
+      auto-revert-verbose t)
+
+;; Configure Ediff to use a single frame and split windows horizontally
+(setq ediff-window-setup-function 'ediff-setup-windows-plain
+      ediff-split-window-function 'split-window-horizontally)
+
+;;  ____________________________________________________________________________
 ;;; COMINT
 
 (require 'comint)
 
 (setq comint-input-ignoredups t
       comint-prompt-read-only t
+      comint-buffer-maximum-size 2048
       comint-scroll-to-bottom-on-input 'this)
 
 ;;  ____________________________________________________________________________
@@ -1171,7 +1230,8 @@ Kills the current Dired buffer when entering a new directory"
 ;; UTF-8
 (prefer-coding-system 'utf-8)
 
-;; Remember the place where the cursor was last time
+;; Remember the place where the cursor was last time?
+(setq save-place-limit 500)
 (save-place-mode 1)
 
 ;; Set desired line length in characters
@@ -1207,14 +1267,16 @@ Kills the current Dired buffer when entering a new directory"
 ;;; LINE WRAPPING
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Line-Truncation>
 
-;; Truncate long lines in programming modes?
-;; By default, lines are continued visually on the next screen-line
-;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Continuation-Lines>
-;; For default behavior, do "M-x toggle-truncate-lines",
-;; or set this variable to nil.
+;; Truncate long lines in programming modes by default.
 (add-hook 'prog-mode-hook
           (lambda ()
             (setq-local truncate-lines t)))
+
+;; If you prefer to see all text within a window in programming modes, enable
+;; visual line breaks, a.k.a soft wrapping
+;; (add-hook 'prog-mode-hook
+;;           (lambda ()
+;;             (visual-line-mode 1)))
 
 ;;  ____________________________________________________________________________
 ;;; FOLDING
@@ -1230,11 +1292,21 @@ Kills the current Dired buffer when entering a new directory"
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Indentation>
 
 (setq-default indent-tabs-mode nil  ; don't use tabs but spaces
-              tab-width 2)          ; set display width for tab characters
+              tab-width 4)          ; set display width for tab characters
 
 ;; Delete the whole indentation instead spaces one-by-one via <backspace>?
 ;; (Possibly shadowed by 3rd-party packages like `smartparens-mode'
 (setq backward-delete-char-untabify-method 'hungry)
+
+;; Enable indentation and completion using the TAB key
+(setq-default tab-always-indent 'complete)
+
+;;  ____________________________________________________________________________
+;;; COMMENTING
+
+;; Enable multi-line commenting to ensure that `comment-indent-new-line'
+;; properly continues comments onto new lines.
+(setq comment-multi-line t)
 
 ;;  ____________________________________________________________________________
 ;;; BRACKETS / PARENTHESIS
@@ -1242,7 +1314,9 @@ Kills the current Dired buffer when entering a new directory"
 
 ;; How to display matching parens generally?
 (setq show-paren-style 'parenthesis
-      show-paren-delay 0.125)
+      show-paren-delay 0.125
+      show-paren-when-point-inside-paren t
+      show-paren-when-point-in-periphery t)
 
 ;; Auto-close parens, brackets and quotes?
 (electric-pair-mode 1)
@@ -1290,6 +1364,11 @@ Kills the current Dired buffer when entering a new directory"
 (define-key flymake-mode-map (kbd "M-g p") #'flymake-goto-prev-error)  ; default
 
 ;;  ____________________________________________________________________________
+;;; LANGUAGE SERVER (EGLOT)
+
+;; TODO Will be included here with Emacs 29 minimum compatibility
+
+;;  ____________________________________________________________________________
 ;;; COMPILING
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Building>
 
@@ -1298,11 +1377,19 @@ Kills the current Dired buffer when entering a new directory"
  'display-buffer-alist
  '("\\*.*compilation\\*" (display-buffer-no-window)))
 
+;; Scroll to the first error
+(setq compilation-scroll-output 'first-error)
+
+;; Recenter to the middle of the window for `compile-goto-error'
+(setq next-error-recenter '(4))
+
 ;;  ____________________________________________________________________________
-;;; TEXT MODES / WRITING
+;;; TEXT MODES / WRITING PROSE
 
 ;; Sentences end with a single space
 (setq sentence-end-double-space nil)
+
+;; TODO Add Flyspell / Ispell presets here
 
 ;;  ____________________________________________________________________________
 ;;; ORG MODE
@@ -1380,6 +1467,11 @@ Kills the current Dired buffer when entering a new directory"
 ;; Visit your Org agenda via `C-z o a'
 (define-key ctl-z-o-map (kbd "a") #'org-agenda)
 
+(add-hook 'org-agenda-mode-hook
+          (lambda ()
+            ;; Highlight current line in Org agenda?
+            (hl-line-mode 1)))
+
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; ORG LINKS
 ;; <https://orgmode.org/org.html#Hyperlinks>
@@ -1399,7 +1491,7 @@ Kills the current Dired buffer when entering a new directory"
 (require 'ox-publish)
 
 ;; Select a project to publish a project via `C-z o p';
-;; This can be used to enerate and publish a static blog, ODF documents, etc.
+;; This can be used to enerate and publish a static blog, ebooks, etc.
 (define-key ctl-z-o-map (kbd "p") 'org-publish)
 
 ;; Speed up publishing by skipping files that haven't been changed
@@ -1409,7 +1501,7 @@ Kills the current Dired buffer when entering a new directory"
 (setq org-publish-timestamp-directory
       (concat user-emacs-directory "org-timestamps/"))
 
-(defun eon-org-publish-use-timestamps ()
+(defun eon-org-publish-unchanged-files-toggle ()
   "Toggle wether to re-export Org files that haven't been changed."
   (interactive)
   (if org-publish-use-timestamps-flag
@@ -1458,8 +1550,9 @@ Kills the current Dired buffer when entering a new directory"
 (add-hook 'emacs-lisp-mode-hook #'flymake-mode)
 (add-hook 'lisp-interaction-mode-hook (lambda () (flymake-mode -1)))
 
-;; Emacs Lisp: don't truncate printed lists
-(setq eval-expression-print-length nil)
+;; Emacs Lisp evaluation: don't truncate printed lists
+(setq eval-expression-print-length nil
+      eval-expression-print-level nil)
 
 ;; Additional keybinding resembling other sexp-related keybindings
 ;; who usually begin with "C-M". Also useful editing non-lisp languages
