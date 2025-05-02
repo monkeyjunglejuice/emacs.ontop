@@ -37,20 +37,6 @@
   ((racket-mode racket-hash-lang-mode) . racket-xp-mode))
 
 ;;  ____________________________________________________________________________
-;;; STRUCTURAL EDITING
-
-;; SMARTPARENS
-;; <https://github.com/Fuco1/smartparens>
-;; <https://smartparens.readthedocs.io/en/latest/>
-
-;; Smartparens non-strict mode is already enabled globally
-;; and configured in `eon-core.el'
-
-(use-package smartparens
-  :hook
-  (racket-mode . smartparens-strict-mode))
-
-;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
 
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
