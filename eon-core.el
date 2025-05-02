@@ -442,12 +442,7 @@
 ;;  ____________________________________________________________________________
 ;;; UNDO / REDO
 
-(use-package undo-fu
-  :custom
-  (undo-limit 67108864) ; 64mb
-  (undo-strong-limit 100663296) ; 96mb
-  (setq undo-outer-limit 1006632960) ; 960mb
-  )
+(use-package undo-fu)
 
 (use-package undo-fu-session
   :custom
