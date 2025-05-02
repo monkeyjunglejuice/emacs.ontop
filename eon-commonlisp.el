@@ -110,13 +110,11 @@
 
 ;; Make the function aware of Sly (defaults to Slime)
 ;; <https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-lisp.html>
-(use-package ob-lisp
-  :ensure nil
+(use-package ob-lisp :ensure nil
   :custom
   (org-babel-lisp-eval-fn #'sly-eval))
 
-(use-package org
-  :ensure nil
+(use-package org :ensure nil
   :hook
   (org-mode . (lambda () (org-babel-do-load-languages
                           'org-babel-load-languages
