@@ -709,7 +709,10 @@
 (use-package org-sticky-header
   :after org
   :hook
-  (org-mode . org-sticky-header-mode))
+  ;; Don't load for Org mode *scratch* buffer
+  (org-mode . (lambda ()
+                (when buffer-file-name
+                  (org-sticky-header-mode 1)))))
 
 ;;  ____________________________________________________________________________
 ;;; MARKUP- / SERIALIZATION FORMATS
