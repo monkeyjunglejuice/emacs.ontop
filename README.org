@@ -1,41 +1,55 @@
 * 🚀 Emacs ONTOP
 
-Emacs ONTOP is an extension to the [[https://github.com/monkeyjunglejuice/emacs.onboard][Emacs ONBOARD starterkit]] with certain niceties and setups for several programming languages. It stays close to original Emacs though in how things are achieved - there are no fancy new macros and other stuff like that.
+Emacs ONTOP is an extension to the [[https://github.com/monkeyjunglejuice/emacs.onboard][Emacs ONBOARD starterkit]] with certain niceties and setups for several programming languages. It stays close to original Emacs though.
 
 - /Compilers, language servers and build systems must be installed separately./
 
 ** Emacs for Common Lisp ★★★★★
 *ontop-commonlisp*: Complete Common Lisp setup with [[https://github.com/joaotavora/sly][Sly]] (fork of Slime). Just install and setup [[https://roswell.github.io/Installation.html][Roswell]], and you're ready to go. Alternatively, install SBCL with your package manager and then [[https://www.quicklisp.org/beta/][Quicklisp]]. The setup covers most needs, seasoned Lispers though may still come up with improvements that I don't know about.
-** Emacs for OCaml ★★★★☆
-*ontop-ocaml*: OCaml setup in Emacs based on Tuareg and Merlin. Completion in Utop is working, with completion candidates provided by Merlin.
+
 ** Emacs for Clojure ★★★★☆
 *ontop-clojure*: The Clojure setup is just a basic setup with Cider right now, but is usable out-of-the-box. Further tweaks might provide an even better experience.
-** Emacs for Haskell ★★★★☆
-*ontop-haskell*: Interactive Haskell setup based on Haskell language server. The GHCi provides a much better experience within Emacs than in a terminal. This configuration works well with both Cabal and Stack projects, both on Linux and MacOS.
-** Emacs for Erlang ★★★★☆
-*ontop-erlang*: Comprehensive Erlang setup with Erlang shell, Tree-sitter and Org-mode babel for notebook-style literate programming.
+
 ** Emacs for Julia ★★★★☆
 *ontop-julia*: The Julia setup is based on the Julia language server, [[https://github.com/gcv/julia-snail][Snail]] and Tree-sitter. The REPL runs in an embedded terminal emulator [[Eat][Eat]].
-** Emacs for Elixir ★★★☆☆
+
+** Emacs for OCaml ★★★★☆
+*ontop-ocaml*: OCaml setup in Emacs based on Tuareg and Merlin. Completion in Utop is working, with completion candidates provided by Merlin.
+
+** Emacs for Haskell ★★★★☆
+*ontop-haskell*: Interactive Haskell setup based on Haskell language server. The GHCi provides a much better experience within Emacs than in a terminal. This configuration works well with both Cabal and Stack projects, both on Linux and MacOS.
+
+** Emacs for Elixir ★★★★☆
 *ontop-elixir*: Elixir setup comes with two pre-configured language servers to choose from (Elixir-ls and Next-ls), Tree-sitter, Mix integration and REPL. [[https://github.com/J3RN/inf-elixir/issues/20][Autocompletion doesn't work in the REPL]], unfortunately. "Jump-to-definition" doesn't work either, but that limitation seems to come from the language servers themselves.
-** Emacs for Scheme ★★★☆☆
+
+** Emacs for Scheme ★★★★☆
 *ontop-scheme*: The Emacs Scheme setup supports eight major Scheme implementations via Geiser and comes with SRFI-browser and structural editing. The Scheme implementations have either more or less comprehensive tooling, hence the user experience varies. Tested on Debian Linux with GNU Guile (most interactive experience and easy setup) and Chicken scheme (rather bare-bones).
-** Emacs for Gerbil Scheme ★★★☆☆
-*ontop-gerbil*: Gerbil Scheme setup with REPL, according to the suggestions on the Gerbil Scheme website.
-** Emacs for Racket ★★★☆☆
+
+** Emacs for Racket ★★★★☆
 *ontop-racket*: The Racket setup based on [[https://github.com/greghendershott/racket-mode][Racket-mode]] provides more interactivity than DrRacket, and the new "racket-hash-lang-mode" supports arbitrary syntax for DSLs in Emacs. However, the syntax highlighting could be configured more in-depth.
+
+** Emacs for Erlang ★★★☆☆
+*ontop-erlang*: Comprehensive Erlang setup with Erlang shell, Tree-sitter and Org-mode babel for notebook-style literate programming.
+
 ** Emacs for Gleam ★★☆☆☆
 *ontop-gleam*: Basic setup for the Gleam language with LSP and Treesitter support. No interactive programming, since Gleam doesn't come with a REPL.
-** Emacs for LFE (Lisp Flavoured Erlang) ★★☆☆☆
-*ontop-lfe*: Basic LFE setup with REPL.
+
 ** Emacs for Lua ★★☆☆☆
 *ontop-lua*: Basic Lua "setup" with REPL and lua-language-server. Rudimentary setup suitable for editing Lua code. The available features don't come anywhere close to the Lua IDE [[https://studio.zerobrane.com/][ZeroBrane Studio]], TextAdept or Neovim.
+
+** Emacs for LFE (Lisp Flavoured Erlang) ★★☆☆☆
+*ontop-lfe*: Basic LFE setup with REPL.
+
+** Emacs for Gerbil Scheme ★☆☆☆☆
+*ontop-gerbil*: Gerbil Scheme setup with REPL, according to the suggestions on the Gerbil Scheme website.
+
 ** Emacs for Web Development ★☆☆☆☆
 *ontop-webdev*: Just basic HTML, CSS and JavaScript editing and linting (linters have to be installed separately); includes web-mode. Highly under-developed, since I don't use JS.
+
 ** Emacs for Emacs Package Development ☆☆☆☆☆
 *ontop-emacsdev*: Not yet included -- scheduled for next time when I'm about to publish a package on Melpa.
 
-* FULL INSTALL -- Get ONTOP:
+* Full Installation -- Get ONTOP:
 
 - *1.* Clone this repository:
 #+begin_src shell
@@ -47,7 +61,7 @@ git clone https://github.com/monkeyjunglejuice/emacs.ontop.git ~/.emacs.ontop
 (load-file "~/.emacs.ontop/eon-init.el")
 #+end_src
 
-- *3.* Edit =~/.emacs.ontop/ontop-setup-modules.el= to select your desired modules, then restart Emacs. The installation process begins: Emacs will download and install the required Emacs packages from MELPA. It will take approx. 1--3 min, depending on your module selection and internet speed. If the process gets interupted, that's no problem -- just restart Emacs, and it will continue. There will be some warnings, which can be ignored -- these are related to the compilation of the downloaded Emacs packages.
+- *3.* Edit =~/.emacs.ontop/ontop-setup-modules.el= to select your desired modules, then restart Emacs. The installation process begins: Emacs will download and install the required Emacs packages from MELPA. It will take approx. 1--3 min, depending on your module selection and internet speed. If the process gets interupted, that's no problem -- just restart Emacs, and it will continue. There will be some warnings, which can be ignored -- these are mostly related to the compilation of the downloaded Emacs packages.
 
 * Get comfortable
 Look into the module files in order to learn about the commands and key bindings -- all documentation lives there. If you want to change settings, re-define these settings within the file =ontop-setup-personal.el=.
@@ -61,17 +75,15 @@ Look into the module files in order to learn about the commands and key bindings
 
 - Don't be invasive: provide add-ons rather than replacements. In the large: Emacs ONTOP tries to integrate into your existing Emacs config rather than aiming to replace it. And in the small: global variables are often used across packages. Be careful not to `setq' these variables, but do `add-to-list' insted (this negligence appears very often in instructions for how to setup packages).
 
-- Towards un-opinionated: Where one opinion has to be followed, prepare or mention the alternatives -- e.g. via conditionals, code examples/templates in the documentation, or even a whole new module that can be activated separately -- but don't foster decision fatique.
-
 - Consistency: Adhering to Emacs conventions and doing common actions in the same way is crucial for the user experience (e.g. same Eglot keybindings across all languages; consistant keybindings for "evaluate expression", "compile", etc.). If in doubt, follow Emacs conventions, `ontop-commonlisp.el' or `ontop-ocaml.el'.
 
-- Reading the documentation in the Elisp files shall be a reward in itself. Tipps, tricks, alternatives -- covering the whole experience working with Emacs in a certain programming language.
+- Beginner-friendly: No complex "Emacs-framework". Novice Emacs users willing to touch Elisp code should be able to follow, adapt code and and immediately celebrate their achievements. Code should not be intertwined, but easily modificable, separately usable and stealable -- if that leads to some redundancy, it's fine.
+
+- Reading the documentation in the Elisp files shall be a reward in itself. Include tipps, tricks, alternatives.
 
 - Carefully pre-configured: the goal is not to pack as much features as possible for each language, but to identify the subtleties, refine iteratively, and work out best practices.
 
 - Portable: Emacs ONTOP Should work on recent Linux/Unix, Windows and MacOS systems; Compatibility with Emacs versions from what's in Debian stable upwards (Debian is the measure of all things)
-
-- Beginner-friendly: novice Emacs users willing to touch Elisp code should be able to follow, adapt code and and immediately celebrate their achievements. Code should not be intertwined, but easily modificable, separately usable and stealable -- if that leads to redundancy, it's fine.
 
 - Rely only on Emacs features enabled by the GNU Emacs distribution's default build options (smallest common denominator).
 
