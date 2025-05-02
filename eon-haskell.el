@@ -30,7 +30,7 @@
   :hook
   (haskell-mode . interactive-haskell-mode))
 
-(use-package haskell
+(use-package haskell :ensure nil
   :bind
   (:map interactive-haskell-mode-map
         ("C-c C-c" . haskell-compile)
@@ -81,7 +81,7 @@
 ;; Notebook-like literate programming in Emacs
 
 ;; Starts a GHCi REPL in the background
-(use-package ob-haskell)
+(use-package ob-haskell :ensure nil)
 
 ;; Evaluate Haskell code in Org source code blocks via "C-c C-c"
 (use-package org :ensure nil

@@ -30,7 +30,7 @@
   ((racket-hash-lang-mode racket-mode racket-repl-mode)
    . racket-smart-open-bracket-mode))
 
-(use-package racket-xp
+(use-package racket-xp :ensure nil
   :config
   (setq-local racket-xp-add-binding-faces t)
   :hook
@@ -72,8 +72,7 @@
 
 ;; Support literate programming in Emacs with Racket
 ;; Evaluate Racket code in Org blocks via "C-c C-c"
-(use-package org
-  :ensure nil
+(use-package org :ensure nil
   :hook
   (org-mode . (lambda ()
                 (org-babel-do-load-languages
