@@ -49,7 +49,6 @@
         ;; eon-commonlisp                ; Common Lisp programming
         ;; eon-elixir                    ; Elixir programming
         ;; eon-erlang                    ; Erlang programming
-        ;; eon-gerbil                    ; Gerbil Scheme programming
         ;; eon-gleam                     ; Gleam programming
         ;; eon-haskell                   ; Haskell programming
         ;; eon-julia                     ; Julia programming
