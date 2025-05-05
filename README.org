@@ -41,7 +41,7 @@ Emacs ONTOP is an extension to the [[https://github.com/monkeyjunglejuice/emacs.
 *ontop-lfe*: Basic LFE setup with REPL.
 
 ** Emacs for Web Development ★☆☆☆☆
-*ontop-webdev*: Just basic HTML, CSS and JavaScript editing and linting (linters have to be installed separately); includes web-mode. Highly under-developed, since I don't use JS.
+*ontop-webdev*: Just basic HTML, CSS and JavaScript editing and linting (linters have to be installed separately); includes web-mode. Highly under-developed, since I don't do web stuff usually.
 
 ** Emacs for Emacs Package Development ☆☆☆☆☆
 *ontop-emacsdev*: Not yet included -- scheduled for next time when I'm about to publish a package on Melpa.
