@@ -19,7 +19,7 @@
 ;; Load the newer file
 (setq load-prefer-newer t)
 
-(use-package compile-angel
+(use-package compile-angel :ensure t
   :demand t
   :config
   ;; Exclude the custom-file, recentf, and savehist files

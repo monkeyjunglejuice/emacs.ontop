@@ -12,22 +12,18 @@
 ;;; ELIXIR TS MODE
 ;; <https://github.com/wkirschbaum/elixir-ts-mode>
 
-(use-package elixir-ts-mode :ensure nil)
+;; In order to use Tree Sitter, install the tree-sitter binary with your
+;; OS package manager
 
-;; In order to use Tree Sitter, install the tree-sitter binary with your OS
-;; package manager. Then install the language grammar via
-;; 'M-x treesit-install-language-grammar'
-(use-package treesit :ensure nil
-  :config
-  (add-to-list 'treesit-language-source-alist
-               '(elixir "https://github.com/elixir-lang/tree-sitter-elixir"))
-  (add-to-list 'treesit-language-source-alist
-               '(heex "https://github.com/phoenixframework/tree-sitter-heex")))
+(use-package elixir-ts-mode :ensure nil
+  :defer t
+  :init
+  (eon-treesitter-ensure-grammar '(elixir heex)))
 
 ;;  ____________________________________________________________________________
 ;;; REPL
 
-(use-package inf-elixir
+(use-package inf-elixir :ensure t
   :custom
   (inf-elixir-switch-to-repl-on-send nil)
   :config
@@ -52,7 +48,7 @@ configuration or restarting applications."
         ("C-c C-r" . inf-elixir-send-region)
         ("C-c C-b" . inf-elixir-send-buffer)
         ("C-c C-c" . inf-elixir-recompile)
-        ("C-c c" . inf-elixir-reload-module)
+        ("C-c c"   . inf-elixir-reload-module)
         ("C-c C-o" . inf-elixir-observer)))
 
 ;;  ____________________________________________________________________________
@@ -89,7 +85,7 @@ configuration or restarting applications."
 ;;; MIX
 ;; <https://hexdocs.pm/mix/1.12/Mix.html>
 
-(use-package mix
+(use-package mix :ensure t
   :diminish mix-minor-mode
   :hook
   ((elixir-ts-mode heex-ts-mode) . mix-minor-mode))
@@ -122,7 +118,7 @@ configuration or restarting applications."
 ;;; EXUNIT
 ;; <https://github.com/ananthakumaran/exunit.el>
 
-(use-package exunit
+(use-package exunit :ensure t
   :diminish exunit-mode
   :custom
   (transient-default-level 4)
@@ -134,7 +130,7 @@ configuration or restarting applications."
 
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
 ;; for all prog-modes in `eon-core.el'
-(use-package rainbow-delimiters
+(use-package rainbow-delimiters :ensure t
   :hook
   (inf-elxir-mode . rainbow-delimiters-mode))
 
@@ -152,14 +148,13 @@ configuration or restarting applications."
 
 ;; TODO -- not working, package might be outdated
 ;; <https://github.com/zweifisch/ob-elixir>
-(use-package ob-elixir)
+(use-package ob-elixir :ensure t)
 
 (use-package org :ensure nil
-  :hook
-  (org-mode . (lambda ()
-                (org-babel-do-load-languages
-                 'org-babel-load-languages
-                 (add-to-list 'org-babel-load-languages '(elixir . t))))))
+  :config
+  (add-to-list 'org-babel-load-languages '(elixir . t))
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               org-babel-load-languages))
 
 ;; _____________________________________________________________________________
 (provide 'eon-elixir)

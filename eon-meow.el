@@ -12,7 +12,7 @@
 ;;; MEOW
 ;; <https://github.com/meow-edit/meow>
 
-(use-package meow
+(use-package meow :ensure t
   :config
   ;; QWERTY layout
   (defun meow-setup ()
@@ -100,7 +100,7 @@
   (meow-setup)
   (meow-global-mode 1))
 
-(use-package meow-tree-sitter
+(use-package meow-tree-sitter :ensure t
   :after meow
   :config
   (meow-tree-sitter-register-defaults))

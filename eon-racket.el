@@ -12,7 +12,7 @@
 ;;; RACKET-MODE
 ;; <https://www.racket-mode.com/>
 
-(use-package racket-mode
+(use-package racket-mode :ensure t
   :init
   ;; Use `racket-hash-lang-mode' for other syntax
   (add-to-list 'auto-mode-alist '("\\.scrbl\\'" . racket-hash-lang-mode))
@@ -41,13 +41,13 @@
 
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
 ;; for all prog-modes in `eon-core.el'
-(use-package rainbow-delimiters
+(use-package rainbow-delimiters :ensure t
   :hook
   (racket-repl-mode . rainbow-delimiters-mode))
 
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
-;; (use-package paren-face
+;; (use-package paren-face :ensure t
 ;;   :hook
 ;;   ((racket-mode racket-hash-lang-mode racket-repl-mode)
 ;;    . paren-face-mode))
@@ -59,11 +59,10 @@
 ;; Support literate programming in Emacs with Racket
 ;; Evaluate Racket code in Org blocks via "C-c C-c"
 ;; (use-package org :ensure nil
-;;   :hook
-;;   (org-mode . (lambda ()
-;;                 (org-babel-do-load-languages
-;;                  'org-babel-load-languages
-;;                  (add-to-list 'org-babel-load-languages '(racket . t))))))
+;;   :config
+;;   (add-to-list 'org-babel-load-languages '(racket . t))
+;;   (org-babel-do-load-languages 'org-babel-load-languages
+;;                                org-babel-load-languages))
 
 ;;  ____________________________________________________________________________
 (provide 'eon-racket)

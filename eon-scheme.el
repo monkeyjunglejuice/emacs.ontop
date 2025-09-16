@@ -12,7 +12,7 @@
 ;;; GEISER
 ;; <https://www.nongnu.org/geiser/>
 
-(use-package geiser
+(use-package geiser :ensure t
   :custom
   (geiser-repl-send-on-return-p t)
   (geiser-repl-use-other-window t)
@@ -27,28 +27,28 @@
 ;; and then then evaluate the expression(s) or restart Emacs.
 
 ;; <https://gitlab.com/emacs-geiser/chez>
-;; (use-package geiser-chez)
+;; (use-package geiser-chez :ensure t)
 
 ;; <https://gitlab.com/emacs-geiser/chicken>
-;; (use-package geiser-chicken)
+;; (use-package geiser-chicken :ensure t)
 
 ;; <https://gitlab.com/emacs-geiser/chibi>
-;; (use-package geiser-chibi)
+;; (use-package geiser-chibi :ensure t)
 
 ;; <https://gitlab.com/emacs-geiser/gambit>
-;; (use-package geiser-gambit)
+;; (use-package geiser-gambit :ensure t)
 
 ;; <https://gitlab.com/emacs-geiser/gauche>
-;; (use-package geiser-gauche)
+;; (use-package geiser-gauche :ensure t)
 
 ;; <https://gitlab.com/emacs-geiser/guile>
-(use-package geiser-guile)
+(use-package geiser-guile :ensure t)
 
 ;; <https://gitlab.com/emacs-geiser/kawa>
 ;; (use-package geiser-kawa)
 
 ;; <https://gitlab.com/emacs-geiser/mit>
-;; (use-package geiser-mit
+;; (use-package geiser-mit :ensure t
 ;;   :config
 ;;   (use-package scheme
 ;;     :ensure nil
@@ -56,16 +56,16 @@
 ;;     (scheme-mit-dialect t)))
 
 ;; <https://gitlab.com/emacs-geiser/racket>
-;; (use-package geiser-racket)
+;; (use-package geiser-racket :ensure t)
 
 ;; <https://gitlab.com/emacs-geiser/stklos>
-;; (use-package geiser-stklos)
+;; (use-package geiser-stklos :ensure t)
 
 ;;  ____________________________________________________________________________
 ;;; SRFI BROWSER
 ;; <https://github.com/srfi-explorations/emacs-srfi>
 
-(use-package srfi)
+(use-package srfi :ensure t)
 
 ;;  ____________________________________________________________________________
 ;;; STRUCTURAL EDITING
@@ -74,19 +74,18 @@
 ;; <https://github.com/Fuco1/smartparens>
 ;; <https://smartparens.readthedocs.io/en/latest/>
 
-;; Smartparens non-strict mode is already enabled globally
-;; and configured in `eon-core.el'
-
-(use-package smartparens
+(use-package smartparens :ensure t
+  :when (featurep 'eon-smartparens)
   :hook
-  (scheme-mode . smartparens-strict-mode))
+  (scheme-mode . smartparens-strict-mode)
+  ((inferior-scheme-mode geiser-repl-mode) . smartparens-mode))
 
 ;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
 
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
 ;; for all prog-modes in `eon-core.el'
-(use-package rainbow-delimiters
+(use-package rainbow-delimiters :ensure t
   :hook
   ((inferior-scheme-mode geiser-repl-mode) . rainbow-delimiters-mode))
 
@@ -105,13 +104,11 @@
 ;; TODO This seems not to work; neither with Chicken nor Racket
 
 ;; <https://www.orgmode.org/worg/org-contrib/babel/languages/ob-doc-scheme.html>
-(use-package org
-  :ensure nil
-  :hook
-  (org-mode . (lambda ()
-                (org-babel-do-load-languages
-                 'org-babel-load-languages
-                 (add-to-list 'org-babel-load-languages '(scheme . t))))))
+;; (use-package org :ensure nil
+;;   :config
+;;   (add-to-list 'org-babel-load-languages '(scheme . t))
+;;   (org-babel-do-load-languages 'org-babel-load-languages
+;;                                org-babel-load-languages))
 
 ;;  ____________________________________________________________________________
 (provide 'eon-scheme)

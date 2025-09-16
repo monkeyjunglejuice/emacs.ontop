@@ -65,7 +65,7 @@
 
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
 ;; for all prog-modes in `eon-core.el'
-(use-package rainbow-delimiters
+(use-package rainbow-delimiters :ensure t
   :hook
   (interactive-haskell-mode . rainbow-delimiters-mode))
 
@@ -85,11 +85,10 @@
 
 ;; Evaluate Haskell code in Org source code blocks via "C-c C-c"
 (use-package org :ensure nil
-  :hook
-  (org-mode . (lambda ()
-                (org-babel-do-load-languages
-                 'org-babel-load-languages
-                 (add-to-list 'org-babel-load-languages '(haskell . t))))))
+  :config
+  (add-to-list 'org-babel-load-languages '(haskell . t))
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               org-babel-load-languages))
 
 ;;  ____________________________________________________________________________
 (provide 'eon-haskell)

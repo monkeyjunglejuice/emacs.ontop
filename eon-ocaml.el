@@ -18,7 +18,7 @@
 ;;  ____________________________________________________________________________
 ;;; TUAREG
 
-(use-package tuareg
+(use-package tuareg :ensure t
   :custom
   (tuareg-electric-indent t)
   (tuareg-display-buffer-on-eval t)
@@ -42,7 +42,7 @@
 ;;  ____________________________________________________________________________
 ;;; MERLIN
 
-(use-package merlin
+(use-package merlin :ensure t
   :custom
   (merlin-completion-with-doc t)
   (merlin-report-errors-in-lighter t)
@@ -73,7 +73,7 @@
 ;;; MERLIN-ELDOC
 ;; <https://github.com/Khady/merlin-eldoc>
 
-(use-package merlin-eldoc
+(use-package merlin-eldoc :ensure t
   :custom
   (merlin-eldoc-max-lines 3)             ; but not more than 3
   (merlin-eldoc-type-verbosity 'min)     ; don't display verbose types
@@ -119,7 +119,7 @@
 
 ;; The keybindings are the same as with the standard toplevel.
 
-(use-package utop
+(use-package utop :ensure t
   :custom
   ;; Utop will start with Dune project awareness:
   (utop-command "opam exec -- dune utop . -- -emacs")
@@ -134,7 +134,7 @@
 ;;; INDENTATION
 ;; <https://github.com/OCamlPro/ocp-indent>
 
-(use-package ocp-indent
+(use-package ocp-indent :ensure t
   :after merlin-mode
   :hook
   (tuareg-mode . ocp-setup-indent))
@@ -143,7 +143,7 @@
 ;;; FORMATTING
 ;; <https://github.com/ocaml-ppx/ocamlformat>
 
-(use-package ocamlformat
+(use-package ocamlformat :ensure t
   :after merlin-mode
   :hook
   (tuareg-mode . ocamlformat-setup-indent))
@@ -152,7 +152,7 @@
 ;;; DUNE
 
 ;; Major mode for Dune files
-(use-package dune
+(use-package dune :ensure t
   :defer t)
 
 ;;  ____________________________________________________________________________
@@ -160,7 +160,7 @@
 
 ;; Use the command "M-x opam-switch-set-switch" to select the opam switch for
 ;; your OCaml project
-(use-package opam-switch-mode
+(use-package opam-switch-mode :ensure t
   :after tuareg
   :config
   (setq tuareg-opam-insinuate t)
@@ -194,7 +194,7 @@
 
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
 ;; for all prog-modes in `eon-core.el'
-(use-package rainbow-delimiters
+(use-package rainbow-delimiters :ensure t
   :hook
   (tuareg-interactive-mode . rainbow-delimiters-mode))
 
@@ -210,18 +210,15 @@
 ;; Notebook-like literate programming in Emacs
 ;; Evaluate OCaml code in Org source code blocks via "C-c C-c"
 
-(use-package ob-ocaml
-  :ensure nil
+(use-package ob-ocaml :ensure nil
   :custom
   (org-babel-ocaml-command "ocaml -nopromptcont"))
 
-(use-package org
-  :ensure nil
-  :hook
-  (org-mode . (lambda ()
-                (org-babel-do-load-languages
-                 'org-babel-load-languages
-                 (add-to-list 'org-babel-load-languages '(ocaml . t))))))
+(use-package org :ensure nil
+  :config
+  (add-to-list 'org-babel-load-languages '(ocaml . t))
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               org-babel-load-languages))
 
 ;;  ____________________________________________________________________________
 (provide 'eon-ocaml)

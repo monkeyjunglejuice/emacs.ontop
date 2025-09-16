@@ -15,7 +15,7 @@
 ;; 'Helpful' is an alternative to the built-in Emacs help that provides
 ;; much more contextual information
 
-(use-package helpful
+(use-package helpful :ensure t
   :defer t
   :bind
   ;; Lookup the current symbol at point

@@ -17,7 +17,7 @@
 (add-to-list 'load-path (expand-file-name "~/code/lfe/emacs/"))
 (require 'lfe-start)
 
-(use-package inferior-lfe
+(use-package inferior-lfe :ensure t
   :load-path "~/code/lfe/emacs/"
   :custom
   (inferior-lfe-program "lfe")
@@ -27,13 +27,13 @@
   (setq inferior-lfe-indent-on-Cj t)
   (setq comint-process-echoes nil))
 
-(use-package lfe-indent
+(use-package lfe-indent :ensure t
   :load-path "~/code/lfe/emacs/")
 
-(use-package lfe-mode
+(use-package lfe-mode :ensure t
   :load-path "~/code/lfe/emacs/")
 
-(use-package lfe-start
+(use-package lfe-start :ensure t
   :load-path "~/code/lfe/emacs/"
   :requires (inferior-lfe lfe-indent lfe-mode))
 
@@ -41,7 +41,7 @@
 ;;; ERLANG
 ;; <https://www.erlang.org/doc/apps/tools/erlang_mode_chapter.html>
 
-(use-package erlang
+(use-package erlang :ensure t
   :defer t)
 
 ;;  ____________________________________________________________________________
@@ -51,18 +51,16 @@
 ;; <https://github.com/Fuco1/smartparens>
 ;; <https://smartparens.readthedocs.io/en/latest/>
 
-;; Smartparens non-strict mode is already enabled globally
-;; and configured in `eon-core.el'
-
-;; Enable strict mode in Lisp buffers
 (use-package smartparens
+  :when (featurep 'eon-smartparens)
   :config
   ;; As of version 20240713.1002, smartparens doesn't recognize LFE as a lisp,
   ;; so let's add it manually
   (add-to-list 'sp-lisp-modes 'lfe-mode)
   (add-to-list 'sp-lisp-modes 'inferior-lfe-mode)
   :hook
-  (lfe-mode . smartparens-strict-mode))
+  (lfe-mode . smartparens-strict-mode)
+  (inferior-lfe-mode . smartparens-mode))
 
 ;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
@@ -89,13 +87,11 @@
 ;; <https://github.com/zweifisch/ob-lfe>
 ;; (use-package ob-lfe)
 
-;; (use-package org
-;;   :ensure nil
-;;   :hook
-;;   (org-mode . (lambda ()
-;;                 (org-babel-do-load-languages
-;;                  'org-babel-load-languages
-;;                  (add-to-list 'org-babel-load-languages '(lfe . t))))))
+;; (use-package org :ensure nil
+;;   :config
+;;   (add-to-list 'org-babel-load-languages '(lfe . t))
+;;   (org-babel-do-load-languages 'org-babel-load-languages
+;;                                org-babel-load-languages))
 
 ;;  ____________________________________________________________________________
 (provide 'eon-lfe)

@@ -8,13 +8,13 @@
 ;;; Code:
 
 ;;  ____________________________________________________________________________
-;; STRUCTURAL EDITING
+;;; STRUCTURAL EDITING
 
 ;; SMARTPARENS
 ;; <https://github.com/Fuco1/smartparens>
 ;; <https://smartparens.readthedocs.io/en/latest/>
 
-(use-package smartparens
+(use-package smartparens :ensure t
   :init
   ;; Turn off other modes that clash with Smartparens
   (electric-pair-mode -1)

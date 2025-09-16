@@ -37,14 +37,17 @@
 ;;; HTML
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#HTML-Mode>
 
-(use-package sgml-mode :ensure nil
-  :defer t)
+(eon-treesitter-ensure-grammar
+ '(html "https://github.com/tree-sitter/tree-sitter-html"))
 
 (use-package html-ts-mode :ensure nil
   :defer t)
 
 ;;  ____________________________________________________________________________
 ;;; CSS
+
+(eon-treesitter-ensure-grammar
+ '(css "https://github.com/tree-sitter/tree-sitter-css"))
 
 (use-package css-mode :ensure nil
   :defer t
@@ -53,6 +56,10 @@
 
 ;;  ____________________________________________________________________________
 ;;; JS
+
+(eon-treesitter-ensure-grammar
+ '(javascript "https://github.com/tree-sitter/tree-sitter-javascript"
+              "master" "src"))
 
 (use-package js :ensure nil
   :defer t)
@@ -71,7 +78,7 @@
 
 ;; <https://github.com/purcell/flymake-css>
 ;; Install the linter via `npm install -g csslint'
-(use-package flymake-css
+(use-package flymake-css :ensure t
   :defer t
   :custom
   (flymake-css-lint-command "csslint")
@@ -79,7 +86,7 @@
   ((css-mode css-ts-mode) . flymake-css-load))
 
 ;; <https://github.com/orzechowskid/flymake-eslint>
-(use-package flymake-eslint
+(use-package flymake-eslint :ensure t
   :defer t
   :hook
   ((js-mode js-ts-mode) . flymake-eslint-enable))

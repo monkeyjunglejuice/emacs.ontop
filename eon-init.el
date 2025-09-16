@@ -12,8 +12,8 @@
 ;;  Emacs ONTOP is an extension on top of the Emacs ONBOARD starter-kit
 ;;
 ;;  
-;;  ---> LOAD THIS FILE from your init file `~/.emacs.d/init.el' or `~/.emacs'
-;;       via (load-file (expand-file-name "~/.emacs.ontop/eon-init.el"))
+;;  --> LOAD THIS FILE from your init file `~/.emacs.d/init.el' or `~/.emacs'
+;;      via (load-file (expand-file-name "~/.emacs.ontop/eon-init.el"))
 ;;
 ;;
 ;; Copyright (C) 2022-2025 Dan Dee
@@ -32,12 +32,12 @@
 ;; Setup `use-package' options before loading the modules
 
 (require 'use-package)
-(setq use-package-always-ensure t)
+(setq use-package-always-ensure nil)
 
 ;;  ____________________________________________________________________________
 ;;; DEBUG / BENCHMARK
 
-;; (use-package benchmark-init
+;; (use-package benchmark-init :ensure t
 ;;   :when init-file-debug
 ;;   ;; Disable collection of benchmark data after init is done
 ;;   :config
@@ -72,7 +72,7 @@ It is empty per default, and will be set in `eon-setup-modules.el'.")
 
 ;; Require the module selection
 (defun eon-require-modules ()
-  "Loads the selected modules and install Emacs packages if necessary."
+  "Load the selected modules and install Emacs packages if necessary."
   (interactive)
   (dolist (module eon-modules)
     (eon-require-with-error-handling module)))

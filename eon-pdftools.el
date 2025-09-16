@@ -14,7 +14,7 @@
 ;; Compiles binary automatically at the first run and after upgrades
 
 ;; Sophisticated PDF viewer
-(use-package pdf-tools
+(use-package pdf-tools :ensure t
   :magic
   ("%PDF" . pdf-view-mode)
   :config

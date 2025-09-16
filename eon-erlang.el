@@ -13,16 +13,15 @@
 ;; <https://github.com/erlang/otp/tree/master/lib/tools/emacs>
 ;; <https://www.erlang.org/doc/apps/tools/erlang_mode_chapter.html>
 
-(use-package erlang)
-
 ;; In order to use Tree Sitter, install the tree-sitter binary with your
-;; OS package manager. Then install the language grammar via
-;; 'M-x treesit-install-language-grammar'
-(use-package treesit
-  :ensure nil
-  :config
-  (add-to-list 'treesit-language-source-alist
-               '(erlang "https://github.com/WhatsApp/tree-sitter-erlang")))
+;; OS package manager
+
+(eon-treesitter-ensure-grammar
+ '(erlang "https://github.com/WhatsApp/tree-sitter-erlang"))
+
+(use-package erlang-ts :ensure t
+  :defer t
+  :mode ("\\.erl\\'" . erlang-ts-mode))
 
 ;;  ____________________________________________________________________________
 ;;; LANGUAGE SERVER
@@ -30,18 +29,17 @@
 ;; Common keybindings are configured in `./eon-core.el'
 
 ;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; ERLANG_LS
-;; <https://github.com/erlang-ls/erlang_ls>
+;;; ERLANG LANGUAGE PLATFORM
+;; <https://github.com/WhatsApp/erlang-language-platform>
 
-(use-package eglot
-  :ensure nil
+(use-package eglot :ensure nil
   :custom
   ;; A longer timeout seems required for the first run in a new project
   (eglot-connect-timeout 30)            ; default: 30
   :config
   ;; Make sure to adapt the path and use the .bat script for Windows
   (add-to-list 'eglot-server-programs
-               '((erlang-mode) . ("erlang_ls")))
+               '((erlang-mode) . ("elp" "server")))
   :hook
   ;; Start language server automatically
   (erlang-mode . eglot-ensure)
@@ -55,15 +53,9 @@
 
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
 ;; for all prog-modes in `eon-core.el'
-(use-package rainbow-delimiters
+(use-package rainbow-delimiters :ensure t
   :hook
   (erlang-shell-mode . rainbow-delimiters-mode))
-
-;; Make parens styleable, e.g. more or less prominent
-;; <https://github.com/tarsius/paren-face>
-;; (use-package paren-face
-;;   :hook
-;;   ((erlang-mode erlang-shell-mode) . paren-face-mode))
 
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
@@ -75,12 +67,11 @@
 ;; <https://github.com/xfwduke/ob-erlang>
 ;; (use-package ob-erlang)
 
-;; (use-package org
-;;   :hook
-;;   (org-mode . (lambda ()
-;;                 (org-babel-do-load-languages
-;;                  'org-babel-load-languages
-;;                  (add-to-list 'org-babel-load-languages '(erlang . t))))))
+;; (use-package org :ensure nil
+;;   :config
+;;   (add-to-list 'org-babel-load-languages '(erlang . t))
+;;   (org-babel-do-load-languages 'org-babel-load-languages
+;;                                org-babel-load-languages))
 
 ;; _____________________________________________________________________________
 (provide 'eon-erlang)
