@@ -16,7 +16,7 @@
 ;; Copyright (C) 2021–2025 Dan Dee
 ;; Author: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
-;; Version: 1.6.3
+;; Version: 1.7.0
 ;; Package-Requires: ((EMACS "30.1"))
 ;; Keywords: convenience
 ;; SPDX-License-Identifier: MIT
@@ -103,7 +103,7 @@ The timer can be canceled with `eon-cancel-gc-timer'.")
 
 ;; Browse, select and install 3rd-party packages with "M-x list-packages RET"
 
-;; The package setup respects when `package-enable-at-setup' is set to nil
+;; The package setup respects when `package-enable-at-startup' is set to nil
 ;; in `early-init-el', so that you can use other package managers like Straight
 ;; or Elpaca without issues.
 
@@ -358,14 +358,12 @@ or `system-configuration' directly."
   "Toggle between light and dark theme with a single key press."
   :group 'convenience)
 
-(defcustom eon-light-theme-name
-  (setq eon-light-theme-name 'modus-operandi)
+(defcustom eon-light-theme-name 'modus-operandi
   "Name of the light theme."
   :group 'eon-toggle-theme
   :type 'symbol)
 
-(defcustom eon-dark-theme-name
-  (setq eon-dark-theme-name 'modus-vivendi)
+(defcustom eon-dark-theme-name 'modus-vivendi
   "Name of the dark theme."
   :group 'eon-toggle-theme
   :type 'symbol)
@@ -1516,28 +1514,6 @@ Accepted forms:
   "Treesitter-spec not available per default.
 Provide full treesitter-spec as a list of (LANG URL [REVISION] [SOURCE-DIR])"
   "Error message when a default spec is unavailable.")
-
-;; (defun eon-treesitter--resolve-one (x)
-;;   "Resolve X to a spec tuple.
-;; X may be a spec tuple or a symbol LANG present in `eon-treesitter-specs`.
-;; Errors with the mandated message for unknown LANGs or invalid elements."
-;;   (cond
-;;    ((eon-treesitter--spec-p x) x)
-;;    ((and (symbolp x) (not (keywordp x)))
-;;     (or (assq x eon-treesitter-specs)
-;;         (user-error "%s" eon-treesitter--missing-spec-error)))
-;;    ((keywordp x)
-;;     (user-error
-;;      "eon-treesitter-ensure-grammar: Only specs or language symbols accepted"))
-;;    (t
-;;     (user-error
-;;      "eon-treesitter-ensure-grammar: Invalid element %S (expect (LANG URL \
-;; [REV] [DIR]) or a language symbol)" x))))
-
-;; (defun eon-treesitter--resolve-elements (xs)
-;;   "Resolve a list XS of symbols/spec-tuples into a list of spec tuples.
-;; Errors if any LANG symbol is not registered by default."
-;;   (mapcar #'eon-treesitter--resolve-one xs))
 
 (defun eon-treesitter--resolve-one (lang-or-spec)
   "Resolve LANG-OR-SPEC to the canonical spec tuple (list (LANG URL [REV] [DIR]))
