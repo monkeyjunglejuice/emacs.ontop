@@ -1,4 +1,4 @@
-;;; eon.el --- Emacs Onboard Starter Kit -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon.el --- Emacs Onboard Starter Kit -*- lexical-binding: t; -*-
 ;;
 ;;    ▒░▒░▒░   ▒░     ▒░ ▒░▒░▒░▒░     ▒░▒░▒░      ▒░    ▒░▒░▒░▒░    ▒░▒░▒░▒░
 ;;   ▒░    ▒░  ▒░▒░   ▒░  ▒░     ▒░  ▒░    ▒░    ▒░▒░    ▒░     ▒░   ▒░    ▒░
@@ -16,8 +16,8 @@
 ;; Copyright (C) 2021–2025 Dan Dee
 ;; Author: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
-;; Version: 1.5.2
-;; Package-Requires: ((EMACS "28.2"))
+;; Version: 1.6.3
+;; Package-Requires: ((EMACS "30.1"))
 ;; Keywords: convenience
 ;; SPDX-License-Identifier: MIT
 ;; This file is not part of GNU Emacs.
@@ -111,46 +111,21 @@ The timer can be canceled with `eon-cancel-gc-timer'.")
   (require 'package)
 
   ;; 1st priority
+  ;; Gnu Elpa and Non-Gnu Elpa, which are enabled by default
+
+  ;; 2nd priority
   (add-to-list 'package-archives
                '("melpa" . "https://melpa.org/packages/") t)
 
-  ;; 2nd priority
-  ;; Install form melpa-stable' only when the package from 'melpa' is broken
+  ;; 3rd priority
+  ;; Install from melpa-stable' only when the package from 'melpa' is broken
   ;; (add-to-list 'package-archives
   ;;              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-
-  ;; 3rd priority
-  ;; There are also Gnu Elpa and Non-Gnu Elpa, which are enabled by default
 
   ;; Highlight current line in the package manager
   (add-hook 'package-menu-mode-hook
             (lambda ()
-              (hl-line-mode 1)))
-
-  ;; Install packages declaratively within an Emacs Lisp file.
-  ;;
-  ;; Example: You can install suggested 3rd-party packages from within this file
-  ;; with single function calls like so:
-  ;;
-  ;; (eon-package 'ensure '(the-matrix-theme))  ; installs the package
-  ;; (eon-package 'ignore '(the-matrix-theme))  ; does nothing (default)
-  ;;
-  ;; The installation will be performed when you restart Emacs or
-  ;; when you evaluate the function manually – eg. via pressing "C-M-x"
-  ;; while the cursor is placed somewhere within the function application form.
-  ;;
-  ;; DEPRECATED Will be removed when Emacs 29 becomes the minimal required
-  ;; version, because `use-package' provides that functionality and much more.
-  (defun eon-package (action package-list)
-    "Helper function to install 3rd-party packages declaratively.
-PACKAGE-LIST will be installed if \='ensure is passed as an argument to ACTION.
-When ACTION receives \='ignore, then nothing will happen."
-    (when (eq action 'ensure)
-      (mapc #'(lambda (package)
-                (unless (package-installed-p package)
-                  (package-refresh-contents)
-                  (package-install package nil)))
-            package-list))))
+              (hl-line-mode 1))))
 
 ;;  ____________________________________________________________________________
 ;;; NATIVE ELISP COMPILATION
@@ -173,19 +148,25 @@ When ACTION receives \='ignore, then nothing will happen."
   "True if `system-type' is Linux or something compatible.
 For finer granularity, use the variables `system-type'
 or `system-configuration' directly."
-  (string= system-type (or "gnu/linux" "berkeley-unix" "gnu" "gnu/kfreebsd")))
+  (memq system-type '(gnu/linux berkeley-unix gnu gnu/kfreebsd)))
 
 (defun eon-winp ()
   "True if `system-type' is Windows or something compatible.
 For finer granularity, use the variables `system-type'
 or `system-configuration' directly."
-  (string= system-type (or "windows-nt" "cygwin" "ms-dos")))
+  (memq system-type '(windows-nt cygwin ms-dos)))
 
 (defun eon-macp ()
   "True if `system-type' is MacOS or something compatible.
 For finer granularity, use the variables `system-type'
 or `system-configuration' directly."
-  (string= system-type "darwin"))
+  (eq system-type 'darwin))
+
+(defun eon-androidp ()
+  "True if `system-type' is Android or something compatible.
+For finer granularity, use the variables `system-type'
+or `system-configuration' directly."
+  (eq system-type 'android))
 
 ;; Open the '~/.emacs.d' directory in the Dired file manager
 (defun eon-visit-user-emacs-directory ()
@@ -202,48 +183,59 @@ or `system-configuration' directly."
 ;;  ____________________________________________________________________________
 ;;; KEYMAPS
 
-;; Make "C-z" available as a prefix key in the same manner as "C-x" and "C-c".
-;; To avoid clashes, new keybindings introduced by Emacs Onboard will usually
+;; Make "C-z" available as a prefix key in the same manner as "C-x" and "C-c";
+;; therefore "C-z" acts like kind of a "leader key".
+;; To avoid clashes, new keybindings introduced by Emacs ONboard will usually
 ;; begin with the prefix "C-z" (with only a few exceptions).
+;; This is unlikely to work out of the box if you are using Emacs within a
+;; terminal emulator, as terminal emulators are usually configured to suspend
+;; a running command via the C-z keybinding.
+
 (global-unset-key (kbd "C-z"))
 
-(define-prefix-command 'ctl-z-map nil "Additional prefix key C-z")
+(define-prefix-command 'ctl-z-map nil "Leader")
 (global-set-key (kbd "C-z") 'ctl-z-map)
 
-(define-prefix-command 'ctl-z-c-map nil "Commonly used commands")
+(define-prefix-command 'ctl-z-c-map nil "Code")
 (define-key ctl-z-map (kbd "c") 'ctl-z-c-map)
 
 (define-prefix-command 'ctl-z-e-map nil "Emacs built-ins")
 (define-key ctl-z-map (kbd "e") 'ctl-z-e-map)
 
-(define-prefix-command 'ctl-z-o-map nil "Org-mode")
+(define-prefix-command 'ctl-z-g-map nil "Version control")
+(define-key ctl-z-map (kbd "g") 'ctl-z-g-map)
+
+(define-prefix-command 'ctl-z-o-map nil "Org")
 (define-key ctl-z-map (kbd "o") 'ctl-z-o-map)
+
+(define-prefix-command 'ctl-z-p-map nil "Project")
+(define-key ctl-z-map (kbd "p") 'ctl-z-p-map)
 
 (define-prefix-command 'ctl-z-s-map nil "Scratch buffers")
 (define-key ctl-z-map (kbd "s") 'ctl-z-s-map)
 
-(define-prefix-command 'ctl-z-w-map nil "Web-related")
+(define-prefix-command 'ctl-z-w-map nil "Web")
 (define-key ctl-z-map (kbd "w") 'ctl-z-w-map)
 
-(define-prefix-command 'ctl-z-x-map nil "Global REPL bindings")
+(define-prefix-command 'ctl-z-x-map nil "Execute")
 (define-key ctl-z-map (kbd "x") 'ctl-z-x-map)
 
 ;;  ____________________________________________________________________________
 ;;; KEYBINDINGS
 
-;; Make the <Command> key on MacOS act as <Ctrl> key: "C- ..."
-(setq mac-command-modifier 'control)
-
-;; Make the <Option> key on MacOS act as <Meta> key for "M- ..."
-(setq mac-option-modifier 'meta)
-
-;; Don't bypass "C-h ..." keybindings
-(setq mac-pass-command-to-system nil)
+(when (eq system-type 'darwin)
+  (setq
+   ;; Make the <Command> key on MacOS act as <Ctrl> key: "C- ..."
+   mac-command-modifier 'control
+   ;; Make the <Option> key on MacOS act as <Meta> key for "M- ..."
+   mac-option-modifier 'meta
+   ;; Don't bypass "C-h ..." keybindings
+   mac-pass-command-to-system nil))
 
 ;; Show a help window with possible key bindings?
-(when (>= emacs-major-version 30)
+(when (fboundp #'which-key-mode)
   (setq which-key-lighter ""
-        which-key-idle-delay 1.5
+        which-key-idle-delay 0.3
         which-key-idle-secondary-delay 0.0
         which-key-sort-uppercase-first nil)
   (which-key-mode 1))
@@ -445,7 +437,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
   (cond
    ((equal eon-default-theme-variant 'light) (eon-load-theme-light))
    ((equal eon-default-theme-variant 'dark) (eon-load-theme-dark))
-   (t (message
+   (t (error
        "Toggle theme: DEFAULT-THEME-VARIANT must be either 'light or 'dark"))))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -454,7 +446,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; Either configure the themes here, or "M-x customize-group RET toggle-theme"
 
 ;; Set some defaults for the Modus themes; doesn't affect other themes.
-;; These variables must be set before loading the themes.
+;; These variables must be set before loading the Modus themes.
 (setq modus-themes-bold-constructs t
       modus-themes-italic-constructs nil
       modus-themes-mixed-fonts t)
@@ -462,13 +454,13 @@ Some themes may come as functions -- wrap these ones in lambdas."
       '((border-mode-line-active bg-mode-line-active)
         (border-mode-line-inactive bg-mode-line-inactive)))
 
-;; Set your light theme:
+;; --> Set your light theme:
 (setq eon-light-theme-name 'modus-operandi-tinted)
 
-;; Set your dark theme:
+;; --> Set your dark theme:
 (setq eon-dark-theme-name 'modus-vivendi-tinted)
 
-;; Set your default variant here - 'light or 'dark
+;; --> Set your default variant here - 'light or 'dark
 (setq eon-default-theme-variant 'light)
 
 ;; Set the keybinding to toggle between light and dark:
@@ -524,7 +516,8 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; (add-to-list 'default-frame-alist '(right-fringe . 0))
 
 ;; Bring frame to the front
-(select-frame-set-input-focus (selected-frame))
+(when (display-graphic-p)
+  (select-frame-set-input-focus (selected-frame)))
 
 ;;  ____________________________________________________________________________
 ;;; CURSOR
@@ -534,7 +527,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; in the code below or do "M-x describe-symbol RET cursor-type RET"
 
 ;; Set the cursor type
-;; Comment out the following expression to change the curser into to a bar
+;; Comment out the following expression to change the cursor into a bar
 ;; (add-to-list 'default-frame-alist '(cursor-type . bar))
 
 ;; Turn on/off cursor blinking by default? 1 means 'on' and -1 means 'off'
@@ -548,9 +541,6 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 ;; Emphasize the cursor when running Emacs in a text terminal?
 (setq visible-cursor nil)
-
-;; Keep cursor outside of any cursor-intangible text property
-(cursor-intangible-mode 1)
 
 ;; Make sure to highlight the current line only in the active window.
 (setq hl-line-sticky-flag nil)
@@ -569,10 +559,12 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (menu-bar-mode 1)
 
 ;; Scroll bar: on/off by default?
-(scroll-bar-mode -1)
+(when (display-graphic-p)
+  (scroll-bar-mode -1))
 
 ;; Tool bar: on/off by default?
-(tool-bar-mode -1)
+(when (display-graphic-p)
+  (tool-bar-mode -1))
 
 ;; Tooltips: enable/disable?
 (tooltip-mode -1)
@@ -605,8 +597,8 @@ Some themes may come as functions -- wrap these ones in lambdas."
       hscroll-step 1)
 
 ;; Enable pixel-based scrolling
-(if (fboundp #'pixel-scroll-precision-mode)
-    (pixel-scroll-precision-mode 1))
+(when (fboundp #'pixel-scroll-precision-mode)
+  (pixel-scroll-precision-mode 1))
 
 ;;  ____________________________________________________________________________
 ;;; MODELINE
@@ -617,15 +609,18 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; than the current window width (in columns).
 (setq mode-line-compact nil)
 
-;; Show the buffer size in the modeline
+;; Show the buffer size in the modeline?
 (size-indication-mode 1)
 
-;; Show column number along with line number in modeline
+;; Show column number along with line number in modeline?
 (column-number-mode 1)
 
 ;;  ____________________________________________________________________________
 ;;; MINIBUFFER
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Minibuffer>
+
+;; Keep cursor outside of any ‘cursor-intangible’ text property
+(add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
 ;; Recursive minibuffers
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Recursive-Edit>
@@ -655,24 +650,51 @@ Some themes may come as functions -- wrap these ones in lambdas."
   (advice-add 'yes-or-no-p :override #'y-or-n-p))
 
 ;;  ____________________________________________________________________________
-;;; MINIBUFFER COMPLETION
+;;; COMPLETION
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Icomplete>
 
 ;; There are many matching styles available, see `completion-styles-alist'
 ;; <https://www.gnu.org/software/emacs/manual/html_node/emacs/Completion-Styles.html>
-;; Below is the standard combo from Emacs 29 plus `substring'
-(setq completion-styles '(basic partial-completion emacs22 substring))
+;; The order within the list determines their priority.
+(setq completion-styles '(basic substring initials flex partial-completion))
+(setq completion-category-defaults nil)
+(setq completion-category-overrides
+      '((file (styles . (basic partial-completion initials substring)))))
+
+;; Prevent *Completions* buffer from popping up?
+(setq completion-auto-help nil)
+;; Cycle completion candidates instead
+(setq completion-cycle-threshold t)
+;; Show docstrings for completion candidates?
+(setq completions-detailed nil)
+
+;; Preview current in-buffer completion candidate?
+(when (fboundp #'completion-preview-mode)
+  (global-completion-preview-mode 1))
+(define-key completion-preview-active-mode-map (kbd "M-n")
+            #'completion-preview-next-candidate)
+(define-key completion-preview-active-mode-map (kbd "M-p")
+            #'completion-preview-prev-candidate)
 
 ;; Tweaking Icomplete
 (with-eval-after-load 'icomplete
   (setq icomplete-in-buffer t
-        icomplete-compute-delay 0.01
-        icomplete-delay-completions-threshold 5000
+        icomplete-compute-delay 0
+        icomplete-delay-completions-threshold 100
         icomplete-show-matches-on-no-input t
-        icomplete-hide-common-prefix nil))
+        icomplete-hide-common-prefix nil)
+  ;; TAB accepts the current candidate in Fido minibuffers
+  (define-key icomplete-minibuffer-map (kbd "TAB") #'icomplete-force-complete)
+  (define-key icomplete-minibuffer-map (kbd "<tab>") #'icomplete-force-complete))
 
-;; Vertical completion with `fido-vertical'
+;; Vertical minibuffer completion with `fido-vertical'
 (fido-vertical-mode 1)
+
+;; Dabbrev
+(with-eval-after-load 'dabbrev
+  (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
+  (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
+  (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode))
 
 ;;  ____________________________________________________________________________
 ;;; ELDOC
@@ -684,6 +706,8 @@ Some themes may come as functions -- wrap these ones in lambdas."
       eldoc-echo-area-display-truncation-message nil
       eldoc-echo-area-prefer-doc-buffer nil
       eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
+
+(define-key ctl-z-c-map (kbd "d") #'eldoc)
 
 ;;  ____________________________________________________________________________
 ;;; PINENTRY
@@ -789,13 +813,9 @@ The elements of the list are regular expressions.")
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Lisp-Interaction>
 ;; (setq initial-major-mode #'lisp-interaction-mode)
 
-;; You can set the scratch buffer to Org-mode which is more useful
+;; You can set the scratch buffer to Org-mode which may be more useful
 ;; for quick notes, writing and literate programming
 ;; (setq initial-major-mode #'org-mode)
-
-;; But for the sake of quick loading, we'll set the scratch buffer
-;; to `fundamental-mode' for now
-(setq initial-major-mode #'fundamental-mode)
 
 ;; Should the *scratch* buffer contain some initial content?
 (setq initial-scratch-message "")
@@ -837,11 +857,10 @@ The elements of the list are regular expressions.")
 ;; Allow Emacs to copy to and paste from the GUI clipboard
 ;; when running in a text terminal
 ;; --> recommended 3rd-party package 'xclip'
-;; If you would like to install this 3rd-party package, change 'ignore
-;; to 'ensure and evaluate the expression – either via "C-M-x",
-;; or simply restart Emacs:
-(eon-package 'ignore '(xclip))
-(when (fboundp #'xclip-mode) (xclip-mode 1))
+;; If you would like to install this 3rd-party package, uncomment and evaluate
+;; the following expression – either via "C-M-x", or simply restart Emacs:
+;; (use-package xclip
+;;  :ensure t)
 
 ;; Copy the full path of the current file
 (defun eon-copy-file-path ()
@@ -863,10 +882,11 @@ The elements of the list are regular expressions.")
 (global-set-key (kbd "M-y") #'eon-insert-kill-ring-item)
 
 ;; Copy & paste between Windows and Emacs running within WSL
-;; (Windows Subsysten for Linux) — which is technically a Linux, not Windows
+;; (Windows Subsystem for Linux) — which is technically a Linux, not Windows
 
 ;; Copy "kill" text from an Emacs buffer for pasting it into a Windows app
-(when (eon-linp)
+(when (and (eon-linp)
+           (file-exists-p "/mnt/c/Windows/System32/clip.exe"))
   (defun eon-wsl-copy (start end)
     "Copy selected text into the Windows clipboard."
     (interactive "r")
@@ -875,7 +895,8 @@ The elements of the list are regular expressions.")
   (define-key ctl-z-map (kbd "C-w") #'eon-wsl-copy))
 
 ;; Paste "yank" text into Emacs buffer that has been copied from a Windows app
-(when (eon-linp)
+(when (and (eon-linp)
+           (file-exists-p "/mnt/c/Windows/System32/clip.exe"))
   (defun eon-wsl-paste ()
     "Paste contents from the Windows clipboard into the Emacs buffer."
     (interactive)
@@ -891,8 +912,23 @@ The elements of the list are regular expressions.")
 ;;; BACKUP
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Backup>
 
+;; CAUTION: This mode makes copies of the files you are editing.
+;; If you're editing files with sensitive data (e.g. on temporally mounted,
+;; encrypted devices), either disable this mode or specify the location
+;; where to save (or not to save) backup copies of these files.
+
 ;; Make backup before editing?
 (setq make-backup-files t)
+
+;; Where to save the backups?
+;; Specify file name/path patterns and directories ("REGEXP" . "DIRECTORY").
+;; Files with sensitive content can be specified (excluded) here, too.
+(setq backup-directory-alist
+      `(("." . ,(concat user-emacs-directory "backup/"))))
+
+;; Apply the same backup policy for Tramp files on their hosts
+;; like the policy for local files
+(setq tramp-backup-directory-alist backup-directory-alist)
 
 ;; Backup settings
 (setq backup-by-copying t
@@ -902,15 +938,6 @@ The elements of the list are regular expressions.")
       delete-old-versions t
       version-control t
       vc-make-backup-files t)
-
-;; Where to save the backups?
-;; Specify file name/path patterns and directories ("REGEXP" . "DIRECTORY")
-(setq backup-directory-alist
-      `(("." . ,(concat user-emacs-directory "backup/"))))
-
-;; Apply the same backup policy for Tramp files on their hosts like the
-;; policy for local files
-(setq tramp-backup-directory-alist backup-directory-alist)
 
 ;;  ____________________________________________________________________________
 ;;; LOCKFILES
@@ -923,10 +950,10 @@ The elements of the list are regular expressions.")
 ;;; AUTO-SAVE
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Auto-Save>
 
-;; Enable auto-save to safeguard against data loss.
+;; Enable auto-save to safeguard against data loss?
 ;; The `recover-file' or `recover-session' functions can be used
 ;; to restore auto-saved data
-(setq auto-save-default nil)
+(setq auto-save-default t)
 (setq auto-save-no-message t)
 
 ;; Do not auto-disable auto-save after deleting large chunks of text
@@ -976,7 +1003,8 @@ The elements of the list are regular expressions.")
 ;; Ignore some recently visited files, eg. to prevent them from showing up
 ;; amongst recent files after package upgrades
 (add-to-list 'recentf-exclude
-             (expand-file-name (concat user-emacs-directory "elpa/"))
+             (expand-file-name (concat user-emacs-directory "elpa/")))
+(add-to-list 'recentf-exclude
              "^/\\(?:ssh\\|su\\|sudo\\)?:")
 
 ;; Use 'completing-read' to choose between recent files
@@ -996,7 +1024,7 @@ The elements of the list are regular expressions.")
 
 ;; Switch to wdired-mode and edit directory content like a text buffer
 (with-eval-after-load 'dired
-  (define-key dired-mode-map (kbd "e") #'dired-toggle-read-only))
+  (define-key dired-mode-map (kbd "e") #'wdired-change-to-wdired-mode))
 
 ;; Don't accumulate useless Dired buffers
 (setq dired-kill-when-opening-new-dired-buffer t)
@@ -1059,17 +1087,18 @@ The elements of the list are regular expressions.")
 
 (eon-trash-on)  ; set the default
 
-;; Use the system trash when deleting files
+;; Use the system trash when deleting files?
 (setq remote-file-name-inhibit-delete-by-moving-to-trash t)
 
-;; Resolve symlinks so that operations are conducted from the file's directory
+;; Resolve symlinks so that operations are conducted from the file's directory?
 (setq find-file-visit-truename t
       vc-follow-symlinks t)
 
-;; Auto refresh dired (and others) when contents change
+;; Auto refresh dired (and others) when contents change?
 (setq global-auto-revert-non-file-buffers t
       auto-revert-stop-on-user-input nil
       auto-revert-verbose t)
+(global-auto-revert-mode 1)
 
 ;; Configure Ediff to use a single frame and split windows horizontally
 (setq ediff-window-setup-function 'ediff-setup-windows-plain
@@ -1091,11 +1120,11 @@ The elements of the list are regular expressions.")
 ;; that runs within Emacs. It is independent from the OS. Eshell looks like
 ;; a Posix shell superficially, but is also a REPL for Emacs Lisp expressions.
 
-;; Get rid of the Eshell startup message
+;; Get rid of the Eshell startup message?
 (setq eshell-banner-message "")
 
-;; List directory content after changing into it
-(setq  eshell-list-files-after-cd t)
+;; List directory content after changing into it?
+(setq eshell-list-files-after-cd t)
 
 ;; To open more than one eshell buffer: "C-u C-z e e"
 (define-key ctl-z-e-map (kbd "e") #'eshell)
@@ -1327,7 +1356,7 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 
 ;; There are various syntax-checkers coming with the built-in Flymake mode,
 ;; and additional checkers can be installed as 3rd-party packages via
-;; "M-x package-install <RET> flymake-" or `(eon-package 'install '(NAME))'
+;; "M-x package-install <RET> flymake-".
 
 ;; Style the Flymake widget in the modeline
 (setq flymake-mode-line-format
@@ -1343,9 +1372,331 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
   (define-key flymake-mode-map (kbd "M-g p") #'flymake-goto-prev-error))  ; default
 
 ;;  ____________________________________________________________________________
-;;; LANGUAGE SERVER (EGLOT)
+;;; EGLOT LANGUAGE SERVER
+;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md/>
 
-;; TODO Will be included here with Emacs 29 minimum compatibility
+(with-eval-after-load 'eglot
+  ;; Shutdown language server after closing last file?
+  (setq eglot-autoshutdown t)
+  ;; Allow edits without confirmation?
+  (setq eglot-confirm-server-initiated-edits nil)
+  ;; Show code action indicators?
+  (setq eglot-code-action-indications nil)
+  ;; Common keybindings
+  (define-key ctl-z-c-map (kbd "r") #'eglot-rename)
+  (define-key ctl-z-c-map (kbd "f") #'eglot-format)
+  (define-key ctl-z-c-map (kbd "F") #'eglot-format-buffer)
+  (define-key ctl-z-c-map (kbd "a") #'eglot-code-actions))
+
+;; Eglot comes with a fairly complete set of associations of major-modes
+;; to popular language servers predefined. If you need to add server
+;; associations to the default list, use add-to-list. For example, you can
+;; add it to the alist like this:
+;;
+;; (with-eval-after-load 'eglot
+;;   (add-to-list 'eglot-server-programs
+;;                '(lua-mode . ("lua-language-server" "--stdio"))))
+;;
+;; This will invoke the program tools with the command-line argument --stdio
+;; in support of editing source files for which Emacs turns on foo-mode, and
+;; will communicate with the program via the standard streams. As usual with
+;; invoking programs, the executable file fools should be in one of the
+;; directories mentioned by the exec-path variable (see Subprocess Creation
+;; in GNU Emacs Lisp Reference Manual), for Eglot to be able to find it.
+;; Sometimes, multiple servers are acceptable alternatives for handling a
+;; given major-mode. In those cases, you may combine the helper function
+;; eglot-alternatives with the functional form of eglot-server-programs.
+;;
+;; (with-eval-after-load 'eglot
+;;   (add-to-list 'eglot-server-programs
+;;                `(lua-mode . ,(eglot-alternatives
+;;                               '(("lua-language-server" "--stdio")
+;;                                 ("lua-lsp" "--stdio"))))))
+
+;;  ____________________________________________________________________________
+;;; TREE-SITTER
+
+;; Define grammar specs for ts-modes already built into Emacs.
+;; Grammars can be built and installed via:
+;; - `eon-treesitter-ensure-grammar' (declarative)
+;; - `treesit-install-language-grammar' (interactive, single grammar)
+;; - `eon-treesitter-install-all' (interactive, all grammars)
+(defvar eon-treesitter-specs
+  '((bash       "https://github.com/tree-sitter/tree-sitter-bash")
+    (c          "https://github.com/tree-sitter/tree-sitter-c")
+    (c-sharp    "https://github.com/tree-sitter/tree-sitter-c-sharp")
+    (cmake      "https://github.com/uyha/tree-sitter-cmake")
+    (cpp        "https://github.com/tree-sitter/tree-sitter-cpp")
+    (css        "https://github.com/tree-sitter/tree-sitter-css")
+    (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
+    (elixir     "https://github.com/elixir-lang/tree-sitter-elixir")
+    (go         "https://github.com/tree-sitter/tree-sitter-go")
+    (gomod      "https://github.com/camdencheek/tree-sitter-go-mod")
+    (heex       "https://github.com/phoenixframework/tree-sitter-heex")
+    (html       "https://github.com/tree-sitter/tree-sitter-html")
+    (java       "https://github.com/tree-sitter/tree-sitter-java")
+    (javascript "https://github.com/tree-sitter/tree-sitter-javascript"
+                "master" "src")
+    (json       "https://github.com/tree-sitter/tree-sitter-json")
+    (lua        "https://github.com/tree-sitter-grammars/tree-sitter-lua")
+    (php        "https://github.com/tree-sitter/tree-sitter-php"
+                nil "php/src")
+    (python     "https://github.com/tree-sitter/tree-sitter-python")
+    (ruby       "https://github.com/tree-sitter/tree-sitter-ruby")
+    (rust       "https://github.com/tree-sitter/tree-sitter-rust")
+    (toml       "https://github.com/tree-sitter/tree-sitter-toml")
+    (tsx        "https://github.com/tree-sitter/tree-sitter-typescript"
+                "master" "tsx/src")
+    (typescript "https://github.com/tree-sitter/tree-sitter-typescript"
+                "master" "typescript/src")
+    (yaml       "https://github.com/tree-sitter-grammars/tree-sitter-yaml"))
+  "Tree-sitter grammar specs: list of (LANG URL [REVISION] [SOURCE-DIR]).
+Add further specs without building/installing via `eon-treesitter-add-specs'
+
+Only LANG and URL are mandatory.
+
+LANG is the language symbol.
+
+URL is the URL of the grammar’s Git repository or a directory
+where the repository has been cloned.
+
+REVISION is the Git tag or branch of the desired version,
+defaulting to the latest default branch.
+
+SOURCE-DIR is the relative subdirectory in the repository in which
+the grammar’s parser.c file resides, defaulting to \"src\".")
+
+;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;; Internal utilities
+
+(defun eon-treesitter--spec-p (x)
+  "Return non-nil if X is a spec tuple (LANG URL [REV] [DIR])."
+  (pcase x
+    (`(,(and _ (pred symbolp)) ,(and _ (pred stringp)) . ,_) t)
+    (_ nil)))
+
+(defun eon-treesitter--normalize-args (args)
+  "Normalize ARGS into a flat list of elements (symbols or spec tuples).
+Accepted forms:
+  - Many args: symbols and/or spec tuples -> returned as-is (copy).
+  - Single list arg:
+      - If it's a single SPEC tuple, wrap it as a one-element list.
+      - If it's a list of symbols/specs (or a mix), return that list.
+  - Single non-list arg: wrap as one-element list."
+  (pcase args
+    ('() nil)
+    (`(,(and x (pred eon-treesitter--spec-p))) (list x)) ; single spec
+    (`(,(and x (pred listp))) (copy-sequence x))         ; list of elems
+    (`(,x) (list x))                                     ; single atom
+    (_ (copy-sequence args))))                           ; many args
+
+(defun eon-treesitter--merge-into-alist (alist specs)
+  "Return ALIST with SPECS merged; later entries overwrite by LANG."
+  (if (null specs)
+      alist
+    (let ((kill (let ((h (make-hash-table :test 'eq)))
+                  (dolist (s specs) (puthash (car s) t h))
+                  h)))
+      (append
+       (cl-remove-if (lambda (pair) (gethash (car pair) kill)) alist)
+       specs))))
+
+(defun eon-treesitter--dedupe-specs (specs)
+  "Remove duplicate LANG specs in SPECS, keeping the last occurrence."
+  (let ((seen-langs (make-hash-table :test 'eq))
+        (result '()))
+    (dolist (spec (reverse specs))       ; right-to-left, keep last
+      (let ((lang (car spec)))
+        (unless (gethash lang seen-langs)
+          (puthash lang t seen-langs)
+          (push spec result))))
+    result))
+
+(defconst eon-treesitter--missing-spec-error
+  "Treesitter-spec not available per default.
+Provide full treesitter-spec as a list of (LANG URL [REVISION] [SOURCE-DIR])"
+  "Error message when a default spec is unavailable.")
+
+;; (defun eon-treesitter--resolve-one (x)
+;;   "Resolve X to a spec tuple.
+;; X may be a spec tuple or a symbol LANG present in `eon-treesitter-specs`.
+;; Errors with the mandated message for unknown LANGs or invalid elements."
+;;   (cond
+;;    ((eon-treesitter--spec-p x) x)
+;;    ((and (symbolp x) (not (keywordp x)))
+;;     (or (assq x eon-treesitter-specs)
+;;         (user-error "%s" eon-treesitter--missing-spec-error)))
+;;    ((keywordp x)
+;;     (user-error
+;;      "eon-treesitter-ensure-grammar: Only specs or language symbols accepted"))
+;;    (t
+;;     (user-error
+;;      "eon-treesitter-ensure-grammar: Invalid element %S (expect (LANG URL \
+;; [REV] [DIR]) or a language symbol)" x))))
+
+;; (defun eon-treesitter--resolve-elements (xs)
+;;   "Resolve a list XS of symbols/spec-tuples into a list of spec tuples.
+;; Errors if any LANG symbol is not registered by default."
+;;   (mapcar #'eon-treesitter--resolve-one xs))
+
+(defun eon-treesitter--resolve-one (lang-or-spec)
+  "Resolve LANG-OR-SPEC to the canonical spec tuple (list (LANG URL [REV] [DIR]))
+from `eon-treesitter-specs` when given a LANG symbol; pass tuples through
+unchanged. Signal a user-error if LANG is unknown."
+  (cond
+   ((eon-treesitter--spec-p lang-or-spec) lang-or-spec)
+   ((and (symbolp lang-or-spec) (not (keywordp lang-or-spec)))
+    (or (assq lang-or-spec eon-treesitter-specs)
+        (user-error "%s" eon-treesitter--missing-spec-error)))
+   ((keywordp lang-or-spec)
+    (user-error
+     "eon-treesitter-ensure-grammar: Only specs or language symbols accepted"))
+   (t
+    (user-error
+     "eon-treesitter-ensure-grammar: Invalid element %S (expect (LANG URL \
+[REV] [DIR]) or a language symbol)" lang-or-spec))))
+
+(defun eon-treesitter--resolve-elements (langs-or-specs)
+  "Resolve LANGS-OR-SPECS to a list of canonical spec tuples.
+Each element may be a spec tuple or a LANG symbol registered in
+`eon-treesitter-specs`.  Signal a user-error if any LANG is unknown."
+  (mapcar #'eon-treesitter--resolve-one langs-or-specs))
+
+(defun eon-treesitter--require-toolchain ()
+  "Fail fast with helpful messages if toolchain is missing."
+  (unless (require 'treesit nil t)
+    (user-error
+     "Tree-sitter not available in this Emacs (feature `treesit' missing)"))
+  (unless (executable-find "git")
+    (user-error "tree-sitter: `git` not found on PATH"))
+  (unless (or (executable-find "cc")
+              (executable-find "gcc")
+              (executable-find "clang"))
+    (user-error "tree-sitter: No C compiler found (cc/gcc/clang)")))
+
+(defun eon-treesitter-setup-specs (&optional specs)
+  "Merge SPECS into `treesit-language-source-alist', overwriting by LANG.
+If SPECS is nil, use `eon-treesitter-specs'."
+  (setq treesit-language-source-alist
+        (eon-treesitter--merge-into-alist
+         treesit-language-source-alist
+         (or specs eon-treesitter-specs))))
+
+(with-eval-after-load 'treesit
+  (eon-treesitter-setup-specs))
+
+(defun eon-treesitter--ensure-impl (specs reinstall)
+  "Core installer for SPECS. If REINSTALL is non-nil, rebuild even if present.
+Return an alist of (LANG . STATUS)."
+  (eon-treesitter--require-toolchain)
+  (pcase-let*
+      ((resolved (eon-treesitter--resolve-elements specs))
+       (to-merge
+        (seq-filter
+         (lambda (spec)
+           (let ((existing (assq (car spec) eon-treesitter-specs)))
+             (not (equal spec existing))))
+         resolved)))
+    ;; Persist any changed specs first (if any)
+    (when to-merge
+      (apply #'eon-treesitter-add-specs to-merge))
+    ;; Ensure source alist is up to date
+    (eon-treesitter-setup-specs)
+    ;; Perform installation per language (preserve order)
+    (mapcar
+     (lambda (spec)
+       (let ((lang (car spec)))
+         (condition-case err
+             (let* ((had   (treesit-language-available-p lang))
+                    (needs (or reinstall (not had))))
+               (when needs
+                 (let ((default-directory (expand-file-name "~")))
+                   (treesit-install-language-grammar lang)))
+               (cons
+                lang
+                (if (treesit-language-available-p lang)
+                    (if had 'present 'installed)
+                  (cons 'error
+                        (format
+                         "Installed but not available; check \
+`treesit-extra-load-path' (currently: %S)"
+                         treesit-extra-load-path)))))
+           (error
+            (cons lang (cons 'error (error-message-string err)))))))
+     (eon-treesitter--dedupe-specs resolved))))
+
+;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;; Public API
+
+(defun eon-treesitter-add-specs (&rest specs)
+  "Add SPECS to `eon-treesitter-specs' and merge them into the source alist.
+Use this only if you merely want to register SPECS, but not build/install
+them.
+
+SPECS can be many specs or a single list of specs.
+
+Each spec has the form (LANG URL [REVISION] [SOURCE-DIR]).
+
+Only LANG and URL are mandatory.
+
+LANG is the language symbol.
+
+URL is the URL of the grammar’s Git repository or a directory where the
+repository has been cloned.
+
+REVISION is the Git tag or branch of the desired version, defaulting to
+the latest default branch.
+
+SOURCE-DIR is the relative subdirectory in the repository in which the
+grammar’s parser.c file resides, defaulting to \"src\".
+
+Return the updated `eon-treesitter-specs'."
+  (let* ((xs0 (eon-treesitter--normalize-args specs))
+         (bad (seq-find (lambda (x)
+                          (not (eon-treesitter--spec-p x)))
+                        xs0)))
+    (when bad
+      (user-error "eon-treesitter-add-specs: Not a spec: %S" bad))
+    (let ((xs (eon-treesitter--dedupe-specs xs0)))
+      ;; Merge into registry (new specs take precedence)
+      (setq eon-treesitter-specs
+            (eon-treesitter--merge-into-alist eon-treesitter-specs xs))
+      ;; Reflect into treesit-language-source-alist
+      (eon-treesitter-setup-specs xs)
+      eon-treesitter-specs)))
+
+(defun eon-treesitter-ensure-grammar (&rest args)
+  "Ensure that grammar(s) for ARGS are built and installed.
+
+ARGS may be:
+  - Spec tuples: (LANG URL [REVISION] [SOURCE-DIR])
+  - Bare LANG symbols as identifiers for specs in `eon-treesitter-specs'
+  - A single list containing either of the above forms
+
+Rules:
+  - If called with a SPEC tuple whose LANG already exists
+    in `eon-treesitter-specs', the existing entry is compared for exact
+    equality. If different, the new SPEC is added and takes precedence.
+  - If called with bare LANG symbols, they must already exist
+    in `eon-treesitter-specs', otherwise signal an error.
+
+Returns an alist of (LANG . STATUS) where STATUS is one of:
+  present | installed | (error . STRING)."
+  (let ((elems (eon-treesitter--normalize-args args)))
+    (when (null elems)
+      (user-error "eon-treesitter-ensure-grammar: No specs provided"))
+    (eon-treesitter--ensure-impl elems nil)))
+
+(cl-defun eon-treesitter-install-all (&key reinstall)
+  "Install all grammars in `eon-treesitter-specs'.
+
+Accepts keyword arg :REINSTALL (non-nil to rebuild grammar even if present).
+
+When called interactively with a prefix argument, acts like :reinstall t.
+
+Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
+  (interactive (list :reinstall current-prefix-arg))
+  (eon-treesitter--ensure-impl eon-treesitter-specs (and reinstall t)))
 
 ;;  ____________________________________________________________________________
 ;;; COMPILING
@@ -1466,7 +1817,7 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 ;;; ORG PUBLISH
 
 ;; Select a project to publish a project via `C-z o p';
-;; This can be used to enerate and publish a static blog, ebooks, etc.
+;; This can be used to generate and publish a static blog, ebooks, etc.
 (define-key ctl-z-o-map (kbd "p") 'org-publish)
 
 ;; Speed up publishing by skipping files that haven't been changed
@@ -1477,7 +1828,7 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
       (concat user-emacs-directory "org-timestamps/"))
 
 (defun org-publish-unchanged-files-toggle ()
-  "Toggle wether to re-export Org files that haven't been changed."
+  "Toggle whether to re-export Org files that haven't been changed."
   (interactive)
   (if org-publish-use-timestamps-flag
       (progn (setq org-publish-use-timestamps-flag nil)
@@ -1509,15 +1860,17 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Executing-Lisp>
 
 (defvar eon-lisp-buffer-modes
-  '( emacs-lisp-mode-hook lisp-interaction-mode-hook
-     lisp-mode-hook
-     scheme-mode-hook))
+  '(emacs-lisp-mode-hook
+    lisp-interaction-mode-hook
+    lisp-mode-hook
+    scheme-mode-hook))
 
 (defvar eon-lisp-interactive-modes
-  '( lisp-interaction-mode-hook ielm-mode-hook
-     inferior-lisp-mode-hook
-     inferior-scheme-mode-hook
-     eval-expression-minibuffer-setup))
+  '(lisp-interaction-mode-hook
+    ielm-mode-hook
+    inferior-lisp-mode-hook
+    inferior-scheme-mode-hook
+    eval-expression-minibuffer-setup-hook))
 
 ;; Emacs Lisp is supported by Flymake, so let's use it per default
 (add-hook 'emacs-lisp-mode-hook #'flymake-mode)
@@ -1528,7 +1881,6 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
       eval-expression-print-level nil)
 
 ;; Additional keybinding resembling other sexp-related keybindings
-;; who usually begin with "C-M". Also useful editing non-lisp languages
 (global-set-key (kbd "C-M-<backspace>") #'backward-kill-sexp)
 
 ;;  ____________________________________________________________________________
