@@ -1,11 +1,9 @@
-;;; eon-commonlisp-slime.el --- Common Lisp with Slime  -*- lexical-binding: t; -*-
+;;; eon-commonlisp.el --- Common Lisp / Sly  -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
-;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/eon-commonlisp-slime.el")'.
-
+;;
 ;;; Code:
 
 ;;  ____________________________________________________________________________
@@ -18,12 +16,19 @@
   (inferior-lisp-program "sbcl"))
 
 ;;  ____________________________________________________________________________
-;;; SLIME
+;;; SLY
+;; <http://joaotavora.github.io/sly/>
+;; <https://github.com/joaotavora/sly>
 
-(use-package slime :ensure t
+(use-package sly :ensure t
   :init
-  ;; Set Slime Lisp implementations
-  (setq slime-lisp-implementations
+  ;; Create local leader maps
+  (eon-localleader-defkeymap sly-editing-mode eon-localleader-sly-editing-mode-map
+    :doc "Local leader keymap for `sly-editing-mode'.")
+  (eon-localleader-defkeymap sly-mrepl-mode eon-localleader-slime-mrepl-mode-map
+    :doc "Local leader keymap for `sly-mrepl-mode'.")
+  ;; Set Sly Lisp implementations
+  (setq sly-lisp-implementations
         '((sbcl ("sbcl"
                  "--noinform"
                  "--control-stack-size" "4096"
@@ -31,59 +36,26 @@
                  "--dynamic-space-size" "8192")
                 :coding-system utf-8-unix)))
   :custom
-  ;; Select Slime default Lisp implementation
-  (slime-default-lisp 'sbcl)
+  ;; Select Sly default Lisp implementation
+  (sly-default-lisp 'sbcl)
   ;; General configuration
-  (slime-net-coding-system 'utf-8-unix)
-  ;; Completion
-  (slime-completion-at-point-functions '(slime-c-p-c-completion-at-point
-                                         slime-filename-completion
-                                         slime-simple-completion-at-point))
+  (sly-net-coding-system 'utf-8-unix)
   :config
-  ;; Slime contribs
-  ;; Loaded by `slime-fancy' meta-contrib:
-  ;; slime-repl
-  ;; slime-autodoc
-  ;; slime-c-p-c
-  ;; slime-editing-commands
-  ;; slime-fancy-inspector
-  ;; slime-fancy-trace
-  ;; slime-fuzzy
-  ;; slime-mdot-fu
-  ;; slime-macrostep
-  ;; slime-presentations
-  ;; slime-scratch
-  ;; slime-references
-  ;; slime-package-fu
-  ;; slime-fontifying-fu
-  ;; slime-trace-dialog
-  ;; slime-indentation
-  (setq slime-contribs '(slime-fancy
-                         slime-asdf
-                         slime-quicklisp
-                         slime-mrepl
-                         slime-highlight-edits
-                         slime-media
-                         slime-sbcl-exts
-                         slime-scheme
-                         ;; BUG https://github.com/slime/slime/issues/887#issue-3414492176
-                         ;; slime-snapshot
-                         slime-sprof))
-  
-  ;; Prevent some buffers from cluttering certain buffer lists:
-  (when (boundp 'eon-boring-buffers)
-    (add-to-list 'eon-boring-buffers "\\`\\*inferior-lisp")
-    (add-to-list 'eon-boring-buffers "\\`\\*slime-events")
-    (add-to-list 'eon-boring-buffers "\\`\\*slime-description"))
-
-  (add-to-list 'display-buffer-alist
-               '("\\*slime-description" (display-buffer-no-window)))
-
+  ;; Prevent these buffers from cluttering certain buffer listings:
+  (eon-boring-buffers-add '("\\`\\*sly-inferior-lisp"
+                            "\\`\\*sly-compilation"
+                            "\\`\\*sly-description"
+                            "\\`\\*sly-events"))
   ;; :hook
   ;; Automatically start a Lisp REPL when opening a Lisp buffer
-  ;; (slime-mode . (lambda ()
-  ;;               (unless (slime-connected-p) (save-excursion (sly)))))
-  )
+  ;; (sly-editing-mode . (lambda ()
+  ;;                       (unless (sly-connected-p) (save-excursion (sly)))))
+  :bind
+  (:map ctl-z-e-map
+        ("l" . sly))
+  (:map eon-localleader-sly-editing-mode-map
+        ;; TODO Add ergonomic keybindings
+        ("c" . sly-compile-defun)))
 
 ;; Common Lisp documentation
 ;; The hyperspec must be installed on your computer. Adapt the path below:
@@ -97,6 +69,21 @@
   (common-lisp-hyperspec-issuex-table
    (concat common-lisp-hyperspec-root "Data/Map_IssX.txt")))
 
+;; <https://github.com/mmgeorge/sly-asdf>
+(use-package sly-asdf :ensure t)
+
+;; <https://github.com/joaotavora/sly-macrostep>
+(use-package sly-macrostep :ensure t)
+
+;; <https://github.com/joaotavora/sly-named-readtables>
+(use-package sly-named-readtables :ensure t)
+
+;; <https://github.com/joaotavora/sly-quicklisp>
+(use-package sly-quicklisp :ensure t
+  :after sly-mrepl
+  :config
+  (add-to-list 'sly-mrepl-shortcut-alist '("quickload" . sly-quickload)))
+
 ;;  ____________________________________________________________________________
 ;;; STRUCTURAL EDITING
 
@@ -107,8 +94,8 @@
 (use-package smartparens :ensure t
   :when (featurep 'eon-smartparens)
   :hook
-  (lisp-mode . smartparens-strict-mode)
-  ((slime-repl-mode slime-mrepl-mode) . smartparens-mode))
+  (sly-editing-mode . smartparens-strict-mode)
+  (sly-mrepl-mode . smartparens-mode))
 
 ;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
@@ -117,14 +104,13 @@
 ;; for all prog-modes in `eon-core.el'
 (use-package rainbow-delimiters :ensure t
   :hook
-  ((slime-repl-mode slime-mrepl-mode) . rainbow-delimiters-mode))
+  (sly-mrepl-mode . rainbow-delimiters-mode))
 
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
 ;; (use-package paren-face
 ;;   :hook
-;;   ((lisp-mode inferior-lisp-mode slime-repl-mode slime-mrepl-mode)
-;;    . paren-face-mode))
+;;   ((lisp-mode inferior-lisp-mode sly-mrepl-mode) . paren-face-mode))
 
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
@@ -136,7 +122,7 @@
 ;; <https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-lisp.html>
 (use-package ob-lisp :ensure nil
   :custom
-  (org-babel-lisp-eval-fn #'slime-eval))
+  (org-babel-lisp-eval-fn #'sly-eval))
 
 (use-package org :ensure nil
   :config
@@ -145,5 +131,5 @@
                                org-babel-load-languages))
 
 ;;  ____________________________________________________________________________
-(provide 'eon-commonlisp-slime)
-;;; eon-commonlisp-slime.el ends here
+(provide 'eon-commonlisp)
+;;; eon-commonlisp.el ends here
