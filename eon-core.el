@@ -24,14 +24,93 @@
 ;;; EXEC PATH FROM SHELL
 ;; <https://github.com/purcell/exec-path-from-shell>
 
-;; Make Emacs use the $PATH set up by the user's shell, especially helpful
-;; when on MacOS or starting Emacs via Systemd or similar which
-;; doesn't adopt all shell environment variables
-(use-package exec-path-from-shell :ensure t
-  :if (or (eon-macp) (daemonp))
-  :init
-  (exec-path-from-shell-initialize))
+;; Make Emacs use the $PATH and other environment variables set up by your
+;; shell; especially helpful when on MacOS, or starting Emacs via Systemd or
+;; similar, who don't adopt certain environment variables.
 
+(use-package exec-path-from-shell :ensure t
+  :when
+  (or (daemonp)
+      (and (eon-macp) (display-graphic-p)))
+  :preface
+  (defvar eon-exec-path-from-shell-blocklist
+    '(;; Unix/shell state
+      "^HOME$" "^\\(OLD\\)?PWD$" "^SHLVL$" "^PS1$" "^R?PROMPT$"
+      "^TERM\\(CAP\\)?$" "^USER$" "^GIT_CONFIG" "^INSIDE_EMACS$" "^_$"
+      "^COLUMNS$" "^LINES$"
+      ;; Display/session
+      "^\\(WAYLAND_\\)?DISPLAY$" "^DBUS_SESSION_BUS_ADDRESS$" "^XAUTHORITY$"
+      ;; WSL
+      "^WSL_INTEROP$"
+      ;; XDG runtime/session
+      "^XDG_CURRENT_DESKTOP$" "^XDG_RUNTIME_DIR$"
+      "^XDG_\\(VTNR$\\|SEAT$\\|BACKEND$\\|SESSION_\\)"
+      ;; Socket-like vars
+      "SOCK$"
+      ;; SSH/GPG can get stale
+      "^SSH_\\(AUTH_SOCK\\|AGENT_PID\\)$" "^\\(SSH\\|GPG\\)_TTY$"
+      "^GPG_AGENT_INFO$")
+    "Regexps for env var names to omit when exporting from the shell.")
+
+  (defun eon-exec-path-from-shell--blocklisted-p (var)
+    (seq-some (lambda (re) (string-match-p re var))
+              eon-exec-path-from-shell-blocklist))
+
+  (defun eon-exec-path-from-shell--env-lines ()
+    "Return \"NAME=VALUE\" lines from the user's shell.
+Respects user options: shell name & arguments."
+    (let* ((sh (or exec-path-from-shell-shell-name
+                   shell-file-name
+                   (getenv "SHELL")))
+           (ok (and sh (executable-find sh)))
+           (args (append exec-path-from-shell-arguments '("-c" "env"))))
+      (cond
+       (ok (or (ignore-errors (apply #'process-lines sh args))
+               (and (executable-find "printenv")
+                    (process-lines "printenv"))
+               (split-string (shell-command-to-string "env") "\n" t)))
+       ((executable-find "printenv") (process-lines "printenv"))
+       (t (split-string (shell-command-to-string "env") "\n" t)))))
+
+  (defun eon-exec-path-from-shell--env-names ()
+    (seq-keep (lambda (s)
+                (when (string-match-p "=" s)
+                  (car (split-string s "="))))
+              (eon-exec-path-from-shell--env-lines)))
+
+  (defun eon-exec-path-from-shell-refresh ()
+    "Refresh names from shell if needed, then import values.
+Respects all exec-path-from-shell user options. Interactive calls echo
+the list."
+    (interactive)
+    (require 'exec-path-from-shell)
+    (let* ((default
+            (eval (car (get 'exec-path-from-shell-variables 'standard-value))))
+           (current exec-path-from-shell-variables)
+           (names (if (equal current default)
+                      (seq-remove
+                       #'eon-exec-path-from-shell--blocklisted-p
+                       (eon-exec-path-from-shell--env-names))
+                    current)))
+      (setopt exec-path-from-shell-variables names)
+      (exec-path-from-shell-initialize)
+      (when (called-interactively-p 'interactive)
+        (message "exec-path-from-shell (%d): %s"
+                 (length names) (mapconcat #'identity names " ")))
+      names))
+
+  :custom
+  ;; Example: '("-l") or nil for non-interactive shells (faster).
+  ;; Your env vars should be defined for your login shell init, e.g.
+  ;; ~/.profile, ~/.zprofile, ~/.bash_profile etc. - not in ~/.bashrc, ~/.zshrc
+  (exec-path-from-shell-arguments '("-l"))
+  ;; If you set this variable, your env variables will not be auto-selected:
+  ;; (exec-path-from-shell-variables '("PATH" "MANPATH"))
+  ;; Use a specific shell if you like:
+  ;; (exec-path-from-shell-shell-name "/bin/bash")
+
+  :config
+  (eon-exec-path-from-shell-refresh))
 
 ;;  ____________________________________________________________________________
 ;;; OS INTEGRATION
