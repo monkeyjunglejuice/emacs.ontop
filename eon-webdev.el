@@ -1,11 +1,9 @@
-;;; eon-webdev.el --- HTML and CSS configuration  -*- lexical-binding: t; -*-
+;;; eon-webdev.el --- HTML, CSS, JavaScript -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
-;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/eon-webdev.el")'.
-
+;;
 ;;; Code:
 
 ;;  ____________________________________________________________________________
@@ -37,32 +35,32 @@
 ;;; HTML
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#HTML-Mode>
 
-(eon-treesitter-ensure-grammar
- '(html "https://github.com/tree-sitter/tree-sitter-html"))
-
 (use-package html-ts-mode :ensure nil
-  :defer t)
+  :defer t
+  :init
+  (eon-treesitter-ensure-grammar
+   '(html "https://github.com/tree-sitter/tree-sitter-html")))
 
 ;;  ____________________________________________________________________________
 ;;; CSS
 
-(eon-treesitter-ensure-grammar
- '(css "https://github.com/tree-sitter/tree-sitter-css"))
-
 (use-package css-mode :ensure nil
   :defer t
+  :init
+  (eon-treesitter-ensure-grammar
+   '(css "https://github.com/tree-sitter/tree-sitter-css"))
   :custom
   (css-indent-offset 2))
 
 ;;  ____________________________________________________________________________
 ;;; JS
 
-(eon-treesitter-ensure-grammar
- '(javascript "https://github.com/tree-sitter/tree-sitter-javascript"
-              "master" "src"))
-
 (use-package js :ensure nil
-  :defer t)
+  :defer t
+  :init
+  (eon-treesitter-ensure-grammar
+   '(javascript "https://github.com/tree-sitter/tree-sitter-javascript"
+                "master" "src")))
 
 ;;  ____________________________________________________________________________
 ;;; SYNTAX-CHECKER / LINTER

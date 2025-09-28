@@ -1,4 +1,4 @@
-;;; eon-init.el --- Emacs ONTOP extension layer  -*- lexical-binding: t; -*-
+;;; eon-init.el --- Emacs ONTOP extension layers -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;
 ;;    ▒░▒░▒░   ▒░     ▒░ ▒░▒░▒░▒░▒░  ▒░▒░▒░   ▒░▒░▒░▒░
 ;;   ▒░    ▒░  ▒░▒░   ▒░ ▒░  ▒░  ▒░ ▒░    ▒░  ▒░     ▒░
@@ -8,8 +8,7 @@
 ;;   ▒░    ▒░  ▒░     ▒░     ▒░     ▒░    ▒░  ▒░
 ;;    ▒░▒░▒░  ▒░      ▒░     ▒░      ▒░▒░▒░   ▒░
 ;;
-;;; Commentary:
-;;  Emacs ONTOP is an extension on top of the Emacs ONBOARD starter-kit
+;;  Emacs ONTOP is an extension on top of the Emacs ONboard starter-kit
 ;;
 ;;  
 ;;  --> LOAD THIS FILE from your init file `~/.emacs.d/init.el' or `~/.emacs'
@@ -20,10 +19,12 @@
 ;; Author: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Version: 1.1.1
-;; Package-Requires: ((EMACS "28.2"))
+;; Package-Requires: ((EMACS "30.1"))
 ;; Keywords: convenience
 ;; SPDX-License-Identifier: MIT
 ;; This file is not part of GNU Emacs.
+;;
+;;; Commentary:
 ;;
 ;;; Code:
 
@@ -35,21 +36,12 @@
 (setq use-package-always-ensure nil)
 
 ;;  ____________________________________________________________________________
-;;; DEBUG / BENCHMARK
-
-;; (use-package benchmark-init :ensure t
-;;   :when init-file-debug
-;;   ;; Disable collection of benchmark data after init is done
-;;   :config
-;;   (add-hook 'after-init-hook #'benchmark-init/deactivate))
-
-;;  ____________________________________________________________________________
 ;;; LOADER
 
 ;; Define the path of the Emacs ONTOP directory
 (defvar eon-ontop-directory
   (file-name-directory (or load-file-name (buffer-file-name)))
-  "The directory that contains the file ontop.el and its modules.")
+  "The directory that contains the file eon-init.el and the modules.")
 
 ;; Add the Emacs ONTOP directory to the `load-path`, so that we can `require`
 ;; modules or do `load-library` and `unload-feature` on the fly.
@@ -70,14 +62,18 @@ It is empty per default, and will be set in `eon-setup-modules.el'.")
 ;; Require and read your module selection
 (eon-require-with-error-handling 'eon-setup-modules)
 
-;; Require the module selection
+;; Load each module from the module selection
 (defun eon-require-modules ()
-  "Load the selected modules and install Emacs packages if necessary."
+  "Require the selected modules and install Emacs packages if necessary."
   (interactive)
   (dolist (module eon-modules)
     (eon-require-with-error-handling module)))
 
 (eon-require-modules)
+
+;; Added for UX/consistency
+(defalias 'eon-load-module #'load-library)
+(defalias 'eon-unload-module #'unload-feature)
 
 ;;  ____________________________________________________________________________
 (provide 'eon-init)

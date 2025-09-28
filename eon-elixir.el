@@ -1,11 +1,9 @@
-;;; eon-elixir.el --- Elixir configuration  -*- lexical-binding: t; -*-
+;;; eon-elixir.el --- Elixir -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
-
+;;
 ;;; Commentary:
-;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/eon-elixir.el")'.
-
+;;
 ;;; Code:
 
 ;;  ____________________________________________________________________________
@@ -16,7 +14,6 @@
 ;; OS package manager
 
 (use-package elixir-ts-mode :ensure nil
-  :defer t
   :init
   (eon-treesitter-ensure-grammar '(elixir heex)))
 
@@ -76,10 +73,10 @@ configuration or restarting applications."
   ;; Start language server automatically
   ((elixir-ts-mode heex-ts-mode) . eglot-ensure)
   ;; Tell the language server to format the buffer before saving
-  ((elixir-ts-mode heex-ts-mode) .
-   (lambda ()
-     (add-hook 'before-save-hook
-               #'eglot-format-buffer nil 'local))))
+  ((elixir-ts-mode heex-ts-mode)
+   . (lambda ()
+       (add-hook 'before-save-hook
+                 #'eglot-format-buffer nil 'local))))
 
 ;;  ____________________________________________________________________________
 ;;; MIX
@@ -104,11 +101,11 @@ configuration or restarting applications."
 ;;
 ;; Run `mix deps.get' afterwards, and then `mix credo'
 
-;; (use-package flycheck
+;; (use-package flycheck :ensure t
 ;;   :hook
 ;;   (elixir-ts-mode . flycheck-mode))
 
-;; (use-package flycheck-credo
+;; (use-package flycheck-credo :ensure t
 ;;   :custom
 ;;   (flycheck-elixir-credo-strict t)
 ;;   :hook
@@ -132,7 +129,7 @@ configuration or restarting applications."
 ;; for all prog-modes in `eon-core.el'
 (use-package rainbow-delimiters :ensure t
   :hook
-  (inf-elxir-mode . rainbow-delimiters-mode))
+  (inf-elixir-mode . rainbow-delimiters-mode))
 
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>

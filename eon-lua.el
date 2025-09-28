@@ -1,11 +1,9 @@
-;;; eon-lua.el --- Lua configuration  -*- lexical-binding: t; -*-
+;;; eon-lua.el --- Lua -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
-;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/eon-lua.el")'.
-
+;;
 ;;; Code:
 
 ;;  ____________________________________________________________________________

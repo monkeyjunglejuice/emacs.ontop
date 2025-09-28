@@ -1,4 +1,4 @@
-;;; eon-scheme.el --- Scheme with Geiser  -*- lexical-binding: t; -*-
+;;; eon-scheme.el --- Scheme / Geiser -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 

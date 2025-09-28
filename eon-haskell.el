@@ -1,4 +1,4 @@
-;;; eon-haskell.el --- Haskell configuration  -*- lexical-binding: t; -*-
+;;; eon-haskell.el --- Haskell -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 

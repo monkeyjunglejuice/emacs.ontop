@@ -1,4 +1,4 @@
-;;; eon-fonts.el --- Font configuration  -*- lexical-binding: t; -*-
+;;; eon-fonts.el --- Fonts -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 

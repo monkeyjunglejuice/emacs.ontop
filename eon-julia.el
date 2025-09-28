@@ -1,4 +1,4 @@
-;;; eon-julia.el --- Julia configuration  -*- lexical-binding: t; -*-
+;;; eon-julia.el --- Julia -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 

@@ -1,4 +1,4 @@
-;;; eon-snippets.el --- Code snippets  -*- lexical-binding: t; -*-
+;;; eon-snippets.el --- Code snippets -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 

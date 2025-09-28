@@ -1,4 +1,4 @@
-;;; eon-meow.el --- Meow settings  -*- lexical-binding: t; -*-
+;;; eon-meow.el --- Meow keybindings -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 

@@ -1,4 +1,4 @@
-;;; eon-smartparens.el --- Structural editing -*- lexical-binding: t; -*-
+;;; eon-smartparens.el --- Smartparens -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
@@ -19,22 +19,33 @@
   ;; Turn off other modes that clash with Smartparens
   (electric-pair-mode -1)
   (show-paren-mode -1)
-  ;; Globally enable non-strict delimiter handling?
-  ;; Specific configurations can be found within the resp. language module files.
-  (smartparens-global-mode)
-  (show-smartparens-global-mode)
   ;; :custom
-  ;; Smartparens comes without keybindings defined, it's totally up to you if you
-  ;; go with a pre-defined keybinding set or your set (see `:bind' down below).
-  ;; Load one of the default keybinding sets:
-  ;; (sp-base-key-bindings 'sp)
-  ;; (sp-base-key-bindings 'paredit)
+  ;; Smartparens comes without keybindings defined, it's totally up to you
+  ;; if you go with a pre-defined keybinding set or your personal set.
+  ;; Before you load one of the default sets, comment out the :bind form below.
+  ;; (sp-base-key-bindings 'sp)  ; default smartparens bindings
+  ;; (sp-base-key-bindings 'paredit)  ; default paredit bindings
   :config
   ;; Enable language-specific configurations
   (require 'smartparens-config)
+  ;; Only use the pseudo-quote inside strings where it serves as hyperlink.
+  (sp-with-modes 'emacs-lisp-mode
+    (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p)))
+  ;; Minibuffer
+  (defun eon-minibuffer-enable-smartparens ()
+    "Enable `smartparens-mode' in the minibuffer during `eval-expression'."
+    (sp-local-pair 'minibuffer-pairs "'" nil :actions nil)
+    (sp-local-pair 'minibuffer-pairs "`" nil :actions nil)
+    (sp-update-local-pairs 'minibuffer-pairs)
+    (smartparens-mode 1))
+  ;; Globally enable non-strict delimiter handling?
+  ;; Specific configurations can be found within the resp. language module files.
+  (smartparens-global-mode 1)
+  (show-smartparens-global-mode 1)
   :hook
   ((emacs-lisp-mode lisp-interaction-mode) . smartparens-strict-mode)
-  ((eshell-mode eval-expression-minibuffer-setup) . smartparens-mode)
+  (eshell-mode . smartparens-mode)
+  (eval-expression-minibuffer-setup . eon-minibuffer-enable-smartparens)
   :bind
   ;; Custom keybinding set, a blend of standard Emacs sexp keybindings
   ;; and Paredit keybindings

@@ -1,5 +1,5 @@
-;;; eon.el --- Emacs Onboard Starter Kit -*- lexical-binding: t; -*-
-;;
+;;; eon.el --- Emacs ONboard Starter Kit -*- lexical-binding: t; -*-
+
 ;;    ▒░▒░▒░   ▒░     ▒░ ▒░▒░▒░▒░     ▒░▒░▒░      ▒░    ▒░▒░▒░▒░    ▒░▒░▒░▒░
 ;;   ▒░    ▒░  ▒░▒░   ▒░  ▒░     ▒░  ▒░    ▒░    ▒░▒░    ▒░     ▒░   ▒░    ▒░
 ;;  ▒░      ▒░ ▒░ ▒░  ▒░  ▒░     ▒░ ▒░      ▒░  ▒░  ▒░   ▒░     ▒░   ▒░     ▒░
@@ -7,22 +7,40 @@
 ;;  ▒░      ▒░ ▒░   ▒░▒░  ▒░     ▒░ ▒░      ▒░ ▒░▒░▒░▒░  ▒░   ▒░     ▒░     ▒░
 ;;   ▒░    ▒░  ▒░     ▒░  ▒░     ▒░  ▒░    ▒░ ▒░      ▒░ ▒░     ▒░   ▒░    ▒░
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
-;;
-;;; Commentary:
-;; Emacs ONBOARD offers a clean slate to build your personal Emacs config.
+
+;; Emacs ONboard offers a clean slate to build your personal Emacs config.
 ;; It stays as close as possible to vanilla Emacs, but offers some convenience
-;; and a better user experience, while only relying on built-in packages.
-;;
+;; and a much better user experience, while only relying on built-in packages.
+
 ;; Copyright (C) 2021–2025 Dan Dee
-;; Author: Dan Dee <monkeyjunglejuice@pm.me>
-;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
-;; Version: 1.7.0
-;; Package-Requires: ((EMACS "30.1"))
-;; Keywords: convenience
-;; SPDX-License-Identifier: MIT
-;; This file is not part of GNU Emacs.
 ;;
-;;; Keybindings:
+;; Emacs ONboard is free software: you can redistribute it and/or modify it
+;; under the terms of the GNU General Public License as published by the Free
+;; Software Foundation, either version 3 of the License, or (at your option) any
+;; later version.
+;;
+;; Emacs ONboard is distributed in the hope that it will be useful, but WITHOUT
+;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+;; FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+;; details.
+;;
+;; You should have received a copy of the GNU General Public License along with
+;; this program. If not, see <https://www.gnu.org/licenses/>.
+
+;; Author: Dan Dee <monkeyjunglejuice@pm.me>
+;; Maintainer: Dan Dee <monkeyjunglejuice@pm.me>
+;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
+;; Created: 28 Apr 2021
+;; Version: 2.0.0
+;; Package: eon
+;; Package-Requires: ((emacs "30.1"))
+;; Keywords: config dotemacs convenience
+;; SPDX-License-Identifier: GPL-3.0-or-later
+;; This file is not part of GNU Emacs.
+
+;;; Commentary:
+;;
+;; Keybindings:
 ;;
 ;; "M-x"  Show all commands
 ;;        – hold down the "Meta key" and press <x>
@@ -30,7 +48,7 @@
 ;;
 ;; "C-g"  Get out! Press <Ctrl>+<g> to cancel whatever happens – or hit 3x <ESC>
 ;;
-;; "F12"  Toggle between dark and light theme
+;; "<leader> x t"  Toggle between dark and light theme
 ;;
 ;;; Examples:
 ;;
@@ -47,13 +65,13 @@
 ;;
 ;;; Code:
 
-;;  ____________________________________________________________________________
-;;; GARBAGE COLLECTION
+;; _____________________________________________________________________________
+;;;; GARBAGE COLLECTION
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/elisp.html#Garbage-Collection>
 
 ;; Set a high value of 1 GB to prevent frequent garbage collections
 ;; during initialization
-(setq gc-cons-threshold #x40000000)  ; default threshold is 800 KB
+(setopt gc-cons-threshold #x40000000)  ; default threshold is 800 KB
 
 ;; Prevent longer GC pauses and experience less mini-interruptions.
 ;; When idle for 15 sec, run the GC no matter what.
@@ -85,7 +103,7 @@ The timer can be canceled with `eon-cancel-gc-timer'.")
 (eon-start-gc-timer)
 
 ;; Show a message when garbage collection happens? Useful while tuning the GC
-(setq garbage-collection-messages nil)
+(setopt garbage-collection-messages nil)
 
 ;; Diagnostics
 (add-hook 'emacs-startup-hook
@@ -96,29 +114,31 @@ The timer can be canceled with `eon-cancel-gc-timer'.")
                               (time-subtract after-init-time before-init-time)))
                      gcs-done)))
 
-;;  ____________________________________________________________________________
-;;; PACKAGE MANAGEMENT
+;; _____________________________________________________________________________
+;;;; PACKAGE MANAGEMENT
+
+;; Browse, select and install 3rd-party packages with "M-x list-packages RET"
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Packages>
 ;; ... or do "M-x info-emacs-manual s packages RET" to read it within Emacs
 
-;; Browse, select and install 3rd-party packages with "M-x list-packages RET"
-
-;; The package setup respects when `package-enable-at-startup' is set to nil
-;; in `early-init-el', so that you can use other package managers like Straight
-;; or Elpaca without issues.
+;; The package setup respects when `package-enable-at-startup' is set to nil in
+;; early-init.el (if there's any), so that you can use other package managers
+;; like Straight or Elpaca without issues.
 
 (when package-enable-at-startup
   (require 'package)
 
-  ;; 1st priority
-  ;; Gnu Elpa and Non-Gnu Elpa, which are enabled by default
+  ;;; 1st priority: Gnu Elpa, enabled by default
 
-  ;; 2nd priority
+  ;;; 2nd priority: Non-Gnu Elpa, enabled by default
+
+  ;;; 3rd priority: Melpa
   (add-to-list 'package-archives
                '("melpa" . "https://melpa.org/packages/") t)
 
-  ;; 3rd priority
-  ;; Install from melpa-stable' only when the package from 'melpa' is broken
+  ;;; 4th priority: Melpa stable
+  ;; Install from melpa-stable only when a package from 'melpa' is broken.
+  ;; Most packages there are utterly outdated.
   ;; (add-to-list 'package-archives
   ;;              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 
@@ -127,20 +147,142 @@ The timer can be canceled with `eon-cancel-gc-timer'.")
             (lambda ()
               (hl-line-mode 1))))
 
-;;  ____________________________________________________________________________
-;;; NATIVE ELISP COMPILATION
+;; _____________________________________________________________________________
+;;;; ELISP NATIVE COMPILATION / BYTECODE
 
 ;; Prevent stale elisp bytecode from shadowing more up-to-date source files?
-(setq load-prefer-newer t)
+(setopt load-prefer-newer t)
 
 ;; Natively compile packages at first use or immediately after installation?
-(setq package-native-compile t)
+(setopt package-native-compile t)
+
+;; Native-compile .elc files asynchronously?
+(setopt native-comp-jit-compilation t)
 
 ;; Ask whether to terminate asynchronous compilations on exit?
-(setq native-comp-async-query-on-exit t)
+;; Prevents from interrupted compilations and leftover artifacts.
+(setopt native-comp-async-query-on-exit t)
 
-;;  ____________________________________________________________________________
-;;; HELPERS
+;; When to bring the buffer to the foreground?
+(setopt warning-minimum-level :error)
+
+;; Reduce bytecode compilation verbosity
+(setopt byte-compile-verbose nil)
+(setopt byte-compile-warnings nil)
+
+;; Reduce native code compilation verbosity
+(setopt native-comp-async-report-warnings-errors nil)
+(setopt native-comp-warning-on-missing-source nil)
+
+;; _____________________________________________________________________________
+;;;; EMACS SYSTEM LIMITS
+
+;; Increase warning threshold
+(setopt large-file-warning-threshold (* 64 1000000))
+
+;; Increase undo limit
+(setopt undo-limit 67108864          ; 64mb
+        undo-strong-limit 100663296  ; 96mb
+        undo-outer-limit 1006632960) ; 960mb
+
+;; Increase the amount of data which Emacs reads from subprocesses
+(setopt read-process-output-max (* 1024 1024))  ; 1 MB
+
+;; _____________________________________________________________________________
+;;;; DEFAULT AND INITIAL FRAME
+
+;; In Emacs terminology, a "frame" means the ordinary "desktop window";
+;; while "window" refers to tiled panels within an Emacs frame. Why?
+;; Because Emacs had it first, and today's convention what "window" means
+;; appeared later.
+;; In order to define properties generally, add them to `default-frame-alist';
+;; to affect only the first frame created, add them to `initial-frame-alist'.
+
+;; Either start Emacs maximized …
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+;; … or set the default width of the Emacs frame in characters
+(add-to-list 'default-frame-alist '(width . 80))
+
+;; … and set the default height of the Emacs frame in lines
+(add-to-list 'default-frame-alist '(height . 32))
+
+;; Horizontal position: set the distance from the left screen edge in pixels
+;; That way, only the first frame created will get a fixed position:
+;; (add-to-list 'initial-frame-alist '(left . 0))
+
+;; Vertical position: set the distance from the top screen edge in pixels
+;; That way, only the first frame created will get a fixed position:
+;; (add-to-list 'initial-frame-alist '(top . 0))
+
+;; Fringe: choose on which sides (not) to show it
+;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Fringes>
+;; (add-to-list 'default-frame-alist '(right-fringe . 0))
+
+;; Bring frame to the front
+(add-hook 'window-setup-hook
+          (lambda ()
+            (when (display-graphic-p)
+              (select-frame-set-input-focus (selected-frame)))))
+
+;; _____________________________________________________________________________
+;;;; USER INTERFACE
+
+;; Menu bar: on/off by default?
+(menu-bar-mode 1)
+
+;; Scroll bar: on/off by default?
+(when (display-graphic-p) (scroll-bar-mode -1))
+
+;; Tool bar: on/off by default?
+(when (display-graphic-p) (tool-bar-mode -1))
+
+;; Tooltips: enable/disable?
+(tooltip-mode -1)
+
+;; Startup screen: on/off by default?
+(setopt inhibit-startup-screen t)
+
+;; Alarms: turn off?
+(setopt ring-bell-function 'ignore)
+
+;; _____________________________________________________________________________
+;;;; CURSOR
+;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Cursor-Display>
+
+;; To learn about available cursors, place your cursor behind 'cursor-type'
+;; in the code below or do "M-x describe-symbol RET cursor-type RET"
+
+;; Set the cursor type
+;; Comment out the following expression to change the cursor into a bar
+;; (add-to-list 'default-frame-alist '(cursor-type . bar))
+
+;; Turn on/off cursor blinking by default? 1 means 'on' and -1 means 'off'
+(blink-cursor-mode -1)
+
+;; Cursor blinking interval in seconds
+(setopt blink-cursor-interval 0.3)
+
+;; Blink cursor that often before going into solid state
+(setopt blink-cursor-blinks 3)
+
+;; Emphasize the cursor when running Emacs in a text terminal?
+(setopt visible-cursor nil)
+
+;; Make sure to highlight the current line only in the active window.
+(setopt hl-line-sticky-flag nil)
+(add-hook 'special-mode-hook
+          (lambda ()
+            ;; Highlight current line in special modes?
+            (hl-line-mode 1)))
+
+;; _____________________________________________________________________________
+;;;; GLOBAL DEFINITIONS & UTILITIES
+
+;; Group for customizations
+(defgroup eon nil
+  "Emacs ONboard & Emacs ONtop customization options."
+  :group 'convenience)
 
 ;; Simplify writing of operating-system-specific Elisp code
 
@@ -156,17 +298,83 @@ For finer granularity, use the variables `system-type'
 or `system-configuration' directly."
   (memq system-type '(windows-nt cygwin ms-dos)))
 
+(defun eon-androidp ()
+  "True if `system-type' is Android or something compatible.
+For finer granularity, use the variables `system-type'
+or `system-configuration' directly."
+  (eq system-type 'android))
+
 (defun eon-macp ()
   "True if `system-type' is MacOS or something compatible.
 For finer granularity, use the variables `system-type'
 or `system-configuration' directly."
   (eq system-type 'darwin))
 
-(defun eon-androidp ()
-  "True if `system-type' is Android or something compatible.
-For finer granularity, use the variables `system-type'
-or `system-configuration' directly."
-  (eq system-type 'android))
+;; Extend `add-to-list' for practical reasons
+(defun eon-list-adjoin (cur elements &optional append compare-fn)
+  "Return a new list like CUR with ELEMENTS added once.
+
+ELEMENTS may be an item or a list.  If APPEND is non-nil, append items
+left→right; otherwise prepend while preserving ELEMENTS order.
+COMPARE-FN is the membership predicate (default `equal').  CUR is not
+mutated.
+
+Examples (CUR = (a b)):
+  (eon-list-adjoin '(a b) 'c)                    ⇒ (c a b)
+  (eon-list-adjoin '(a b) '(c a))                ⇒ (c a b)
+  (eon-list-adjoin '(a b) '(d) t)                ⇒ (a b d)
+  (eon-list-adjoin '(a b) '(\"x\" \"x\") nil #'string-equal)
+                                                ⇒ (\"x\" a b)"
+  (let* ((xs   (if (listp elements) elements (list elements)))
+         (test (or compare-fn #'equal)))
+    (cl-labels
+        ((step (res items)
+           (if (null items)
+               res
+             (let* ((x (car items))
+                    (res* (if (cl-find x res :test test)
+                              res
+                            (if append
+                                (append res (list x))
+                              (cons x res)))))
+               (step res* (cdr items))))))
+      (step (copy-sequence cur)
+            (if append xs (reverse xs))))))
+
+;; One-shot Customize wrapper (runs :set/type normalization once)
+(defmacro eon-setopt-add-to-list (var elements &optional append compare-fn)
+  "Set VAR to CUR with ELEMENTS adjoined using a single `setopt' call.
+
+VAR is a symbol naming a list variable.  ELEMENTS may be an item or a
+list.  APPEND/COMPARE-FN as in `eon-list-adjoin'.  If VAR is unbound,
+treat it as nil.
+
+Examples (initial VAR = (a b)):
+  (eon-setopt-add-to-list some-var 'c)
+  (eon-setopt-add-to-list some-var '(c a))
+  (eon-setopt-add-to-list some-var '(d) t)
+  (eon-setopt-add-to-list some-var '(\"x\") nil #'string-equal)"
+  `(setopt ,var
+           (eon-list-adjoin
+            (if (boundp ',var) ,var nil)
+            ,elements ,append ,compare-fn)))
+
+;; Drop-in rebinder (no Customize semantics)
+(defun eon-add-to-list (list-sym elements &optional append compare-fn)
+  "Rebind LIST-SYM to a new list with ELEMENTS adjoined once.
+
+LIST-SYM is a symbol naming a list variable.  ELEMENTS may be an item or
+a list.  APPEND/COMPARE-FN as in `eon-list-adjoin'.  Returns the new
+value of LIST-SYM.
+
+Examples (LIST-SYM value starts as (a b)):
+  (eon-add-to-list 'v 'c)                  ⇒ (c a b)
+  (eon-add-to-list 'v '(c a))              ⇒ (c a b)
+  (eon-add-to-list 'v '(d) t)              ⇒ (a b d)"
+  (set list-sym
+       (eon-list-adjoin
+        (if (boundp list-sym) (symbol-value list-sym) nil)
+        elements append compare-fn)))
 
 ;; Open the '~/.emacs.d' directory in the Dired file manager
 (defun eon-visit-user-emacs-directory ()
@@ -180,51 +388,197 @@ or `system-configuration' directly."
   (interactive)
   (find-file user-init-file))
 
-;;  ____________________________________________________________________________
-;;; KEYMAPS
+;; Get all the parent major modes
+(defun eon-get-parent-modes ()
+  "Return major-mode and its parents (child first).
+When called interactively, also echo the result."
+  (interactive)
+  (cl-labels ((collect (mode)
+                (if-let ((p (get mode 'derived-mode-parent)))
+                    (cons mode (collect p))
+                  (list mode))))
+    (let ((parents (collect major-mode)))
+      (if (called-interactively-p 'interactive)
+          (message "%S" parents)
+        parents))))
 
-;; Make "C-z" available as a prefix key in the same manner as "C-x" and "C-c";
-;; therefore "C-z" acts like kind of a "leader key".
+;; _____________________________________________________________________________
+;;;; LEADER-KEY / LOCAL LEADER-KEY and KEYMAPS
+
 ;; To avoid clashes, new keybindings introduced by Emacs ONboard will usually
-;; begin with the prefix "C-z" (with only a few exceptions).
-;; This is unlikely to work out of the box if you are using Emacs within a
-;; terminal emulator, as terminal emulators are usually configured to suspend
-;; a running command via the C-z keybinding.
+;; live under the leader prefix (with only a few exceptions).
 
-(global-unset-key (kbd "C-z"))
+;; ---> Defaults for graphical Emacs:
+;; "C-," is the leader key, reach the local leader via "C-, C-,"
+;; 
+;; ---> Defaults for Emacs with terminal UI (invoked by "emacs -nw"):
+;; "C-z" is the leader key, reach the local leader via "C-z C-z"
 
-(define-prefix-command 'ctl-z-map nil "Leader")
-(global-set-key (kbd "C-z") 'ctl-z-map)
+;; Terminal note: In `emacs -nw`, "C-z" is normally bound to suspend Emacs.
+;; We rebind it as a leader, so it works in modern terminals (e.g. WezTerm).
+;; If your TTY converts C-z to SIGTSTP before Emacs sees it (rare), disable
+;; the suspend char or move it (see optional snippet below).
+;; (add-hook 'tty-setup-hook
+;;           (lambda ()
+;;             (ignore-errors
+;;               ;; No kernel suspend on ^Z
+;;               (call-process "stty" nil nil nil "susp" "undef")
+;;               ;; No XON/XOFF flow control stealing C-s/C-q
+;;               (call-process "stty" nil nil nil "-ixon" "-ixoff"))))
 
-(define-prefix-command 'ctl-z-c-map nil "Code")
-(define-key ctl-z-map (kbd "c") 'ctl-z-c-map)
+;; Leader key implementation
 
-(define-prefix-command 'ctl-z-e-map nil "Emacs built-ins")
-(define-key ctl-z-map (kbd "e") 'ctl-z-e-map)
+(defun eon--set-leader-key (sym value)
+  (let ((old (and (boundp sym) (symbol-value sym))))
+    (when (and old (> (length old) 0))
+      (keymap-global-unset old t))
+    (set-default sym value)
+    (when (boundp 'ctl-z-map)
+      (keymap-global-set value ctl-z-map))
+    (when (and old (string= eon-localleader-key old))
+      (eon--set-localleader-key 'eon-localleader-key value))))
 
-(define-prefix-command 'ctl-z-g-map nil "Version control")
-(define-key ctl-z-map (kbd "g") 'ctl-z-g-map)
+(defcustom eon-leader-key
+  (if (display-graphic-p) "C-," "C-z")
+  "Leader prefix (GUI -> \"C-,\"; TTY -> \"C-z\"). Use `setopt' to change."
+  :group 'eon
+  :type 'string
+  :set #'eon--set-leader-key)
 
-(define-prefix-command 'ctl-z-o-map nil "Org")
-(define-key ctl-z-map (kbd "o") 'ctl-z-o-map)
+;; Localleader key implementation
 
-(define-prefix-command 'ctl-z-p-map nil "Project")
-(define-key ctl-z-map (kbd "p") 'ctl-z-p-map)
+(defun eon--set-localleader-label (sym value)
+  (set-default sym value)
+  ;; Refresh which-key title symbol to match the new label
+  (setq eon--localleader-which-key-sym (make-symbol value))
+  ;; Refresh the entry shown under the leader, if the leader map exists
+  (when (boundp 'ctl-z-map)
+    (keymap-set ctl-z-map eon-localleader-key
+                `(,eon-localleader-label . eon-localleader-dispatch))))
 
-(define-prefix-command 'ctl-z-s-map nil "Scratch buffers")
-(define-key ctl-z-map (kbd "s") 'ctl-z-s-map)
+(defcustom eon-localleader-label "Local"
+  "Label shown for the localleader in which-key and the leader menu."
+  :group 'eon
+  :type 'string
+  :set #'eon--set-localleader-label)
 
-(define-prefix-command 'ctl-z-w-map nil "Web")
-(define-key ctl-z-map (kbd "w") 'ctl-z-w-map)
+(defun eon--set-localleader-key (sym value)
+  (let ((old (and (boundp sym) (symbol-value sym))))
+    (when (boundp 'ctl-z-map)
+      (when old (keymap-unset ctl-z-map old))
+      (keymap-set ctl-z-map value
+                  `(,eon-localleader-label . eon-localleader-dispatch))))
+  (set-default sym value))
 
-(define-prefix-command 'ctl-z-x-map nil "Execute")
-(define-key ctl-z-map (kbd "x") 'ctl-z-x-map)
+(defcustom eon-localleader-key
+  (if (display-graphic-p) "C-," "C-z")
+  "Localleader key (pressed after the leader).
+GUI: leader then \"C-,\" -> localleader (\"C-, C-,\")
+TTY: leader then \"C-z\" -> localleader (\"C-z C-z\")
+Use `setopt' to override."
+  :group 'eon
+  :type 'string
+  :set #'eon--set-localleader-key)
 
-;;  ____________________________________________________________________________
-;;; KEYBINDINGS
+;;; Sub-keymaps under the leader key:
 
-(when (eq system-type 'darwin)
-  (setq
+(defvar-keymap ctl-z-b-map :doc "Buffer")
+(defvar-keymap ctl-z-c-map :doc "Code")
+(defvar-keymap ctl-z-e-map :doc "Exec")
+(defvar-keymap ctl-z-f-map :doc "File")
+(defvar-keymap ctl-z-g-map :doc "Goto")
+(defvar-keymap ctl-z-h-map :doc "Help")
+(defvar-keymap ctl-z-o-map :doc "Org")
+(defvar-keymap ctl-z-p-map :doc "Project")
+(defvar-keymap ctl-z-q-map :doc "Quit")
+(defvar-keymap ctl-z-s-map :doc "Search")
+(defvar-keymap ctl-z-t-map :doc "Tab/WS")
+(defvar-keymap ctl-z-v-map :doc "VC/Git")
+(defvar-keymap ctl-z-w-map :doc "Window")
+(defvar-keymap ctl-z-x-map :doc "Misc")
+
+(defvar-keymap eon-localleader-global-map
+  :doc "Global localleader map (fallback for all modes)."
+  "/" '("..." . execute-extended-command-for-buffer))
+
+;;; Top-level leader keymap:
+
+(defvar-keymap ctl-z-map
+  :doc "Leader (top-level) keymap."
+  ;; Localleader entry, kept dynamic via :set handler
+  eon-localleader-key `(,eon-localleader-label . eon-localleader-dispatch)
+  "b" `("Buffer"  . ,ctl-z-b-map)
+  "c" `("Code"    . ,ctl-z-c-map)
+  "e" `("Exec"    . ,ctl-z-e-map)
+  "f" `("File"    . ,ctl-z-f-map)
+  "g" `("Goto"    . ,ctl-z-g-map)
+  "h" `("Help"    . ,ctl-z-h-map)
+  "m" #'execute-extended-command  ; bind "M-x" to "m" under the leader
+  "o" `("Org"     . ,ctl-z-o-map)
+  "p" `("Project" . ,ctl-z-p-map)
+  "q" `("Quit"    . ,ctl-z-q-map)
+  "s" `("Search"  . ,ctl-z-s-map)
+  "t" `("Tab/WS"  . ,ctl-z-t-map)
+  "v" `("VC/Git"  . ,ctl-z-v-map)
+  "w" `("Window"  . ,ctl-z-w-map)
+  "x" `("Misc"    . ,ctl-z-x-map))
+
+;; Initial binding of the leader prefix
+(keymap-global-set eon-leader-key ctl-z-map)
+
+;;; Localleader implementation
+
+(defvar-local eon-localleader-map eon-localleader-global-map
+  "Active localleader keymap for the current buffer.")
+
+(defvar eon--localleader-which-key-sym (make-symbol eon-localleader-label))
+
+(defun eon-localleader-dispatch ()
+  "Function called by the key bound as localleader."
+  (interactive)
+  (let ((effective (if (keymapp eon-localleader-map)
+                       eon-localleader-map
+                     eon-localleader-global-map)))
+    (set eon--localleader-which-key-sym effective)
+    (set-transient-map effective t)
+    (when (fboundp 'which-key-show-keymap)
+      (which-key-show-keymap eon--localleader-which-key-sym t))))
+
+(defmacro eon-localleader-defkeymap (mode map-sym &rest body)
+  "Define arbitrary MAP-SYM for MODE and make it inherit the global localleader.
+Also set `eon-localleader-map' when entering MODE (and immediately if
+already in MODE or a derived mode). BODY is forwarded to `defvar-keymap.'"
+  (declare (indent 2))
+  (let ((hook (intern (format "%s-hook" mode))))
+    `(progn
+       (defvar-keymap ,map-sym ,@body)
+       ;; Ensure inheritance from the global localleader map
+       (set-keymap-parent ,map-sym eon-localleader-global-map)
+       ;; Activate for buffers of this mode
+       (add-hook ',hook (lambda () (setq eon-localleader-map ,map-sym)))
+       ;; If we're already in MODE (or derived), select it now
+       (when (derived-mode-p ',mode)
+         (setq eon-localleader-map ,map-sym)))))
+
+;; _____________________________________________________________________________
+;;; KEYBINDING RELATED SETTINGS
+
+;; Which-key: show a menu with available keybindings
+(when (fboundp #'which-key-mode)
+  (setopt which-key-lighter ""
+          which-key-separator " "
+          which-key-idle-delay 0.3
+          which-key-idle-secondary-delay 0.0
+          which-key-sort-uppercase-first nil
+          which-key-sort-order 'which-key-key-order-alpha
+          which-key-allow-evil-operators t
+          which-key-preserve-window-configuration t
+          which-key-show-remaining-keys t
+          which-key-show-transient-maps t)
+  (which-key-mode 1))
+
+(when (eon-macp)
+  (setopt
    ;; Make the <Command> key on MacOS act as <Ctrl> key: "C- ..."
    mac-command-modifier 'control
    ;; Make the <Option> key on MacOS act as <Meta> key for "M- ..."
@@ -232,68 +586,8 @@ or `system-configuration' directly."
    ;; Don't bypass "C-h ..." keybindings
    mac-pass-command-to-system nil))
 
-;; Show a help window with possible key bindings?
-(when (fboundp #'which-key-mode)
-  (setq which-key-lighter ""
-        which-key-idle-delay 0.3
-        which-key-idle-secondary-delay 0.0
-        which-key-sort-uppercase-first nil)
-  (which-key-mode 1))
-
-;;  ____________________________________________________________________________
-;;; SYSTEM
-
-;; Increase warning threshold
-(setq large-file-warning-threshold (* 64 1000000))
-
-;; Increase undo limit
-(setq undo-limit 67108864          ; 64mb
-      undo-strong-limit 100663296  ; 96mb
-      undo-outer-limit 1006632960) ; 960mb
-
-;; Increase the amount of data which Emacs reads from subprocesses
-(setq read-process-output-max (* 1024 1024))  ; 1 MB
-
-;;  ____________________________________________________________________________
-;;; SERVER
-;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Emacs-Server>
-;; ... or do "M-x info-emacs-manual s server RET" to read it within Emacs
-
-;; Display the name of the Emacs server process in the frame title
-;; to see easily to which server process a client is connected to
-;; Further information:
-;; <https://monkeyjunglejuice.github.io/blog/emacs-server-name-frame-title.howto.html>
-(with-eval-after-load 'server
-
-  (defun eon-frame-title ()
-    "Set a custom frame title."
-    (setq frame-title-format
-          (concat "%b (%f)"
-                  (when (server-running-p)
-                    (concat " " server-name)))))
-
-  (add-hook 'emacs-startup-hook
-            (lambda ()
-              "Run functions after loading init files"
-              (eon-frame-title)))
-
-  (add-hook 'server-mode-hook
-            (lambda ()
-              "Run functions after entering or leaving server-mode."
-              (eon-frame-title)))
-
-  ;; Shutdown the Emacs server process
-  (defun eon-server-stop ()
-    "Save buffers, quit and shutdown (kill) server."
-    (interactive)
-    (save-some-buffers)
-    (kill-emacs)))
-
-;; Start the server?
-;; (server-start)
-
-;;  ____________________________________________________________________________
-;;; FONTS
+;; _____________________________________________________________________________
+;;;; FONTS
 ;;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Fonts>
 
 ;; You can use this function definition as a template to define your own font
@@ -339,38 +633,38 @@ or `system-configuration' directly."
                       :slant  'normal
                       :weight 'normal
                       :width  'normal
-                      :height 0.9)
+                      :height 0.8)
   ;; Set the fonts for the inactive mode line
   (set-face-attribute 'mode-line-inactive nil
                       ;; :family "Iosevka Curly"
                       :slant  'normal
                       :weight 'normal
                       :width  'normal
-                      :height 0.9))
+                      :height 0.8))
 
-;;  ____________________________________________________________________________
-;;; TOGGLE THEME
+;; _____________________________________________________________________________
+;;;; TOGGLE THEME
 
 ;; Default/fallback definitions – don't change them here,
 ;; but scroll further down to 'THEME CONFIG'
 
-(defgroup eon-toggle-theme nil
+(defgroup eon-theme nil
   "Toggle between light and dark theme with a single key press."
-  :group 'convenience)
+  :group 'eon)
 
-(defcustom eon-light-theme-name 'modus-operandi
+(defcustom eon-light-theme-name 'modus-operandi-tinted
   "Name of the light theme."
-  :group 'eon-toggle-theme
+  :group 'eon-theme
   :type 'symbol)
 
-(defcustom eon-dark-theme-name 'modus-vivendi
+(defcustom eon-dark-theme-name 'modus-vivendi-tinted
   "Name of the dark theme."
-  :group 'eon-toggle-theme
+  :group 'eon-theme
   :type 'symbol)
 
 (defcustom eon-default-theme-variant 'light
   "Load either the light or the dark theme at startup?"
-  :group 'eon-toggle-theme
+  :group 'eon-theme
   :type 'symbol)
 
 (defvar eon-active-theme-variant nil
@@ -378,22 +672,22 @@ or `system-configuration' directly."
 
 (defcustom eon-load-before-light-theme-hook nil
   "Run before loading the light theme."
-  :group 'eon-toggle-theme
+  :group 'eon-theme
   :type 'hook)
 
 (defcustom eon-load-after-light-theme-hook nil
   "Run after loading the light theme."
-  :group 'eon-toggle-theme
+  :group 'eon-theme
   :type 'hook)
 
 (defcustom eon-load-before-dark-theme-hook nil
   "Run before loading the dark theme."
-  :group 'eon-toggle-theme
+  :group 'eon-theme
   :type 'hook)
 
 (defcustom eon-load-after-dark-theme-hook nil
   "Run after loading the dark theme."
-  :group 'eon-toggle-theme
+  :group 'eon-theme
   :type 'hook)
 
 (defun eon-load-theme-light ()
@@ -439,30 +733,34 @@ Some themes may come as functions -- wrap these ones in lambdas."
        "Toggle theme: DEFAULT-THEME-VARIANT must be either 'light or 'dark"))))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;;; THEME CONFIG
+;; Either configure the themes here,
+;; or "M-x customize-group RET eon-toggle-theme"
 
-;;; THEME CONFIG
-;; Either configure the themes here, or "M-x customize-group RET toggle-theme"
+;; Set the keybinding to toggle between light and dark: "<leader> x t"
+(keymap-set ctl-z-x-map "t" #'eon-toggle-theme)
 
 ;; Set some defaults for the Modus themes; doesn't affect other themes.
 ;; These variables must be set before loading the Modus themes.
-(setq modus-themes-bold-constructs t
-      modus-themes-italic-constructs nil
-      modus-themes-mixed-fonts t)
-(setq modus-themes-common-palette-overrides
-      '((border-mode-line-active bg-mode-line-active)
-        (border-mode-line-inactive bg-mode-line-inactive)))
+(setopt modus-themes-bold-constructs t
+        modus-themes-italic-constructs nil
+        modus-themes-mixed-fonts t)
+(setopt modus-themes-common-palette-overrides
+        '((border-mode-line-active bg-mode-line-active)
+          (border-mode-line-inactive bg-mode-line-inactive)))
 
-;; --> Set your light theme:
-(setq eon-light-theme-name 'modus-operandi-tinted)
+;; Do not extend `region' background past the end of the line
+(custom-set-faces
+ '(region ((t :extend nil))))
 
-;; --> Set your dark theme:
-(setq eon-dark-theme-name 'modus-vivendi-tinted)
+;;; ---> Set your light theme:
+;; (setopt eon-light-theme-name 'modus-operandi)
 
-;; --> Set your default variant here - 'light or 'dark
-(setq eon-default-theme-variant 'light)
+;;; ---> Set your dark theme:
+;; (setopt eon-dark-theme-name 'modus-vivendi)
 
-;; Set the keybinding to toggle between light and dark:
-(global-set-key (kbd "<f12>") #'eon-toggle-theme)
+;;; ---> Set your default variant here - 'light or 'dark
+;; (setopt eon-default-theme-variant 'light)
 
 ;; The hooks below can be used to run additional functions before or after
 ;; loading the selected light and dark theme. That's useful for setting
@@ -471,219 +769,127 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 (add-hook 'eon-load-after-light-theme-hook
           (lambda ()
-            (eon-fonts-default)
+            ;; (eon-fonts-default)
             ))
 
 (add-hook 'eon-load-after-dark-theme-hook
           (lambda ()
-            (eon-fonts-default)
+            ;; (eon-fonts-default)
             ))
 
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;; Set the default fontset
+(eon-fonts-default)
 ;; Load the theme eventually
 (eon-load-theme-default)
 
-;;  ____________________________________________________________________________
-;;; DEFAULT AND INITIAL FRAME
-;; In Emacs terminology, a "frame" means the ordinary "desktop window";
-;; while "window" refers to tiled panels within an Emacs frame. Why?
-;; Because Emacs had it first, and today's convention what "window" means
-;; appeared later.
-;; In order to define properties generally, add them to `default-frame-alist';
-;; to affect only the first frame created, add them to `initial-frame-alist'.
-
-;; Either start Emacs maximized …
-;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
-
-;; … or set the default width of the Emacs frame in characters
-(add-to-list 'default-frame-alist '(width . 80))
-
-;; … and set the default height of the Emacs frame in lines
-(add-to-list 'default-frame-alist '(height . 32))
-
-;; Horizontal position: set the distance from the left screen edge in pixels
-;; That way, only the first frame created will get a fixed position:
-;; (add-to-list 'initial-frame-alist '(left . 0))
-
-;; Vertical position: set the distance from the top screen edge in pixels
-;; That way, only the first frame created will get a fixed position:
-;; (add-to-list 'initial-frame-alist '(top . 0))
-
-;; Fringe: choose on which sides (not) to show it
-;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Fringes>
-;; (add-to-list 'default-frame-alist '(right-fringe . 0))
-
-;; Bring frame to the front
-(when (display-graphic-p)
-  (select-frame-set-input-focus (selected-frame)))
-
-;;  ____________________________________________________________________________
-;;; CURSOR
-;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Cursor-Display>
-
-;; To learn about available cursors, place your cursor behind 'cursor-type'
-;; in the code below or do "M-x describe-symbol RET cursor-type RET"
-
-;; Set the cursor type
-;; Comment out the following expression to change the cursor into a bar
-;; (add-to-list 'default-frame-alist '(cursor-type . bar))
-
-;; Turn on/off cursor blinking by default? 1 means 'on' and -1 means 'off'
-(blink-cursor-mode -1)
-
-;; Cursor blinking interval in seconds
-(setq blink-cursor-interval 0.3)
-
-;; Blink cursor that often before going into solid state
-(setq blink-cursor-blinks 3)
-
-;; Emphasize the cursor when running Emacs in a text terminal?
-(setq visible-cursor nil)
-
-;; Make sure to highlight the current line only in the active window.
-(setq hl-line-sticky-flag nil)
-(add-hook 'special-mode-hook
-          (lambda ()
-            ;; Highlight current line in special modes?
-            (hl-line-mode 1)))
-
-;; Render cursors or regions in non-focused windows?
-(setq-default cursor-in-non-selected-windows nil)
-
-;;  ____________________________________________________________________________
-;;; USER INTERFACE
-
-;; Menu bar: on/off by default?
-(menu-bar-mode 1)
-
-;; Scroll bar: on/off by default?
-(when (display-graphic-p)
-  (scroll-bar-mode -1))
-
-;; Tool bar: on/off by default?
-(when (display-graphic-p)
-  (tool-bar-mode -1))
-
-;; Tooltips: enable/disable?
-(tooltip-mode -1)
-
-;; Startup screen: on/off by default?
-(setq inhibit-startup-screen t)
-
-;; Alarms: turn off?
-(setq ring-bell-function 'ignore)
-
-;; Redraw the display – useful when running Emacs in a Windows terminal emulator
-(define-key ctl-z-map (kbd "C-r") #'redraw-display)
-
-;;  ____________________________________________________________________________
-;;; SCROLLING
+;; _____________________________________________________________________________
+;;;; DISPLAY & SCROLLING
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Scrolling>
 
-(setq-default mouse-wheel-scroll-amount '(1 ((shift) . 1))
-              mouse-wheel-progressive-speed t
-              mouse-wheel-follow-mouse t)
+(setopt mouse-wheel-scroll-amount '(1 ((shift) . 1))
+        mouse-wheel-progressive-speed t
+        mouse-wheel-follow-mouse t)
 
-(setq-default scroll-preserve-screen-position t
-              scroll-margin 1
-              scroll-up-aggressively 0.01
-              scroll-down-aggressively 0.01)
+(setopt scroll-preserve-screen-position t
+        scroll-margin 1
+        scroll-up-aggressively 0.01
+        scroll-down-aggressively 0.01)
 
 ;; Horizontal scrolling
-(setq auto-window-vscroll nil
-      hscroll-margin 1
-      hscroll-step 1)
+(setopt auto-window-vscroll nil
+        hscroll-margin 1
+        hscroll-step 1)
 
 ;; Enable pixel-based scrolling
 (when (fboundp #'pixel-scroll-precision-mode)
   (pixel-scroll-precision-mode 1))
 
-;;  ____________________________________________________________________________
-;;; MODELINE
+;; Redraw the display – useful when running Emacs in a Windows terminal emulator
+(keymap-set ctl-z-x-map "r" #'redraw-display)
+
+;; _____________________________________________________________________________
+;;;; MODE LINE
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Mode-Line>
 
 ;; Compress the mode line? If non-nil, repeating spaces are compressed into
 ;; a single space. If 'long', this is only done when the mode line is longer
 ;; than the current window width (in columns).
-(setq mode-line-compact nil)
+(setopt mode-line-compact nil)
 
 ;; Show the buffer size in the modeline?
 (size-indication-mode 1)
 
-;; Show column number along with line number in modeline?
+;; Show column number along with line number in mode line?
 (column-number-mode 1)
 
-;;  ____________________________________________________________________________
-;;; MINIBUFFER
+;; _____________________________________________________________________________
+;;;; MINIBUFFER
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Minibuffer>
-
-;; Keep cursor outside of any ‘cursor-intangible’ text property
-(add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
 ;; Recursive minibuffers
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Recursive-Edit>
 ;; Allow minibuffer commands while in the minibuffer
 ;; There are two commands to get out of recursive minibuffers:
 ;; "C-z-c" exit-recursive-edit and "C-]" abort-recursive-edit
-(setq enable-recursive-minibuffers t)
+(setopt enable-recursive-minibuffers t)
 (minibuffer-depth-indicate-mode 1)
+;; Get out of recursive minibuffers more easily via "C-g"
+(define-key global-map [remap keyboard-quit] #'keyboard-escape-quit)
 
-;; Use the minibuffer instead of dialog boxes?
-(setq use-dialog-box nil)
+;; Do not allow the cursor in the minibuffer prompt
+(setq minibuffer-prompt-properties
+      '( read-only t
+         cursor-intangible t
+         face minibuffer-prompt))
+(add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+;; For mouse commands to ask questions, use dialog box instead of minibuffer?
+(setopt use-dialog-box nil)
 
 ;; Grow and shrink the minibuffer according to its content?
-(setq resize-mini-windows 'grow-only)
-
-;; Save minibuffer history between Emacs sessions?
-(setq history-length 300)
-(savehist-mode 1)
-
-;; Delete duplicates from the command history?
-(setq history-delete-duplicates t)
+(setopt resize-mini-windows 'grow-only)
 
 ;; Allow for shorter responses? "y" for "yes" and "n" for "no"
-(setq read-answer-short t)
-(if (boundp 'use-short-answers)
-    (setq use-short-answers t)
-  (advice-add 'yes-or-no-p :override #'y-or-n-p))
+(setopt read-answer-short t)
+(setopt use-short-answers t)
+(advice-add 'yes-or-no-p :override #'y-or-n-p)
 
-;;  ____________________________________________________________________________
-;;; COMPLETION
+;; _____________________________________________________________________________
+;;;; COMPLETION
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Icomplete>
 
 ;; There are many matching styles available, see `completion-styles-alist'
 ;; <https://www.gnu.org/software/emacs/manual/html_node/emacs/Completion-Styles.html>
 ;; The order within the list determines their priority.
-(setq completion-styles '(basic substring initials flex partial-completion))
-(setq completion-category-defaults nil)
-(setq completion-category-overrides
-      '((file (styles . (basic partial-completion initials substring)))))
+(setopt completion-styles '(basic substring initials flex partial-completion))
+(setopt completion-category-defaults nil)
+(setopt completion-category-overrides
+        '((file (styles . (basic partial-completion initials substring)))))
 
 ;; Prevent *Completions* buffer from popping up?
-(setq completion-auto-help nil)
+(setopt completion-auto-help nil)
 ;; Cycle completion candidates instead
-(setq completion-cycle-threshold t)
+(setopt completion-cycle-threshold t)
 ;; Show docstrings for completion candidates?
-(setq completions-detailed nil)
+(setopt completions-detailed nil)
 
 ;; Preview current in-buffer completion candidate?
-(when (fboundp #'completion-preview-mode)
-  (global-completion-preview-mode 1))
-(define-key completion-preview-active-mode-map (kbd "M-n")
+(global-completion-preview-mode 1)
+(keymap-set completion-preview-active-mode-map "M-n"
             #'completion-preview-next-candidate)
-(define-key completion-preview-active-mode-map (kbd "M-p")
+(keymap-set completion-preview-active-mode-map "M-p"
             #'completion-preview-prev-candidate)
 
 ;; Tweaking Icomplete
 (with-eval-after-load 'icomplete
-  (setq icomplete-in-buffer t
-        icomplete-compute-delay 0
-        icomplete-delay-completions-threshold 100
-        icomplete-show-matches-on-no-input t
-        icomplete-hide-common-prefix nil)
+  (setopt icomplete-in-buffer t
+          icomplete-compute-delay 0
+          icomplete-delay-completions-threshold 100
+          icomplete-show-matches-on-no-input t
+          icomplete-hide-common-prefix nil)
   ;; TAB accepts the current candidate in Fido minibuffers
-  (define-key icomplete-minibuffer-map (kbd "TAB") #'icomplete-force-complete)
-  (define-key icomplete-minibuffer-map (kbd "<tab>") #'icomplete-force-complete))
+  (keymap-set icomplete-minibuffer-map "TAB" #'icomplete-force-complete)
+  (keymap-set icomplete-minibuffer-map "<tab>" #'icomplete-force-complete))
 
 ;; Vertical minibuffer completion with `fido-vertical'
 (fido-vertical-mode 1)
@@ -694,70 +900,101 @@ Some themes may come as functions -- wrap these ones in lambdas."
   (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
   (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode))
 
-;;  ____________________________________________________________________________
-;;; ELDOC
+;; _____________________________________________________________________________
+;;;; HELP
+;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Help>
+
+(keymap-set ctl-z-h-map "/" `("..." . ,help-map))
+(keymap-set ctl-z-h-map "e" #'view-echo-area-messages)
+(keymap-set ctl-z-h-map "f" #'describe-function)
+(keymap-set ctl-z-h-map "k" #'describe-key-briefly)
+(keymap-set ctl-z-h-map "o" #'describe-symbol)
+(keymap-set ctl-z-h-map "v" #'describe-variable)
+
+;; Show all options when running 'apropos' "C-h a" (fulltext search)
+(setopt apropos-do-all t)
+
+;; _____________________________________________________________________________
+;;;; CUSTOMIZATION UI
+
+;; Don't accumulate customization buffers
+(setopt custom-buffer-done-kill t)
+
+;; _____________________________________________________________________________
+;;;; ELDOC
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Lisp-Doc>
 ;; <https://www.masteringemacs.org/article/seamlessly-merge-multiple-documentation-sources-eldoc>
 
-(setq eldoc-minor-mode-string nil
-      eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly
-      eldoc-echo-area-display-truncation-message nil
-      eldoc-echo-area-prefer-doc-buffer nil
-      eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
+(setopt eldoc-minor-mode-string nil
+        eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly
+        eldoc-echo-area-display-truncation-message nil
+        eldoc-echo-area-prefer-doc-buffer nil
+        eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
 
-(define-key ctl-z-c-map (kbd "d") #'eldoc)
+(keymap-set ctl-z-c-map "d" #'eldoc)
 
-;;  ____________________________________________________________________________
-;;; PINENTRY
+;; _____________________________________________________________________________
+;;; SEARCH
+;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Search>
 
-(setq epg-pinentry-mode 'loopback)
+;; Switch search functions to make regex-search the default
+(keymap-global-set "C-s" #'isearch-forward-regexp)
+(keymap-global-set "C-r" #'isearch-backward-regexp)
+(keymap-global-set "C-S-s" #'isearch-forward)
+(keymap-global-set "C-S-r" #'isearch-backward)
 
-;;  ____________________________________________________________________________
-;;; WINDOW MANAGEMENT
+;; Search and replace
+;; The 'query-' variant asks for each string. Confirm with "SPC",
+;; or jump to the next via "n"
+(keymap-global-set "M-%" #'query-replace-regexp)
+(keymap-global-set "C-M-%" #'replace-regexp)
+
+;; _____________________________________________________________________________
+;;;; PINENTRY
+
+(setopt epg-pinentry-mode 'loopback)
+
+;; _____________________________________________________________________________
+;;;; WINDOW MANAGEMENT
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Windows>
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Window-Convenience>
 
-;; Display-buffer: avoid resizing
-(setq even-window-sizes nil)
+;; Should `display-buffer' try to even window sizes?
+;; Set to nil to leave the window configuration alone.
+(setopt even-window-sizes 'height-only)
 
 ;; Focus follows mouse?
-(setq mouse-autoselect-window nil
-      focus-follows-mouse nil)
+(setopt mouse-autoselect-window nil
+        focus-follows-mouse nil)
 
 ;; Default window navigation – simply switch to the next window in order.
 ;; Added for convenience; the default keybinding is "C-x o"
-(global-set-key (kbd "M-o") #'other-window)
-
-;; Navigate windows by direction
-;; (setq windmove-wrap-around nil)
-;; (global-set-key (kbd "s-j") #'windmove-down)
-;; (global-set-key (kbd "s-k") #'windmove-up)
-;; (global-set-key (kbd "s-h") #'windmove-left)
-;; (global-set-key (kbd "s-l") #'windmove-right)
+(keymap-global-set "M-o" #'other-window)
 
 ;; Undo/redo window layouts
+(setopt winner-dont-bind-my-keys t)
+(keymap-set ctl-z-w-map "u" #'winner-undo)
+(keymap-set ctl-z-w-map "r" #'winner-redo)
 (winner-mode 1)
-(define-key winner-mode-map (kbd "C-x 4 u") #'winner-undo)
-(define-key winner-mode-map (kbd "C-x 4 r") #'winner-redo)
 
-;;  ____________________________________________________________________________
-;;; BUFFERS
+;; _____________________________________________________________________________
+;;;; BUFFER MANAGEMENT
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Buffers>
 
-;; Uniquify buffer names for buffers that would have identical names
-(setq uniquify-buffer-name-style 'forward)
-
 ;; Fast buffer switching
-(global-set-key (kbd "M-[") #'previous-buffer)
-(global-set-key (kbd "M-]") #'next-buffer)
+(keymap-global-set "M-[" #'previous-buffer)
+(keymap-global-set "M-]" #'next-buffer)
+(keymap-set ctl-z-b-map "b" #'switch-to-buffer)
 
 ;; Kill the current buffer immediately instead of presenting a selection
 ;; It's the equivalent to "close tab" in a web browser or other editors
-(global-set-key (kbd "C-x k") #'kill-current-buffer)
+(keymap-set ctl-z-map "k" #'kill-current-buffer)
+
+;; Kill the window too
+(keymap-set ctl-z-map "K" #'kill-buffer-and-window)
 
 ;; Get the buffer out of the way, but let it alive
-(global-set-key (kbd "C-x K") #'bury-buffer)
-(global-set-key (kbd "C-x M-k") #'unbury-buffer)
+(keymap-set ctl-z-b-map "k" #'bury-buffer)
 
 ;; Kill all buffers at once – equivalent to "close all tabs"
 (defun eon-kill-all-buffers ()
@@ -767,80 +1004,90 @@ Some themes may come as functions -- wrap these ones in lambdas."
   (let ((kill-buffer-query-functions '()))
     (mapc #'kill-buffer (buffer-list))))
 
+(keymap-set ctl-z-b-map "K" #'eon-kill-all-buffers)
+
+;; Uniquify buffer names for buffers that would have identical names
+(setopt uniquify-buffer-name-style 'forward)
+
 ;; Define boring buffers globally, so they can be hidden.
 ;; These buffers remain accessible via Ibuffer "C-x C-b".
-(defvar eon-boring-buffers '("\\` "
-                             "\\`\\*Echo Area"
-                             "\\`\\*Minibuf"
-                             "\\`\\*Completions"
-                             "\\`\\*Flymake log"
-                             "\\`\\*Semantic SymRef"
-                             "\\`\\*Backtrace"
-                             "\\`\\*tramp"
-                             "\\`\\*EGLOT"
-                             ;; And some hidden buffers can be visited by ...
-                             "\\`\\*scratch"        ; "C-z s s"
-                             "\\`\\*Messages"       ; "C-h e"
-                             "\\`\\*Bookmark List"  ; "C-x r l"
-                             "\\`\\*Ibuffer"        ; "C-x C-b"
-                             )
-  "List of buffer names of buffers to hide on several occasions.
-The elements of the list are regular expressions.")
+(defcustom eon-boring-buffers
+  '("\\` "
+    "\\`\\*Echo Area"
+    "\\`\\*Minibuf"
+    "\\`\\*Completions"
+    "\\`\\*Flymake log"
+    "\\`\\*Semantic SymRef"
+    "\\`\\*Backtrace"
+    "\\`\\*Async-native-compile-log"
+    "\\`\\*tramp"
+    "\\`\\*EGLOT"
+    ;; And some hidden buffers can be visited by ...
+    "\\`\\*Bookmark List"  ; "C-x r l"
+    "\\`\\*Ibuffer"        ; "<leader> b i"
+    "\\`\\*Messages"       ; "<leader> h e"
+    )
+  "List of regexps matching buffers considered uninteresting.
+These buffers may be skipped from navigation commands.
+Use `eon-boring-buffers-add' to extend the list."
+  :type '(repeat regexp)
+  :group 'eon)
 
-;;  ____________________________________________________________________________
-;;; IBUFFER – the buffer manager
+(defun eon-boring-buffers-add (&optional regexp)
+  "Add REGEXP (string or list of strings) to `eon-boring-buffers'.
+Called without argument just syncs `eon-boring-buffers' to other places."
+  (when regexp
+    (eon-add-to-list 'eon-boring-buffers regexp))
+  ;; Define other places where `eon-boring-buffers' are synced to:
+  (setopt switch-to-prev-buffer-skip-regexp eon-boring-buffers
+          switch-to-next-buffer-skip-regexp eon-boring-buffers))
+
+;; Hide boring buffers from `next-buffer' and `prev-buffer'.
+(with-eval-after-load 'window (eon-boring-buffers-add))
+
+;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;;; IBUFFER – the buffer manager
 ;; <https://protesilaos.com/codelog/2020-04-02-emacs-intro-ibuffer/>
 
 (add-hook 'ibuffer-mode-hook
           (lambda ()
             (ibuffer-auto-mode 1)))
 
-(setq ibuffer-marked-face 'dired-marked)
+(setopt ibuffer-marked-face 'dired-marked)
 
 ;; Hide the boring buffers from Ibuffer too?
-;; (setq ibuffer-never-show-predicates eon-boring-buffers)
+;; (setopt ibuffer-never-show-predicates eon-boring-buffers)
 
-(global-set-key (kbd "C-x C-b") #'ibuffer)
+(keymap-global-set "C-x C-b" #'ibuffer)
+(keymap-set ctl-z-b-map "i" #'ibuffer)
 
-;;  ____________________________________________________________________________
-;;; SCRATCH BUFFER
+;; _____________________________________________________________________________
+;;;; SCRATCH BUFFER
 
 ;; Set an initial major mode for the *scratch* buffer:
 
 ;; Lisp-interaction-mode is the default mode for the scratch buffer
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Lisp-Interaction>
-;; (setq initial-major-mode #'lisp-interaction-mode)
+;; (setopt initial-major-mode #'lisp-interaction-mode)
 
 ;; You can set the scratch buffer to Org-mode which may be more useful
 ;; for quick notes, writing and literate programming
-;; (setq initial-major-mode #'org-mode)
+;; (setopt initial-major-mode #'org-mode)
 
 ;; Should the *scratch* buffer contain some initial content?
-(setq initial-scratch-message "")
+(setopt initial-scratch-message "")
 
 ;; Quickly jump to the *scratch* buffer
-(defun eon-scratch ()
-  "Jump to the *scratch* buffer. If it does not exist, create it."
-  (interactive)
-  (switch-to-buffer "*scratch*"))
-(define-key ctl-z-s-map (kbd "s") #'eon-scratch)
+(keymap-set ctl-z-map "z" #'scratch-buffer)
 
-;;  ____________________________________________________________________________
-;;; VISITING FILES AT POINT
-
-;; "C-x C-v"       – Visit any resource under the cursor
-;; "M-x ffap-menu" – Display a list of all resources mentioned in this buffer
-
-(define-key ctl-z-map (kbd "C-.") #'find-file-at-point)
-
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; CLIPBOARD, COPY & PASTE
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Killing>
 
 ;; Prevent duplicates to avoid cluttering the kill ring
-(setq kill-do-not-save-duplicates t)
+(setopt kill-do-not-save-duplicates t)
 
-(setq
+(setopt
  ;; Use clipboard
  select-enable-clipboard t
  ;; Use primary selection: mark = copy / middle-click = paste
@@ -873,11 +1120,11 @@ The elements of the list are regular expressions.")
                filename))))
 
 ;; Simple alternative for 'yank-pop' – present a selection of the kill ring
-(defun eon-insert-kill-ring-item ()
+(defun eon-yank-from-kill-ring ()
   "Select and insert an item from the 'kill-ring'."
   (interactive)
   (insert (completing-read "Yank: " kill-ring nil t)))
-(global-set-key (kbd "M-y") #'eon-insert-kill-ring-item)
+(keymap-global-set "M-y" #'eon-yank-from-kill-ring)
 
 ;; Copy & paste between Windows and Emacs running within WSL
 ;; (Windows Subsystem for Linux) — which is technically a Linux, not Windows
@@ -890,7 +1137,7 @@ The elements of the list are regular expressions.")
     (interactive "r")
     (let ((default-directory "/mnt/c/"))
       (shell-command-on-region start end "clip.exe")))
-  (define-key ctl-z-map (kbd "C-w") #'eon-wsl-copy))
+  (keymap-set ctl-z-map "C-w" #'eon-wsl-copy))
 
 ;; Paste "yank" text into Emacs buffer that has been copied from a Windows app
 (when (and (eon-linp)
@@ -904,99 +1151,95 @@ The elements of the list are regular expressions.")
        (substring
         (shell-command-to-string "powershell.exe -command 'Get-Clipboard'")
         0 -1))))
-  (define-key ctl-z-map (kbd "C-y") #'eon-wsl-paste))
+  (keymap-set ctl-z-map "C-y" #'eon-wsl-paste))
 
-;;  ____________________________________________________________________________
-;;; BACKUP
-;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Backup>
+;; _____________________________________________________________________________
+;;;; HISTORY
 
-;; CAUTION: This mode makes copies of the files you are editing.
-;; If you're editing files with sensitive data (e.g. on temporally mounted,
-;; encrypted devices), either disable this mode or specify the location
-;; where to save (or not to save) backup copies of these files.
+;; Which histories to save between Emacs sessions?
+(savehist-mode 1)
+(eon-add-to-list 'savehist-additional-variables
+                 '(kill-ring
+                   register-alist
+                   mark-ring
+                   global-mark-ring
+                   search-ring
+                   regexp-search-ring))
 
-;; Make backup before editing?
-(setq make-backup-files t)
+;; History length for various histories
+(setopt history-length 500)
+;; Delete duplicates from the command history?
+(setopt history-delete-duplicates t)
 
-;; Where to save the backups?
-;; Specify file name/path patterns and directories ("REGEXP" . "DIRECTORY").
-;; Files with sensitive content can be specified (excluded) here, too.
-(setq backup-directory-alist
-      `(("." . ,(concat user-emacs-directory "backup/"))))
+;; Remember where the cursor was, the last time you visited the file?
+(setopt save-place-limit 500)
+(save-place-mode 1)
 
-;; Apply the same backup policy for Tramp files on their hosts
-;; like the policy for local files
-(setq tramp-backup-directory-alist backup-directory-alist)
+;; _____________________________________________________________________________
+;;;; FILE MANAGEMENT
 
-;; Backup settings
-(setq backup-by-copying t
-      backup-by-copying-when-linked t
-      kept-new-versions 5
-      kept-old-versions 5
-      delete-old-versions t
-      version-control t
-      vc-make-backup-files t)
+;; Open arbitrary file: "<leader> f f"
+(keymap-set ctl-z-f-map "f" #'find-file)
+;; Open another file that has common file base name: "<leader> f a"
+(keymap-set ctl-z-f-map "a" #'find-alternate-file-other-window)
+;; Open the file you really wanted: "<leader> f A"
+(keymap-set ctl-z-f-map "A" #'find-alternate-file)
 
-;;  ____________________________________________________________________________
-;;; LOCKFILES
-;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Interlocking>
+;; Open any resource under the cursor: "<leader> f o"
+(keymap-set ctl-z-f-map "o" #'find-file-at-point)
+;; Display a list of all resources mentioned in this buffer: "<leader> f O"
+(keymap-set ctl-z-f-map "O" #'ffap-menu)
 
-;; Let Emacs keep track of files currently visited?
-(setq create-lockfiles nil)
+;; Save buffer if modified: "<leader> f s"
+(keymap-set ctl-z-f-map "s" #'save-buffer)
+;; Save some modified file-visiting buffers, but ask: "<leader> f S"
+(keymap-set ctl-z-f-map "S" #'save-some-buffers)
+;; Write buffer to file ("save file as ..."): "<leader> f w"
+(keymap-set ctl-z-f-map "w" #'write-file)
 
-;;  ____________________________________________________________________________
-;;; AUTO-SAVE
-;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Auto-Save>
+;; Deleting files
 
-;; Enable auto-save to safeguard against data loss?
-;; The `recover-file' or `recover-session' functions can be used
-;; to restore auto-saved data
-(setq auto-save-default t)
-(setq auto-save-no-message t)
+(defun eon-trash-on ()
+  "Delete files by moving to the system trash."
+  (interactive)
+  (setopt delete-by-moving-to-trash t)
+  (setopt dired-recursive-deletes 'always)  ; don't ask when directory not empty
+  (message "Trash on: Deleted files will go to system trash."))
 
-;; Do not auto-disable auto-save after deleting large chunks of text
-(setq auto-save-include-big-deletions t)
+(defun eon-trash-off ()
+  "Delete files immediately."
+  (interactive)
+  (setopt delete-by-moving-to-trash nil)
+  (setopt dired-recursive-deletes 'top)  ; ask when directory not empty
+  (message "Trash off: Files will be deleted immediately!"))
 
-;; Auto-save locations
-(setq auto-save-list-file-prefix
-      (expand-file-name "autosave/" user-emacs-directory))
-(setq tramp-auto-save-directory
-      (expand-file-name "autosave-tramp/" user-emacs-directory))
+(eon-trash-on)  ; set the default
 
-;; Auto save options
-(setq kill-buffer-delete-auto-save-files t)
+;; Use the system trash when deleting files?
+(setopt remote-file-name-inhibit-delete-by-moving-to-trash t)
 
-;;  ____________________________________________________________________________
-;;; HELP
-;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Help>
+;; Resolve symlinks so that operations are conducted from the file's directory?
+(setopt find-file-visit-truename t
+        vc-follow-symlinks t)
 
-;; Show all options when running 'apropos' "C-h a" (fulltext search)
-(setq apropos-do-all t)
+;; Auto refresh dired (and others) when contents change?
+(setopt global-auto-revert-non-file-buffers t
+        auto-revert-stop-on-user-input nil
+        auto-revert-verbose t)
+(global-auto-revert-mode 1)
 
-;;  ____________________________________________________________________________
-;;; SEARCH
-;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Search>
+;; Configure Ediff to use a single frame and split windows horizontally
+(setopt ediff-window-setup-function 'ediff-setup-windows-plain
+        ediff-split-window-function 'split-window-horizontally)
 
-;; Switch search functions to make regex-search the default
-(global-set-key (kbd "C-s") #'isearch-forward-regexp)
-(global-set-key (kbd "C-r") #'isearch-backward-regexp)
-(global-set-key (kbd "C-S-s") #'isearch-forward)
-(global-set-key (kbd "C-S-r") #'isearch-backward)
-
-;; Search and replace
-;; The 'query-' variant asks for each string. Confirm with "SPC",
-;; or jump to the next via "n"
-(global-set-key (kbd "M-%") #'query-replace-regexp)
-(global-set-key (kbd "C-M-%") #'replace-regexp)
-
-;;  ____________________________________________________________________________
-;;; RECENT FILES
+;; _____________________________________________________________________________
+;;;; RECENT FILES
 
 ;; Turn on recent file mode to visit recently edited files
 (recentf-mode 1)
 
-(setq recentf-max-menu-items 10
-      recentf-max-saved-items 100)
+(setopt recentf-max-menu-items 10
+        recentf-max-saved-items 100)
 
 ;; Ignore some recently visited files, eg. to prevent them from showing up
 ;; amongst recent files after package upgrades
@@ -1005,29 +1248,90 @@ The elements of the list are regular expressions.")
 (add-to-list 'recentf-exclude
              "^/\\(?:ssh\\|su\\|sudo\\)?:")
 
-;; Use 'completing-read' to choose between recent files
-(defun eon-find-recentf ()
-  "Find recent file via completion in the minibuffer."
-  (interactive)
-  (find-file (completing-read "Find recent file: " recentf-list nil t) nil))
-(global-set-key (kbd "C-x f") #'eon-find-recentf)
+(keymap-global-set "C-x f" #'recentf-open)
+(keymap-set ctl-z-f-map "r" #'recentf-open)
 
-;;  ____________________________________________________________________________
-;;; DIRED
+;; _____________________________________________________________________________
+;;;; BACKUP FILES
+;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Backup>
+
+;; CAUTION: This mode makes copies of the files you are editing.
+;; If you're editing files with sensitive data (e.g. on temporally mounted,
+;; encrypted devices), either disable this mode or specify the location
+;; where to save (or not to save) backup copies of these files.
+
+;; Make backup before editing?
+(setopt make-backup-files t)
+
+;; Where to save the backups?
+;; Specify file name/path patterns and directories ("REGEXP" . "DIRECTORY").
+;; Files with sensitive content can be specified (excluded) here, too.
+(setopt backup-directory-alist
+        `(("." . ,(concat user-emacs-directory "backup/"))))
+
+;; Apply the same backup policy for Tramp files on their hosts
+;; like the policy for local files
+(setopt tramp-backup-directory-alist backup-directory-alist)
+
+;; Backup settings
+(setopt backup-by-copying t
+        backup-by-copying-when-linked t
+        kept-new-versions 5
+        kept-old-versions 5
+        delete-old-versions t
+        version-control t
+        vc-make-backup-files t)
+
+;; _____________________________________________________________________________
+;;;; LOCKFILES
+;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Interlocking>
+
+;; Let Emacs keep track of files currently visited?
+(setopt create-lockfiles nil)
+
+;; _____________________________________________________________________________
+;;;; AUTO-SAVE FILES
+;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Auto-Save>
+
+;; Enable auto-save to safeguard against data loss?
+;; The `recover-file' or `recover-session' functions can be used
+;; to restore auto-saved data
+(setopt auto-save-default t)
+(setopt auto-save-no-message t)
+
+;; Do not auto-disable auto-save after deleting large chunks of text
+(setopt auto-save-include-big-deletions t)
+
+;; Auto-save locations
+(setopt auto-save-list-file-prefix
+        (expand-file-name "autosave/" user-emacs-directory))
+(setopt tramp-auto-save-directory
+        (expand-file-name "autosave-tramp/" user-emacs-directory))
+
+;; Auto save options
+(setopt kill-buffer-delete-auto-save-files t)
+
+;; _____________________________________________________________________________
+;;;; DIRED FILE MANAGER
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Dired>
 
 ;; The `dired' keybinding is "C-x d". This new keybinding is in accordance
 ;; with "C-x C-f" for visiting files
-(global-set-key (kbd "C-x C-d") #'dired)
+(keymap-global-set "C-x C-d" #'dired)
+
+;; Open the Dired file manager from the leader menu: "<leader> d"
+(keymap-set ctl-z-map "d" #'dired)
+;; Open the directory of the currently visited file in Dired: "<leader> f d"
+(keymap-set ctl-z-f-map "d" #'dired-jump)
 
 ;; Switch to wdired-mode and edit directory content like a text buffer
 (with-eval-after-load 'dired
-  (define-key dired-mode-map (kbd "e") #'wdired-change-to-wdired-mode))
+  (keymap-set dired-mode-map "e" #'wdired-change-to-wdired-mode))
 
 ;; Don't accumulate useless Dired buffers
-(setq dired-kill-when-opening-new-dired-buffer t)
+(setopt dired-kill-when-opening-new-dired-buffer t)
 
-;; Directory listings
+;; Improving directory listings
 (add-hook 'dired-mode-hook
           (lambda ()
             ;; Hide details in file listings? Toggle via "S-("
@@ -1036,25 +1340,31 @@ The elements of the list are regular expressions.")
             (hl-line-mode 1)))
 
 ;; Listing columns; Switch arguments with "C-u s" e.g. hide backups with -B
-(setq-default dired-listing-switches "-lhFA -v --group-directories-first")
+(setopt dired-listing-switches "-lhFA -v --group-directories-first")
 
-;; Copying files/directories
-(setq dired-recursive-copies 'always)
+;; Copying files/directories with sub-directories?
+(setopt dired-recursive-copies 'always)
 
-;; Create directories if they don't exist
-(setq dired-create-destination-dirs 'ask)
+;; Create directories if they don't exist?
+(setopt dired-create-destination-dirs 'ask)
+
+;; Register file renaming in underlying version control system?
+(setopt dired-vc-rename-file t)
 
 ;; Mimic dual-pane file managers?
-(setq dired-dwim-target t)
+(setopt dired-dwim-target t)
+
+;; Check for directory modifications?
+(setopt dired-auto-revert-buffer 'dired-buffer-stale-p)
 
 ;; Images
-(setq image-dired-thumb-margin 1
-      image-dired-thumb-relief 0
-      ;; Store thumbnails in the system-wide thumbnail location
-      ;; e.g. ~/.local/cache/thumbnails to make them reusable by other programs
-      image-dired-thumbnail-storage 'standard-large)
+(setopt image-dired-thumb-margin 1
+        image-dired-thumb-relief 0
+        ;; Store thumbnails in the system-wide thumbnail location
+        ;; e.g. ~/.local/cache/thumbnails to make them reusable by other programs
+        image-dired-thumbnail-storage 'standard-large)
 
-;; Linux/Unix only: hit "M-RET" to open files in desktop app
+;; Linux/Unix only: hit "M-RET" to open files in the corresponding desktop app
 (when (eon-linp)
   (defun eon-dired-xdg-open ()
     "Open files and folders with the default desktop app."
@@ -1064,53 +1374,17 @@ The elements of the list are regular expressions.")
       (call-process "xdg-open" nil 0 nil file)
       (message "Opening %s done" file)))
   (with-eval-after-load 'dired
-    (define-key dired-mode-map (kbd "M-RET") #'eon-dired-xdg-open)))
+    (keymap-global-set dired-mode-map "M-RET" #'eon-dired-xdg-open)))
 
-;;  ____________________________________________________________________________
-;;; FILE HANDLING
-
-(defun eon-trash-on ()
-  "Delete files by moving to the system trash."
-  (interactive)
-  (setq delete-by-moving-to-trash t)
-  (setq dired-recursive-deletes 'always)  ; don't ask when directory not empty
-  (message "Trash on: Deleted files will go to system trash."))
-
-(defun eon-trash-off ()
-  "Delete files immediately."
-  (interactive)
-  (setq delete-by-moving-to-trash nil)
-  (setq dired-recursive-deletes 'top)  ; ask when directory not empty
-  (message "Trash off: Files will be deleted immediately!"))
-
-(eon-trash-on)  ; set the default
-
-;; Use the system trash when deleting files?
-(setq remote-file-name-inhibit-delete-by-moving-to-trash t)
-
-;; Resolve symlinks so that operations are conducted from the file's directory?
-(setq find-file-visit-truename t
-      vc-follow-symlinks t)
-
-;; Auto refresh dired (and others) when contents change?
-(setq global-auto-revert-non-file-buffers t
-      auto-revert-stop-on-user-input nil
-      auto-revert-verbose t)
-(global-auto-revert-mode 1)
-
-;; Configure Ediff to use a single frame and split windows horizontally
-(setq ediff-window-setup-function 'ediff-setup-windows-plain
-      ediff-split-window-function 'split-window-horizontally)
-
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; COMINT
 
-(setq comint-input-ignoredups t
-      comint-prompt-read-only t
-      comint-buffer-maximum-size 2048
-      comint-scroll-to-bottom-on-input 'this)
+(setopt comint-input-ignoredups t
+        comint-prompt-read-only t
+        comint-buffer-maximum-size 2048
+        comint-scroll-to-bottom-on-input 'this)
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; ESHELL
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/eshell.html>
 
@@ -1119,15 +1393,22 @@ The elements of the list are regular expressions.")
 ;; a Posix shell superficially, but is also a REPL for Emacs Lisp expressions.
 
 ;; Get rid of the Eshell startup message?
-(setq eshell-banner-message "")
+(setopt eshell-banner-message "")
 
 ;; List directory content after changing into it?
-(setq eshell-list-files-after-cd t)
+(setopt eshell-list-files-after-cd t)
 
-;; To open more than one eshell buffer: "C-u C-z e e"
-(define-key ctl-z-e-map (kbd "e") #'eshell)
+(defun eon-eshell-new ()
+  "Open a new eshell instance."
+  (interactive)
+  (eshell 't))
 
-;;  ____________________________________________________________________________
+;; Launch an Eshell buffer: "<leader> e e"; re-visit the buffer by repeating
+(keymap-set ctl-z-e-map "e" #'eshell)
+;; Launch a fresh Eshell buffer: "<leader> e E"
+(keymap-set ctl-z-e-map "E" #'eon-eshell-new)
+
+;; _____________________________________________________________________________
 ;;; SHELL
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Shell-Mode>
 
@@ -1135,35 +1416,69 @@ The elements of the list are regular expressions.")
 ;; and display their output
 
 ;; Set another shell than your default one?
-;; (setq shell-file-name "/usr/bin/bash")
+;; (setopt shell-file-name "/usr/bin/bash")
 
-;; To open more than one shell buffer: "C-u C-z e s"
-(define-key ctl-z-e-map (kbd "s") #'shell)
+;; Make `shell' behave like `eshell'
+(setopt shell-kill-buffer-on-exit t)
 
-;;  ____________________________________________________________________________
+(defun eon-shell-new ()
+  "Open a new shell instance."
+  (interactive)
+  (shell (generate-new-buffer-name "*shell*")))
+
+;; Launch a Shell buffer: "<leader> e s"; re-visit the buffer by repeating
+(keymap-set ctl-z-e-map "s" #'shell)
+;; Launch a fresh Shell buffer: "<leader> e S"
+(keymap-set ctl-z-e-map "S" #'eon-shell-new)
+
+;; _____________________________________________________________________________
+;;; PROJECT MANAGEMENT
+;; Setup for Emacs' built-in project management
+
+;; Open file in current project
+(keymap-global-set "C-x f" #'project-find-file)
+;; Open directory in current project
+(keymap-global-set "C-x d" #'project-find-dir)
+
+;; Switch to current project buffers: "<leader> SPC"
+(keymap-set ctl-z-map "SPC" #'project-switch-to-buffer)
+;; "<leader> p" inherits all commands from the `project-prefix-map'
+(set-keymap-parent ctl-z-p-map project-prefix-map)
+
+;; Show all project keybindings in the selection?
+(setopt project-switch-use-entire-map nil)
+;; Show these insteads:
+(setopt project-switch-commands '((project-find-file   "File"   ?f)
+                                  (project-find-dir    "Dired"  ?d)
+                                  (project-find-regexp "Grep"   ?g)
+                                  (project-vc-dir      "VC/Git" ?v)
+                                  (project-eshell      "Eshell" ?e)
+                                  (project-shell       "Shell"  ?s)))
+
+;; _____________________________________________________________________________
 ;;; PROCED
 
 ;; Show and manage OS processes, like the command line programs top and htop
 
-(setq proced-auto-update-interval 1)
+(setopt proced-auto-update-interval 1)
 
-(setq-default proced-auto-update-flag t
-              proced-descend t)
+(setopt proced-auto-update-flag t
+        proced-descend t)
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; NET-UTILS
 
-(setq netstat-program "netstat"
-      netstat-program-options '("-atupe"))
+(setopt netstat-program "netstat"
+        netstat-program-options '("-atupe"))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; WEB BROWSERS
 
 ;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;; EWW BUILT-IN BROWSER
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/eww.html#Top>
 
-(setq url-privacy-level '(email lastloc cookies))
+(setopt url-privacy-level '(email lastloc cookies))
 (url-setup-privacy-info)
 
 (defun eon-user-agent (browser-name)
@@ -1172,42 +1487,42 @@ BROWSER-NAME can be either `safari-macos', `safari-iphone', `w3m' or t,
 which sets the default `eww' user-agent according to `url-privacy-level'."
   (cond
    ((equal browser-name 'safari-macos)
-    (setq url-user-agent
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/603.3.8 (KHTML, like Gecko) Version/11.0.1 Safari/603.3.8"))
+    (setopt url-user-agent
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/603.3.8 (KHTML, like Gecko) Version/11.0.1 Safari/603.3.8"))
    ((equal browser-name 'safari-iphone)
-    (setq url-user-agent
-          "Mozilla/5.0 (iPhone; CPU iPhone OS 18_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.2 Mobile/15E148 Safari/604.1"))
+    (setopt url-user-agent
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 18_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.2 Mobile/15E148 Safari/604.1"))
    ((equal browser-name 'w3m)
-    (setq url-user-agent
-          "w3m/0.5.3+git2020050"))
+    (setopt url-user-agent
+            "w3m/0.5.3+git2020050"))
    (t
-    (setq url-user-agent
-          'default))))
+    (setopt url-user-agent
+            'default)))
 
-;; Set the user agent for the internal web browser
-(eon-user-agent 'safari-iphone)
+  ;; Set the user agent for the internal web browser
+  (eon-user-agent 'safari-iphone)
 
-;; Per default, open links with the internal web browser
-(setq browse-url-browser-function #'eww-browse-url)
+  ;; Per default, open links with the internal web browser
+  (setopt browse-url-browser-function #'eww-browse-url)
 
-;; Secondary web browser
-(setq browse-url-secondary-browser-function #'browse-url-default-browser)
-;; (setq browse-url-browser-function #'browse-url-firefox)
-;; (setq browse-url-generic-program (executable-find "nyxt")
-;;        browse-url-browser-function #'browse-url-generic)
+  ;; Secondary web browser
+  (setopt browse-url-secondary-browser-function #'browse-url-default-browser))
+;; (setopt browse-url-browser-function #'browse-url-firefox)
+;; (setopt browse-url-generic-program (executable-find "nyxt")
+;;         browse-url-browser-function #'browse-url-generic)
 
 ;; Keybindings
-(define-key ctl-z-w-map (kbd "W") #'browse-url)
-(define-key ctl-z-w-map (kbd "w") #'browse-web)
+(keymap-set ctl-z-g-map "W" #'browse-url)
+(keymap-set ctl-z-g-map "w" #'browse-web)
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; EMAIL SENDING
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Sending-Mail>
 
 ;; TODO: Send emails directly from Emacs using SMTP – example template
 
 ;; Should be defined first
-;; (setq user-mail-address "mail@example.org")
+;; (setopt user-mail-address "mail@example.org")
 
 ;; To avoid typing in the password for each email, specify SMTP account(s)
 ;; in '~/.authinfo.gpg'. Here's a content template for authinfo.gpg:
@@ -1215,55 +1530,59 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 
 ;; Emacs email variables
 (with-eval-after-load 'smtpmail
-  (setq send-mail-function #'smtpmail-send-it
-        smtpmail-smtp-server "localhost"
-        smtpmail-stream-type 'starttls
-        smtpmail-smtp-service 1025      ; default port: 587
-        smtpmail-queue-dir "~/.mail/queued-mail/"
-        smtpmail-smtp-user user-mail-address
-        smtpmail-debug-info nil))
+  (setopt send-mail-function #'smtpmail-send-it
+          smtpmail-smtp-server "localhost"
+          smtpmail-stream-type 'starttls
+          smtpmail-smtp-service 1025      ; default port: 587
+          smtpmail-queue-dir "~/.mail/queued-mail/"
+          smtpmail-smtp-user user-mail-address
+          smtpmail-debug-info nil))
 
-(setq message-kill-buffer-on-exit t)
+(setopt message-kill-buffer-on-exit t)
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; CALENDAR
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Calendar_002fDiary>
 
-(setq calendar-date-style 'iso
-      calendar-week-start-day 1
-      calendar-weekend-days '(6 0))
+(setopt calendar-date-style 'iso
+        calendar-week-start-day 1
+        calendar-weekend-days '(6 0))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; GENERAL EDITING
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Basic>
 
 ;; UTF-8
 (prefer-coding-system 'utf-8)
 
-;; Remember the place where the cursor was last time?
-(setq save-place-limit 500)
-(save-place-mode 1)
-
 ;; Set desired line length in characters
-(setq-default fill-column 80)
+(setopt fill-column 80)
 
 ;; While a text selection is active, typing characters replaces
 ;; the selection with the typed characters (default: -1 = off)
 (delete-selection-mode -1)
 
 ;; Save always with a final new line?
-(setq require-final-newline t)
+(setopt require-final-newline t)
 
 ;; Better than the default 'just-one-space' (was M-SPC before)
-(global-set-key (kbd "M-S-SPC") #'cycle-spacing)
+(keymap-global-set "M-S-SPC" #'cycle-spacing)
 
 ;; Count lines, words and chars (buffer or region)
-(global-set-key (kbd "C-x l") #'count-words)
+(keymap-global-set "C-x l" #'count-words)
 
 ;; Kill up to character
-(global-set-key (kbd "M-z") #'zap-up-to-char)
+(keymap-global-set "M-z" #'zap-up-to-char)
 
-;;  ____________________________________________________________________________
+;; Define keymap in order to group formatting commands
+(defvar-keymap eon-format-map :doc "Format"
+               "a" #'align
+               "s" #'sort-lines)
+;; Hook the keymap into the "Code" sub-keymap under the leader to make it
+;; available via "<leader> c f"
+(keymap-set ctl-z-c-map "F" `("Format" . ,eon-format-map))
+
+;; _____________________________________________________________________________
 ;;; LINE NUMBERS
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Display-Custom>
 
@@ -1273,7 +1592,7 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
           (lambda ()
             (display-line-numbers-mode -1)))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; LINE WRAPPING
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Line-Truncation>
 
@@ -1288,7 +1607,7 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 ;;           (lambda ()
 ;;             (visual-line-mode 1)))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; FOLDING
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Hideshow>
 
@@ -1297,58 +1616,62 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 ;;           (lambda ()
 ;;             (hs-minor-mode 1)))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; INDENTATION
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Indentation>
 
-(setq-default indent-tabs-mode nil  ; don't use tabs but spaces
-              tab-width 4)          ; set display width for tab characters
+(setopt indent-tabs-mode nil  ; don't use tabs but spaces
+        tab-width 4)          ; set display width for tab characters
 
 ;; Delete the whole indentation instead spaces one-by-one via <backspace>?
 ;; (Possibly shadowed by 3rd-party packages like `smartparens-mode'
-(setq backward-delete-char-untabify-method 'hungry)
+(setopt backward-delete-char-untabify-method 'hungry)
 
 ;; Enable indentation and completion using the TAB key
-(setq-default tab-always-indent 'complete)
+(setopt tab-always-indent 'complete)
 
-;;  ____________________________________________________________________________
+;; Trigger automatic indentation by newline and DEL/backspace
+(setopt electric-indent-chars '(?\n ?\^?))
+
+;; _____________________________________________________________________________
 ;;; COMMENTING
 
 ;; Enable multi-line commenting to ensure that `comment-indent-new-line'
-;; properly continues comments onto new lines.
-(setq comment-multi-line t)
+;; continues comments onto new lines?
+(setopt comment-multi-line t)
 
-;;  ____________________________________________________________________________
+;; Also comment empty lines between?
+(setopt comment-empty-lines t)
+
+;; _____________________________________________________________________________
 ;;; BRACKETS / PARENTHESIS
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Parentheses>
 
 ;; How to display matching parens generally?
-(setq show-paren-style 'parenthesis
-      show-paren-delay 0.125
-      show-paren-when-point-inside-paren t
-      show-paren-when-point-in-periphery t)
+(setopt show-paren-style 'parenthesis
+        show-paren-delay 0.125
+        show-paren-when-point-inside-paren t
+        show-paren-when-point-in-periphery t)
 
 ;; Auto-close parens, brackets and quotes?
 (electric-pair-mode 1)
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; WHITESPACE
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Useless-Whitespace>
 
 ;; Indicate trailing whitespace in programming modes?
 (add-hook 'prog-mode-hook
-          (lambda ()
-            (setq show-trailing-whitespace nil)))
+          (lambda () (setopt show-trailing-whitespace nil)))
 
 ;; Indicate trailing whitespace in "text" modes?
 (add-hook 'text-mode-hook
-          (lambda ()
-            (setq show-trailing-whitespace nil)))
+          (lambda () (setopt show-trailing-whitespace nil)))
 
 ;; Cleanup trailing whitespace
-(define-key ctl-z-c-map (kbd "w") #'whitespace-cleanup)
+(keymap-set ctl-z-c-map "w" #'whitespace-cleanup)
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; SYNTAX CHECK / LINTER
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/flymake.html>
 
@@ -1357,34 +1680,34 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 ;; "M-x package-install <RET> flymake-".
 
 ;; Style the Flymake widget in the modeline
-(setq flymake-mode-line-format
-      '(" " "FlyM" flymake-mode-line-exception flymake-mode-line-counters))
+(setopt flymake-mode-line-format
+        '(" " "FlyM" flymake-mode-line-exception flymake-mode-line-counters))
 
 ;; Stop when first/last error is reached
-(setq flymake-wrap-around nil)
+(setopt flymake-wrap-around nil)
 
 (with-eval-after-load 'flymake
-  (define-key flymake-mode-map (kbd "M-g E") #'flymake-show-project-diagnostics)
-  (define-key flymake-mode-map (kbd "M-g e") #'flymake-show-buffer-diagnostics)
-  (define-key flymake-mode-map (kbd "M-g n") #'flymake-goto-next-error) ; default
-  (define-key flymake-mode-map (kbd "M-g p") #'flymake-goto-prev-error))  ; default
+  (keymap-set flymake-mode-map "M-g E" #'flymake-show-project-diagnostics)
+  (keymap-set flymake-mode-map "M-g e" #'flymake-show-buffer-diagnostics)
+  (keymap-set flymake-mode-map "M-g n" #'flymake-goto-next-error)  ; default
+  (keymap-set flymake-mode-map "M-g p" #'flymake-goto-prev-error))  ; default
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; EGLOT LANGUAGE SERVER
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md/>
 
 (with-eval-after-load 'eglot
   ;; Shutdown language server after closing last file?
-  (setq eglot-autoshutdown t)
+  (setopt eglot-autoshutdown t)
   ;; Allow edits without confirmation?
-  (setq eglot-confirm-server-initiated-edits nil)
+  (setopt eglot-confirm-server-initiated-edits nil)
   ;; Show code action indicators?
-  (setq eglot-code-action-indications nil)
+  (setopt eglot-code-action-indications nil)
   ;; Common keybindings
-  (define-key ctl-z-c-map (kbd "r") #'eglot-rename)
-  (define-key ctl-z-c-map (kbd "f") #'eglot-format)
-  (define-key ctl-z-c-map (kbd "F") #'eglot-format-buffer)
-  (define-key ctl-z-c-map (kbd "a") #'eglot-code-actions))
+  (keymap-set ctl-z-c-map "r"   #'eglot-rename)
+  (keymap-set ctl-z-c-map "f"   #'eglot-format)
+  (keymap-set ctl-z-c-map "F b" #'eglot-format-buffer)
+  (keymap-set ctl-z-c-map "a"   #'eglot-code-actions))
 
 ;; Eglot comes with a fairly complete set of associations of major-modes
 ;; to popular language servers predefined. If you need to add server
@@ -1411,7 +1734,7 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 ;;                               '(("lua-language-server" "--stdio")
 ;;                                 ("lua-lsp" "--stdio"))))))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; TREE-SITTER
 
 ;; Define grammar specs for ts-modes already built into Emacs.
@@ -1451,18 +1774,14 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
   "Tree-sitter grammar specs: list of (LANG URL [REVISION] [SOURCE-DIR]).
 Add further specs without building/installing via `eon-treesitter-add-specs'
 
-Only LANG and URL are mandatory.
-
-LANG is the language symbol.
-
-URL is the URL of the grammar’s Git repository or a directory
-where the repository has been cloned.
-
-REVISION is the Git tag or branch of the desired version,
-defaulting to the latest default branch.
-
-SOURCE-DIR is the relative subdirectory in the repository in which
-the grammar’s parser.c file resides, defaulting to \"src\".")
+- Only LANG and URL are mandatory.
+- LANG is the language symbol.
+- URL is the URL of the grammar’s Git repository or a directory
+  where the repository has been cloned.
+- REVISION is the Git tag or branch of the desired version,
+  defaulting to the latest default branch.
+- SOURCE-DIR is the relative subdirectory in the repository in which
+  the grammar’s parser.c file resides, defaulting to \"src\".")
 
 ;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;; Internal utilities
@@ -1553,10 +1872,10 @@ Each element may be a spec tuple or a LANG symbol registered in
 (defun eon-treesitter-setup-specs (&optional specs)
   "Merge SPECS into `treesit-language-source-alist', overwriting by LANG.
 If SPECS is nil, use `eon-treesitter-specs'."
-  (setq treesit-language-source-alist
-        (eon-treesitter--merge-into-alist
-         treesit-language-source-alist
-         (or specs eon-treesitter-specs))))
+  (setopt treesit-language-source-alist
+          (eon-treesitter--merge-into-alist
+           treesit-language-source-alist
+           (or specs eon-treesitter-specs))))
 
 (with-eval-after-load 'treesit
   (eon-treesitter-setup-specs))
@@ -1601,7 +1920,6 @@ Return an alist of (LANG . STATUS)."
             (cons lang (cons 'error (error-message-string err)))))))
      (eon-treesitter--dedupe-specs resolved))))
 
-;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;; Public API
 
 (defun eon-treesitter-add-specs (&rest specs)
@@ -1609,22 +1927,16 @@ Return an alist of (LANG . STATUS)."
 Use this only if you merely want to register SPECS, but not build/install
 them.
 
-SPECS can be many specs or a single list of specs.
-
-Each spec has the form (LANG URL [REVISION] [SOURCE-DIR]).
-
-Only LANG and URL are mandatory.
-
-LANG is the language symbol.
-
-URL is the URL of the grammar’s Git repository or a directory where the
-repository has been cloned.
-
-REVISION is the Git tag or branch of the desired version, defaulting to
-the latest default branch.
-
-SOURCE-DIR is the relative subdirectory in the repository in which the
-grammar’s parser.c file resides, defaulting to \"src\".
+- SPECS can be many specs or a single list of specs.
+  Each spec has the form (LANG URL [REVISION] [SOURCE-DIR]).
+- Only LANG and URL are mandatory.
+- LANG is the language symbol.
+- URL is the URL of the grammar’s Git repository or a directory where the
+  repository has been cloned.
+- REVISION is the Git tag or branch of the desired version, defaulting to
+  the latest default branch.
+- SOURCE-DIR is the relative subdirectory in the repository in which the
+  grammar’s parser.c file resides, defaulting to \"src\".
 
 Return the updated `eon-treesitter-specs'."
   (let* ((xs0 (eon-treesitter--normalize-args specs))
@@ -1674,7 +1986,7 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
   (interactive (list :reinstall current-prefix-arg))
   (eon-treesitter--ensure-impl eon-treesitter-specs (and reinstall t)))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; COMPILING
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Building>
 
@@ -1684,30 +1996,36 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
  '("\\*.*compilation\\*" (display-buffer-no-window)))
 
 ;; Scroll to the first error
-(setq compilation-scroll-output 'first-error)
+(setopt compilation-scroll-output 'first-error)
 
 ;; Recenter to the middle of the window for `compile-goto-error'
-(setq next-error-recenter '(4))
+(setopt next-error-recenter '(4))
 
-;;  ____________________________________________________________________________
-;;; TEXT MODES / WRITING PROSE
+;; _____________________________________________________________________________
+;;;; TEXT MODES / WRITING PROSE
+
+;; Visual line wrapping in text mode
+(add-hook 'text-mode-hook #'visual-line-mode)
 
 ;; Sentences end with a single space
-(setq sentence-end-double-space nil)
+(setopt sentence-end-double-space nil)
 
 ;; TODO Add Flyspell / Ispell presets here
 
-;;  ____________________________________________________________________________
-;;; ORG MODE
+;; _____________________________________________________________________________
+;;;; ORG MODE
 ;; <https://orgmode.org/>
 ;; <https://orgmode.org/org.html>
-
 ;; Org provides functionality far beyond that of computational notebooks
 ;; such as Jupyter or R Markdown.
 
+;; Create the local leader keymap
+(eon-localleader-defkeymap org-mode eon-localleader-org-mode-map
+  :doc "Localleader map for `org-mode'.")
+
 ;; Set a default location to look for Org files; but you can have
 ;; that directory anywhere you like
-(setq org-directory (expand-file-name "~/Documents/org/"))
+(setopt org-directory (expand-file-name "~/Documents/org/"))
 
 (defun eon-visit-org-directory ()
   "Show the Org directory in Dired."
@@ -1715,34 +2033,34 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
   (dired org-directory))
 
 ;; Visit the `org-directory' in Dired via `C-z o d'
-(define-key ctl-z-o-map (kbd "d") #'eon-visit-org-directory)
+(keymap-set ctl-z-o-map "d" #'eon-visit-org-directory)
 
 ;; Turn on visual word wrapping
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Visual-Line-Mode>
 (add-hook 'org-mode-hook #'visual-line-mode)
 
 ;; Alignment of tags at the end of headlines
-(setq  org-auto-align-tags t
-       org-tags-column 0)
+(setopt  org-auto-align-tags t
+         org-tags-column 0)
 
 ;; Toggle indicator for headlines
-(setq org-ellipsis " ▼ ")
+(setopt org-ellipsis " ▼ ")
 
 ;; Don't add leading indentation to code blocks, remove them during export
-(setq org-edit-src-content-indentation 0
-      org-src-preserve-indentation nil)
+(setopt org-edit-src-content-indentation 0
+        org-src-preserve-indentation nil)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; ORG CAPTURE
 ;; <https://orgmode.org/org.html#Capture>
 
 ;; Capture a note via `C-z o c'
-(define-key ctl-z-o-map (kbd "c") #'org-capture)
+(keymap-set ctl-z-o-map "c" #'org-capture)
 ;; Put newer notes on top of the file
-(setq org-reverse-note-order t)
+(setopt org-reverse-note-order t)
 
 ;; Set a default target for storing notes
-(setq org-default-notes-file (concat org-directory "notes.org"))
+(setopt org-default-notes-file (concat org-directory "notes.org"))
 
 (defun eon-visit-org-notes ()
   "Visit the Org notes file."
@@ -1750,26 +2068,26 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
   (find-file org-default-notes-file))
 
 ;; Visit the default notes file via `C-z o o'
-(define-key ctl-z-o-map (kbd "o") #'eon-visit-org-notes)
+(keymap-set ctl-z-o-map "o" #'eon-visit-org-notes)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; ORG TODO
 ;; <https://orgmode.org/org.html#TODO-Items>
 
 ;; Set some sensible default states for todo-items
-(setq org-todo-keywords
-      '((sequence "TODO(t)" "PROJ(p)" "LOOP(r)" "STRT(s)" "WAIT(w)" "HOLD(h)" "IDEA(i)" "|" "DONE(d)" "KILL(k)")
-        (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)")
-        (sequence "|" "OKAY(o)" "YES(y)" "NO(n)")))
+(setopt org-todo-keywords
+        '((sequence "TODO(t)" "PROJ(p)" "LOOP(r)" "STRT(s)" "WAIT(w)" "HOLD(h)" "IDEA(i)" "|" "DONE(d)" "KILL(k)")
+          (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)")
+          (sequence "|" "OKAY(o)" "YES(y)" "NO(n)")))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; ORG AGENDA
 ;; <https://orgmode.org/org.html#Agenda-Views>
 
-(setq org-agenda-files (list org-directory))
+(setopt org-agenda-files (list org-directory))
 
 ;; Visit your Org agenda via `C-z o a'
-(define-key ctl-z-o-map (kbd "a") #'org-agenda)
+(keymap-set ctl-z-o-map "a" #'org-agenda)
 
 (add-hook 'org-agenda-mode-hook
           (lambda ()
@@ -1780,48 +2098,48 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
 ;;; ORG LINKS
 ;; <https://orgmode.org/org.html#Hyperlinks>
 
-;; Store a link via `C-z o L'
-(define-key ctl-z-o-map (kbd "L") #'org-store-link)
+;; Store a link via "<localleader> L"
+(keymap-set eon-localleader-org-mode-map "L" #'org-store-link)
 
-;; Insert a link into an Org file via `C-z o l'
-(define-key ctl-z-o-map (kbd "l") #'org-insert-link)
+;; Insert a link into an Org file via "<localleader> l"
+(keymap-set eon-localleader-org-mode-map "l" #'org-insert-link)
 
-;; Toggle visible/hidden links via `C-z o M-l'
-(define-key ctl-z-o-map (kbd "M-l") #'org-toggle-link-display)
+;; Toggle visible/hidden links via "<localleader> M-l"
+(keymap-set eon-localleader-org-mode-map "M-l" #'org-toggle-link-display)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; ORG PUBLISH
 
-;; Select a project to publish a project via `C-z o p';
+;; Select a project to publish a project via "<localleader> p";
 ;; This can be used to generate and publish a static blog, ebooks, etc.
-(define-key ctl-z-o-map (kbd "p") 'org-publish)
+(keymap-set eon-localleader-org-mode-map "p" #'org-publish)
 
 ;; Speed up publishing by skipping files that haven't been changed
-(setq org-publish-list-skipped-files nil)
+(setopt org-publish-list-skipped-files nil)
 
 ;; Where to place the directory containing the timestamps about changed files
-(setq org-publish-timestamp-directory
-      (concat user-emacs-directory "org-timestamps/"))
+(setopt org-publish-timestamp-directory
+        (concat user-emacs-directory "org-timestamps/"))
 
 (defun org-publish-unchanged-files-toggle ()
   "Toggle whether to re-export Org files that haven't been changed."
   (interactive)
   (if org-publish-use-timestamps-flag
-      (progn (setq org-publish-use-timestamps-flag nil)
+      (progn (setopt org-publish-use-timestamps-flag nil)
              (message "Re-export unchanged files"))
-    (progn (setq org-publish-use-timestamps-flag t)
+    (progn (setopt org-publish-use-timestamps-flag t)
            (message "Don't re-export unchanged files (default)"))))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; ORG EXPORT
 
 ;; HTML export
-(setq org-html-checkbox-type 'unicode
-      org-html-prefer-user-labels t
-      org-html-self-link-headlines t)
+(setopt org-html-checkbox-type 'unicode
+        org-html-prefer-user-labels t
+        org-html-self-link-headlines t)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; Literate Programming
+;;; LITERATE PROGRAMMING
 ;; <https://orgmode.org/worg/org-contrib/babel/intro.html>
 
 ;; Activate code blocks via Babel languages
@@ -1831,34 +2149,130 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
 ;; should not be configured here, but within their specific ONTOP modules
 ;; ("eon-*.el" files)
 
-;;  ____________________________________________________________________________
-;;; LISP LANGUAGES
+;; _____________________________________________________________________________
+;;;; EMACS LISP
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Executing-Lisp>
 
-(defvar eon-lisp-buffer-modes
-  '(emacs-lisp-mode-hook
-    lisp-interaction-mode-hook
-    lisp-mode-hook
-    scheme-mode-hook))
+;;; Localleader keymaps
 
-(defvar eon-lisp-interactive-modes
-  '(lisp-interaction-mode-hook
-    ielm-mode-hook
-    inferior-lisp-mode-hook
-    inferior-scheme-mode-hook
-    eval-expression-minibuffer-setup-hook))
+;; Group macro-related commands into a keymap
+(defvar-keymap eon-localleader-elisp-macro-map
+  :doc "Macro/expand commands for Emacs Lisp."
+  "m" #'emacs-lisp-macroexpand
+  "p" #'pp-macroexpand-last-sexp)
 
-;; Emacs Lisp is supported by Flymake, so let's use it per default
-(add-hook 'emacs-lisp-mode-hook #'flymake-mode)
-(add-hook 'lisp-interaction-mode-hook (lambda () (flymake-mode -1)))
+;; Group compilaton commands ito a keymap
+(defvar-keymap eon-localleader-elisp-compile-map
+  :doc "Compilation commands for Emacs Lisp."
+  "b" #'elisp-byte-compile-buffer
+  "f" #'elisp-byte-compile-file)
+
+;; Define localleader keymap for `emacs-lisp-mode'
+(eon-localleader-defkeymap emacs-lisp-mode eon-localleader-elisp-map
+  :doc "Local leader keymap for Emacs Lisp buffers."
+  ;; Hook "compilation" keymap into the localleader keymap for emacs-lisp-mode
+  "c" `("Compile" . ,eon-localleader-elisp-compile-map)
+  "d" #'eval-defun
+  "D" #'edebug-defun
+  "e" #'eval-last-sexp
+  ;; Hook "macro" keymap into the localleader keymap for emacs-lisp-mode
+  "m" `("Macro" . ,eon-localleader-elisp-macro-map)
+  "p" #'pp-eval-last-sexp
+  "P" #'eval-print-last-sexp
+  "r" #'elisp-eval-region-or-buffer)
+
+;; Enable Flymake for Emacs Lisp, but never for lisp-interaction-mode.
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (unless (derived-mode-p 'lisp-interaction-mode)
+              (flymake-mode 1))))
+
+;; Reach eval-expression via "<leader> x"
+(keymap-set ctl-z-e-map "x" #'eval-expression)
 
 ;; Emacs Lisp evaluation: don't truncate printed lists
-(setq eval-expression-print-length nil
-      eval-expression-print-level nil)
+(setopt eval-expression-print-length nil
+        eval-expression-print-level nil)
 
 ;; Additional keybinding resembling other sexp-related keybindings
-(global-set-key (kbd "C-M-<backspace>") #'backward-kill-sexp)
+(keymap-global-set "C-M-<backspace>" #'backward-kill-sexp)
 
-;;  ____________________________________________________________________________
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; Helpers
+
+(defvar eon-lisp-src-modes-registry
+  '(common-lisp-mode
+    emacs-lisp-mode
+    lisp-mode
+    lisp-data-mode
+    scheme-mode)
+  "Registry of Lisp-related source modes.")
+
+(defvar eon-lisp-repl-modes-registry
+  '(eshell-mode
+    inferior-emacs-lisp-mode
+    inferior-lisp-mode
+    inferior-scheme-mode
+    lisp-interaction-mode)
+  "Registry of Lisp-related REPL modes.")
+
+(defun eon-lisp--modes-transform (modes switch)
+  "Transform MODES according to SWITCH.
+- 'hook returns corresponding -hook symbols"
+  (pcase switch
+    ('hook (mapcar (lambda (m) (intern (format "%s-hook" m))) modes))
+    (_ modes)))
+
+(defun eon-lisp-src-modes (&optional switch)
+  "Return installed Lisp-related source modes from the registry.
+With SWITCH = 'hook, return -hook variables."
+  (eon-lisp--modes-transform
+   (seq-filter #'fboundp eon-lisp-src-modes-registry)
+   switch))
+
+(defun eon-lisp-repl-modes (&optional switch)
+  "Return installed Lisp-related REPL modes from the registry.
+With SWITCH = 'hook, return -hook variables."
+  (eon-lisp--modes-transform
+   (seq-filter #'fboundp eon-lisp-repl-modes-registry)
+   switch))
+
+;; _____________________________________________________________________________
+;;;; SERVER
+;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Emacs-Server>
+;; ... or do "M-x info-emacs-manual s server RET" to read it within Emacs
+
+;; Display the name of the Emacs server process in the frame title
+;; to see easily to which server process a client is connected to
+(with-eval-after-load 'server
+
+  (defun eon-frame-title ()
+    "Set a custom frame title."
+    (setq frame-title-format
+          (concat "%b (%f)"
+                  (when (server-running-p)
+                    (concat " " server-name)))))
+
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              "Run functions after loading init files"
+              (eon-frame-title)))
+
+  (add-hook 'server-mode-hook
+            (lambda ()
+              "Run functions after entering or leaving server-mode."
+              (eon-frame-title)))
+
+  ;; Shutdown the Emacs server process
+  (defun eon-server-stop ()
+    "Save buffers, quit and shutdown (kill) server."
+    (interactive)
+    (save-some-buffers)
+    (kill-emacs)))
+
+;; Start the server?
+(add-hook 'emacs-startup-hook #'server-start)
+
+;; _____________________________________________________________________________
 (provide 'eon)
 ;;; eon.el ends here

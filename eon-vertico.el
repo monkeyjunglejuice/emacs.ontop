@@ -1,11 +1,9 @@
-;;; eon-vertico.el --- Vertical completion  -*- lexical-binding: t; -*-
+;;; eon-vertico.el --- Vertico -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
-;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/eon-vertico.el")'.
-
+;;
 ;;; Code:
 
 ;;  ____________________________________________________________________________
@@ -16,7 +14,7 @@
 (use-package vertico :ensure t
   :after orderless
   :init
-  ;; Disable ONBOARD completion
+  ;; Disable ONBOARD default completion
   (fido-mode -1)
   (fido-vertical-mode -1)
   (icomplete-mode -1)
@@ -64,13 +62,6 @@
           (cdr args)))
   (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
 
-  ;; Do not allow the cursor in the minibuffer prompt
-  (setq minibuffer-prompt-properties
-        '(read-only t
-                    cursor-intangible t
-                    face minibuffer-prompt))
-  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-
   ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
   ;; Vertico commands are hidden in normal buffers
   (setq read-extended-command-predicate
@@ -83,7 +74,7 @@
 ;; Enable rich annotations using the Marginalia package
 (use-package marginalia :ensure t
   :init
-  ;; The :init configuration is always executed (Not lazy!)
+  ;; The :init configuration is always executed (not lazy).
   ;; Must be in the :init section of use-package such that the mode gets
   ;; enabled right away. Note that this forces loading the package.
   (marginalia-mode)

@@ -1,11 +1,9 @@
-;;; eon-helpful.el --- Helpful configuration  -*- lexical-binding: t; -*-
+;;; eon-helpful.el --- Helpful -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
-;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/eon-helpful.el")'.
-
+;;
 ;;; Code:
 
 ;;  ____________________________________________________________________________
@@ -30,12 +28,20 @@
   ;; already links to the manual, if a function is referenced there.
   ("C-h F" . #'helpful-function)
   ("C-h v" . #'helpful-variable)
-  ("C-h k" .  #'helpful-key)
+  ("C-h k" . #'helpful-key)
   ;; Look up *C*ommands
   ;; By default, C-h C is bound to describe 'describe-coding-system'.
   ;; I don't find this very useful, but it's frequently useful to only
   ;; look at interactive functions.
-  ("C-h C" . #'helpful-command))
+  ("C-h C" . #'helpful-command)
+  ;; Help
+  (:map ctl-z-h-map
+        ("o" . #'helpful-at-point)
+        ("f" . #'helpful-callable)
+        ("F" . #'helpful-function)
+        ("v" . #'helpful-variable)
+        ("K" . #'helpful-key)
+        ("c" . #'helpful-command)))
 
 ;;  ____________________________________________________________________________
 (provide 'eon-helpful)

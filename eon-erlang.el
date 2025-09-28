@@ -1,4 +1,4 @@
-;;; eon-erlang.el --- Erlang configuration  -*- lexical-binding: t; -*-
+;;; eon-erlang.el --- Erlang -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 

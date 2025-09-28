@@ -1,4 +1,4 @@
-;;; eon-embark.el --- Embark settings  -*- lexical-binding: t; -*-
+;;; eon-embark.el --- Embark -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;; Commentary:
 ;;; Code:
 

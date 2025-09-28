@@ -1,11 +1,11 @@
-;;; eon-switchwindow.el --- Auto package update  -*- lexical-binding: t; -*-
+;;; eon-switchwindow.el --- Switch-window -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
 ;; You can also use this file/configuration independently from Emacs ONTOP
 ;; Load it from anywhere via `(load-file "/path/to/eon-switchwindow.el")'.
-
+;;
 ;;; Code:
 
 ;;  ___________________________________________________________________________
@@ -18,7 +18,8 @@
   (switch-window-multiple-frames nil)
   (switch-window-threshold 1)
   (switch-window-mvborder-increment 1)
-  (switch-window-minibuffer-shortcut 109) ; "m"
+  (switch-window-shortcut-style 'qwerty)
+  (switch-window-minibuffer-shortcut ?m) ; "m"
   :config
   ;; Set Vim/Xmonad-like keybindings for window resizing
   (setq switch-window-extra-map
@@ -31,11 +32,9 @@
           (define-key map (kbd "SPC") 'switch-window-resume-auto-resize-window)
           map))
   (setq switch-window-qwerty-shortcuts
-        '("a" "s" "d" "f" "g"
-          "q" "w" "e" "r" "t" "y"
-          "u" "i" "o" "p"
-          "z" "x" "c" "v"
-          "b" "n"))
+        '("s" "d" "f"
+          "w" "e" "r"
+          "u" "i" "o"))
   (set-face-attribute 'switch-window-background nil
                       :foreground 'unspecified
                       :inherit 'shadow)
@@ -53,7 +52,20 @@
   ("C-x 4 d" . switch-window-then-dired)
   ("C-x 4 f" . switch-window-then-find-file)
   ("C-x 4 b" . switch-window-then-display-buffer)
-  ("C-x 4 s" . switch-window-then-swap-buffer))
+  ("C-x 4 s" . switch-window-then-swap-buffer)
+  (:map ctl-z-w-map
+        ("w" . switch-window)
+        ("m" . switch-window-then-maximize)
+        ("s" . switch-window-then-split-below)
+        ("v" . switch-window-then-split-right)
+        ("c" . switch-window-then-delete)
+        ("k" . switch-window-then-kill-buffer)
+        ("d" . switch-window-then-dired)
+        ("f" . switch-window-then-find-file)
+        ("b" . switch-window-then-display-buffer)
+        ("x" . switch-window-then-swap-buffer))
+  (:map ctl-z-map
+        ("j" . switch-window)))
 
 ;;  ____________________________________________________________________________
 (provide 'eon-switchwindow)

@@ -1,4 +1,4 @@
-;;; eon-lfe.el --- Lisp Flavoured Erlang  -*- lexical-binding: t; -*-
+;;; eon-lfe.el --- Lisp Flavoured Erlang -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
