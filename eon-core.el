@@ -15,185 +15,11 @@
 ;; shell; especially helpful when on MacOS, or starting Emacs via Systemd or
 ;; similar, who don't adopt certain environment variables.
 
-;; (use-package exec-path-from-shell :ensure t
-;;   :when
-;;   (or (daemonp)
-;;       (and (eon-macp) (display-graphic-p)))
-;;   :preface
-;;   (defvar eon-exec-path-from-shell-blocklist
-;;     '(;; Unix/shell state
-;;       "^HOME$" "^\\(OLD\\)?PWD$" "^SHLVL$" "^PS1$" "^R?PROMPT$"
-;;       "^TERM\\(CAP\\)?$" "^USER$" "^GIT_CONFIG" "^INSIDE_EMACS$" "^_$"
-;;       "^COLUMNS$" "^LINES$"
-;;       ;; Display/session
-;;       "^\\(WAYLAND_\\)?DISPLAY$" "^DBUS_SESSION_BUS_ADDRESS$" "^XAUTHORITY$"
-;;       ;; WSL
-;;       "^WSL_INTEROP$"
-;;       ;; XDG runtime/session
-;;       "^XDG_CURRENT_DESKTOP$" "^XDG_RUNTIME_DIR$"
-;;       "^XDG_\\(VTNR$\\|SEAT$\\|BACKEND$\\|SESSION_\\)"
-;;       ;; Socket-like vars
-;;       "SOCK$"
-;;       ;; SSH/GPG can get stale
-;;       "^SSH_\\(AUTH_SOCK\\|AGENT_PID\\)$" "^\\(SSH\\|GPG\\)_TTY$"
-;;       "^GPG_AGENT_INFO$")
-;;     "Regexps for env var names to omit when exporting from the shell.")
-;; 
-;;   (defun eon-exec-path-from-shell--blocklisted-p (var)
-;;     (seq-some (lambda (re) (string-match-p re var))
-;;               eon-exec-path-from-shell-blocklist))
-;; 
-;;   (defun eon-exec-path-from-shell--env-lines ()
-;;     "Return \"NAME=VALUE\" lines from the user's shell.
-;; Respects user options: shell name & arguments."
-;;     (let* ((sh (or exec-path-from-shell-shell-name
-;;                    shell-file-name
-;;                    (getenv "SHELL")))
-;;            (ok (and sh (executable-find sh)))
-;;            (args (append exec-path-from-shell-arguments '("-c" "env"))))
-;;       (cond
-;;        (ok (or (ignore-errors (apply #'process-lines sh args))
-;;                (and (executable-find "printenv")
-;;                     (process-lines "printenv"))
-;;                (split-string (shell-command-to-string "env") "\n" t)))
-;;        ((executable-find "printenv") (process-lines "printenv"))
-;;        (t (split-string (shell-command-to-string "env") "\n" t)))))
-;; 
-;;   (defun eon-exec-path-from-shell--env-names ()
-;;     (seq-keep (lambda (s)
-;;                 (when (string-match-p "=" s)
-;;                   (car (split-string s "="))))
-;;               (eon-exec-path-from-shell--env-lines)))
-;; 
-;;   (defun eon-exec-path-from-shell-refresh ()
-;;     "Refresh names from shell if needed, then import values.
-;; Respects all exec-path-from-shell user options. Interactive calls echo
-;; the list."
-;;     (interactive)
-;;     (require 'exec-path-from-shell)
-;;     (let* ((default
-;;             (eval (car (get 'exec-path-from-shell-variables 'standard-value))))
-;;            (current exec-path-from-shell-variables)
-;;            (names (if (equal current default)
-;;                       (seq-remove
-;;                        #'eon-exec-path-from-shell--blocklisted-p
-;;                        (eon-exec-path-from-shell--env-names))
-;;                     current)))
-;;       (setopt exec-path-from-shell-variables names)
-;;       (exec-path-from-shell-initialize)
-;;       (when (called-interactively-p 'interactive)
-;;         (message "exec-path-from-shell (%d): %s"
-;;                  (length names) (mapconcat #'identity names " ")))
-;;       names))
-;; 
-;;   :custom
-;;   ;; Example: '("-l") or nil for non-interactive shells (faster).
-;;   ;; Your env vars should be defined for your login shell init, e.g.
-;;   ;; ~/.profile, ~/.zprofile, ~/.bash_profile etc. - not in ~/.bashrc, ~/.zshrc
-;;   (exec-path-from-shell-arguments '("-l"))
-;;   ;; If you set this variable, your env variables will not be auto-selected:
-;;   ;; (exec-path-from-shell-variables '("PATH" "MANPATH"))
-;;   ;; Use a specific shell if you like:
-;;   ;; (exec-path-from-shell-shell-name "/bin/bash")
-;; 
-;;   :config
-;;   (eon-exec-path-from-shell-refresh))
-
-;; (use-package exec-path-from-shell :ensure t
-;;   :when
-;;   (or (daemonp)
-;;       (and (eon-macp) (display-graphic-p)))
-;;   :preface
-;;   (defvar eon-exec-path-from-shell-blocklist
-;;     '(;; Unix/shell state
-;;       "^HOME$" "^\\(OLD\\)?PWD$" "^SHLVL$" "^PS1$" "^R?PROMPT$"
-;;       "^TERM\\(CAP\\)?$" "^USER$" "^GIT_CONFIG" "^INSIDE_EMACS$" "^_$"
-;;       "^COLUMNS$" "^LINES$"
-;;       ;; Display/session
-;;       "^\\(WAYLAND_\\)?DISPLAY$" "^DBUS_SESSION_BUS_ADDRESS$" "^XAUTHORITY$"
-;;       ;; WSL
-;;       "^WSL_INTEROP$"
-;;       ;; XDG runtime/session
-;;       "^XDG_CURRENT_DESKTOP$" "^XDG_RUNTIME_DIR$"
-;;       "^XDG_\\(VTNR$\\|SEAT$\\|BACKEND$\\|SESSION_\\)"
-;;       ;; Socket-like vars
-;;       "SOCK$"
-;;       ;; SSH/GPG can get stale
-;;       "^SSH_\\(AUTH_SOCK\\|AGENT_PID\\)$" "^\\(SSH\\|GPG\\)_TTY$"
-;;       "^GPG_AGENT_INFO$")
-;;     "Regexps for env var names to omit when exporting from the shell.")
-;; 
-;;   (defun eon-exec-path-from-shell--blocklisted-p (var)
-;;     (seq-some (lambda (re) (string-match-p re var))
-;;               eon-exec-path-from-shell-blocklist))
-;; 
-;;   (defun eon-exec-path-from-shell--env-lines ()
-;;     "Return NAME=VALUE lines from user's shell (exactly one subprocess).
-;; Respects `exec-path-from-shell-shell-name' and
-;; `exec-path-from-shell-arguments'."
-;;     (let* ((sh (or exec-path-from-shell-shell-name
-;;                    shell-file-name
-;;                    (getenv "SHELL")
-;;                    (error "No shell; set `exec-path-from-shell-shell-name'")))
-;;            (args (append exec-path-from-shell-arguments '("-c" "env"))))
-;;       (apply #'process-lines sh args)))  ;; exactly one call
-;; 
-;;   (defun eon-exec-path-from-shell--env-alist ()
-;;     "Parse `NAME=VALUE' lines into an alist."
-;;     (let ((alist nil))
-;;       (dolist (s (eon-exec-path-from-shell--env-lines))
-;;         (when (string-match "=" s)
-;;           (let* ((name (substring s 0 (match-beginning 0)))
-;;                  (val  (substring s (match-end 0))))
-;;             ;; last occurrence wins (typical env semantics)
-;;             (setf (alist-get name alist nil 'remove #'string-equal) val))))
-;;       alist))
-;; 
-;;   (defun eon-exec-path-from-shell-refresh ()
-;;     "Sync env in one shell call; respect user options.
-;; If `exec-path-from-shell-variables' is still the package default,
-;; auto-select names from the shell (filtered by the blocklist).
-;; Otherwise, use the user-provided list verbatim."
-;;     (interactive)
-;;     (require 'exec-path-from-shell)
-;;     (let* ((env-alist (eon-exec-path-from-shell--env-alist))
-;;            (default (eval (car (get 'exec-path-from-shell-variables
-;;                                     'standard-value))))
-;;            (current exec-path-from-shell-variables)
-;;            (names (if (equal current default)
-;;                       ;; auto-pick names from the single shell call
-;;                       (seq-remove #'eon-exec-path-from-shell--blocklisted-p
-;;                                   (mapcar #'car env-alist))
-;;                     ;; user provided: use as-is
-;;                     current)))
-;;       ;; Persist the chosen name list for transparency/customization.
-;;       (setopt exec-path-from-shell-variables names)
-;;       ;; Apply values from the alist (no second shell call).
-;;       (dolist (name names)
-;;         (let ((val (alist-get name env-alist nil nil #'string-equal)))
-;;           (when val
-;;             (exec-path-from-shell-setenv name val))))
-;;       (when (called-interactively-p 'interactive)
-;;         (message "exec-path-from-shell (%d): %s"
-;;                  (length names) (mapconcat #'identity names " ")))
-;;       names))
-;; 
-;;   :custom
-;;   ;; Example: '("-l") or nil for non-interactive shells (faster).
-;;   (exec-path-from-shell-arguments '("-l"))
-;;   ;; Example override (respected verbatim, no auto-pick):
-;;   ;; (exec-path-from-shell-variables '("PATH"))
-;;   ;; Optional: use a specific shell
-;;   ;; (exec-path-from-shell-shell-name "/bin/bash")
-;; 
-;;   :config
-;;   ;; Exactly one subprocess during init.
-;;   (eon-exec-path-from-shell-refresh))
-
 (use-package exec-path-from-shell :ensure t
   :when
   (or (daemonp)
       (and (eon-macp) (display-graphic-p)))
+
   :preface
   (defvar eon-exec-path-from-shell-blocklist
     '(;; Unix/shell state
@@ -214,57 +40,44 @@
       "^GPG_AGENT_INFO$")
     "Regexps for env var names to omit when exporting from the shell.
 Adapted from Doom Emacs")
-
+  
   (defun eon-exec-path-from-shell--blocklisted-p (var)
     (seq-some (lambda (re) (string-match-p re var))
               eon-exec-path-from-shell-blocklist))
-
+  
   (defun eon-exec-path-from-shell--env-lines ()
-    "Return \"NAME=VALUE\" lines from the user's shell (one subprocess).
-Respects user options: shell name & arguments."
-    (let* ((sh   (or exec-path-from-shell-shell-name
-                     shell-file-name
-                     (getenv "SHELL")))
-           (ok   (and sh (executable-find sh)))
+    (let* ((sh (or exec-path-from-shell-shell-name
+                   shell-file-name
+                   (getenv "SHELL")))
+           (ok (and sh (executable-find sh)))
            (args (append exec-path-from-shell-arguments '("-c" "env"))))
       (cond
-       (ok (ignore-errors (apply #'process-lines sh args)))
-       ((executable-find "printenv") (ignore-errors (process-lines "printenv")))
-       (t nil))))
-
-  (defun eon-exec-path-from-shell--env-alist ()
-    "Parse NAME=VALUE lines into an alist, or nil on failure."
-    (let ((lines (eon-exec-path-from-shell--env-lines))
-          (alist nil))
-      (when lines
-        (dolist (s lines)
-          (when (string-match "=" s)
-            (let ((k (substring s 0 (match-beginning 0)))
-                  (v (substring s (match-end 0))))
-              (setf (alist-get k alist nil 'remove #'string-equal) v))))
-        alist)))
-
+       (ok (or (ignore-errors (apply #'process-lines sh args))
+               (and (executable-find "printenv")
+                    (process-lines "printenv"))
+               (split-string (shell-command-to-string "env") "\n" t)))
+       ((executable-find "printenv") (process-lines "printenv"))
+       (t (split-string (shell-command-to-string "env") "\n" t)))))
+  
+  (defun eon-exec-path-from-shell--env-names ()
+    (seq-keep (lambda (s)
+                (when (string-match-p "=" s)
+                  (car (split-string s "="))))
+              (eon-exec-path-from-shell--env-lines)))
+  
   (defun eon-exec-path-from-shell-refresh ()
-    "Import env with one shell call normally; fallback to package on failure.
-If `exec-path-from-shell-variables' is the package default, auto-select
-names from the scraped env (filtered by the blocklist). Otherwise, use the
-user-provided list verbatim."
     (interactive)
     (require 'exec-path-from-shell)
-    (let* ((env (eon-exec-path-from-shell--env-alist))
-           (default (eval (car (get 'exec-path-from-shell-variables
-                                    'standard-value))))
+    (let* ((default
+            (eval (car (get 'exec-path-from-shell-variables 'standard-value))))
            (current exec-path-from-shell-variables)
            (names (if (equal current default)
-                      (seq-remove #'eon-exec-path-from-shell--blocklisted-p
-                                  (mapcar #'car (or env '())))
+                      (seq-remove
+                       #'eon-exec-path-from-shell--blocklisted-p
+                       (eon-exec-path-from-shell--env-names))
                     current)))
       (setopt exec-path-from-shell-variables names)
-      (if env
-          (dolist (n names)
-            (let ((v (alist-get n env nil nil #'string-equal)))
-              (when v (exec-path-from-shell-setenv n v))))
-        (exec-path-from-shell-initialize))
+      (exec-path-from-shell-initialize)
       (when (called-interactively-p 'interactive)
         (message "exec-path-from-shell (%d): %s"
                  (length names) (mapconcat #'identity names " ")))
@@ -273,9 +86,9 @@ user-provided list verbatim."
   :custom
   ;; Example: '("-l") or nil for non-interactive shells (faster).
   (exec-path-from-shell-arguments '("-l"))
-  ;; Override the automatic selection of your environmet variables
-  ;; (exec-path-from-shell-variables '("PATH" "MAN-PATH"))
-  ;; Want to use a shell different from your standard shell?
+  ;; You can set the variables manually, no autoselection:
+  ;; (exec-path-from-shell-variables '("PATH" "MANPATH"))
+  ;; Use a specific shell if you like:
   ;; (exec-path-from-shell-shell-name "/bin/bash")
 
   :config
