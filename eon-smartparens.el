@@ -32,7 +32,7 @@
   (sp-with-modes 'emacs-lisp-mode
     (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p)))
   ;; Minibuffer
-  (defun eon-minibuffer-enable-smartparens ()
+  (defun eon-smartparens-enable-minibuffer ()
     "Enable `smartparens-mode' in the minibuffer during `eval-expression'."
     (sp-local-pair 'minibuffer-pairs "'" nil :actions nil)
     (sp-local-pair 'minibuffer-pairs "`" nil :actions nil)
@@ -45,7 +45,7 @@
   :hook
   ((emacs-lisp-mode lisp-interaction-mode) . smartparens-strict-mode)
   (eshell-mode . smartparens-mode)
-  (eval-expression-minibuffer-setup . eon-minibuffer-enable-smartparens)
+  (eval-expression-minibuffer-setup . eon-smartparens-enable-minibuffer)
   :bind
   ;; Custom keybinding set, a blend of standard Emacs sexp keybindings
   ;; and Paredit keybindings
