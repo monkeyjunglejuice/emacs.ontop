@@ -28,7 +28,7 @@
   :config
   ;; Enable language-specific configurations
   (require 'smartparens-config)
-  ;; Only use the pseudo-quote inside strings where it serves as hyperlink.
+  ;; Only use the pseudo-quote inside strings where it serves as hyperlink
   (sp-with-modes 'emacs-lisp-mode
     (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p)))
   ;; Minibuffer
