@@ -39,12 +39,12 @@
     (sp-update-local-pairs 'minibuffer-pairs)
     (smartparens-mode 1))
   ;; Globally enable non-strict delimiter handling?
-  ;; Specific configurations can be found within the resp. language module files.
-  (smartparens-global-mode 1)
+  ;; Specific configurations are within the respective language module files.
+  ;; (smartparens-global-mode 1)
   (show-smartparens-global-mode 1)
   :hook
-  ((emacs-lisp-mode lisp-interaction-mode) . smartparens-strict-mode)
-  (eshell-mode . smartparens-mode)
+  ((prog-mode conf-mode eshell-mode) . smartparens-mode)
+  ((emacs-lisp-mode lisp-interaction-mode lisp-mode) . smartparens-strict-mode)
   (eval-expression-minibuffer-setup . eon-smartparens-enable-minibuffer)
   :bind
   ;; Custom keybinding set, a blend of standard Emacs sexp keybindings
