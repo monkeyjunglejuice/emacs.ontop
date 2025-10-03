@@ -19,22 +19,21 @@
   (switch-window-threshold 1)
   (switch-window-mvborder-increment 1)
   (switch-window-shortcut-style 'qwerty)
-  (switch-window-minibuffer-shortcut ?m) ; "m"
+  (switch-window-qwerty-shortcuts '("s" "d" "f"
+                                    "w" "e" "r"
+                                    "z" "x" "c"))
+  (switch-window-minibuffer-shortcut ?m)
+  (switch-window-extra-map
+   (let ((map (make-sparse-keymap)))
+     ;; Set Vim/Xmonad-like keybindings for window resizing
+     (define-key map (kbd "K") 'switch-window-mvborder-up)
+     (define-key map (kbd "J") 'switch-window-mvborder-down)
+     (define-key map (kbd "H") 'switch-window-mvborder-left)
+     (define-key map (kbd "L") 'switch-window-mvborder-right)
+     (define-key map (kbd "B") 'balance-windows)
+     (define-key map (kbd "SPC") 'switch-window-resume-auto-resize-window)
+     map))
   :config
-  ;; Set Vim/Xmonad-like keybindings for window resizing
-  (setq switch-window-extra-map
-        (let ((map (make-sparse-keymap)))
-          (define-key map (kbd "k") 'switch-window-mvborder-up)
-          (define-key map (kbd "j") 'switch-window-mvborder-down)
-          (define-key map (kbd "h") 'switch-window-mvborder-left)
-          (define-key map (kbd "l") 'switch-window-mvborder-right)
-          (define-key map (kbd "b") 'balance-windows)
-          (define-key map (kbd "SPC") 'switch-window-resume-auto-resize-window)
-          map))
-  (setq switch-window-qwerty-shortcuts
-        '("s" "d" "f"
-          "w" "e" "r"
-          "u" "i" "o"))
   (set-face-attribute 'switch-window-background nil
                       :foreground 'unspecified
                       :inherit 'shadow)
@@ -63,9 +62,7 @@
         ("d" . switch-window-then-dired)
         ("f" . switch-window-then-find-file)
         ("b" . switch-window-then-display-buffer)
-        ("x" . switch-window-then-swap-buffer))
-  (:map ctl-z-map
-        ("j" . switch-window)))
+        ("x" . switch-window-then-swap-buffer)))
 
 ;;  ____________________________________________________________________________
 (provide 'eon-switchwindow)
