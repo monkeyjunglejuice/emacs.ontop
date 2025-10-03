@@ -45,7 +45,7 @@ If enabling non-interactively while Flycheck is on, skip enabling."
   ((emacs-lisp-mode . flycheck-mode)
    (lisp-interaction-mode . (lambda () (flycheck-mode -1)))))
 
-;; Use Eglot with Flycheck instead of Flymake
+;; Use Eglot with Flycheck rather than Flymake
 ;; <https://github.com/flycheck/flycheck-eglot>
 (use-package flycheck-eglot :ensure t
   :after (flycheck eglot)
