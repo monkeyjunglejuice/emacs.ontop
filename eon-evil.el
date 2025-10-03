@@ -54,27 +54,5 @@
     "P" #'dired-ranger-move))
 
 ;;  ____________________________________________________________________________
-;; STRUCTURAL EDITING
-;; <https://github.com/noctuid/lispyville>
-
-(use-package lispyville :ensure t
-  :after evil
-  :when (not (featurep 'eon-smartparens))
-  :diminish
-  :init
-  (setq lispyville-key-theme
-        '(operators
-          c-w
-          (prettify insert)
-          (atom-movement t)
-          slurp/barf-lispy
-          additional
-          additional-insert))
-  :config
-  (lispyville-set-key-theme)
-  :hook
-  ((prog-mode conf-mode) . lispyville-mode))
-
-;;  ____________________________________________________________________________
 (provide 'eon-evil)
 ;;; eon-evil.el ends here
