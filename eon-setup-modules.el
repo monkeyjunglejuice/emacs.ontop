@@ -1,7 +1,7 @@
 ;;; eon-setup-modules.el --- Modules -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
-;;
+
 ;;; Commentary:
 ;;
 ;;; Code:
@@ -15,19 +15,19 @@
 ;;     and unload manually loaded modules via "M-x eon-unload-module RET eon-"
 ;;
 ;; --> Documentation lives in the module files. To learn more, place the cursor
-;;     on a module entry below and do `M-x ffap RET' to visit the file.
+;;     on a module symbol below and do "<leader> f o" to visit the file.
 
-(setq
+(setopt
  eon-modules
  '(;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-   ;;; NATIVE ELISP COMPILATION
+   ;;; MODULES TO LOAD EARLY
 
-   ;; eon-nativecomp                ; improved native compilation
+   ;; eon-compileangel              ; improved native compilation
 
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ;;; NECESSARY MODULES
 
-   eon                           ; The Emacs ONBOARD starter-kit
+   eon                           ; the Emacs ONBOARD starter-kit
    eon-core                      ; shared settings and definitions
 
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -39,35 +39,50 @@
 
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ;;; OPTIONAL MODULES
-
+   
    eon-autoupdate                ; update packages automatically
    eon-consult                   ; navigation and search framework
-   ;; eon-embark                    ; minibuffer actions
-   ;; eon-flycheck                  ; syntax checker alternative
+   ;; eon-corfu                     ; code (auto) completion
+   ;; eon-embark                    ; minibuffer actions and context menu
+   eon-flycheck                  ; syntax checker alternative
    ;; eon-fonts                     ; curated font sets
    eon-helpful                   ; extended help viewer
-   eon-pdftools                  ; PDF reader
-   eon-smartparens               ; structural editing
-   eon-snippets                  ; code snippets
-   eon-switchwindow              ; window manageement
-   eon-vertico                   ; vertical completion
+   ;; eon-lispy                     ; edit parenthesis structurally
+   eon-magit                     ; Git user interface inside Emacs
+   eon-marginalia                ; rich annotations
+   ;; eon-pdftools                  ; PDF reader and editor
+   eon-smartparens               ; edit parenthesis structurally
+   ;; eon-snippets                  ; code snippets
+   eon-switchwindow              ; window management
+   eon-todo                      ; highlight todo keywords in comments
+   eon-vertico                   ; versatile vertical completion
 
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ;;; PROGRAMMING LANGUAGES
 
-   ;; eon-clojure                   ; Clojure and ClojureScript programming
-   eon-commonlisp                ; Common Lisp programming, using Sly
-   ;; eon-elixir                    ; Elixir programming
-   eon-erlang                    ; Erlang programming
-   ;; eon-gleam                     ; Gleam programming
-   ;; eon-haskell                   ; Haskell programming
-   ;; eon-julia                     ; Julia programming
-   ;; eon-lfe                       ; Lisp Flavoured Erlang programming
-   eon-lua                       ; Lua programming
-   ;; eon-ocaml                     ; Ocaml programming
-   ;; eon-racket                    ; Racket programming
-   eon-scheme                    ; Scheme programming
-   eon-webdev                    ; HTML/CSS editing
+   ;; eon-lang-clojure              ; Clojure and ClojureScript programming
+   eon-lang-commonlisp           ; Common Lisp programming with Sly
+   eon-lang-elixir               ; Elixir programming
+   eon-lang-erlang               ; Erlang programming
+   ;; eon-lang-gleam                ; Gleam programming
+   ;; eon-lang-haskell              ; Haskell programming
+   ;; eon-lang-julia                ; Julia programming
+   ;; eon-lang-lfe                  ; Lisp Flavoured Erlang programming
+   eon-lang-lua                  ; Lua programming
+   eon-lang-ocaml                ; Ocaml programming
+   ;; eon-lang-racket               ; Racket programming
+   ;; eon-lang-scheme               ; Scheme programming
+   ;; eon-lang-schem-chez           ; Chez Scheme support
+   ;; eon-lang-scheme-chibi         ; Chibi Scheme support
+   ;; eon-lang-scheme-chicken       ; Chicken Scheme support
+   ;; eon-lang-scheme-gambit        ; Gambit Scheme support
+   ;; eon-lang-scheme-gauche        ; Gauche Scheme support
+   eon-lang-scheme-guile         ; Guile Scheme support
+   ;; eon-lang-scheme-kawa          ; Kawa Scheme support
+   ;; eon-lang-scheme-mit           ; MIT Scheme support
+   ;; eon-lang-scheme-racket        ; Racket support; consider `eon-lang-racket'
+   ;; eon-lang-scheme-stklos        ; Stklos Scheme support
+   eon-lang-webdev               ; HTML/CSS editing
 
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ;;; PERSONAL MODULES

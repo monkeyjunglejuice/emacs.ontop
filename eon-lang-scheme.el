@@ -1,11 +1,13 @@
-;;; eon-scheme.el --- Scheme / Geiser -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-lang-scheme.el --- Scheme / Geiser -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
-;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/eon-scheme.el")'.
-
+;;
+;; Common definitions and functionality for all Scheme implementation modules.
+;; This module will be loaded automatically by the implementation-specific
+;; Scheme modules, even if commented out in `eon-setup-modules'.
+;; 
 ;;; Code:
 
 ;;  ____________________________________________________________________________
@@ -16,50 +18,7 @@
   :custom
   (geiser-repl-send-on-return-p t)
   (geiser-repl-use-other-window t)
-  (scheme-mit-dialect nil)
-  ;; Set Geiser's default implementation?
-  (geiser-default-implementation 'guile))
-
-;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; GEISER IMPLEMENTATION PACKAGES
-
-;; Unquote and configure the corresponding package(s) for your Scheme(s) below,
-;; and then then evaluate the expression(s) or restart Emacs.
-
-;; <https://gitlab.com/emacs-geiser/chez>
-;; (use-package geiser-chez :ensure t)
-
-;; <https://gitlab.com/emacs-geiser/chicken>
-;; (use-package geiser-chicken :ensure t)
-
-;; <https://gitlab.com/emacs-geiser/chibi>
-;; (use-package geiser-chibi :ensure t)
-
-;; <https://gitlab.com/emacs-geiser/gambit>
-;; (use-package geiser-gambit :ensure t)
-
-;; <https://gitlab.com/emacs-geiser/gauche>
-;; (use-package geiser-gauche :ensure t)
-
-;; <https://gitlab.com/emacs-geiser/guile>
-(use-package geiser-guile :ensure t)
-
-;; <https://gitlab.com/emacs-geiser/kawa>
-;; (use-package geiser-kawa)
-
-;; <https://gitlab.com/emacs-geiser/mit>
-;; (use-package geiser-mit :ensure t
-;;   :config
-;;   (use-package scheme
-;;     :ensure nil
-;;     :custom
-;;     (scheme-mit-dialect t)))
-
-;; <https://gitlab.com/emacs-geiser/racket>
-;; (use-package geiser-racket :ensure t)
-
-;; <https://gitlab.com/emacs-geiser/stklos>
-;; (use-package geiser-stklos :ensure t)
+  (scheme-mit-dialect nil))
 
 ;;  ____________________________________________________________________________
 ;;; SRFI BROWSER
@@ -74,8 +33,8 @@
 ;; <https://github.com/Fuco1/smartparens>
 ;; <https://smartparens.readthedocs.io/en/latest/>
 
+(when (eon-modulep 'eon-smartparens))
 (use-package smartparens :ensure t
-  :when (featurep 'eon-smartparens)
   :hook
   (scheme-mode . smartparens-strict-mode)
   ((inferior-scheme-mode geiser-repl-mode) . smartparens-mode))
@@ -111,5 +70,5 @@
 ;;                                org-babel-load-languages))
 
 ;;  ____________________________________________________________________________
-(provide 'eon-scheme)
-;;; eon-scheme.el ends here
+(provide 'eon-lang-scheme)
+;;; eon-lang-scheme.el ends here

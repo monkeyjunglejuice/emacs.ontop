@@ -1,7 +1,7 @@
-;;; eon-evil.el --- Structural editing -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-lispy.el --- Structural editing -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
-;;
+
 ;;; Commentary:
 ;;
 ;;; Code:
@@ -11,7 +11,6 @@
 ;; <https://github.com/noctuid/lispyville>
 
 (use-package lispyville :ensure t
-  :when (not (featurep 'eon-smartparens))
   :diminish
   :init
   (setq lispyville-key-theme

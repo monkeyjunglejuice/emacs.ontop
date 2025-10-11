@@ -1,4 +1,4 @@
-;;; eon-elixir.el --- Elixir -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-lang-elixir.el --- Elixir -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 ;;
@@ -21,6 +21,9 @@
 ;;; REPL
 
 (use-package inf-elixir :ensure t
+  :init
+  (eon-localleader-defkeymap elixir-ts-mode eon-localleader-elixir-map
+    :doc "Local leader keymap for the Elixir major mode.")
   :custom
   (inf-elixir-switch-to-repl-on-send nil)
   :config
@@ -46,7 +49,15 @@ configuration or restarting applications."
         ("C-c C-b" . inf-elixir-send-buffer)
         ("C-c C-c" . inf-elixir-recompile)
         ("C-c c"   . inf-elixir-reload-module)
-        ("C-c C-o" . inf-elixir-observer)))
+        ("C-c C-o" . inf-elixir-observer))
+  (:map eon-localleader-elixir-map
+        ("r" . inf-elixir-project)
+        ("l" . inf-elixir-send-line)
+        ("r" . inf-elixir-send-region)
+        ("b" . inf-elixir-send-buffer)
+        ("c" . inf-elixir-recompile)
+        ("C" . inf-elixir-reload-module)
+        ("o" . inf-elixir-observer)))
 
 ;;  ____________________________________________________________________________
 ;;; LANGUAGE SERVER
@@ -99,17 +110,14 @@ configuration or restarting applications."
 ;;    ]
 ;;  end
 ;;
-;; Run `mix deps.get' afterwards, and then `mix credo'
+;; Then run 'mix deps.get' and 'mix credo'
 
-;; (use-package flycheck :ensure t
-;;   :hook
-;;   (elixir-ts-mode . flycheck-mode))
-
-;; (use-package flycheck-credo :ensure t
-;;   :custom
-;;   (flycheck-elixir-credo-strict t)
-;;   :hook
-;;   (flycheck-mode . flycheck-credo-setup))
+(when (eon-modulep 'eon-flycheck)
+  (use-package flycheck-credo :ensure t
+    :custom
+    (flycheck-elixir-credo-strict t)
+    :hook
+    (flycheck-mode . flycheck-credo-setup)))
 
 ;;  ____________________________________________________________________________
 ;;; EXUNIT
@@ -154,5 +162,5 @@ configuration or restarting applications."
                                org-babel-load-languages))
 
 ;; _____________________________________________________________________________
-(provide 'eon-elixir)
-;;; eon-elixir.el ends here
+(provide 'eon-lang-elixir)
+;;; eon-lang-elixir.el ends here

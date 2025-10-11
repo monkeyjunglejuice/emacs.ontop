@@ -1,11 +1,9 @@
-;;; eon-haskell.el --- Haskell -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-lang-haskell.el --- Haskell -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
-;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/eon-haskell.el")'.
-
+;;
 ;;; Code:
 
 ;;  ____________________________________________________________________________
@@ -13,6 +11,9 @@
 ;;  <http://haskell.github.io/haskell-mode>
 
 (use-package haskell-mode
+  :init
+  (eon-treesitter-ensure-grammar
+   '(haskell "https://github.com/tree-sitter/tree-sitter-haskell"))
   :custom
   (haskell-completing-read-function 'completing-read)
   (haskell-process-auto-import-loaded-modules t)
@@ -69,12 +70,6 @@
   :hook
   (interactive-haskell-mode . rainbow-delimiters-mode))
 
-;; Make parens styleable, e.g. more or less prominent
-;; <https://github.com/tarsius/paren-face>
-;; (use-package paren-face
-;;   :hook
-;;   ((haskell-mode interactive-haskell-mode) . paren-face-mode))
-
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://org-babel.readthedocs.io/en/latest/eval/>
@@ -91,5 +86,5 @@
                                org-babel-load-languages))
 
 ;;  ____________________________________________________________________________
-(provide 'eon-haskell)
-;;; eon-haskell.el ends here
+(provide 'eon-lang-haskell)
+;;; eon-lang-haskell.el ends here

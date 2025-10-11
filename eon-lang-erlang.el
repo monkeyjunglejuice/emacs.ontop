@@ -1,11 +1,9 @@
-;;; eon-erlang.el --- Erlang -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-lang-erlang.el --- Erlang -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
-;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/eon-erlang.el")'.
-
+;;
 ;;; Code:
 
 ;;  ____________________________________________________________________________
@@ -13,14 +11,11 @@
 ;; <https://github.com/erlang/otp/tree/master/lib/tools/emacs>
 ;; <https://www.erlang.org/doc/apps/tools/erlang_mode_chapter.html>
 
-;; In order to use Tree Sitter, install the tree-sitter binary with your
-;; OS package manager
-
-(eon-treesitter-ensure-grammar
- '(erlang "https://github.com/WhatsApp/tree-sitter-erlang"))
-
 (use-package erlang-ts :ensure t
   :defer t
+  :init
+  (eon-treesitter-ensure-grammar
+   '(erlang "https://github.com/WhatsApp/tree-sitter-erlang"))
   :mode ("\\.erl\\'" . erlang-ts-mode))
 
 ;;  ____________________________________________________________________________
@@ -28,14 +23,13 @@
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
 ;; Common keybindings are configured in `./eon-core.el'
 
-;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; ERLANG LANGUAGE PLATFORM
+;; Erlang Language Platform
 ;; <https://github.com/WhatsApp/erlang-language-platform>
 
 (use-package eglot :ensure nil
   :custom
   ;; A longer timeout seems required for the first run in a new project
-  (eglot-connect-timeout 30)            ; default: 30
+  (eglot-connect-timeout 60)  ; default: 30
   :config
   ;; Make sure to adapt the path and use the .bat script for Windows
   (add-to-list 'eglot-server-programs
@@ -65,7 +59,7 @@
 
 ;; Only available from Github, therefore not installed
 ;; <https://github.com/xfwduke/ob-erlang>
-;; (use-package ob-erlang)
+;; (use-package ob-erlang :ensure t)
 
 ;; (use-package org :ensure nil
 ;;   :config
@@ -74,5 +68,5 @@
 ;;                                org-babel-load-languages))
 
 ;; _____________________________________________________________________________
-(provide 'eon-erlang)
-;;; eon-erlang.el ends here
+(provide 'eon-lang-erlang)
+;;; eon-lang-erlang.el ends here

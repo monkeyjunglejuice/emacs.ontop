@@ -3,8 +3,6 @@
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
-;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/eon-switchwindow.el")'.
 ;;
 ;;; Code:
 
@@ -23,17 +21,17 @@
                                     "w" "e" "r"
                                     "z" "x" "c"))
   (switch-window-minibuffer-shortcut ?m)
-  (switch-window-extra-map
-   (let ((map (make-sparse-keymap)))
-     ;; Set Vim/Xmonad-like keybindings for window resizing
-     (define-key map (kbd "K") 'switch-window-mvborder-up)
-     (define-key map (kbd "J") 'switch-window-mvborder-down)
-     (define-key map (kbd "H") 'switch-window-mvborder-left)
-     (define-key map (kbd "L") 'switch-window-mvborder-right)
-     (define-key map (kbd "B") 'balance-windows)
-     (define-key map (kbd "SPC") 'switch-window-resume-auto-resize-window)
-     map))
   :config
+  (setq switch-window-extra-map
+        (let ((map (make-sparse-keymap)))
+          ;; Set Vim-like keybindings for window resizing
+          (define-key map (kbd "k") 'switch-window-mvborder-up)
+          (define-key map (kbd "j") 'switch-window-mvborder-down)
+          (define-key map (kbd "h") 'switch-window-mvborder-left)
+          (define-key map (kbd "l") 'switch-window-mvborder-right)
+          (define-key map (kbd "b") 'balance-windows)
+          (define-key map (kbd "SPC") 'switch-window-resume-auto-resize-window)
+          map))
   (set-face-attribute 'switch-window-background nil
                       :foreground 'unspecified
                       :inherit 'shadow)
@@ -52,6 +50,7 @@
   ("C-x 4 f" . switch-window-then-find-file)
   ("C-x 4 b" . switch-window-then-display-buffer)
   ("C-x 4 s" . switch-window-then-swap-buffer)
+  ;; Bind `switch-window' commands in the leader keymap
   (:map ctl-z-w-map
         ("w" . switch-window)
         ("m" . switch-window-then-maximize)

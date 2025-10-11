@@ -1,10 +1,9 @@
-;;; eon-smartparens.el --- Smartparens -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-smartparens.el --- Structural editing -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
-;; Emacs ONTOP is an extension on top of the Emacs ONBOARD starter-kit
-
+;;
 ;;; Code:
 
 ;;  ____________________________________________________________________________
@@ -30,7 +29,7 @@
   (require 'smartparens-config)
   ;; Only use the pseudo-quote inside strings where it serves as hyperlink
   (sp-with-modes 'emacs-lisp-mode
-    (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p)))
+                 (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p)))
   ;; Minibuffer
   (defun eon-smartparens-enable-minibuffer ()
     "Enable `smartparens-mode' in the minibuffer during `eval-expression'."

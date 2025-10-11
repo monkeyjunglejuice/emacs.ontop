@@ -51,7 +51,7 @@ If enabling non-interactively while Flycheck is on, skip enabling."
   :after (flycheck eglot)
   :custom (flycheck-eglot-exclusive nil)
   :config
-  (global-flycheck-eglot-mode 1))
+  (global-flycheck-eglot-mode))
 
 ;;  ____________________________________________________________________________
 (provide 'eon-flycheck)

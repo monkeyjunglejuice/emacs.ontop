@@ -23,18 +23,19 @@
   ("C-h B" . embark-bindings))
 
 (use-package embark :ensure t
-  :if (or (eon-linp) (eon-winp))
+  :when (or (eon-linp) (eon-winp))
   :bind
   ("<menu>" . embark-act)
   ("M-<menu>" . embark-dwim))
 
 (use-package embark :ensure t
-  :if (eon-macp)
+  :when (eon-macp)
   :bind
   ("C-." . embark-act)
   ("C-;" . embark-dwim))
 
 (use-package embark :ensure t
+  :when (featurep 'eon-vertico)
   :after vertico
   :config
   (defun +embark-live-vertico ()

@@ -3,7 +3,6 @@
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
-;; Emacs ONTOP is an extension on top of the Emacs ONBOARD starter-kit
 ;;
 ;;; Code:
 
@@ -17,8 +16,9 @@
 
 (use-package exec-path-from-shell :ensure t
   :when
-  (or (daemonp)
-      (and (eon-macp) (display-graphic-p)))
+  ;; TODO Refine the loading conditions, so it doesn't load when
+  ;; graphical Emacs has been started *from* the terminal
+  (or (daemonp) (and (eon-macp) (display-graphic-p)))
 
   :preface
   (defvar eon-exec-path-from-shell-blocklist
@@ -74,11 +74,14 @@ Adapted from Doom Emacs")
            (names (if (equal current default)
                       (seq-remove
                        #'eon-exec-path-from-shell--blocklisted-p
+                       ;; TODO Currently inefficient, causes 1st shell spawn
                        (eon-exec-path-from-shell--env-names))
                     current)))
       (setopt exec-path-from-shell-variables names)
+      ;; TODO Causes 2nd shell spawn to do the work; should do all at once
       (exec-path-from-shell-initialize)
       (when (called-interactively-p 'interactive)
+        ;; TODO Also show the issued shell command in the message
         (message "exec-path-from-shell (%d): %s"
                  (length names) (mapconcat #'identity names " ")))
       names))
@@ -86,7 +89,7 @@ Adapted from Doom Emacs")
   :custom
   ;; Example: '("-l") or nil for non-interactive shells (faster).
   (exec-path-from-shell-arguments '("-l"))
-  ;; You can set the variables manually, no autoselection:
+  ;; You can set the variables manually, then no autoselection will happen:
   ;; (exec-path-from-shell-variables '("PATH" "MANPATH"))
   ;; Use a specific shell if you like:
   ;; (exec-path-from-shell-shell-name "/bin/bash")
@@ -97,21 +100,18 @@ Adapted from Doom Emacs")
 ;;  ____________________________________________________________________________
 ;;; OS INTEGRATION
 
-;; Enable the built-in `use-package' extension ":ensure-system-package"
-(use-package use-package-ensure-system-package)
+;; Use the MacOS trash instead of freedesktop.org ~/.local/share/Trash
+;; <https://github.com/emacsorphanage/osx-trash>
+(when (eon-macp)
+  (use-package osx-trash :ensure t
+    :config
+    (osx-trash-setup)))
 
 ;; <https://gitlab.com/jabranham/system-packages>
 ;; The package attempts to guess which system package manager you use,
 ;; and lets you manage your system packages directly from Emacs via
 ;; "M-x system-packages"
-(use-package system-packages :ensure t)
-
-;; Use the MacOS trash instead of freedesktop.org ~/.local/share/Trash
-;; <https://github.com/emacsorphanage/osx-trash>
-(use-package osx-trash :ensure t
-  :when (eon-macp)
-  :config
-  (osx-trash-setup))
+;; (use-package system-packages :ensure t)
 
 ;;  ____________________________________________________________________________
 ;;; DIMINISH
@@ -134,151 +134,20 @@ Adapted from Doom Emacs")
                                                  emacs22)))))
 
 ;;  ____________________________________________________________________________
-;;; CORFU
-;; <https://github.com/minad/corfu>
+;;; COMPLETION-AT-POINT EXTENSIONS
 
-;; (use-package corfu :ensure t
-;;   :after orderless
-;;   :init
-;;   (global-completion-preview-mode -1)  ; Disable Emacs ONboard standard
-;;   (global-corfu-mode)
-;;   (corfu-popupinfo-mode)
-;;   :custom
-;;   (global-corfu-minibuffer t)
-;;   (corfu-cycle t)
-;;   (corfu-auto t)
-;;   (corfu-auto-prefix 2)
-;;   (corfu-auto-delay 0.2)
-;;   (corfu-popupinfo-delay '(0.3 . 0.1))
-;;   (corfu-popupinfo-max-height 10)
-;;   (corfu-quit-at-boundary 'separator)
-;;   (corfu-quit-no-match 'separator)
-;;   (corfu-preview-current t)
-;;   (corfu-preselect 'valid)
-;;   (corfu-on-exact-match 'nil)
-;;   :hook
-;;   ((eat-eshell-mode eshell-mode shell-mode)
-;;    . corfu-mode)
-;;   :bind
-;;   (:map corfu-map
-;;         ;; ("TAB" . corfu-next)
-;;         ;; ([tab] . corfu-next)
-;;         ;; ("S-TAB" . corfu-previous)
-;;         ;; ([backtab] . corfu-previous)
-;;         ;; ("S-RET" . corfu-insert)
-;;         ;; ("S-<return>" . corfu-insert)
-;;         ("RET" . nil)))
+;; Cape extends the capabilities of in-buffer completion. It integrates with
+;; Corfu or the default completion UI by providing additional backends through
+;; completion-at-point-functions.
 
-(use-package corfu
-  :ensure t
-  :after orderless
+(use-package cape :ensure t
+  :commands (cape-dabbrev cape-file cape-elisp-block)
   :init
-  (global-completion-preview-mode -1)
-  (global-corfu-mode)
-  (corfu-history-mode)
-  (corfu-popupinfo-mode)
-  ;; Shells: cycle with TAB/S-TAB.
-  (defun eon-corfu-shell-setup ()
-    (setq-local corfu-auto t))
-  ;; REPLs (comint & friends): keep/force auto popup.
-  (defun eon-corfu-repl-setup ()
-    (setq-local corfu-auto t))
-  (defun eon-corfu-insert ()
-    "Insert first candidate, even if nothing selected (works with 'prompt)."
-    (interactive)
-    (completion-at-point)
-    (corfu-first)
-    (corfu-insert))
-  :custom
-  (corfu-cycle t)
-  (corfu-auto t)
-  (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.2)
-  (corfu-popupinfo-delay '(0.4 . 0.1))
-  (corfu-popupinfo-max-height 10)
-  (corfu-quit-at-boundary nil)
-  (corfu-quit-no-match 'separator)
-  (corfu-preselect 'prompt)
-  (corfu-on-exact-match nil)
-  :config
-  ;; "Magic backspace": cancel selection, keep popup open
-  ;; (ported from evil-collection)
-  (let ((magic-backspace
-         (list 'menu-item "" nil
-               :filter (lambda (&optional _)
-                         (when (and (boundp 'corfu--index)
-                                    (>= corfu--index 0))
-                           'corfu-reset)))))
-    (define-key corfu-map (kbd "DEL")         magic-backspace)
-    (define-key corfu-map [backspace]         magic-backspace)
-    (define-key corfu-map (kbd "<backspace>") magic-backspace))
-  :hook
-  ;; Shells: manual completion
-  ((eshell-mode eat-eshell-mode shell-mode) . eon-corfu-shell-setup)
-  ;; REPLs: most are comint-derived; ensure auto on there
-  (comint-mode . eon-corfu-repl-setup)
-  :bind
-  (:map corfu-map
-        ;; Cycle
-        ("TAB" . corfu-next) ([tab] . corfu-next)
-        ("S-TAB" . corfu-previous) ([backtab] . corfu-previous)
-        ;; Commit explicitly
-        ("C-j" . eon-corfu-insert)
-        ;; Never steal newline/eval
-        ("RET" . nil)))
-
-;;  ____________________________________________________________________________
-;;; CAPE: compose/augment CAPFs (files in shells & repls)
-;; <https://github.com/minad/cape>
-
-;; (use-package cape :ensure t
-;;   :init
-;;   (add-to-list 'completion-at-point-functions #'cape-file)
-;;   ;; Continuously update the candidates - deactivate if lagging
-;;   ;; (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
-;;   ;; ;; Compose own completion at point for Eglot
-;;   ;; (defun eon-eglot-capf-super ()
-;;   ;;   (setq-local completion-at-point-functions
-;;   ;;               (list (cape-capf-super
-;;   ;;                      #'eglot-completion-at-point
-;;   ;;                      #'cape-file))))
-;;   ;; :hook
-;;   ;; (eglot-managed-mode . #'eon-eglot-capf-super)
-;;   :bind
-;;   ("C-c p f" . cape-file))
-
-(use-package cape
-  :ensure t
-  :init
-  (defun eon-capf/eshell ()
-    "Eshell: pcomplete + files, combined."
-    (setq-local completion-at-point-functions
-                (list (cape-capf-super
-                       #'pcomplete-completions-at-point
-                       #'cape-file))))
-
-  (defun eon-capf/shell ()
-    "M-x shell: comint completion + files, combined."
-    (setq-local completion-at-point-functions
-                (list (cape-capf-super
-                       #'comint-completion-at-point
-                       #'cape-file))))
-
-  (defun eon-capf/repl ()
-    "Other comint REPLs: keep capfs, but ensure files are available."
-    (unless (derived-mode-p 'shell-mode)
-      (setq-local completion-at-point-functions
-                  (if (memq #'cape-file completion-at-point-functions)
-                      completion-at-point-functions
-                    (cons #'cape-file
-                          completion-at-point-functions)))))
-
-  ;; :hook
-  ;; (eshell-mode . eon-capf/eshell)
-  ;; (shell-mode  . eon-capf/shell)
-  ;; ;; Cover comint REPLs (e.g. inferior-*, sql, etc.), but not shell-mode
-  ;; (comint-mode . eon-capf/repl)
-  )
+  ;; Add to the global default value of `completion-at-point-functions' which is
+  ;; used by `completion-at-point'.
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'cape-elisp-block))
 
 ;;  ____________________________________________________________________________
 ;;; COPY / PASTE
@@ -286,37 +155,108 @@ Adapted from Doom Emacs")
 ;; Copy/paste between TUI Emacs and graphical apps.
 ;; Installs and loads only if Emacs really runs in the terminal emulator.
 ;; <https://elpa.gnu.org/packages/xclip.html>
-(use-package emacs
+(use-package emacs :ensure nil
   :functions (xclip-mode)
   :preface
-  (defun eon--xclip-ensure-on-tty (&optional frame)
+  (defun eon-xclip--ensure-on-tty (&optional frame)
     (with-selected-frame (or frame (selected-frame))
       (unless (display-graphic-p)
         (use-package xclip :ensure t
           :demand t
           :config (xclip-mode 1)))))
   :hook
-  (window-setup . eon--xclip-ensure-on-tty)
-  (after-make-frame-functions . eon--xclip-ensure-on-tty))
+  (window-setup . eon-xclip--ensure-on-tty)
+  (after-make-frame-functions . eon-xclip--ensure-on-tty))
 
 ;; No empty lines etc. in the kill ring
 ;; <https://github.com/NicholasBHubbard/clean-kill-ring.el>
 (use-package clean-kill-ring :ensure t
   :config
-  (clean-kill-ring-mode 1))
+  (clean-kill-ring-mode))
 
 ;;  ____________________________________________________________________________
 ;;; UNDO / REDO
 
 (use-package undo-fu :ensure t)
 
-;; Keep your undo/redo history even if you close the file and shutdown Emacs
+;; Keep the undo/redo history even if you close the file and shutdown Emacs
 (use-package undo-fu-session :ensure t
   :custom
   (undo-fu-session-incompatible-files
    '("\\.gpg$" "/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'"))
   :config
-  (undo-fu-session-global-mode 1))
+  (undo-fu-session-global-mode))
+
+;;  ____________________________________________________________________________
+;; PARENTHESIS DISPLAY
+
+;; Color-code nested parens …
+;; <https://github.com/Fanael/rainbow-delimiters>
+(use-package rainbow-delimiters :ensure t
+  :hook
+  ((prog-mode conf-mode) . rainbow-delimiters-mode))
+
+;; … and/or make parens styleable, e.g. more or less prominent
+;; <https://github.com/tarsius/paren-face>
+;; (use-package paren-face
+;;   :hook
+;;   (prog-mode . paren-face-mode))
+
+;;  ____________________________________________________________________________
+;; INDENTATION
+;; <https://github.com/Malabarba/aggressive-indent-mode>
+
+(use-package aggressive-indent :ensure t
+  :diminish aggressive-indent-mode
+  :init
+  (global-aggressive-indent-mode 1))
+
+;;  ____________________________________________________________________________
+;;; NAVIGATION
+
+;;; Goto visible character
+(use-package avy :ensure t
+  :bind
+  (:map ctl-z-g-map
+        ("g" . avy-goto-char-2)))
+
+;;; Goto last change
+;; <https://github.com/emacs-evil/goto-chg>
+(use-package goto-chg :ensure t
+  :bind
+  (:map prog-mode-map
+        ("M-p" . goto-last-change)
+        ("M-n" . goto-last-change-reverse))
+  (:map text-mode-map
+        ("M-p" . goto-last-change)
+        ("M-n" . goto-last-change-reverse)))
+
+;;  ____________________________________________________________________________
+;;; COLOR NAMES
+;; <https://elpa.gnu.org/packages/rainbow-mode.html>
+
+;; Colorize color names and hex codes in arbitrary buffers
+(use-package rainbow-mode :ensure t
+  :diminish
+  :defer t
+  :bind
+  (:map ctl-z-x-map
+        ("c" . rainbow-mode)))
+
+;;  ____________________________________________________________________________
+;;; GIT-GUTTER
+
+;; <https://github.com/emacsorphanage/git-gutter>
+(use-package git-gutter :ensure t
+  :diminish
+  :config
+  (global-git-gutter-mode))
+
+;; <https://github.com/emacsorphanage/git-gutter-fringe>
+(use-package git-gutter-fringe :ensure t
+  :after git-gutter
+  :custom
+  (git-gutter-fr:side 'left-fringe))
 
 ;;  ____________________________________________________________________________
 ;;; DIRED
@@ -326,18 +266,18 @@ Adapted from Doom Emacs")
 ;; <https://github.com/mattiasb/dired-hide-dotfiles>
 (use-package dired-hide-dotfiles :ensure t
   :diminish
-  :config
-  (setq dired-hide-dotfiles-verbose nil)
+  :custom
+  (dired-hide-dotfiles-verbose nil)
   :hook
   (dired-mode . dired-hide-dotfiles-mode)
   :bind
-  (:map dired-mode-map
-        ("." . dired-hide-dotfiles-mode)))
+  (:map eon-localleader-dired-map
+        ("h" . dired-hide-dotfiles-mode)))
 
 ;; Filter Dired listings
 (use-package dired-narrow :ensure t
   :bind
-  (:map dired-mode-map
+  (:map eon-localleader-dired-map
         ("/" . dired-narrow-regexp)))
 
 ;; Ranger-like features
@@ -359,17 +299,61 @@ Adapted from Doom Emacs")
         ("<backtab>" . dired-subtree-cycle)))
 
 ;;  ____________________________________________________________________________
+;;; GREP / RIPGREP
+;; <https://github.com/BurntSushi/ripgrep>
+;; Ripgrep must be installed on your computer for this to work
+
+;; <https://github.com/dajva/rg.el>
+(when (executable-find "rg")
+  (use-package rg :ensure t
+    :custom
+    ;; Inject Ripgrep into the `project-switch-commands' dispatch menu
+    (project-switch-commands
+     (cl-substitute '(rg-project "Ripgrep" ?g) 'project-find-regexp
+                    project-switch-commands
+                    :key #'car :test #'eq))
+    :bind
+    (:map ctl-z-s-map
+          ("G" . rg))))
+
+;; <https://github.com/mhayashi1120/Emacs-wgrep/>
+(use-package wgrep :ensure t)
+
+;;  ____________________________________________________________________________
 ;;; SHELL / TERMINAL
 
 ;; <https://codeberg.org/akib/emacs-eat>
 ;; <https://elpa.nongnu.org/nongnu-devel/doc/eat.html>
+;; To setup shell integration for GNU Bash, insert at the end of your .bashrc:
+;; [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
+;; source "$EAT_SHELL_INTEGRATION_DIR/bash"
+;; For Zsh, put the following in your .zshrc:
+;; [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
+;; source "$EAT_SHELL_INTEGRATION_DIR/zsh"
+
 (use-package eat :ensure t
   :custom
   (eat-term-name "xterm-256color")
   (eat-kill-buffer-on-exit t)
   :config
-  ;; Run Eshell always in Eat?
-  (eat-eshell-mode)
+  ;; make C-u work in Eat terminals like in normal terminals
+  (delete [?\C-u] eat-semi-char-non-bound-keys)
+  ;; ditto for C-g
+  (delete [?\C-g] eat-semi-char-non-bound-keys)
+  (eat-update-semi-char-mode-map)
+  ;; Awkward workaround for the need to call eat-reload after changing
+  ;; Eat's keymaps, but reloading from :config section causes infinite recursion
+  ;; because :config wraps with-eval-after-load.
+  (defvar eat--prevent-use-package-config-recursion nil)
+  (unless eat--prevent-use-package-config-recursion
+    (setq eat--prevent-use-package-config-recursion t)
+    (eat-reload))
+  (makunbound 'eat--prevent-use-package-config-recursion)
+  :hook
+  ;; Run Eshell always in eat: `eat-eshell-mode'.
+  (eshell-load . eat-eshell-mode)
+  ;; Run TUI programs in Eshell: `eat-eshell-visual-command-mode'.
+  (eshell-load . eat-eshell-visual-command-mode)
   :bind
   (:map ctl-z-e-map
         ;; Terminal emulator
@@ -384,115 +368,6 @@ Adapted from Doom Emacs")
   (use-package fish-mode :ensure t))
 
 ;;  ____________________________________________________________________________
-;;; GREP / RIPGREP
-;; <https://github.com/BurntSushi/ripgrep>
-;; Ripgrep must be installed on your computer for this to work
-
-;; <https://github.com/dajva/rg.el>
-(when (executable-find "rg")
-  (use-package rg :ensure t
-    :defer t
-    :bind
-    (:map ctl-z-s-map
-          ("r" . rg))))
-
-;; <https://github.com/mhayashi1120/Emacs-wgrep/>
-(use-package wgrep :ensure t
-  :defer t)
-
-;;  ____________________________________________________________________________
-;;; MAGIT
-;; <https://magit.vc/>
-
-(use-package magit :ensure t
-  :defer t
-  :custom
-  ;; How many directoriess deep Magit looks for Git repos
-  (magit-repository-directories '(("~/" . 1)))
-  :config
-  (defun eon-magit-kill-buffers ()
-    "Restore window configuration and kill all Magit buffers."
-    (interactive)
-    (let ((buffers (magit-mode-get-buffers)))
-      (magit-restore-window-configuration)
-      (mapc #'kill-buffer buffers)))
-  :bind
-  (:map ctl-z-v-map
-        ("v" . magit-project-status)
-        ("f" . magit-file-dispatch)
-        ("g" . magit-dispatch)
-        ("k" . eon-magit-kill-buffers)))
-
-;;  ____________________________________________________________________________
-;;; GIT-GUTTER
-
-;; <https://github.com/emacsorphanage/git-gutter>
-(use-package git-gutter :ensure t
-  :defer t
-  :diminish
-  :hook
-  ((text-mode prog-mode) . git-gutter-mode))
-
-;; <https://github.com/emacsorphanage/git-gutter-fringe>
-(use-package git-gutter-fringe :ensure t
-  :after git-gutter
-  :custom
-  (git-gutter-fr:side 'left-fringe))
-
-;;  ____________________________________________________________________________
-;; PARENTHESIS DISPLAY
-
-;; Color-code nested parens …
-;; <https://github.com/Fanael/rainbow-delimiters>
-(use-package rainbow-delimiters :ensure t
-  :defer t
-  :hook
-  ((prog-mode conf-mode) . rainbow-delimiters-mode))
-
-;; … and/or make parens styleable, e.g. more or less prominent
-;; <https://github.com/tarsius/paren-face>
-;; (use-package paren-face
-;;   :defer t
-;;   :hook
-;;   (prog-mode . paren-face-mode))
-
-;;  ____________________________________________________________________________
-;;; COLOR NAMES
-;; <https://elpa.gnu.org/packages/rainbow-mode.html>
-
-;; Colorize color names in arbitrary buffers
-(use-package rainbow-mode :ensure t
-  :diminish
-  :defer t
-  :bind
-  (:map ctl-z-x-map
-        ("c" . rainbow-mode)))
-
-;;  ____________________________________________________________________________
-;; INDENTATION
-;; <https://github.com/Malabarba/aggressive-indent-mode>
-
-(use-package aggressive-indent :ensure t
-  :defer t
-  :diminish aggressive-indent-mode
-  :hook
-  ((prog-mode conf-mode) . aggressive-indent-mode))
-
-;;  ____________________________________________________________________________
-;;; GOTO LAST CHANGE
-;; <https://github.com/emacs-evil/goto-chg>
-
-(use-package goto-chg :ensure t
-  :defer t
-  :bind
-  (:map prog-mode-map
-        ("M-p" . goto-last-change)
-        ("M-n" . goto-last-change-reverse))
-  (:map text-mode-map
-        ("M-p" . goto-last-change)
-        ("M-n" . goto-last-change-reverse)))
-
-;;  ____________________________________________________________________________
 ;;; ORG MODE EXTENSIONS
 
 ;; <https://github.com/alphapapa/org-sticky-header>
@@ -502,7 +377,8 @@ Adapted from Doom Emacs")
     "Enable org-sticky-header unless in *scratch* buffer."
     (unless (string= (buffer-name) "*scratch*")
       (org-sticky-header-mode 1)))
-  :hook (org-mode . eon-org--sticky-header-maybe))
+  :hook
+  (org-mode . eon-org--sticky-header-maybe))
 
 ;;  ____________________________________________________________________________
 ;;; MARKUP- / SERIALIZATION FORMATS
@@ -524,9 +400,6 @@ Adapted from Doom Emacs")
   :hook
   ;; Turn on visual word wrapping
   (markdown-mode . visual-line-mode))
-
-;; <https://github.com/yoshiki/yaml-mode>
-(use-package yaml-mode :ensure t)
 
 ;;  ____________________________________________________________________________
 ;;; LISP

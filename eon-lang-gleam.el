@@ -1,11 +1,9 @@
-;;; eon-gleam.el --- Gleam -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-lang-gleam.el --- Gleam -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
-;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/eon-gleam.el")'.
-
+;;
 ;;; Code:
 
 ;;  ____________________________________________________________________________
@@ -13,11 +11,10 @@
 ;; <https://github.com/gleam-lang/gleam-mode>
 
 (use-package gleam-ts-mode :ensure t
+  :init
+  (eon-treesitter-ensure-grammar
+   '(gleam "https://github.com/gleam-lang/tree-sitter-gleam"))
   :mode (rx ".gleam" eos))
-
-;; Unless you have the Gleam tree-sitter grammar installed and treesit knows
-;; where to find it, you'll want to run M-x gleam-ts-install-grammar. It should
-;; only take a moment, but does require that your OS has a C compiler available.
 
 ;;  ____________________________________________________________________________
 ;;; REPL
@@ -31,14 +28,12 @@
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
 ;; Common keybindings are configured in `./eon-core.el'
 
-;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; GLEAM LSP
 ;; <https://gleam.run/language-server>
 
 (use-package eglot :ensure nil
   :custom
   ;; A longer timeout seems required for the first run in a new project
-  (eglot-connect-timeout 60)            ; default: 30
+  (eglot-connect-timeout 60)  ; default: 30
   :config
   (add-to-list 'eglot-server-programs
                '((gleam-ts-mode) . ("gleam" "lsp")))
@@ -61,12 +56,6 @@
 ;;   ((gleam-ts-mode) . mix-minor-mode))
 
 ;;  ____________________________________________________________________________
-;;; ERLANG
-;; <https://www.erlang.org/doc/apps/tools/erlang_mode_chapter.html>
-
-(use-package erlang :ensure t)
-
-;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
 
 ;; Rainbow-delimiters color-coding of nested parens is already enabled
@@ -79,5 +68,5 @@
 ;;   (gleam-ts-mode . paren-face-mode))
 
 ;; _____________________________________________________________________________
-(provide 'eon-gleam)
-;;; eon-gleam.el ends here
+(provide 'eon-lang-gleam)
+;;; eon-lang-gleam.el ends here

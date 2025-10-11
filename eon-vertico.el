@@ -19,11 +19,6 @@
   (fido-vertical-mode -1)
   (icomplete-mode -1)
   (icomplete-vertical-mode -1)
-  ;; Enable Vertico
-  (vertico-mode)
-  ;; How to display Vertico per default?
-  (vertico-multiform-mode)
-  ;; (vertico-buffer-mode)
   :custom
   ;; Display certain listings in another form?
   (vertico-multiform-commands '((consult-imenu buffer)
@@ -34,16 +29,22 @@
   (vertico-count 12)
   (vertico-resize 'grow-only)
   ;; Enable cycling for `vertico-next' and `vertico-previous'?
-  (vertico-cycle nil))
+  (vertico-cycle nil)
+  :config
+  ;; Enable Vertico
+  (vertico-mode)
+  ;; How to display Vertico per default?
+  (vertico-multiform-mode))
 
 ;; Use `consult-completion-in-region' if a vertical completion is enabled.
 ;; Otherwise use the default `completion--in-region' function.
-(setq completion-in-region-function
-      (lambda (&rest args)
-        (apply (if (or vertico-mode fido-vertical-mode)
-                   #'consult-completion-in-region
-                 #'completion--in-region)
-               args)))
+(when (eon-modulep 'consult)
+  (setq completion-in-region-function
+        (lambda (&rest args)
+          (apply (if (or vertico-mode fido-vertical-mode)
+                     #'consult-completion-in-region
+                   #'completion--in-region)
+                 args))))
 
 ;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; EMACS (built-in)
@@ -60,28 +61,7 @@
                    crm-separator)
                   (car args))
           (cdr args)))
-  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
-
-  ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
-  ;; Vertico commands are hidden in normal buffers
-  (setq read-extended-command-predicate
-        #'command-completion-default-include-p))
-
-;;;  ____________________________________________________________________________
-;;; MARGINALIA
-;; <https://github.com/minad/marginalia>
-
-;; Enable rich annotations using the Marginalia package
-(use-package marginalia :ensure t
-  :init
-  ;; The :init configuration is always executed (not lazy).
-  ;; Must be in the :init section of use-package such that the mode gets
-  ;; enabled right away. Note that this forces loading the package.
-  (marginalia-mode)
-  :bind
-  ;; Either bind `marginalia-cycle' globally or only in the minibuffer
-  (:map minibuffer-local-map
-        ("M-A" . marginalia-cycle)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator))
 
 ;;  ____________________________________________________________________________
 (provide 'eon-vertico)

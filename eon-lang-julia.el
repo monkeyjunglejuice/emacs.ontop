@@ -1,4 +1,4 @@
-;;; eon-julia.el --- Julia -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-lang-julia.el --- Julia -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
@@ -9,19 +9,14 @@
 ;;; Code:
 
 ;;  ____________________________________________________________________________
-;;; JULIA TREESITTER MODE
+;;; JULIA MODE
 ;; <https://github.com/ronisbr/julia-ts-mode>
 
 (use-package julia-ts-mode :ensure t
-  :mode "\\.jl$")
-
-;; In order to use Tree Sitter, install the tree-sitter binary with your OS
-;; package manager. Then install the language grammar via
-;; 'M-x treesit-install-language-grammar' or 'M-x eon-treesit-install-missing'.
-(use-package treesit :ensure nil
-  :config
+  :init
   (eon-treesitter-ensure-grammar
-   '(julia "https://github.com/tree-sitter/tree-sitter-julia" nil nil)))
+   '(julia "https://github.com/tree-sitter/tree-sitter-julia"))
+  :mode "\\.jl$")
 
 ;;  ____________________________________________________________________________
 ;;; JULIA SNAIL
@@ -30,40 +25,16 @@
 
 (use-package julia-snail :ensure t
   :custom
-  ;; Needs a terminal emulator within Emacs; alternative: vterm
+  ;; Julia Snail requires a terminal emulator within Emacs for the REPL
   (julia-snail-terminal-type :eat)
   ;; Print the result of evaluating code to the REPL
-  (julia-snail-repl-display-eval-results t)  ; `nil' to disable
+  (julia-snail-repl-display-eval-results t)  ; nil to disable
   ;; Show result of evaluating code in the source buffer
-  (julia-snail-popup-display-eval-results nil)  ; `:command', `:change' or `nil'
+  (julia-snail-popup-display-eval-results nil)  ; :command, :change or nil
   ;; The default works with Consult and Helm
-  (julia-snail-imenu-style :module-tree)  ; `:module-tree', `:flat' or `nil'
+  (julia-snail-imenu-style :module-tree)  ; :module-tree, :flat or nil
   :hook
   (julia-ts-mode . julia-snail-mode))
-
-;;  ____________________________________________________________________________
-;;; EAT
-;; <https://codeberg.org/akib/emacs-eat>
-;; <https://elpa.nongnu.org/nongnu-devel/doc/eat.html>
-;; Julia Snail requires a terminal emulator within Emacs for the REPL
-
-(use-package eat :ensure t
-  :custom
-  (eat-kill-buffer-on-exit t)
-  :config
-  ;; make C-u work in Eat terminals like in normal terminals
-  (delete [?\C-u] eat-semi-char-non-bound-keys)
-  ;; ditto for C-g
-  (delete [?\C-g] eat-semi-char-non-bound-keys)
-  (eat-update-semi-char-mode-map)
-  ;; XXX: Awkward workaround for the need to call eat-reload after changing
-  ;; Eat's keymaps, but reloading from :config section causes infinite recursion
-  ;; because :config wraps with-eval-after-load.
-  (defvar eat--prevent-use-package-config-recursion nil)
-  (unless eat--prevent-use-package-config-recursion
-    (setq eat--prevent-use-package-config-recursion t)
-    (eat-reload))
-  (makunbound 'eat--prevent-use-package-config-recursion))
 
 ;;  ____________________________________________________________________________
 ;;; EGLOT LANGUAGE SERVER
@@ -94,12 +65,6 @@
   :hook
   (julia-snail-mode . rainbow-delimiters-mode))
 
-;; Make parens styleable, e.g. more or less prominent
-;; <https://github.com/tarsius/paren-face>
-;; (use-package paren-face
-;;   :hook
-;;   ((julia-ts-mode julia-snail-mode) . paren-face-mode))
-
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://orgmode.org/worg/org-contrib/babel/index.html>
@@ -115,5 +80,5 @@
                                org-babel-load-languages))
 
 ;;  ____________________________________________________________________________
-(provide 'eon-julia)
-;;; eon-julia.el ends here
+(provide 'eon-lang-julia)
+;;; eon-lang-julia.el ends here

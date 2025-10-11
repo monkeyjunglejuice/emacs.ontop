@@ -1,11 +1,9 @@
-;;; eon-racket.el --- Racket -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-lang-racket.el --- Racket -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
-;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/eon-racket.el")'.
-
+;;
 ;;; Code:
 
 ;;  ____________________________________________________________________________
@@ -14,7 +12,7 @@
 
 (use-package racket-mode :ensure t
   :init
-  ;; Use `racket-hash-lang-mode' for other syntax
+  ;; Use `racket-hash-lang-mode' for other syntaxes
   (add-to-list 'auto-mode-alist '("\\.scrbl\\'" . racket-hash-lang-mode))
   (add-to-list 'auto-mode-alist '("\\.rhm\\'" . racket-hash-lang-mode))
   :custom
@@ -65,5 +63,5 @@
 ;;                                org-babel-load-languages))
 
 ;;  ____________________________________________________________________________
-(provide 'eon-racket)
-;;; eon-racket.el ends here
+(provide 'eon-lang-racket)
+;;; eon-lang-racket.el ends here

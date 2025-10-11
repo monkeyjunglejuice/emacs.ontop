@@ -1,4 +1,4 @@
-;;; eon-lua.el --- Lua -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-lang-lua.el --- Lua -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
@@ -9,12 +9,11 @@
 ;;  ____________________________________________________________________________
 ;;; LUA TS MODE
 
-(eon-treesitter-ensure-grammar
- '(lua "https://github.com/tree-sitter-grammars/tree-sitter-lua"))
-
 (use-package lua-ts-mode :ensure nil
   :defer t
   :init
+  (eon-treesitter-ensure-grammar
+   '(lua "https://github.com/tree-sitter-grammars/tree-sitter-lua"))
   (add-to-list 'major-mode-remap-alist '(lua-mode . lua-ts-mode))
   :mode "\\.lua\\'"
   :interpreter "lua"
@@ -51,5 +50,5 @@
                                org-babel-load-languages))
 
 ;;  ____________________________________________________________________________
-(provide 'eon-lua)
-;;; eon-lua.el ends here
+(provide 'eon-lang-lua)
+;;; eon-lang-lua.el ends here

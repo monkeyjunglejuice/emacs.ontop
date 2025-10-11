@@ -3,9 +3,7 @@
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
-;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/eon-meow.el")'.
-
+;;
 ;;; Code:
 
 ;;  ____________________________________________________________________________

@@ -1,11 +1,9 @@
-;;; eon-lfe.el --- Lisp Flavoured Erlang -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-lang-lfe.el --- Lisp Flavoured Erlang -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
-;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/eon-lfe.el")'.
-
+;;
 ;;; Code:
 
 ;;  ____________________________________________________________________________
@@ -13,36 +11,13 @@
 ;; <https://github.com/lfe/lfe>
 ;; <https://github.com/lfe/rebar3>
 
-;; Personal Elisp directory
-(add-to-list 'load-path (expand-file-name "~/code/lfe/emacs/"))
-(require 'lfe-start)
-
-(use-package inferior-lfe :ensure t
-  :load-path "~/code/lfe/emacs/"
+(use-package lfe-mode :ensure t
   :custom
   (inferior-lfe-program "lfe")
   (inferior-lfe-program-options '("-nobanner"))
   :config
   (setq inferior-lfe-check-if-rebar-project t)
-  (setq inferior-lfe-indent-on-Cj t)
-  (setq comint-process-echoes nil))
-
-(use-package lfe-indent :ensure t
-  :load-path "~/code/lfe/emacs/")
-
-(use-package lfe-mode :ensure t
-  :load-path "~/code/lfe/emacs/")
-
-(use-package lfe-start :ensure t
-  :load-path "~/code/lfe/emacs/"
-  :requires (inferior-lfe lfe-indent lfe-mode))
-
-;;  ____________________________________________________________________________
-;;; ERLANG
-;; <https://www.erlang.org/doc/apps/tools/erlang_mode_chapter.html>
-
-(use-package erlang :ensure t
-  :defer t)
+  (setq inferior-lfe-indent-on-Cj t))
 
 ;;  ____________________________________________________________________________
 ;;; STRUCTURAL EDITING
@@ -51,16 +26,16 @@
 ;; <https://github.com/Fuco1/smartparens>
 ;; <https://smartparens.readthedocs.io/en/latest/>
 
-(use-package smartparens
-  :when (featurep 'eon-smartparens)
-  :config
-  ;; As of version 20240713.1002, smartparens doesn't recognize LFE as a lisp,
-  ;; so let's add it manually
-  (add-to-list 'sp-lisp-modes 'lfe-mode)
-  (add-to-list 'sp-lisp-modes 'inferior-lfe-mode)
-  :hook
-  (lfe-mode . smartparens-strict-mode)
-  (inferior-lfe-mode . smartparens-mode))
+(when (eon-modulep 'eon-smartparens)
+  (use-package smartparens
+    :config
+    ;; As of version 20240713.1002, smartparens doesn't recognize LFE as a Lisp,
+    ;; so let's add it manually
+    (add-to-list 'sp-lisp-modes 'lfe-mode)
+    (add-to-list 'sp-lisp-modes 'inferior-lfe-mode)
+    :hook
+    (lfe-mode . smartparens-strict-mode)
+    (inferior-lfe-mode . smartparens-mode)))
 
 ;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
@@ -83,7 +58,7 @@
 ;; Notebook-like literate programming in Emacs
 ;; Evaluate LFE code in Org source code blocks via "C-c C-c"
 
-;; TODO -- not working, package might be outdated
+;; TODO Not working, package might be outdated
 ;; <https://github.com/zweifisch/ob-lfe>
 ;; (use-package ob-lfe)
 
@@ -94,5 +69,5 @@
 ;;                                org-babel-load-languages))
 
 ;;  ____________________________________________________________________________
-(provide 'eon-lfe)
-;;; eon-lfe.el ends here
+(provide 'eon-lang-lfe)
+;;; eon-lang-lfe.el ends here

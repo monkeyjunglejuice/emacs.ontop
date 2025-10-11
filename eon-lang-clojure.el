@@ -1,10 +1,8 @@
-;;; eon-clojure.el --- Clojure -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-lang-clojure.el --- Clojure -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
-;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/eon-clojure.el")'.
 ;;
 ;;; Code:
 
@@ -34,11 +32,10 @@
 ;; SMARTPARENS
 ;; <https://github.com/Fuco1/smartparens>
 ;; <https://smartparens.readthedocs.io/en/latest/>
-
-(use-package smartparens :ensure t
-  :when (featurep 'eon-smartparens)
-  :hook
-  (clojure-ts-mode . smartparens-strict-mode))
+(when (eon-modulep 'eon-smartparens)
+  (use-package smartparens :ensure t
+    :hook
+    (clojure-ts-mode . smartparens-strict-mode)))
 
 ;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
@@ -62,11 +59,12 @@
 
 ;; Evaluate Clojure code in Org source code blocks via "C-c C-c"
 (use-package org :ensure nil
+  
   :config
   (add-to-list 'org-babel-load-languages '(clojure . t))
   (org-babel-do-load-languages 'org-babel-load-languages
                                org-babel-load-languages))
 
 ;; _____________________________________________________________________________
-(provide 'eon-clojure)
-;;; eon-clojure.el ends here
+(provide 'eon-lang-clojure)
+;;; eon-lang-clojure.el ends here

@@ -1,18 +1,16 @@
-;;; eon-ocaml.el --- OCaml -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-lang-ocaml.el --- OCaml -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
-;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/eon-ocaml.el")'
 ;;
-;; The aim of Emacs ONTOP is to provide a comprehensive OCaml setup.
+;; The aim is to provide a comprehensive OCaml setup.
 ;; Using this module, you will not need to load `opam-user-setup.el'
 ;; in Emacs, because the functionality is already included here.
 ;; It's nevertheless a good idea to install "user-setup" package
 ;; via "opam install user-setup" or `opam-install-dev-packages',
 ;; because some of its dependencies are quite useful.
-
+;;
 ;;; Code:
 
 ;;  ____________________________________________________________________________
@@ -198,12 +196,6 @@
   :hook
   (tuareg-interactive-mode . rainbow-delimiters-mode))
 
-;; Make parens styleable, e.g. more or less prominent
-;; <https://github.com/tarsius/paren-face>
-;; (use-package paren-face
-;;   :hook
-;;   ((tuareg-mode tuareg-interactive-mode) . paren-face-mode))
-
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://orgmode.org/worg/org-contrib/babel/index.html>
@@ -221,5 +213,5 @@
                                org-babel-load-languages))
 
 ;;  ____________________________________________________________________________
-(provide 'eon-ocaml)
-;;; eon-ocaml.el ends here
+(provide 'eon-lang-ocaml)
+;;; eon-lang-ocaml.el ends here

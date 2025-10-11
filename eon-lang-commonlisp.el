@@ -1,4 +1,4 @@
-;;; eon-commonlisp.el --- Common Lisp / Sly  -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-lang-commonlisp.el --- Common Lisp / Sly  -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
@@ -23,9 +23,11 @@
 (use-package sly :ensure t
   :init
   ;; Create local leader maps
-  (eon-localleader-defkeymap sly-editing-mode eon-localleader-sly-editing-mode-map
+  (eon-localleader-defkeymap
+      sly-editing-mode eon-localleader-sly-editing-map
     :doc "Local leader keymap for `sly-editing-mode'.")
-  (eon-localleader-defkeymap sly-mrepl-mode eon-localleader-slime-mrepl-mode-map
+  (eon-localleader-defkeymap
+      sly-mrepl-mode eon-localleader-sly-mrepl-map
     :doc "Local leader keymap for `sly-mrepl-mode'.")
   ;; Set Sly Lisp implementations
   (setq sly-lisp-implementations
@@ -53,7 +55,7 @@
   :bind
   (:map ctl-z-e-map
         ("l" . sly))
-  (:map eon-localleader-sly-editing-mode-map
+  (:map eon-localleader-sly-editing-map
         ;; TODO Add ergonomic keybindings
         ("c" . sly-compile-defun)))
 
@@ -91,11 +93,12 @@
 ;; <https://github.com/Fuco1/smartparens>
 ;; <https://smartparens.readthedocs.io/en/latest/>
 
-(use-package smartparens :ensure t
-  :when (featurep 'eon-smartparens)
-  :hook
-  (sly-editing-mode . smartparens-strict-mode)
-  (sly-mrepl-mode . smartparens-mode))
+(when (eon-modulep 'eon-smartparens)
+  (use-package smartparens :ensure t
+    :when (featurep 'eon-smartparens)
+    :hook
+    (sly-editing-mode . smartparens-strict-mode)
+    (sly-mrepl-mode . smartparens-mode)))
 
 ;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
@@ -131,5 +134,5 @@
                                org-babel-load-languages))
 
 ;;  ____________________________________________________________________________
-(provide 'eon-commonlisp)
-;;; eon-commonlisp.el ends here
+(provide 'eon-lang-commonlisp)
+;;; eon-lang-commonlisp.el ends here

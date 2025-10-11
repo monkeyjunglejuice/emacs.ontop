@@ -3,9 +3,7 @@
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
-;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/eon-snippets.el")'.
-
+;;
 ;;; Code:
 
 ;;  ____________________________________________________________________________
@@ -25,11 +23,11 @@
   :defer t)
 
 ;; <https://github.com/elken/yasnippet-capf>
-;; (use-package yasnippet-capf
-;;   :after cape
-;;   :config
-;;   (add-to-list 'completion-at-point-functions #'yasnippet-capf))
+(use-package yasnippet-capf :ensure t
+  :after cape
+  :config
+  (add-to-list 'completion-at-point-functions #'yasnippet-capf))
 
 ;;  ____________________________________________________________________________
 (provide 'eon-snippets)
-;;; eon-snippts.el ends here
+;;; eon-snippets.el ends here

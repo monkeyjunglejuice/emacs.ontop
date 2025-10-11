@@ -3,9 +3,7 @@
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
-;; You can also use this file/configuration independently from Emacs ONTOP
-;; Load it from anywhere via `(load-file "/path/to/eon-helix.el")'.
-
+;;
 ;;; Code:
 
 ;;  ____________________________________________________________________________
@@ -35,17 +33,6 @@
   :custom
   (which-key-idle-delay 0.25)
   (which-key-idle-secondary-delay 0.0))
-
-;;  ____________________________________________________________________________
-;;; STRUCTURAL EDITING
-;; <https://github.com/noctuid/lispyville>
-
-(use-package lispyville :ensure t
-  :diminish
-  :hook
-  ((prog-mode conf-mode) . lispyville-mode)
-  (smartparens-mode . (lambda ()
-                        (lispyville-mode -1))))
 
 ;;  ____________________________________________________________________________
 (provide 'eon-helix)
