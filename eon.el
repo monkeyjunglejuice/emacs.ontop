@@ -1,4 +1,4 @@
-;;; eon.el --- Emacs ONboard Starter Kit -*- lexical-binding: t; -*-
+;;; eon.el --- Emacs ONBOARD Starter Kit -*- lexical-binding: t; -*-
 
 ;;    ▒░▒░▒░   ▒░     ▒░ ▒░▒░▒░▒░     ▒░▒░▒░      ▒░    ▒░▒░▒░▒░    ▒░▒░▒░▒░
 ;;   ▒░    ▒░  ▒░▒░   ▒░  ▒░     ▒░  ▒░    ▒░    ▒░▒░    ▒░     ▒░   ▒░    ▒░
@@ -8,18 +8,18 @@
 ;;   ▒░    ▒░  ▒░     ▒░  ▒░     ▒░  ▒░    ▒░ ▒░      ▒░ ▒░     ▒░   ▒░    ▒░
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 
-;; Emacs ONboard offers a clean slate to build your personal Emacs config.
+;; Emacs ONBOARD offers a clean slate to build your personal Emacs config.
 ;; It stays as close as possible to vanilla Emacs, but offers some convenience
 ;; and a much better user experience, while only relying on built-in packages.
 
 ;; Copyright (C) 2021–2025 Dan Dee
 ;;
-;; Emacs ONboard is free software: you can redistribute it and/or modify it
+;; Emacs ONBOARD is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
 ;; Software Foundation, either version 3 of the License, or (at your option) any
 ;; later version.
 ;;
-;; Emacs ONboard is distributed in the hope that it will be useful, but WITHOUT
+;; Emacs ONBOARD is distributed in the hope that it will be useful, but WITHOUT
 ;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 ;; FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
 ;; details.
@@ -31,7 +31,7 @@
 ;; Maintainer: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Created: 28 Apr 2021
-;; Version: 2.1.4
+;; Version: 2.1.5
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
 ;; Keywords: config dotemacs convenience
@@ -159,16 +159,23 @@ The timer can be canceled with `eon-cancel-gc-timer'.")
 ;; Prevents from interrupted compilations and leftover artifacts.
 (setopt native-comp-async-query-on-exit t)
 
-;; When to bring the buffer to the foreground?
-(setopt warning-minimum-level :error)
+;; This options are not set if Emacs is started via "emacs --debug-init"
+(unless init-file-debug
+  (setopt
+   ;; When to bring the buffer to the foreground?
+   warning-minimum-level :error
+   ;; Reduce bytecode compilation verbosity?
+   byte-compile-verbose nil
+   byte-compile-warnings nil
+   ;; Reduce native code compilation verbosity?
+   native-comp-async-report-warnings-errors nil
+   native-comp-warning-on-missing-source nil))
 
-;; Reduce bytecode compilation verbosity?
-(setopt byte-compile-verbose nil)
-(setopt byte-compile-warnings nil)
+;; _____________________________________________________________________________
+;;; DEBUGGING AND ERROR HANDLING
 
-;; Reduce native code compilation verbosity?
-(setopt native-comp-async-report-warnings-errors nil)
-(setopt native-comp-warning-on-missing-source nil)
+(when init-file-debug
+  (setopt debug-on-error t))
 
 ;; _____________________________________________________________________________
 ;;; EMACS SYSTEM LIMITS
@@ -185,100 +192,13 @@ The timer can be canceled with `eon-cancel-gc-timer'.")
 (setopt read-process-output-max (* 1024 1024))  ; 1 MB
 
 ;; _____________________________________________________________________________
-;;; DEFAULT AND INITIAL FRAME
-
-;; In Emacs terminology, a "frame" means the ordinary "desktop window";
-;; while "window" refers to tiled panels within an Emacs frame. Why?
-;; Because Emacs had it first, and today's convention what "window" means
-;; appeared later.
-;; In order to define properties generally, add them to `default-frame-alist';
-;; to affect only the first frame created, add them to `initial-frame-alist'.
-
-;; Either start Emacs maximized …
-;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
-
-;; … or set the default width of the Emacs frame in characters
-(add-to-list 'default-frame-alist '(width . 80))
-
-;; … and set the default height of the Emacs frame in lines
-(add-to-list 'default-frame-alist '(height . 32))
-
-;; Horizontal position: set the distance from the left screen edge in pixels
-;; That way, only the first frame created will get a fixed position:
-;; (add-to-list 'initial-frame-alist '(left . 0))
-
-;; Vertical position: set the distance from the top screen edge in pixels
-;; That way, only the first frame created will get a fixed position:
-;; (add-to-list 'initial-frame-alist '(top . 0))
-
-;; Fringe: choose on which sides (not) to show it
-;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Fringes>
-;; (add-to-list 'default-frame-alist '(right-fringe . 0))
-
-;; Bring frame to the front
-(add-hook 'window-setup-hook
-          (lambda ()
-            (when (display-graphic-p)
-              (select-frame-set-input-focus (selected-frame)))))
-
-;; _____________________________________________________________________________
-;;; USER INTERFACE
-
-;; Menu bar: on/off by default?
-(menu-bar-mode 1)
-
-;; Scroll bar: on/off by default?
-(when (display-graphic-p) (scroll-bar-mode -1))
-
-;; Tool bar: on/off by default?
-(when (display-graphic-p) (tool-bar-mode -1))
-
-;; Tooltips: enable/disable?
-(tooltip-mode -1)
-
-;; Startup screen: on/off by default?
-(setopt inhibit-startup-screen t)
-
-;; Alarms: turn off?
-(setopt ring-bell-function 'ignore)
-
-;; _____________________________________________________________________________
-;;; CURSOR
-;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Cursor-Display>
-
-;; To learn about available cursors, place your cursor behind 'cursor-type'
-;; in the code below or do "M-x describe-symbol RET cursor-type RET"
-
-;; Set the cursor type
-;; Comment out the following expression to change the cursor into a bar
-;; (add-to-list 'default-frame-alist '(cursor-type . bar))
-
-;; Turn on/off cursor blinking by default? 1 means 'on' and -1 means 'off'
-(blink-cursor-mode -1)
-
-;; Cursor blinking interval in seconds
-(setopt blink-cursor-interval 0.3)
-
-;; Blink cursor that often before going into solid state
-(setopt blink-cursor-blinks 3)
-
-;; Emphasize the cursor when running Emacs in a text terminal?
-(setopt visible-cursor nil)
-
-;; Make sure to highlight the current line only in the active window.
-(setopt hl-line-sticky-flag nil)
-(add-hook 'special-mode-hook
-          (lambda ()
-            ;; Highlight current line in special modes?
-            (hl-line-mode 1)))
-
-;; _____________________________________________________________________________
 ;;; GLOBAL DEFINITIONS & UTILITIES
 
 ;; Define the group for Customizations
 (defgroup eon nil
   "Emacs ONBOARD starter kit & ONTOP extension layer."
-  :group 'convenience)
+  :group 'convenience
+  :prefix "eon-")
 
 ;; Simplify writing of operating-system-specific Elisp code
 
@@ -392,9 +312,113 @@ When called interactively, also echo the result."
         parents))))
 
 ;; _____________________________________________________________________________
+;;; DEFAULT AND INITIAL FRAME
+
+;; In Emacs terminology, a "frame" means the ordinary "desktop window";
+;; while "window" refers to tiled panels within an Emacs frame. Why?
+;; Because Emacs had it first, and today's convention what "window" means
+;; appeared later.
+;; In order to define properties generally, add them to `default-frame-alist';
+;; to affect only the first frame created, add them to `initial-frame-alist'.
+
+;; Either start Emacs maximized …
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+;; … or set the default width of the Emacs frame in characters
+(add-to-list 'default-frame-alist '(width . 80))
+
+;; … and set the default height of the Emacs frame in lines
+(add-to-list 'default-frame-alist '(height . 32))
+
+;; Horizontal position: set the distance from the left screen edge in pixels
+;; That way, only the first frame created will get a fixed position:
+;; (add-to-list 'initial-frame-alist '(left . 0))
+
+;; Vertical position: set the distance from the top screen edge in pixels
+;; That way, only the first frame created will get a fixed position:
+;; (add-to-list 'initial-frame-alist '(top . 0))
+
+;; Fringe: choose on which sides (not) to show it
+;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Fringes>
+;; (add-to-list 'default-frame-alist '(right-fringe . 0))
+
+;; Bring frame to the front
+(add-hook 'window-setup-hook
+          (lambda ()
+            (when (display-graphic-p)
+              (select-frame-set-input-focus (selected-frame)))))
+
+;; _____________________________________________________________________________
+;;; USER INTERFACE
+
+;; Menu bar: on/off by default?
+(menu-bar-mode 1)
+
+;; Scroll bar: on/off by default?
+(when (display-graphic-p) (scroll-bar-mode -1))
+
+;; Tool bar: on/off by default?
+(when (display-graphic-p) (tool-bar-mode -1))
+
+;; Tooltips: enable/disable?
+(tooltip-mode -1)
+
+;; Startup screen: on/off by default?
+(setopt inhibit-startup-screen t)
+
+;; Alarms: turn off?
+(setopt ring-bell-function 'ignore)
+
+;; _____________________________________________________________________________
+;;; CURSOR
+;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Cursor-Display>
+
+;; To learn about available cursors, place your cursor behind 'cursor-type'
+;; in the code below or do "M-x describe-symbol RET cursor-type RET"
+
+;; Set the cursor type
+;; Comment out the following expression to change the cursor into a bar
+;; (add-to-list 'default-frame-alist '(cursor-type . bar))
+
+;; Turn on/off cursor blinking by default? 1 means 'on' and -1 means 'off'
+(blink-cursor-mode -1)
+
+;; Cursor blinking interval in seconds
+(setopt blink-cursor-interval 0.3)
+
+;; Blink cursor that often before going into solid state
+(setopt blink-cursor-blinks 3)
+
+;; Emphasize the cursor when running Emacs in a text terminal?
+(setopt visible-cursor nil)
+
+;; Make sure to highlight the current line only in the active window.
+(setopt hl-line-sticky-flag nil)
+(add-hook 'special-mode-hook
+          (lambda ()
+            ;; Highlight current line in special modes?
+            (hl-line-mode 1)))
+
+;; _____________________________________________________________________________
+;;; WHICH-KEY
+;; Show a menu with available keybindings
+
+(which-key-mode 1)
+
+(setopt which-key-lighter ""
+        which-key-separator " "
+        which-key-idle-delay 0.3
+        which-key-idle-secondary-delay 0.0
+        which-key-sort-uppercase-first nil
+        which-key-sort-order 'which-key-key-order-alpha
+        which-key-preserve-window-configuration t
+        which-key-show-remaining-keys t
+        which-key-show-transient-maps t)
+
+;; _____________________________________________________________________________
 ;;; LEADER-KEY / LOCAL LEADER-KEY and KEYMAPS
 
-;; To avoid clashes, new keybindings introduced by Emacs ONboard will usually
+;; To avoid clashes, new keybindings introduced by Emacs ONBOARD will usually
 ;; live under the leader prefix (with only a few exceptions).
 
 ;;; ---> Defaults for graphical Emacs:
@@ -437,12 +461,16 @@ When called interactively, also echo the result."
 ;; Localleader implementation
 
 (defvar-keymap eon-localleader-global-map
-  :doc "Global localleader map (fallback for all buffers)."
+  :doc "Global local leader keymap (fallback for all buffers).
+You can bind commands here that should appear in all local leader keymaps."
   "." '("..." . execute-extended-command-for-buffer))
 
 (defvar-local eon-localleader--map eon-localleader-global-map
-  "Active localleader keymap for the current buffer.")
+  "Active localleader keymap for the current buffer.
+Don't bind any keys/commands to this keymap.")
 
+;; HACK Relies currently on `which-key' internals, what's a bit of an eyesore,
+;; but seems to work reliably.
 (defun eon-localleader--context-window ()
   "Return the window where the key sequence started."
   (cond
@@ -451,25 +479,39 @@ When called interactively, also echo the result."
     which-key--original-window)
    (t (selected-window))))
 
-(defun eon-localleader--effective-map (&optional _)
-  "Return the localleader map for the current context buffer."
-  (let* ((win (eon-localleader--context-window))
-         (buf (and (window-live-p win) (window-buffer win))))
-    (with-current-buffer (or buf (current-buffer))
-      (if (keymapp eon-localleader--map)
-          eon-localleader--map
-        eon-localleader-global-map))))
-
 (defun eon-localleader--set-key (sym value)
   "Setter for `eon-localleader-key'; rebinds the leader entry."
   (let ((old (and (boundp sym) (symbol-value sym))))
     (when (boundp 'ctl-z-map)
       (when old (keymap-unset ctl-z-map old))
-      (keymap-set
-       ctl-z-map value
-       ;; No label; :filter supplies the proper (buffer-local) map.
-       '(menu-item "" nil :filter eon-localleader--effective-map))))
+      (keymap-set ctl-z-map value ctl-z-localleader-map)))
   (set-default sym value))
+
+;; Empty, named prefix so which-key shows a stable label "Local".
+(defvar-keymap ctl-z-localleader-map
+  :doc "Local leader"
+  :name "Local")
+
+(defun eon-localleader--sync-local-prefix-parent ()
+  "Make `ctl-z-localleader-map' inherit the effective localleader.
+Respects the which-key origin window so that the correct buffer's
+localleader is shown."
+  (let* ((win (eon-localleader--context-window))
+         (buf (and (window-live-p win) (window-buffer win)))
+         (map (with-current-buffer (or buf (current-buffer))
+                (if (keymapp eon-localleader--map)
+                    eon-localleader--map
+                  eon-localleader-global-map))))
+    (set-keymap-parent ctl-z-localleader-map map)))
+
+;; Keep the UI prefix parent fresh when modes change, even without which-key.
+(add-hook 'after-change-major-mode-hook
+          #'eon-localleader--sync-local-prefix-parent)
+
+(with-eval-after-load 'which-key
+  (advice-add 'which-key--update :before
+              (lambda (&rest _)
+                (eon-localleader--sync-local-prefix-parent))))
 
 (defcustom eon-localleader-key
   (if (display-graphic-p) "C-," "C-z")
@@ -520,13 +562,12 @@ Use `setopt' to override."
   "x"   `("Misc"     . ,ctl-z-x-map)
   "RET" `("Bookmark" . ,ctl-z-ret-map)
   ;; Add dynamic localleader keymap
-  eon-localleader-key
-  '(menu-item "" nil :filter eon-localleader--effective-map))
+  eon-localleader-key `("Local" . ,ctl-z-localleader-map))
 
 ;; Initial binding of the leader prefix
 (keymap-global-set eon-leader-key ctl-z-map)
 
-;; Make the leader available in the minibuffer
+;; Make the leader available in the minibuffer too
 ;; If there's a problem with that, please open an issue on Github:
 ;; <https://github.com/monkeyjunglejuice/emacs.onboard/issues>
 (add-hook 'minibuffer-setup-hook
@@ -544,26 +585,11 @@ BODY is forwarded to `defvar-keymap'."
        ;; Inherit global entries so globals are always available
        (set-keymap-parent ,map-sym eon-localleader-global-map)
        ;; Activate buffer-locally in this mode
-       (add-hook ',hook (lambda () (setq-local eon-localleader--map ,map-sym)))
-       ;; If we're already in MODE (or derived), select it now
-       (when (derived-mode-p ',mode)
-         (setq-local eon-localleader--map ,map-sym)))))
+       (add-hook ',hook (lambda ()
+                          (setq-local eon-localleader--map ,map-sym))))))
 
 ;; _____________________________________________________________________________
 ;;; KEYBINDING-RELATED SETTINGS
-
-;; Which-key: show a menu with available keybindings
-(when (fboundp #'which-key-mode)
-  (setopt which-key-lighter ""
-          which-key-separator " "
-          which-key-idle-delay 0.3
-          which-key-idle-secondary-delay 0.0
-          which-key-sort-uppercase-first nil
-          which-key-sort-order 'which-key-key-order-alpha
-          which-key-preserve-window-configuration t
-          which-key-show-remaining-keys t
-          which-key-show-transient-maps t)
-  (which-key-mode 1))
 
 (when (eon-macp)
   (setopt
@@ -871,12 +897,25 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (setopt completion-category-overrides
         '((file (styles . (partial-completion basic initials)))))
 
-;; Prevent *Completions* buffer from popping up?
-(setopt completion-auto-help nil)
-;; Cycle completion candidates instead?
-(setopt completion-cycle-threshold t)
-;; Show docstrings for completion candidates?
-(setopt completions-detailed nil)
+;; Allow the *Completions* buffer to pop up?
+(setopt completion-auto-help 'always)
+
+;; Display settings for the *Completions* buffer; only if not disabled above
+(setopt
+ ;; Show the help lines on top of the *Completions* buffer?
+ completion-show-help nil
+ ;; Cycle completion candidates instead?
+ completion-cycle-threshold nil
+ ;; Show docstrings for completion candidates?
+ completions-detailed t
+ ;; Automatically select the *Completions* buffer?
+ completion-auto-select 'second-tab
+ ;; Define the appearance of completions?
+ completions-format 'one-column
+ ;; Maximum height of the *Completions* buffer in lines?
+ completions-max-height 12
+ ;; Enable grouping of completion candidates?
+ completions-group t)
 
 ;; Preview current in-buffer completion candidate?
 (when (fboundp #'global-completion-preview-mode)
@@ -926,7 +965,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (when package-enable-at-startup
 
   ;; Open the package manager interface: "<leader> x p"
-  (keymap-set ctl-z-x-map "p" #'list-packages)
+  (keymap-set ctl-z-x-map "P" #'list-packages)
 
   ;; Highlight current line in the package manager
   (add-hook 'package-menu-mode-hook
@@ -981,6 +1020,12 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (setopt epg-pinentry-mode 'loopback)
 
 ;; _____________________________________________________________________________
+;;; FRAME MANAGEMENT
+
+(keymap-set ctl-z-x-map "f" #'toggle-frame-maximized)
+(keymap-set ctl-z-x-map "F" #'toggle-frame-fullscreen)
+
+;; _____________________________________________________________________________
 ;;; WINDOW MANAGEMENT
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Windows>
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Window-Convenience>
@@ -1027,8 +1072,8 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 (keymap-set ctl-z-b-map "b" #'switch-to-buffer)
 
-;; Kill the current buffer immediately instead of presenting a selection
-;; It's the equivalent to "close tab" in a web browser or other editors
+;; Kill the current buffer immediately instead of presenting a selection.
+;; It's the equivalent to "close tab" in other editors.
 (keymap-set ctl-z-map "k" #'kill-current-buffer)
 
 ;; Kill the window too
@@ -1263,7 +1308,7 @@ Called without argument just syncs `eon-boring-buffers' to other places."
 (setopt find-file-visit-truename t
         vc-follow-symlinks t)
 
-;; Auto refresh dired (and others) when contents change?
+;; Auto refresh buffers when contents change?
 (setopt global-auto-revert-non-file-buffers t
         auto-revert-stop-on-user-input nil
         auto-revert-verbose t)
@@ -1389,7 +1434,7 @@ Called without argument just syncs `eon-boring-buffers' to other places."
    ;; Mimic dual-pane file managers?
    dired-dwim-target t
    ;; Check for directory modifications?
-   dired-auto-revert-buffer 'dired-buffer-stale-p))
+   dired-auto-revert-buffer t))
 
 ;; Switch to wdired-mode and edit directory content like a text buffer
 (with-eval-after-load 'dired
@@ -1427,6 +1472,10 @@ Called without argument just syncs `eon-boring-buffers' to other places."
    ;; Store thumbnails in the system-wide thumbnail location
    ;; e.g. ~/.local/cache/thumbnails to make them reusable by other programs
    image-dired-thumbnail-storage 'standard-large))
+
+;; Define localleader keymap for `dired-mode'
+(eon-localleader-defkeymap dired-mode eon-localleader-dired-map
+  :doc "Local leader keymap for Dired buffers.")
 
 ;; _____________________________________________________________________________
 ;;; BOOKMARKS
@@ -1470,8 +1519,12 @@ Called without argument just syncs `eon-boring-buffers' to other places."
 ;; Launch a fresh Eshell buffer: "<leader> e E"
 (keymap-set ctl-z-e-map "E" #'eon-eshell-new)
 
+;; Create Eshell loacalleader keymap
+(eon-localleader-defkeymap eshell-mode eon-localleader-eshell-map
+  :doc "Local leader keymap for Eshell")
+
 ;; _____________________________________________________________________________
-;:;; SHELL
+;;; SHELL
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Shell-Mode>
 
 ;; This is also no terminal emulator, but a buffer to issue shell commands
@@ -1513,6 +1566,15 @@ Called without argument just syncs `eon-boring-buffers' to other places."
                                   (project-shell       "Shell"  ?s)))
 
 ;; _____________________________________________________________________________
+;;; VERSION CONTROL
+;; Setup for Emacs' built-in VC management
+
+(keymap-set ctl-z-v-map "v" #'vc-dir)
+(keymap-set ctl-z-v-map "V" #'project-vc-dir)
+(keymap-set ctl-z-v-map "g" #'vc-git-grep)
+(keymap-set ctl-z-v-map "." `("..." . ,vc-prefix-map))
+
+;; _____________________________________________________________________________
 ;;; PROCED
 
 ;; Show and manage OS processes, like the command line programs top and htop
@@ -1540,7 +1602,7 @@ Called without argument just syncs `eon-boring-buffers' to other places."
 
 (defun eon-user-agent (browser-name)
   "Accepts a symbol in order to return a pre-defined user-agent string.
-BROWSER-NAME can be either `safari-macos', `safari-iphone', `w3m' or t -
+BROWSER-NAME can be either \='safari-macos, \='safari-iphone, \='w3m or t -
 which sets the default `eww' user-agent according to `url-privacy-level'."
   (pcase browser-name
     ('safari-macos
@@ -1558,24 +1620,18 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 ;; Set the user agent for the internal web browser
 (eon-user-agent 'safari-iphone)
 
-;; Per default, open links with the internal web browser
-(setopt browse-url-browser-function #'eww-browse-url)
-
-;; Secondary web browser
-(setopt browse-url-secondary-browser-function #'browse-url-default-browser)
-;; (setopt browse-url-browser-function #'browse-url-firefox)
-;; (setopt browse-url-generic-program (executable-find "nyxt")
-;;         browse-url-browser-function #'browse-url-generic)
-
-;; Keybindings
-(keymap-set ctl-z-g-map "W" #'browse-url)
+;; Browse web with EWW, the internal web browser
 (keymap-set ctl-z-g-map "w" #'browse-web)
+
+(eon-localleader-defkeymap eww-mode eon-localleader-eww-map
+  :doc "Local leader keymap for the Emacs Web Wowser"
+  "e" #'eww-browse-with-external-browser)
 
 ;; _____________________________________________________________________________
 ;;; EMAIL
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Sending-Mail>
 
-;; TODO: Send emails directly from Emacs using SMTP – example template
+;; TODO Send emails directly from Emacs using SMTP – example template
 
 ;; Should be defined first
 ;; (setopt user-mail-address "mail@example.org")
@@ -1589,7 +1645,7 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
   (setopt send-mail-function #'smtpmail-send-it
           smtpmail-smtp-server "localhost"
           smtpmail-stream-type 'starttls
-          smtpmail-smtp-service 1025      ; default port: 587
+          smtpmail-smtp-service 1025  ; default port: 587
           smtpmail-queue-dir "~/.mail/queued-mail/"
           smtpmail-smtp-user user-mail-address
           smtpmail-debug-info nil))
