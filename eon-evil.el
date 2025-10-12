@@ -105,6 +105,56 @@ Used by custom variables `eon-evil-leader-key' and `eon-evil-localleader-key'."
   (setopt evil-collection-setup-minibuffer t)
   :config
   (evil-collection-init)
+
+  ;; Unshadow the current leader where evil-collection sets a keybinding that
+  ;; would otherwise override the leader key (e.g. as it does with "SPC"
+  ;; in `customize-mode').
+
+  (defun eon-evil--unshadow-leader-in-maps (maps)
+    (let ((lk eon-evil-leader-key))
+      (when (and (stringp lk) (> (length lk) 0))
+        (let ((key (kbd lk)))
+          (dolist (ms maps)
+            (let ((km (cond ((keymapp ms) ms)
+                            ((and (symbolp ms) (boundp ms))
+                             (symbol-value ms))
+                            (t nil))))
+              (when (keymapp km)
+                (dolist (st '(normal visual motion))
+                  (let ((aux (evil-get-auxiliary-keymap km st nil)))
+                    (when aux
+                      (define-key aux key nil)))))))))))
+
+  (defun eon-evil--unshadow-leader-in-ec-feature (feat)
+    (let* ((name (symbol-name feat))
+           (pref "evil-collection-")
+           (mod  (and (string-prefix-p pref name)
+                      (substring name (length pref))))
+           (maps (and mod
+                      (intern (format "evil-collection-%s-maps" mod)))))
+      (when (and maps (boundp maps))
+        (eon-evil--unshadow-leader-in-maps (symbol-value maps)))))
+
+  (defun eon-evil--unshadow-leader-ec-sweep ()
+    (mapc #'eon-evil--unshadow-leader-in-ec-feature features))
+
+  (defun eon-evil--unshadow-leader-ec-after-load (file)
+    (let ((base (file-name-base file)))
+      (when (string-prefix-p "evil-collection-" base)
+        (eon-evil--unshadow-leader-in-ec-feature (intern base)))))
+
+  ;; Run now, for future loads, and on leader changes
+  (eon-evil--unshadow-leader-ec-sweep)
+  (add-hook 'after-load-functions
+            #'eon-evil--unshadow-leader-ec-after-load)
+
+  ;; Re-unshadow when the leader changes via setopt/Customize
+  (when (fboundp 'eon-evil--set-leaders)
+    (advice-add 'eon-evil--set-leaders :after
+                (lambda (sym _val)
+                  (when (eq sym 'eon-evil-leader-key)
+                    (eon-evil--unshadow-leader-ec-sweep)))))
+
   ;; Adopt ranger-like movements in Dired
   (evil-collection-define-key 'normal 'dired-mode-map
     "l" #'dired-find-file
