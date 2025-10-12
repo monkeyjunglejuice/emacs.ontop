@@ -313,6 +313,8 @@ Adapted from Doom Emacs")
                     project-switch-commands
                     :key #'car :test #'eq))
     :bind
+    (:map project-prefix-map
+          ("g" . rg-project))
     (:map ctl-z-s-map
           ("G" . rg))))
 
