@@ -51,15 +51,16 @@
   (evil-echo-state nil)
   (evil-move-cursor-back nil)
   (evil-undo-system 'undo-fu)
-  ;; TODO Needs a context-dependent documentation lookup;
-  ;; - helpful-at-point for Elisp (check; for now)
+  ;; TODO `evil-lookup-func' should be a context-dependent documentation lookup;
+  ;; - helpful-at-point for Elisp (implemented for now)
   ;; - sly-hyperspec-lookup for Common Lisp / Sly, opens page in EWW
   ;; - eglot doc buffer (eldoc) for LSP-enabled modes
-  ;; - etc.
+  ;; - etc. -- there's probably a package for that already existing.
   (evil-lookup-func #'helpful-at-point))
 
 ;; _____________________________________________________________________________
 ;; <https://github.com/emacs-evil/evil-collection>
+
 (use-package evil-collection :ensure t
   :after evil
   :diminish evil-collection-unimpaired-mode
