@@ -6,7 +6,7 @@
 ;;
 ;;; Code:
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; EVIL
 ;; <https://evil.readthedocs.io/en/latest/settings.html>
 ;; <https://github.com/noctuid/evil-guide>
@@ -43,6 +43,8 @@
   (evil-define-key 'normal 'global
     (kbd "gc") #'eon-evil-comment-or-uncomment))
 
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
 (use-package evil-vars :ensure nil
   :after evil
   :custom
@@ -56,6 +58,7 @@
   ;; - etc.
   (evil-lookup-func #'helpful-at-point))
 
+;; _____________________________________________________________________________
 ;; <https://github.com/emacs-evil/evil-collection>
 (use-package evil-collection :ensure t
   :after evil
@@ -71,11 +74,13 @@
     "p" #'dired-ranger-paste
     "P" #'dired-ranger-move))
 
+;; _____________________________________________________________________________
+
 (use-package which-key :ensure nil
   :after evil
   :custom
   (which-key-allow-evil-operators t))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 (provide 'eon-evil)
 ;;; eon-evil.el ends here
