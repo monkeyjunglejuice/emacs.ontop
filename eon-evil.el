@@ -12,29 +12,66 @@
 ;; <https://github.com/noctuid/evil-guide>
 
 (use-package evil :ensure t
+
   :init
-  (setopt evil-want-integration t)
-  (setopt evil-want-keybinding nil)
-  ;; Leader and local leader in Evil; doesn't need Evil's built-in leader
-  (defun eon-evil--setup-leaders ()
-    "Bind \",\" as leader and \", ,\" as localleader in Evil states."
-    (let ((states '(normal visual motion)))
-      ;; In Evil's modal states, "," invokes your leader map
-      (mapc (lambda (evil-state)
-              (evil-define-key evil-state 'global (kbd ",") ctl-z-map))
-            states))
-    ;; Add a labeled comma prefix *at runtime* so which-key shows ', +Local'
-    (when (keymapp ctl-z-localleader-map)
-      (define-key ctl-z-map (kbd ",")
-        (cons "Local" ctl-z-localleader-map))))
+
+  (setopt evil-want-integration t
+          evil-want-keybinding nil)
+
+  ;; We're not using Evil's leader/localleader implementation. Instead we're
+  ;; wiring in the agnostic implementation from Emacs ONBOARD that works
+  ;; independently from Evil.
+
+  (defun eon-evil--bind-leader-in-states (old new)
+    "Explicitly bind the leader key to prevent hijacking."
+    (when (and (stringp new) (> (length new) 0))
+      (dolist (m (list evil-normal-state-map
+                       evil-visual-state-map
+                       evil-motion-state-map))
+        (when (and (stringp old) (> (length old) 0))
+          (define-key m (kbd old) nil))
+        (define-key m (kbd new) ctl-z-map))))
+
+  (defun eon-evil--set-leaders (sym val)
+    "Setter for leader and local leader keys.
+Used by custom variables `eon-evil-leader-key' and `eon-evil-localleader-key'."
+    (let ((old (and (boundp sym) (default-value sym))))
+      (set-default sym val)
+      (with-eval-after-load 'evil
+        (pcase sym
+          ('eon-evil-leader-key
+           (eon-evil--bind-leader-in-states old val))
+          ('eon-evil-localleader-key
+           (when old (define-key ctl-z-map (kbd old) nil))
+           (define-key ctl-z-map (kbd val)
+                       (cons "Local" ctl-z-localleader-map)))))))
+
+  (defcustom eon-evil-leader-key ","
+    "Leader key for Evil."
+    :group 'eon :type 'string
+    :set #'eon-evil--set-leaders
+    :initialize 'custom-initialize-set)
+
+  (defcustom eon-evil-localleader-key ","
+    "Local leader key for Evil."
+    :group 'eon :type 'string
+    :set #'eon-evil--set-leaders
+    :initialize 'custom-initialize-set)
+
   :config
+
+  ;; Activate Evil first
   (evil-mode 1)
-  ;; Leader key / local leader key
-  (eon-evil--setup-leaders)
+
+  ;; Explicitly bind the leader key afterwards so it won't get hijacked
+  (eon-evil--bind-leader-in-states nil eon-evil-leader-key)
+
   ;; Escape from Evil Emacs state
   (evil-define-key 'emacs 'global [escape] #'evil-normal-state)
+
   ;; Fast window switching
   (evil-define-key 'normal 'global (kbd "RET") #'evil-window-mru)
+
   ;; Comment/uncomment by pressing "gcc" in normal mode and "gc" in visual mode
   (evil-define-operator eon-evil-comment-or-uncomment (beg end)
     "Toggle comment for the region between BEG and END."
