@@ -34,7 +34,7 @@
   ;; Escape from Evil Emacs state
   (evil-define-key 'emacs 'global [escape] #'evil-normal-state)
   ;; Fast window switching
-  (evil-define-key 'normal 'global (kbd "SPC") #'evil-window-mru)
+  (evil-define-key 'normal 'global (kbd "RET") #'evil-window-mru)
   ;; Comment/uncomment by pressing "gcc" in normal mode and "gc" in visual mode
   (evil-define-operator eon-evil-comment-or-uncomment (beg end)
     "Toggle comment for the region between BEG and END."
