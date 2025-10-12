@@ -105,6 +105,7 @@ Used by custom variables `eon-evil-leader-key' and `eon-evil-localleader-key'."
   (setopt evil-collection-setup-minibuffer t)
   :config
   (evil-collection-init)
+  ;; Adopt ranger-like movements in Dired
   (evil-collection-define-key 'normal 'dired-mode-map
     "l" #'dired-find-file
     "h" #'dired-up-directory
