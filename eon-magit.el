@@ -31,7 +31,7 @@
         ("v" . magit-status)
         ("V" . magit-project-status)
         ("f" . magit-file-dispatch)
-        ("." . magit-dispatch)
+        ("," . magit-dispatch)
         ("k" . eon-magit-kill-buffers)))
 
 ;;  ____________________________________________________________________________
