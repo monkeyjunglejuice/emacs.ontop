@@ -1,12 +1,12 @@
 ;;; eon-consult.el --- Consult -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
-;;
+
 ;;; Commentary:
 ;;
 ;;; Code:
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; CONSULT
 ;; <https://github.com/minad/consult>
 ;; <https://github.com/minad/consult/wiki>
@@ -35,10 +35,10 @@
     "Run consult-fd if fd is available, else consult-find.")
 
   ;; Localleader label
-  (keymap-set eon-localleader-global-map "." #'consult-mode-command)
+  (keymap-set eon-localleader-global-map "," #'consult-mode-command)
   (with-eval-after-load 'which-key
     (which-key-add-keymap-based-replacements
-      eon-localleader-global-map "." "..."))
+      eon-localleader-global-map "," "..."))
 
   :config
   ;; Optionally configure preview. The default value
@@ -71,7 +71,7 @@
   :bind
   (;; C-c bindings in `mode-specific-map'
    ;; ("C-c M-x" . consult-mode-command)
-   ("C-c h" . consult-history)
+   ;; ("C-c h" . consult-history)
    ;; ("C-c k" . consult-kmacro)
    ;; ("C-c m" . consult-man)
    ;; ("C-c i" . consult-info)
@@ -132,6 +132,7 @@
 
    ;; Leader
    :map ctl-z-map
+   ("SPC" . consult-buffer)
    ("n" . consult-project-buffer)
 
    ;; Buffer
@@ -145,6 +146,10 @@
    ;; Exec
    :map ctl-z-e-map
    ("k" . consult-kmacro)
+
+   ;; Eshell local leader
+   :map eon-localleader-eshell-map
+   ("h" . consult-history)
 
    ;; File
    :map ctl-z-f-map
@@ -197,10 +202,16 @@
    :map ctl-z-x-map
    ("T" . consult-theme)))
 
+;; _____________________________________________________________________________
+;;; CONSULT-DIR
+
 (use-package consult-dir :ensure t
   :bind
   (:map ctl-z-map
         ("d" . consult-dir)))
+
+;; _____________________________________________________________________________
+;;; CONSULT-FLYCHECK
 
 (when (eon-modulep 'eon-flycheck)
   (use-package consult-flycheck :ensure t
@@ -208,6 +219,9 @@
     (:map ctl-z-c-map
           ;; Override `consult-flymake' in the `ctl-z-g-map'
           ("c" . consult-flycheck))))
+
+;; _____________________________________________________________________________
+;;; CONSULT-TODO
 
 (use-package consult-todo :ensure t
   :bind
