@@ -38,6 +38,11 @@
    ;; eon-meow                      ; modular editing, Meow keybindings
 
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   ;;; THEMES
+
+   eon-themes-doom               ; Doom Emacs theme pack
+
+   ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ;;; OPTIONAL MODULES
    
    eon-autoupdate                ; update packages automatically
