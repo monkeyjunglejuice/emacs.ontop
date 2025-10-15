@@ -47,7 +47,7 @@
 
    eon-autoupdate                ; update packages automatically
    eon-consult                   ; navigation and search framework
-   ;; eon-corfu                     ; code (auto) completion
+   eon-corfu                     ; code (auto)completion
    ;; eon-embark                    ; minibuffer actions and context menu
    eon-flycheck                  ; syntax checker alternative
    ;; eon-fonts                     ; curated font sets
