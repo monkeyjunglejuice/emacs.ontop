@@ -29,7 +29,7 @@
           evil-want-keybinding nil)
 
   ;; We're not using Evil's leader/localleader implementation. Instead we're
-  ;; wiring in the agnostic implementation from Emacs ONBOARD that works
+  ;; wiring the agnostic implementation from Emacs ONBOARD `eon.el' that works
   ;; independently from Evil.
 
   (defun eon-evil--bind-leader-in-states (old new)
@@ -73,7 +73,7 @@ Used by custom variables `eon-evil-leader-key' and `eon-evil-localleader-key'."
   ;; Activate Evil first
   (evil-mode 1)
 
-  ;; Explicitly bind the leader key afterwards so it won't get hijacked
+  ;; Explicitly bind the leader key
   (eon-evil--bind-leader-in-states nil eon-evil-leader-key)
 
   ;; Escape from Evil Emacs state
@@ -116,9 +116,8 @@ Used by custom variables `eon-evil-leader-key' and `eon-evil-localleader-key'."
   :config
   (evil-collection-init)
 
-  ;; Unshadow the current leader where evil-collection sets a keybinding that
-  ;; would otherwise override the leader key (e.g. as it does with "SPC"
-  ;; in `customize-mode').
+  ;; Prevent the current leader from getting shadowed by evil-collection
+  ;; (e.g. as it does with "SPC" in `customize-mode').
 
   (defun eon-evil--unshadow-leader-in-maps (maps)
     (let ((lk eon-evil-leader-key))
@@ -165,7 +164,7 @@ Used by custom variables `eon-evil-leader-key' and `eon-evil-localleader-key'."
                   (when (eq sym 'eon-evil-leader-key)
                     (eon-evil--unshadow-leader-ec-sweep)))))
 
-  ;; Adopt ranger-like movements in Dired
+  ;; Add Ranger-like movements to Dired
   (evil-collection-define-key 'normal 'dired-mode-map
     "l" #'dired-find-file
     "h" #'dired-up-directory
@@ -174,6 +173,7 @@ Used by custom variables `eon-evil-leader-key' and `eon-evil-localleader-key'."
     "P" #'dired-ranger-move))
 
 ;; _____________________________________________________________________________
+;;; WHICH-KEY
 
 (use-package which-key :ensure nil
   :after evil
