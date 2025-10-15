@@ -6,7 +6,7 @@
 ;;
 ;;; Code:
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; HELIX
 ;; <https://github.com/mgmarlow/helix-mode>
 
@@ -29,11 +29,13 @@
 ;; (helix-define-typable-command "format" #'format-all-buffer)
 
 ;; Let `which-key' appear quickly
+;; _____________________________________________________________________________
+;;; WHICH-KEY
 (use-package which-key :ensure nil
   :custom
   (which-key-idle-delay 0.25)
   (which-key-idle-secondary-delay 0.0))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 (provide 'eon-helix)
 ;;; eon-helix.el ends here
