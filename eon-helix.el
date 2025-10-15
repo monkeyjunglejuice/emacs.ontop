@@ -28,10 +28,12 @@
 ;; Example:
 ;; (helix-define-typable-command "format" #'format-all-buffer)
 
-;; Let `which-key' appear quickly
 ;; _____________________________________________________________________________
 ;;; WHICH-KEY
+
+;; Let which-key appear a bit faster
 (use-package which-key :ensure nil
+  :after helix
   :custom
   (which-key-idle-delay 0.25)
   (which-key-idle-secondary-delay 0.0))
