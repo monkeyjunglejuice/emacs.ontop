@@ -24,7 +24,7 @@
 ;;  ____________________________________________________________________________
 ;;; EGLOT LANGUAGE SERVER
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
-;; Common keybindings are configured in `./eon-eglot.el'
+;; Common keybindings are configured in `./eon.el'
 
 (use-package eglot :ensure nil
   :config
