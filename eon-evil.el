@@ -80,7 +80,7 @@ Used by custom variables `eon-evil-leader-key' and `eon-evil-localleader-key'."
   (evil-define-key 'emacs 'global [escape] #'evil-normal-state)
 
   ;; Fast window switching
-  (evil-define-key 'normal 'global (kbd "RET") #'evil-window-mru)
+  (evil-define-key 'normal 'global (kbd "SPC") #'evil-window-mru)
 
   ;; Comment/uncomment by pressing "gcc" in normal mode and "gc" in visual mode
   (evil-define-operator eon-evil-comment-or-uncomment (beg end)
