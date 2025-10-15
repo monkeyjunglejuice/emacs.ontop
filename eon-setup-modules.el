@@ -52,7 +52,7 @@
    eon-flycheck                  ; syntax checker alternative
    ;; eon-fonts                     ; curated font sets
    eon-helpful                   ; extended help viewer
-   ;; eon-lispy                     ; edit parenthesis structurally
+   eon-lispy                     ; edit parenthesis structurally
    eon-magit                     ; Git user interface inside Emacs
    eon-marginalia                ; rich annotations
    ;; eon-pdftools                  ; PDF reader and editor
