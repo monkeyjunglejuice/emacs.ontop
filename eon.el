@@ -31,7 +31,7 @@
 ;; Maintainer: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Created: 28 Apr 2021
-;; Version: 2.2.0
+;; Version: 2.2.1
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
 ;; Keywords: config dotemacs convenience
@@ -50,7 +50,7 @@
 ;;
 ;; "<leader> x t"  Toggle between dark and light theme
 ;;
-;;; Examples:
+;; Examples:
 ;;
 ;; "M-x eon-"                      Show all commands defined by Emacs ONBOARD
 ;; "M-x eon-visit-user-init-file"  Visit main config file: .emacs or init.el
@@ -73,7 +73,7 @@
 ;; Original: <https://gitlab.com/koral/gcmh> License: GPL-3.0-OR-LATER
 ;; Discussion: <https://news.ycombinator.com/item?id=39190110>
 
-(defcustom eon-gcmh-high-cons-threshold (* 1024 1024 1024)  ; 1024 MiB
+(defcustom eon-gcmh-high-cons-threshold (* 1024 1024 1024)  ; 1 GiB
   "High cons GC threshold.
 This should be set to a value that makes GC unlikely but does not
 cause OS paging."
@@ -181,9 +181,6 @@ Cancel the previous one if present."
                               (time-subtract after-init-time before-init-time)))
                      gcs-done)))
 
-;; Show a message when garbage collection happens? Useful while tuning the GC
-(setopt garbage-collection-messages nil)
-
 ;; _____________________________________________________________________________
 ;;; PACKAGE MANAGEMENT INIT
 
@@ -198,9 +195,9 @@ Cancel the previous one if present."
 (when package-enable-at-startup
   (require 'package)
 
-  ;;; 1st priority: Gnu Elpa, enabled by default
+  ;;; 1st priority: Gnu Elpa, enabled per default
 
-  ;;; 2nd priority: Non-Gnu Elpa, enabled by default
+  ;;; 2nd priority: Non-Gnu Elpa, enabled per default
 
   ;;; 3rd priority: Melpa
   (add-to-list 'package-archives
@@ -714,14 +711,14 @@ BODY is forwarded to `defvar-keymap'."
                       :slant  'normal
                       :weight 'normal
                       :width  'normal
-                      :height 0.8)
+                      :height 0.9)
   ;; Set the fonts for the inactive mode line
   (set-face-attribute 'mode-line-inactive nil
                       ;; :family "Iosevka Curly"
                       :slant  'normal
                       :weight 'normal
                       :width  'normal
-                      :height 0.8))
+                      :height 0.9))
 
 ;; _____________________________________________________________________________
 ;;; TOGGLE THEME
@@ -995,7 +992,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (with-eval-after-load 'icomplete
   (setopt icomplete-in-buffer t
           icomplete-compute-delay 0
-          icomplete-delay-completions-threshold 100
+          icomplete-delay-completions-threshold 256
           icomplete-show-matches-on-no-input t
           icomplete-hide-common-prefix nil)
   ;; TAB accepts the current candidate in Fido minibuffers
@@ -1106,7 +1103,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 ;; Default window navigation – simply switch to the next window in order.
 ;; Added for convenience; the default keybinding is "C-x o"
-(keymap-global-set "M-o" #'other-window)
+(keymap-set ctl-z-w-map "w" #'other-window)
 
 ;; Undo/redo window layouts
 (setopt winner-dont-bind-my-keys t)
@@ -1136,6 +1133,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (keymap-set ctl-z-b-map "p" #'previous-buffer)
 (keymap-set ctl-z-b-map "n" #'next-buffer)
 
+(keymap-set ctl-z-map "SPC" #'switch-to-buffer)
 (keymap-set ctl-z-b-map "b" #'switch-to-buffer)
 
 ;; Kill the current buffer immediately instead of presenting a selection.
@@ -1318,12 +1316,12 @@ Called without argument just syncs `eon-boring-buffers' to other places."
                    regexp-search-ring))
 
 ;; History length for various histories
-(setopt history-length 500)
+(setopt history-length 1024)
 ;; Delete duplicates from the command history?
 (setopt history-delete-duplicates t)
 
 ;; Remember where the cursor was, the last time you visited that file?
-(setopt save-place-limit 500)
+(setopt save-place-limit 1024)
 (save-place-mode 1)
 
 ;; _____________________________________________________________________________
@@ -1336,10 +1334,13 @@ Called without argument just syncs `eon-boring-buffers' to other places."
 ;; Open the file in another window: "<leader> f A"
 (keymap-set ctl-z-f-map "A" #'find-alternate-file-other-window)
 
-;; Open any resource under the cursor: "<leader> f o"
-(keymap-set ctl-z-f-map "o" #'find-file-at-point)
-;; Display a list of all resources mentioned in this buffer: "<leader> f O"
-(keymap-set ctl-z-f-map "O" #'ffap-menu)
+;; Open any resource under the cursor: "<leader> f p"
+(keymap-set ctl-z-f-map "p" #'find-file-at-point)
+;; Display a list of all resources mentioned in this buffer: "<leader> f P"
+(keymap-set ctl-z-f-map "P" #'ffap-menu)
+
+;; Open file in another window: "<leader> f o"
+(keymap-set ctl-z-f-map "o" #'find-file-other-window)
 
 ;; Save buffer if modified: "<leader> f s"
 (keymap-set ctl-z-f-map "s" #'save-buffer)
@@ -1397,7 +1398,7 @@ Called without argument just syncs `eon-boring-buffers' to other places."
 (recentf-mode 1)
 
 (setopt recentf-max-menu-items 10
-        recentf-max-saved-items 100)
+        recentf-max-saved-items 128)
 
 ;; Ignore some recently visited files, eg. to prevent them from showing up
 ;; amongst recent files after package upgrades
@@ -1559,7 +1560,7 @@ Called without argument just syncs `eon-boring-buffers' to other places."
 
 (setopt comint-input-ignoredups t
         comint-prompt-read-only t
-        comint-buffer-maximum-size 2048)
+        comint-buffer-maximum-size 65536)
 
 ;; _____________________________________________________________________________
 ;;; ESHELL
@@ -1570,7 +1571,10 @@ Called without argument just syncs `eon-boring-buffers' to other places."
 ;; a POSIX shell superficially, but is also a REPL for Emacs Lisp expressions.
 
 ;; Get rid of the Eshell startup message?
-(setopt eshell-banner-message "")
+(setopt eshell-banner-message ""
+        eshell-history-size 1024
+        eshell-hist-ignoredups t
+        eshell-cmpl-ignore-case t)
 
 ;; List directory content after changing into it?
 (setopt eshell-list-files-after-cd t)
@@ -2227,6 +2231,9 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
 ;; Don't add leading indentation to code blocks, remove them during export
 (setopt org-edit-src-content-indentation 0
         org-src-preserve-indentation nil)
+
+;; Context-dependent action
+(keymap-set eon-localleader-org-mode-map "c" #'org-ctrl-c-ctrl-c)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; ORG CAPTURE
