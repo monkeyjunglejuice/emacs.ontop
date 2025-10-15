@@ -37,5 +37,19 @@
   (which-key-idle-secondary-delay 0.0))
 
 ;; _____________________________________________________________________________
+;;; DIRED
+
+(use-package dired :ensure nil
+  :after helix
+  :bind
+  ;; Add Ranger-like movements to Dired
+  (:map dired-mode-map
+        ("l" . dired-find-file)
+        ("h" . dired-up-directory)
+        ("y" . dired-ranger-copy)
+        ("p" . dired-ranger-paste)
+        ("P" . dired-ranger-move)))
+
+;; _____________________________________________________________________________
 (provide 'eon-helix)
 ;;; eon-helix.el ends here
