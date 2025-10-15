@@ -100,7 +100,7 @@ Used by custom variables `eon-evil-leader-key' and `eon-evil-localleader-key'."
   (evil-undo-system 'undo-fu)
   ;; TODO `evil-lookup-func' should be a context-dependent documentation lookup;
   ;; - helpful-at-point for Elisp (implemented for now)
-  ;; - sly-hyperspec-lookup for Common Lisp / Sly, opens page in EWW
+  ;; - sly-hyperspec-lookup for Common Lisp / Sly that opens page in EWW
   ;; - eglot doc buffer (eldoc) for LSP-enabled modes
   ;; - etc. -- there's probably a package for that already existing.
   (evil-lookup-func #'helpful-at-point))
