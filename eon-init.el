@@ -64,8 +64,9 @@
 
 ;; Define the path of the Emacs ONTOP directory
 (defvar eon-ontop-directory
-  (file-name-directory (or load-file-name (buffer-file-name)))
-  "The directory that contains the file eon-init.el and the modules.")
+  (file-name-directory (or load-file-name buffer-file-name
+                           (locate-library "eon-init")))
+  "Directory containing eon-init.el and modules.")
 
 ;; Add the Emacs ONTOP directory to the `load-path', so that we can `require'
 ;; modules or do `load-library' and `unload-feature'.
