@@ -85,7 +85,7 @@
    ;; eon-lang-scheme-guile         ; Guile Scheme support
    ;; eon-lang-scheme-kawa          ; Kawa Scheme support
    ;; eon-lang-scheme-mit           ; MIT Scheme support
-   ;; eon-lang-scheme-racket        ; Racket support; consider `eon-lang-racket'
+   ;; eon-lang-scheme-racket        ; consider `eon-lang-racket' instead
    ;; eon-lang-scheme-stklos        ; Stklos Scheme support
    eon-lang-web                  ; HTML/CSS editing
 
