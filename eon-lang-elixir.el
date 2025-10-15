@@ -1,7 +1,7 @@
 ;;; eon-lang-elixir.el --- Elixir -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
-;;
+
 ;;; Commentary:
 ;;
 ;;; Code:
