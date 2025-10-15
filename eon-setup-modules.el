@@ -55,8 +55,8 @@
    eon-lispy                     ; edit parenthesis structurally
    eon-magit                     ; Git user interface inside Emacs
    eon-marginalia                ; rich annotations
-   eon-smartparens               ; edit parenthesis structurally
    eon-pdftools                  ; PDF reader and editor
+   ;; eon-smartparens               ; edit parenthesis structurally
    ;; eon-snippets                  ; code snippets
    eon-switchwindow              ; window management
    eon-todo                      ; highlight todo keywords in comments
