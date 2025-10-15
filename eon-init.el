@@ -74,7 +74,7 @@
 
 ;; Define the initial module list
 (defcustom eon-modules nil
-  "List of selected modules (features) to load.
+  "List of selected modules (Emacs features) available to load.
 The variable will be set by requiring `eon-setup-modules.el'."
   :type '(repeat (symbol :tag "Feature"))
   :group 'eon)
