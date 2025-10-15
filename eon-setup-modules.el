@@ -87,7 +87,7 @@
    ;; eon-lang-scheme-mit           ; MIT Scheme support
    ;; eon-lang-scheme-racket        ; Racket support; consider `eon-lang-racket'
    ;; eon-lang-scheme-stklos        ; Stklos Scheme support
-   eon-lang-webdev               ; HTML/CSS editing
+   eon-lang-web                  ; HTML/CSS editing
 
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ;;; PERSONAL MODULES
