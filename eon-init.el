@@ -98,7 +98,8 @@ find out if a module is loaded."
 
 ;; Load each module from the module selection
 (defun eon-require-modules ()
-  "Require the selected modules and install Emacs packages if necessary."
+  "Require the selected modules.
+The modules then will install necessary 3rd-party Emacs packages."
   (interactive)
   (dolist (module eon-modules)
     (eon-require-with-error-handling module)))
