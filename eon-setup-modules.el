@@ -1,4 +1,4 @@
-;;; eon-setup-modules.el --- Modules -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-setup-modules.el --- Module selection -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
@@ -28,10 +28,10 @@
    ;;; NECESSARY MODULES
 
    eon                           ; the Emacs ONBOARD starter-kit
-   eon-core                      ; shared settings and definitions
+   eon-core                      ; required shared settings and definitions
 
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-   ;;; KEYBINDINGS
+   ;;; KEYBINDINGS -- if none selected, fall back to Emacs keybindings
 
    eon-evil                      ; modular editing, Vim keybindings
    ;; eon-helix                     ; modular editing, Helix keybindings
