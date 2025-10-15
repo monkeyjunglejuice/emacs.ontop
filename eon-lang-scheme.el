@@ -33,11 +33,11 @@
 ;; <https://github.com/Fuco1/smartparens>
 ;; <https://smartparens.readthedocs.io/en/latest/>
 
-(when (eon-modulep 'eon-smartparens))
-(use-package smartparens :ensure t
-  :hook
-  (scheme-mode . smartparens-strict-mode)
-  ((inferior-scheme-mode geiser-repl-mode) . smartparens-mode))
+(when (eon-modulep 'eon-smartparens)
+  (use-package smartparens :ensure t
+    :hook
+    (scheme-mode . smartparens-strict-mode)
+    ((inferior-scheme-mode geiser-repl-mode) . smartparens-mode)))
 
 ;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
