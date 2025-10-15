@@ -37,7 +37,7 @@
                       :inherit 'shadow)
   (set-face-attribute 'switch-window-label nil
                       :inherit 'show-paren-match-expression
-                      :height 1.0)
+                      :height 2.0)
   :bind
   ;; Bind `switch-window' commands to regular Emacs keybindings
   ("C-x o"   . switch-window)
