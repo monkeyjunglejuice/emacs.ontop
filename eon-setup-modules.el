@@ -40,7 +40,7 @@
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ;;; THEMES
 
-   eon-themes-doom               ; Doom Emacs theme pack
+   ;; eon-themes-doom               ; Doom Emacs theme pack
 
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ;;; OPTIONAL MODULES
@@ -55,7 +55,7 @@
    eon-lispy                     ; edit parenthesis structurally
    eon-magit                     ; Git user interface inside Emacs
    eon-marginalia                ; rich annotations
-   eon-pdftools                  ; PDF reader and editor
+   ;; eon-pdftools                  ; PDF reader and editor
    ;; eon-smartparens               ; edit parenthesis structurally
    ;; eon-snippets                  ; code snippets
    eon-switchwindow              ; window management
@@ -66,23 +66,23 @@
    ;;; PROGRAMMING LANGUAGES
 
    ;; eon-lang-clojure              ; Clojure and ClojureScript programming
-   eon-lang-commonlisp           ; Common Lisp programming with Sly
-   eon-lang-elixir               ; Elixir programming
-   eon-lang-erlang               ; Erlang programming
+   ;; eon-lang-commonlisp           ; Common Lisp programming with Sly
+   ;; eon-lang-elixir               ; Elixir programming
+   ;; eon-lang-erlang               ; Erlang programming
    ;; eon-lang-gleam                ; Gleam programming
    ;; eon-lang-haskell              ; Haskell programming
    ;; eon-lang-julia                ; Julia programming
    ;; eon-lang-lfe                  ; Lisp Flavoured Erlang programming
-   eon-lang-lua                  ; Lua programming
-   eon-lang-ocaml                ; Ocaml programming
+   ;; eon-lang-lua                  ; Lua programming
+   ;; eon-lang-ocaml                ; Ocaml programming
    ;; eon-lang-racket               ; Racket programming
-   ;; eon-lang-scheme               ; Scheme programming
-   ;; eon-lang-schem-chez           ; Chez Scheme support
+   ;; eon-lang-scheme               ; Scheme programming with Geiser
+   ;; eon-lang-scheme-chez          ; Chez Scheme support
    ;; eon-lang-scheme-chibi         ; Chibi Scheme support
    ;; eon-lang-scheme-chicken       ; Chicken Scheme support
    ;; eon-lang-scheme-gambit        ; Gambit Scheme support
    ;; eon-lang-scheme-gauche        ; Gauche Scheme support
-   eon-lang-scheme-guile         ; Guile Scheme support
+   ;; eon-lang-scheme-guile         ; Guile Scheme support
    ;; eon-lang-scheme-kawa          ; Kawa Scheme support
    ;; eon-lang-scheme-mit           ; MIT Scheme support
    ;; eon-lang-scheme-racket        ; Racket support; consider `eon-lang-racket'
@@ -92,8 +92,8 @@
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ;;; AI TOOLS
 
-   eon-ollama                    ; Base config to support local LLMs
-   eon-gptel                     ; Gptel LLM chat client
+   ;; eon-ollama                    ; Base config to support local LLMs
+   ;; eon-gptel                     ; Gptel LLM chat client
 
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ;;; PERSONAL MODULES
