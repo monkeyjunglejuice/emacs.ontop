@@ -323,12 +323,13 @@ Adapted from Doom Emacs")
 
 ;;  ____________________________________________________________________________
 ;;; SHELL / TERMINAL
-
 ;; <https://codeberg.org/akib/emacs-eat>
 ;; <https://elpa.nongnu.org/nongnu-devel/doc/eat.html>
+
 ;; To setup shell integration for GNU Bash, insert at the end of your .bashrc:
 ;; [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
 ;; source "$EAT_SHELL_INTEGRATION_DIR/bash"
+;;
 ;; For Zsh, put the following in your .zshrc:
 ;; [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
 ;; source "$EAT_SHELL_INTEGRATION_DIR/zsh"
