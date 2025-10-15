@@ -90,6 +90,12 @@
    eon-lang-web                  ; HTML/CSS editing
 
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   ;;; AI TOOLS
+
+   eon-ollama                    ; Base config to support local LLMs
+   eon-gptel                     ; Gptel LLM chat client
+
+   ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ;;; PERSONAL MODULES
 
    ;; Below is an empty extra module that runs your personal Elisp code.
