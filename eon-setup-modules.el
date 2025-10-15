@@ -44,7 +44,7 @@
 
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ;;; OPTIONAL MODULES
-   
+
    eon-autoupdate                ; update packages automatically
    eon-consult                   ; navigation and search framework
    ;; eon-corfu                     ; code (auto) completion
