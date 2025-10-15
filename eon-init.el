@@ -104,6 +104,7 @@ The modules then will install necessary 3rd-party Emacs packages."
   (dolist (module eon-modules)
     (eon-require-with-error-handling module)))
 
+;; Trigger
 (eon-require-modules)
 
 ;; Placeholder, added for UX/consistency.
