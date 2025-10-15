@@ -1,4 +1,4 @@
-;;; eon-lang-webdev.el --- HTML, CSS, JavaScript -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-lang-web.el --- HTML, CSS, JavaScript -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
@@ -91,5 +91,5 @@
     ((js-mode js-ts-mode) . flymake-eslint-enable)))
 
 ;;  ____________________________________________________________________________
-(provide 'eon-lang-webdev)
-;;; eon-lang-webdev.el ends here
+(provide 'eon-lang-web)
+;;; eon-lang-web.el ends here
