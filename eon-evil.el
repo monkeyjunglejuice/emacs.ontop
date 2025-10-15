@@ -11,6 +11,16 @@
 ;; <https://evil.readthedocs.io/en/latest/settings.html>
 ;; <https://github.com/noctuid/evil-guide>
 
+;; Evil states cheatsheet:
+;; normal
+;; visual
+;; insert
+;; emacs
+;; operator
+;; motion
+;; replace
+;; global (binds the key without evil current-global-map)
+
 (use-package evil :ensure t
 
   :init
