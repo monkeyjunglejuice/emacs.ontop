@@ -34,6 +34,7 @@
    ;;; KEYBINDINGS -- if none selected, fall back to Emacs keybindings
 
    eon-evil                      ; modular editing, Vim keybindings
+   eon-god                       ; modular editing, Emacs keybindings
    ;; eon-helix                     ; modular editing, Helix keybindings
    ;; eon-meow                      ; modular editing, Meow keybindings
 
