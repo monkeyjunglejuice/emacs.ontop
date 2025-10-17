@@ -1,8 +1,9 @@
-;;; eon-flycheck.el --- Flycheck -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-flycheck.el --- Syntax check / linters -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
+;;
 ;; Alternative for the built-in Flymake
 ;;
 ;;; Code:
@@ -12,7 +13,9 @@
 ;; <https://www.flycheck.org/en/latest/>
 
 (use-package flycheck :ensure t
+
   :preface
+
   (defun eon-flycheck--enabling-p (cur arg)
     "Return non-nil if the mode should enable given CUR and ARG.
 CUR is the current mode state (non-nil means enabled).
@@ -27,6 +30,7 @@ If enabling non-interactively while Flymake is on, disable Flymake."
                (bound-and-true-p flymake-mode))
       (flymake-mode -1))
     (funcall orig arg))
+
   (defun eon-flymake--yield (orig &optional arg)
     "Make Flymake yield to Flycheck on auto-enable.
 ORIG is the advised `flymake-mode'. ARG is the prefix arg.
@@ -37,13 +41,18 @@ If enabling non-interactively while Flycheck is on, skip enabling."
              (bound-and-true-p flycheck-mode))
         nil
       (funcall orig arg)))
+
   :init
+
   (advice-add 'flycheck-mode :around #'eon-flycheck--prefer)
   (with-eval-after-load 'flymake
     (advice-add 'flymake-mode :around #'eon-flymake--yield))
+
   :hook
+
   ((emacs-lisp-mode . flycheck-mode)
    (lisp-interaction-mode . (lambda () (flycheck-mode -1)))))
+
 
 ;; Use Eglot with Flycheck rather than Flymake
 ;; <https://github.com/flycheck/flycheck-eglot>
