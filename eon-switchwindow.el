@@ -14,7 +14,7 @@
   :custom
   (switch-window-background t)
   (switch-window-multiple-frames nil)
-  (switch-window-threshold 1)
+  (switch-window-threshold 2)
   (switch-window-mvborder-increment 1)
   (switch-window-shortcut-style 'qwerty)
   (switch-window-qwerty-shortcuts '("s" "d" "f"
@@ -37,7 +37,7 @@
                       :inherit 'shadow)
   (set-face-attribute 'switch-window-label nil
                       :inherit 'show-paren-match-expression
-                      :height 2.0)
+                      :height 1.5)
   :bind
   ;; Bind `switch-window' commands to regular Emacs keybindings
   ("C-x o"   . switch-window)
