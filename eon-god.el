@@ -13,16 +13,10 @@
 (use-package god-mode :ensure t
 
   :init
-  (defun eon-god-unexempt (&rest modes)
-    (setopt god-exempt-major-modes
-            (seq-difference god-exempt-major-modes modes 'eq)))
-
   (defun eon-god--bind-leader-in-states (old new)
     "Explicitly bind the leader key to prevent hijacking."
     (when (and (stringp new) (> (length new) 0))
-      (dolist (m (list god-local-mode-map
-                       ;; Add further God mode maps here
-                       ))
+      (dolist (m (list god-local-mode-map))
         (when (and (stringp old) (> (length old) 0))
           (define-key m (kbd old) nil))
         (define-key m (kbd new) ctl-z-map))))
@@ -54,14 +48,16 @@ Used by custom variables `eon-god-leader-key' and `eon-god-localleader-key'."
     :initialize 'custom-initialize-set)
 
   :custom
+  (god-mode-lighter-string "")
   (god-mode-enable-function-key-translation nil)
   
   :config
   (god-mode)
 
-  ;; Don't disable God mode in the following modes per default
-  ;; (eon-god-unexempt 'dired-mode 'eww-mode 'ibuffer-mode 'magit-popup-mode
-  ;;                   'org-agenda-mode 'wdired-mode)
+  (defun eon-god-unexempt (&rest modes)
+    "Don't disable God mode in certain MODES per default."
+    (setopt god-exempt-major-modes
+            (seq-difference god-exempt-major-modes modes 'eq)))
 
   (defun eon-god-update-cursor-type ()
     (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar)))
