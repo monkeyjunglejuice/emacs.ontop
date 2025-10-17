@@ -1,4 +1,4 @@
-;;; eon-god.el --- God mode keybindings -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-god.el --- Modal editing, Emacs keybindings -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
@@ -48,14 +48,14 @@ Used by custom variables `eon-god-leader-key' and `eon-god-localleader-key'."
     :initialize 'custom-initialize-set)
 
   :custom
-  (god-mode-lighter-string "")
+  (god-mode-lighter-string "G")
   (god-mode-enable-function-key-translation nil)
-  
+
   :config
   (god-mode)
 
   (defun eon-god-unexempt (&rest modes)
-    "Don't disable God mode in certain MODES per default."
+    "Remove certain MODES from God mode's blocklist."
     (setopt god-exempt-major-modes
             (seq-difference god-exempt-major-modes modes 'eq)))
 
@@ -71,7 +71,8 @@ Used by custom variables `eon-god-leader-key' and `eon-god-localleader-key'."
   :bind
   ("<escape>" . god-local-mode)
   (:map god-local-mode-map
-        ("i" . god-local-mode)))
+        ("i" . god-local-mode)
+        ("z" . repeat)))
 
 ;; Adjustments for Isearch
 (use-package god-mode-isearch :ensure nil
@@ -80,6 +81,13 @@ Used by custom variables `eon-god-leader-key' and `eon-god-localleader-key'."
         ("<escape>" . god-mode-isearch-activate))
   (:map god-mode-isearch-map
         ("<escape>" . god-mode-isearch-disable)))
+
+;; _____________________________________________________________________________
+;;; WHICH-KEY
+
+(use-package which-key :ensure nil
+  :config
+  (which-key-enable-god-mode-support))
 
 ;; _____________________________________________________________________________
 (provide 'eon-god)
