@@ -41,7 +41,9 @@
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ;;; THEMES
 
-   ;; eon-themes-doom               ; Doom Emacs theme pack
+   eon-theme-catppuccin         ; Soothing pastel themes
+   eon-theme-doom               ; Doom Emacs theme pack
+   eon-theme-spacemacs          ; Spacemacs theme
 
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ;;; OPTIONAL MODULES
