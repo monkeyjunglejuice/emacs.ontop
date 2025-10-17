@@ -14,13 +14,6 @@
   :config
   (global-hl-todo-mode))
 
-(when (eon-modulep 'eon-flycheck)
-  (use-package flycheck-hl-todo :ensure t
-    :after (hl-todo flycheck)
-    :defer 5  ; Need to be initialized after the rest of checkers
-    :config
-    (flycheck-hl-todo-setup)))
-
 (when (eon-modulep 'eon-consult)
   (use-package consult-todo :ensure t
     :after (hl-todo consult)
