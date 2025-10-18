@@ -22,21 +22,21 @@
  '(;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ;;; MODULES TO LOAD EARLY
 
-   ;; eon-compileangel              ; improved native compilation
+   ;; eon-compileangel              ; Improved native compilation
 
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ;;; NECESSARY MODULES
 
-   eon                           ; the Emacs ONBOARD starter-kit
-   eon-core                      ; required shared settings and definitions
+   eon                           ; The Emacs ONBOARD starter-kit
+   eon-core                      ; Required shared settings and definitions
 
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ;;; KEYBINDINGS -- if none selected, fall back to Emacs keybindings
 
-   eon-evil                      ; modular editing, Vim keybindings
-   eon-god                       ; modular editing, Emacs keybindings
-   ;; eon-helix                     ; modular editing, Helix keybindings
-   ;; eon-meow                      ; modular editing, Meow keybindings
+   ;; eon-evil                      ; Modular editing, Vim keybindings
+   ;; eon-god                       ; Modular editing, Emacs keybindings
+   ;; eon-helix                     ; Modular editing, Helix keybindings
+   ;; eon-meow                      ; Modular editing, Meow keybindings
 
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ;;; THEMES
@@ -44,26 +44,27 @@
    eon-theme-catppuccin         ; Soothing pastel themes
    eon-theme-doom               ; Doom Emacs theme pack
    eon-theme-spacemacs          ; Spacemacs theme
+   eon-theme-matrix             ; Inspired by "The Matrix" movie
 
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ;;; OPTIONAL MODULES
 
-   eon-autoupdate                ; update packages automatically
-   eon-consult                   ; navigation and search framework
-   eon-corfu                     ; code (auto)completion
-   ;; eon-embark                    ; minibuffer actions and context menu
-   eon-flycheck                  ; syntax checker alternative
-   ;; eon-fonts                     ; curated font sets
-   eon-helpful                   ; extended help viewer
-   eon-lispy                     ; edit parenthesis structurally
-   eon-marginalia                ; rich annotations
+   ;; eon-autoupdate                ; Update packages automatically
+   eon-consult                   ; Navigation and search framework
+   eon-corfu                     ; Code (auto)completion
+   ;; eon-embark                    ; Minibuffer actions and context menu
+   eon-flycheck                  ; Syntax checker alternative
+   ;; eon-fonts                     ; Curated font sets
+   eon-helpful                   ; Extended help viewer
+   ;; eon-lispy                     ; Edit parenthesis structurally
    eon-git                       ; Git user interface inside Emacs
+   eon-marginalia                ; Rich annotations
    ;; eon-pdftools                  ; PDF reader and editor
-   ;; eon-smartparens               ; edit parenthesis structurally
-   ;; eon-snippets                  ; code snippets
-   eon-switchwindow              ; window management
-   eon-todo                      ; highlight todo keywords in comments
-   eon-vertico                   ; versatile vertical completion
+   ;; eon-smartparens               ; Edit parenthesis structurally
+   ;; eon-snippets                  ; Code snippets
+   eon-switchwindow              ; Window management
+   eon-todo                      ; Highlight todo keywords in comments
+   eon-vertico                   ; Versatile vertical completion
 
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ;;; PROGRAMMING LANGUAGES
