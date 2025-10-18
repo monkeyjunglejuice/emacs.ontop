@@ -44,8 +44,8 @@
 ;; TODO Corfu config needs an overhaul
 (use-package corfu :ensure t
   :init
-  ;; Disable Emacs ONBOARD standard first
-  (global-completion-preview-mode -1)
+  ;; Prevent *Completions* buffer from popping up
+  (setopt completion-auto-help nil)
   :custom
   (corfu-auto t)
   (corfu-auto-prefix 2)
