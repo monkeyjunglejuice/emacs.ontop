@@ -10,21 +10,22 @@
 ;; LISPYVILLE
 ;; <https://github.com/noctuid/lispyville>
 
-(use-package lispyville :ensure t
-  :diminish
-  :init
-  (setq lispyville-key-theme
-        '(operators
-          c-w
-          (prettify insert)
-          (atom-movement t)
-          slurp/barf-lispy
-          additional
-          additional-insert))
-  :config
-  (lispyville-set-key-theme)
-  :hook
-  ((prog-mode conf-mode) . lispyville-mode))
+(when (eon-modulep 'eon-evil)
+  (use-package lispyville :ensure t
+    :diminish
+    :init
+    (setq lispyville-key-theme
+          '(operators
+            c-w
+            (prettify insert)
+            (atom-movement t)
+            slurp/barf-lispy
+            additional
+            additional-insert))
+    :config
+    (lispyville-set-key-theme)
+    :hook
+    ((prog-mode conf-mode) . lispyville-mode)))
 
 ;;  ____________________________________________________________________________
 (provide 'eon-lispy)
