@@ -31,7 +31,7 @@
 ;; Maintainer: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Created: 28 Apr 2021
-;; Version: 2.2.1
+;; Version: 2.2.4
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
 ;; Keywords: config dotemacs convenience
@@ -93,7 +93,7 @@ same of `gc-cons-threshold' default."
 
 (defcustom eon-gcmh-idle-delay 15
   "Idle time to wait in seconds before triggering GC.
-If `auto' this is auto computed based on `eon-gcmh-auto-idle-delay-factor'."
+If `auto', this is auto-computed based on `eon-gcmh-auto-idle-delay-factor'."
   :group 'eon
   :type '(choice number (const auto)))
 
@@ -231,32 +231,33 @@ Cancel the previous one if present."
   (setopt
    ;; When to bring the buffer to the foreground?
    warning-minimum-level :error
-   ;; Reduce bytecode compilation verbosity?
+   ;; Allow bytecode compilation to be verbose?
    byte-compile-verbose nil
-   byte-compile-warnings nil
+   ;; Turn off minor warnings
+   byte-compile-warnings (not '(callargs
+                                docstrings
+                                empty-body
+                                free-vars
+                                lexical
+                                noruntime
+                                obsolete))
    ;; Reduce native code compilation verbosity?
    native-comp-async-report-warnings-errors nil
    native-comp-warning-on-missing-source nil))
 
 ;; _____________________________________________________________________________
-;;; DEBUGGING AND ERROR HANDLING
-
-(when init-file-debug
-  (setopt debug-on-error t))
-
-;; _____________________________________________________________________________
 ;;; EMACS SYSTEM LIMITS
 
 ;; Increase warning threshold
-(setopt large-file-warning-threshold (* 64 1024 1024))
+(setopt large-file-warning-threshold (* 64 1024 1024))  ; 64 MiB
 
 ;; Increase undo limit
-(setopt undo-limit (* 64 1024 1024)  ; 64mb
-        undo-strong-limit (* 96 1024 1024)   ; 96mb
-        undo-outer-limit (* 960 1024 1024))  ; 960mb
+(setopt undo-limit (* 64 1024 1024)  ; 64 MiB
+        undo-strong-limit (* 96 1024 1024)   ; 96 MiB
+        undo-outer-limit (* 960 1024 1024))  ; 960 MiB
 
 ;; Increase the amount of data which Emacs reads from subprocesses
-(setopt read-process-output-max (* 1024 1024))  ; 1 MB
+(setopt read-process-output-max (* 1024 1024))  ; 1 MiB
 
 ;; _____________________________________________________________________________
 ;;; GLOBAL DEFINITIONS & UTILITIES
@@ -293,54 +294,43 @@ For finer granularity, use the variables `system-type'
 or `system-configuration' directly."
   (eq system-type 'darwin))
 
-;; Extended variant of `add-to-list' and its friends
+;; Extended `add-to-list' and friends
 
 (defun eon-list-adjoin (cur elements &optional append compare-fn)
   "Return a new list like CUR with ELEMENTS added once.
 
 ELEMENTS may be an item or a list. If APPEND is non-nil, append items
-left→right; otherwise prepend while preserving ELEMENTS order.
-COMPARE-FN is the membership predicate (default `equal').  CUR is not
-mutated.
+left->right; otherwise prepend while preserving ELEMENTS order.
+COMPARE-FN is the membership predicate (default `equal').
 
-Examples (CUR = (a b)):
-  (eon-list-adjoin '(a b) 'c)                    ⇒ (c a b)
-  (eon-list-adjoin '(a b) '(c a))                ⇒ (c a b)
-  (eon-list-adjoin '(a b) '(d) t)                ⇒ (a b d)
-  (eon-list-adjoin '(a b) '(\"x\" \"x\") nil #'string-equal)
-                                                ⇒ (\"x\" a b)"
-  (let* ((xs   (if (listp elements) elements (list elements)))
+Examples:
+  (eon-list-adjoin '(a b) 'c)                                 ; => (c a b)
+  (eon-list-adjoin '(a b) '(c a))                             ; => (c a b)
+  (eon-list-adjoin '(a b) '(d) t)                             ; => (a b d)
+  (eon-list-adjoin '(a b) '(\"x\" \"x\") nil #'string-equal)  ; => (\"x\" a b)"
+  (declare (pure t) (side-effect-free t))
+  (let* ((xs   (if (consp elements) elements (list elements)))
          (test (or compare-fn #'equal)))
     (cl-labels
-        ((step (res items)
+        ((prepend-step (res items)
            (if (null items)
                res
-             (let* ((x (car items))
-                    (res* (if (cl-find x res :test test)
-                              res
-                            (if append
-                                (append res (list x))
-                              (cons x res)))))
-               (step res* (cdr items))))))
-      (step (copy-sequence cur)
-            (if append xs (reverse xs))))))
-
-(defmacro eon-add-to-list-setopt (var elements &optional append compare-fn)
-  "Set VAR to CUR with ELEMENTS adjoined using a single `setopt' call.
-
-VAR is a symbol naming a list variable. ELEMENTS may be an item or a
-list. APPEND/COMPARE-FN as in `eon-list-adjoin'. If VAR is unbound,
-treat it as nil.
-
-Examples (initial VAR = (a b)):
-  (eon-add-to-list-setopt some-var 'c)
-  (eon-add-to-list-setopt some-var '(c a))
-  (eon-add-to-list-setopt some-var '(d) t)
-  (eon-add-to-list-setopt some-var '(\"x\") nil #'string-equal)"
-  `(setopt ,var
-           (eon-list-adjoin
-            (if (boundp ',var) ,var nil)
-            ,elements ,append ,compare-fn)))
+             (let ((x (car items)))
+               (prepend-step
+                (if (cl-find x res :test test) res (cons x res))
+                (cdr items)))))
+         (append-step (res items seen extra)
+           (if (null items)
+               (append res (nreverse extra))
+             (let ((x (car items)))
+               (if (cl-find x seen :test test)
+                   (append-step res (cdr items) seen extra)
+                 (append-step res (cdr items)
+                              (cons x seen) (cons x extra)))))))
+      (if append
+          (append-step cur xs cur nil)
+        ;; Preserve ELEMENTS order when prepending
+        (prepend-step cur (reverse xs))))))
 
 (defun eon-add-to-list (list-sym elements &optional append compare-fn)
   "Rebind LIST-SYM to a new list with ELEMENTS adjoined once.
@@ -350,13 +340,34 @@ a list. APPEND/COMPARE-FN as in `eon-list-adjoin'. Returns the new
 value of LIST-SYM.
 
 Examples (LIST-SYM value starts as (a b)):
-  (eon-add-to-list 'v 'c)                  ⇒ (c a b)
-  (eon-add-to-list 'v '(c a))              ⇒ (c a b)
-  (eon-add-to-list 'v '(d) t)              ⇒ (a b d)"
+  (eon-add-to-list 'v 'c)           ; => (c a b)
+  (eon-add-to-list 'v '(c a))       ; => (c a b)
+  (eon-add-to-list 'v '(d) t)       ; => (a b d)"
+  (unless (symbolp list-sym)
+    (error "eon-add-to-list: LIST-SYM must be quoted: 'my-var"))
   (set list-sym
        (eon-list-adjoin
         (if (boundp list-sym) (symbol-value list-sym) nil)
         elements append compare-fn)))
+
+(defmacro eon-add-to-list-setopt
+    (list-sym elements &optional append compare-fn)
+  "Like `eon-add-to-list' but via `setopt'.
+
+LIST-SYM must be a quoted symbol, e.g. 'my-var. ELEMENTS may be an
+item or a list. If APPEND is non-nil, append items left->right;
+otherwise prepend while preserving ELEMENTS order. COMPARE-FN defaults
+to `equal'. See `eon-add-to-list' for examples."
+  (declare (debug (sexp form &optional form function)))
+  (unless (and (consp list-sym)
+               (eq (car list-sym) 'quote)
+               (symbolp (cadr list-sym)))
+    (error "eon-add-to-list-setopt: LIST-SYM must be quoted: 'my-var"))
+  (let ((sym (cadr list-sym)))
+    `(setopt ,sym
+             (eon-list-adjoin
+              (if (boundp ',sym) ,sym nil)
+              ,elements ,append ,compare-fn))))
 
 ;; Get all the parent major modes
 (defun eon-get-parent-modes ()
@@ -386,10 +397,10 @@ When called interactively, also echo the result."
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; … or set the default width of the Emacs frame in characters
-(add-to-list 'default-frame-alist '(width . 80))
+;; (add-to-list 'default-frame-alist '(width . 80))
 
 ;; … and set the default height of the Emacs frame in lines
-(add-to-list 'default-frame-alist '(height . 32))
+;; (add-to-list 'default-frame-alist '(height . 32))
 
 ;; Horizontal position: set the distance from the left screen edge in pixels
 ;; That way, only the first frame created will get a fixed position:
@@ -403,7 +414,7 @@ When called interactively, also echo the result."
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Fringes>
 ;; (add-to-list 'default-frame-alist '(right-fringe . 0))
 
-;; Bring frame to the front
+;; Bring frame to the front (steals focus)
 (add-hook 'window-setup-hook
           (lambda ()
             (when (display-graphic-p)
@@ -453,7 +464,7 @@ When called interactively, also echo the result."
 ;; Emphasize the cursor when running Emacs in a text terminal?
 (setopt visible-cursor nil)
 
-;; Make sure to highlight the current line only in the active window.
+;; Make sure to highlight the current line only in the active window
 (setopt hl-line-sticky-flag nil)
 (add-hook 'special-mode-hook
           (lambda ()
@@ -514,7 +525,8 @@ When called interactively, also echo the result."
 
 (defcustom eon-leader-key
   (if (display-graphic-p) "C-," "C-z")
-  "Leader prefix (GUI -> \"C-,\"; TTY -> \"C-z\"). Use `setopt' to change."
+  "Leader prefix (GUI -> \"C-,\"; TTY -> \"C-z\").
+Use the Customization UI to change, or `setopt' in Elisp code."
   :group 'eon
   :type 'string
   :set #'eon-leader--set-key)
@@ -522,7 +534,7 @@ When called interactively, also echo the result."
 ;; Localleader implementation
 
 (defvar-keymap eon-localleader-global-map
-  :doc "Global local leader keymap (fallback for all buffers).
+  :doc "Global local leader keymap (fallback for all major and minor modes).
 You can bind commands here that should appear in all local leader keymaps."
   "," '("..." . execute-extended-command-for-buffer))
 
@@ -548,13 +560,13 @@ Don't bind any keys/commands to this keymap.")
       (keymap-set ctl-z-map value ctl-z-localleader-map)))
   (set-default sym value))
 
-;; Empty, named prefix so which-key shows a stable label "Local".
+;; Empty named prefix, so which-key shows the label "Local".
 (defvar-keymap ctl-z-localleader-map
   :doc "Local leader"
   :name "Local")
 
 (defun eon-localleader--sync-local-prefix-parent ()
-  "Make `ctl-z-localleader-map' inherit the effective localleader.
+  "Make `ctl-z-localleader-map' inherit the effective local leader keymap.
 Respects the which-key origin window so that the correct buffer's
 localleader is shown."
   (let* ((win (eon-localleader--context-window))
@@ -576,10 +588,10 @@ localleader is shown."
 
 (defcustom eon-localleader-key
   (if (display-graphic-p) "C-," "C-z")
-  "Localleader key (pressed after the leader).
-GUI: leader then \"C-,\" -> localleader (\"C-, C-,\")
-TTY: leader then \"C-z\" -> localleader (\"C-z C-z\")
-Use `setopt' to override."
+  "Localleader key, pressed after the leader.
+GUI default: \"C-,\" -> reach local leader \"C-, C-,\"
+TTY default: \"C-z\" -> localleader \"C-z C-z\"
+Use the Customization UI to change, or `setopt' in Elisp code."
   :group 'eon
   :type 'string
   :set #'eon-localleader--set-key)
@@ -612,7 +624,6 @@ Use `setopt' to override."
   "f"   `("File"     . ,ctl-z-f-map)
   "g"   `("Goto"     . ,ctl-z-g-map)
   "h"   `("Help"     . ,ctl-z-h-map)
-  "m"   #'execute-extended-command
   "o"   `("Org"      . ,ctl-z-o-map)
   "p"   `("Project"  . ,ctl-z-p-map)
   "q"   `("Quit"     . ,ctl-z-q-map)
@@ -625,7 +636,7 @@ Use `setopt' to override."
   ;; Add dynamic localleader keymap
   eon-localleader-key `("Local" . ,ctl-z-localleader-map))
 
-;; Initial binding of the leader prefix
+;; Initial binding of the leader prefix to the leader keymap
 (keymap-global-set eon-leader-key ctl-z-map)
 
 ;; Make the leader available in the minibuffer too
@@ -650,7 +661,7 @@ BODY is forwarded to `defvar-keymap'."
                           (setq-local eon-localleader--map ,map-sym))))))
 
 ;; _____________________________________________________________________________
-;;; KEYBINDING-RELATED SETTINGS
+;;; GENERAL KEYBINDINGS
 
 (when (eon-macp)
   (setopt
@@ -661,8 +672,26 @@ BODY is forwarded to `defvar-keymap'."
    ;; Don't bypass "C-h ..." keybindings
    mac-pass-command-to-system nil))
 
+;; Make "M-x" available in the leader keymap
+(keymap-set ctl-z-map "m" #'execute-extended-command)
+
 ;; Add `universal-argument' to the leader keymap
 (keymap-set ctl-z-map "u" #'universal-argument)
+
+;; _____________________________________________________________________________
+;;; VI KEYBINDINGS (VIPER-MODE)
+
+(with-eval-after-load 'viper
+  (setopt
+   viper-inhibit-startup-message t    ; Don't show viper's start up message
+   viper-expert-level            '5   ; Use max Emacs experience level [1,5]
+   viper-case-fold-search        t    ; Ingore case when searching
+   viper-ex-style-editing        nil  ; Delete past line's beginning
+   viper-ex-style-motion         nil  ; Move past line's beginning
+   ))
+
+(with-eval-after-load 'viper-cmd
+  (viper-buffer-search-enable))
 
 ;; _____________________________________________________________________________
 ;;; FONTS
@@ -672,6 +701,7 @@ BODY is forwarded to `defvar-keymap'."
 ;; set, then call your personal function via `eon-load-after-light-theme-hook'
 ;; and `eon-load-after-light-theme-hook' (under section 'THEME CONFIG').
 ;; TODO Make it easy to configure by setting a font, the size, etc.
+;; TODO Decouple from eon-load-.*-theme-hook
 (defun eon-fonts-default ()
   "The height value is in 1/10 pt, so 140 will give 14 pt."
   (interactive)
@@ -681,7 +711,7 @@ BODY is forwarded to `defvar-keymap'."
                       :slant  'normal
                       :weight 'normal
                       :width  'normal
-                      :height 150)
+                      :height 140)
   ;; Set an alternative monospaced font. Can be the same as above.
   ;; It should have the same character width as the default font
   (set-face-attribute 'fixed-pitch nil
@@ -724,25 +754,30 @@ BODY is forwarded to `defvar-keymap'."
 ;;; TOGGLE THEME
 
 ;; Default/fallback definitions – don't change them here,
-;; but scroll further down to 'THEME CONFIG'
+;; but further down in 'THEME CONFIG' - or set them in your init.el.
 ;; TODO Refactor in order to dissolve duplication
+;; TODO Add setters to defcustom
 
-(defcustom eon-theme-name-light 'modus-operandi-tinted
-  "Name of the light theme."
+(defcustom eon-theme-light 'modus-operandi
+  "The theme can be either a symbol, function symbol or lambda."
   :group 'eon
-  :type 'symbol)
+  :type '(restricted-sexp
+          :match-alternatives (functionp symbolp)))
 
-(defcustom eon-theme-name-dark 'modus-vivendi-tinted
-  "Name of the dark theme."
+(defcustom eon-theme-dark 'modus-vivendi
+  "The theme can be either a symbol, function symbol or lambda."
   :group 'eon
-  :type 'symbol)
+  :type '(restricted-sexp
+          :match-alternatives (functionp symbolp)))
 
 (defcustom eon-theme-variant-default 'light
   "Load either the light or the dark theme at startup?"
   :group 'eon
-  :type 'symbol)
+  :type '(radio
+          (const :tag "Dark" dark)
+          (const :tag "Light" light)))
 
-(defvar eon-theme-variant-active nil
+(defvar eon-theme--variant-active nil
   "Holds the information about the currently active theme variant.")
 
 (defcustom eon-theme-light-pre-load-hook nil
@@ -771,11 +806,11 @@ Some themes may come as functions -- wrap these ones in lambdas."
   (interactive)
   (mapc #'disable-theme custom-enabled-themes)
   (run-hooks 'eon-theme-light-pre-load-hook)
-  (cond ((symbolp eon-theme-name-light)
-         (load-theme eon-theme-name-light t))
-        ((functionp eon-theme-name-light)
-         (funcall eon-theme-name-light)))
-  (setq eon-theme-variant-active 'light)
+  (cond ((symbolp eon-theme-light)
+         (load-theme eon-theme-light t))
+        ((functionp eon-theme-light)
+         (funcall eon-theme-light)))
+  (setq eon-theme--variant-active 'light)
   (run-hooks 'eon-theme-light-post-load-hook))
 
 (defun eon-theme-load-dark ()
@@ -784,36 +819,35 @@ Some themes may come as functions -- wrap these ones in lambdas."
   (interactive)
   (mapc #'disable-theme custom-enabled-themes)
   (run-hooks 'eon-theme-dark-pre-load-hook)
-  (cond ((symbolp eon-theme-name-dark)
-         (load-theme eon-theme-name-dark t))
-        ((functionp eon-theme-name-dark)
-         (funcall eon-theme-name-dark)))
-  (setq eon-theme-variant-active 'dark)
+  (cond ((symbolp eon-theme-dark)
+         (load-theme eon-theme-dark t))
+        ((functionp eon-theme-dark)
+         (funcall eon-theme-dark)))
+  (setq eon-theme--variant-active 'dark)
   (run-hooks 'eon-theme-dark-post-load-hook))
 
 (defun eon-theme-toggle ()
   "Toggle between light and dark theme."
   (interactive)
   (cond
-   ((equal eon-theme-variant-active 'light) (eon-theme-load-dark))
-   ((equal eon-theme-variant-active 'dark) (eon-theme-load-light))
+   ((equal eon-theme--variant-active 'light) (eon-theme-load-dark))
+   ((equal eon-theme--variant-active 'dark) (eon-theme-load-light))
    (t (mapc #'disable-theme custom-enabled-themes))))
 
 (defun eon-theme-load-default ()
   "Load the default theme."
+  (interactive)
   (cond
    ((equal eon-theme-variant-default 'light) (eon-theme-load-light))
    ((equal eon-theme-variant-default 'dark) (eon-theme-load-dark))
    (t (error
-       "Toggle theme: DEFAULT-THEME-VARIANT must be either 'light or 'dark"))))
+       "Theme: `eon-theme-variant-default' must be set to 'light or 'dark"))))
+
+;; Keybinding to toggle between light and dark: "<leader> x t"
+(keymap-set ctl-z-x-map "t" #'eon-theme-toggle)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; THEME CONFIG
-;; Either configure the themes here,
-;; or "M-x customize-group RET eon"
-
-;; Set the keybinding to toggle between light and dark: "<leader> x t"
-(keymap-set ctl-z-x-map "t" #'eon-theme-toggle)
 
 ;; Set some defaults for the Modus themes; doesn't affect other themes.
 ;; These variables must be set before loading the Modus themes.
@@ -824,14 +858,16 @@ Some themes may come as functions -- wrap these ones in lambdas."
         '((border-mode-line-active bg-mode-line-active)
           (border-mode-line-inactive bg-mode-line-inactive)))
 
+;; Customize via "M-x eon-customize-group" or via `setopt' in your init.el
+
 ;;; ---> Set your light theme:
-;; (setopt eon-theme-name-light 'modus-operandi)
+;; (setopt eon-theme-light 'modus-operandi-tinted)
 
 ;;; ---> Set your dark theme:
-;; (setopt eon-theme-name-dark 'modus-vivendi)
+;; (setopt eon-theme-dark 'modus-vivendi-tinted)
 
-;;; ---> Set your default variant here - 'light or 'dark
-;; (setopt eon-theme-variant-default 'dark)
+;;; ---> Set 'light or 'dark as your default theme variant:
+;; (setopt eon-theme-variant-default 'light)
 
 ;; The hooks below can be used to run additional functions before or after
 ;; loading the selected light and dark theme. That's useful for setting
@@ -845,9 +881,8 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; Normal functions not designated as "(interactive)" must be wrapped in lambdas:
 (add-hook 'eon-theme-light-post-load-hook
           (lambda ()
-            ;; Do not extend `region' background past the end of the line?
-            (custom-set-faces
-             '(region ((t :extend nil))))
+            ;; Extend `region' background past the end of the line?
+            (custom-set-faces '(region ((t :extend nil))))
             ))
 
 ;; Load the default font set; if you want to load a different font set,
@@ -862,12 +897,11 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; Normal functions not designated as "(interactive)" must be wrapped in lambdas:
 (add-hook 'eon-theme-dark-post-load-hook
           (lambda ()
-            ;; Do not extend `region' background past the end of the line?
-            (custom-set-faces
-             '(region ((t :extend nil))))
+            ;; Extend `region' background past the end of the line?
+            (custom-set-faces '(region ((t :extend nil))))
             ))
 
-;; Load the default font set; if you want to load a different font set,
+;; Load the default font set; if you want to load your own font set,
 ;; "unhook" `eon-fonts-default' first via:
 ;; (remove-hook 'eon-theme-dark-post-load-hook #'eon-fonts-default)
 (add-hook 'eon-theme-dark-post-load-hook #'eon-fonts-default)
@@ -960,8 +994,20 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (setopt completion-category-overrides
         '((file (styles . (partial-completion basic initials)))))
 
+;;; Dabbrev
+(with-eval-after-load 'dabbrev
+  (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
+  (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
+  (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode))
+
+;; Make TAB try completion when appropriate.
+(setopt tab-always-indent 'complete)
+
+;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; *Completions* buffer
+
 ;; Allow the *Completions* buffer to pop up?
-(setopt completion-auto-help 'always)
+(setopt completion-auto-help t)
 
 ;; Display settings for the *Completions* buffer; only if not disabled above
 (setopt
@@ -970,9 +1016,11 @@ Some themes may come as functions -- wrap these ones in lambdas."
  ;; Cycle completion candidates instead?
  completion-cycle-threshold nil
  ;; Show docstrings for completion candidates?
+ ;; TODO Keep that off until I figured out how to truncate long docstrings in
+ ;; the when the frame width is narrower
  completions-detailed nil
  ;; Automatically select the *Completions* buffer?
- completion-auto-select 'second-tab
+ completion-auto-select nil
  ;; Define the appearance of completions?
  completions-format 'one-column
  ;; Maximum height of the *Completions* buffer in lines?
@@ -980,33 +1028,80 @@ Some themes may come as functions -- wrap these ones in lambdas."
  ;; Enable grouping of completion candidates?
  completions-group t)
 
-;; Preview current in-buffer completion candidate?
-(when (fboundp #'global-completion-preview-mode)
-  (global-completion-preview-mode 1)
-  (keymap-set completion-preview-active-mode-map
-              "M-n" #'completion-preview-next-candidate)
-  (keymap-set completion-preview-active-mode-map
-              "M-p" #'completion-preview-prev-candidate))
+;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; Icomplete
 
 ;; Tweaking Icomplete
 (with-eval-after-load 'icomplete
-  (setopt icomplete-in-buffer t
-          icomplete-compute-delay 0
+  (setopt icomplete-compute-delay 0.01
           icomplete-delay-completions-threshold 256
           icomplete-show-matches-on-no-input t
-          icomplete-hide-common-prefix nil)
-  ;; TAB accepts the current candidate in Fido minibuffers
+          icomplete-hide-common-prefix nil))
+
+;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; Show `completion-in-region' candidates in the buffer
+
+(setopt icomplete-in-buffer t)
+(setopt icomplete-prospects-height 10)
+
+;; Keep *Completions* from popping up, even if requested
+(advice-add 'completion-at-point :after #'minibuffer-hide-completions)
+
+;; Navigate completion candidates
+(with-eval-after-load 'icomplete
+  (dolist (map (list icomplete-minibuffer-map
+                     minibuffer-local-completion-map))
+    (define-key map (kbd "C-n") #'icomplete-forward-completions)
+    (define-key map (kbd "C-p") #'icomplete-backward-completions)
+    (define-key map (kbd "<down>") #'icomplete-forward-completions)
+    (define-key map (kbd "<up>") #'icomplete-backward-completions)
+    (define-key map (kbd "M-n") #'icomplete-forward-completions)
+    (define-key map (kbd "M-p") #'icomplete-backward-completions)))
+
+;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; Vertical completion with `fido-vertical'
+
+;; TAB accepts the current candidates in Fido minibuffers
+(with-eval-after-load 'icomplete
   (keymap-set icomplete-minibuffer-map "TAB" #'icomplete-force-complete)
   (keymap-set icomplete-minibuffer-map "<tab>" #'icomplete-force-complete))
 
-;; Vertical minibuffer completion with `fido-vertical'
 (fido-vertical-mode 1)
 
-;; Dabbrev
-(with-eval-after-load 'dabbrev
-  (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
-  (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
-  (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode))
+;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; Show `completion-in-region' candidates in the minibuffer
+
+;; TODO Make this a minor mode, and customizable with the Customization UI
+
+(defvar eon-minibuffer-completion-require-match nil
+  "If non-nil, only accept a real candidate from `completing-read'.")
+
+(defun eon-minibuffer-completion-in-region
+    (beg end collection &optional predicate)
+  "Minibuffer frontend for `completion-in-region'."
+  (let* ((initial (buffer-substring-no-properties beg end))
+         (md (completion-metadata initial collection predicate))
+         (ann (completion-metadata-get md 'annotation-function))
+         (aff (completion-metadata-get md 'affixation-function))
+         (cat (completion-metadata-get md 'category))
+         (exitf (completion-metadata-get md 'exit-function))
+         ;; Keep *Completions* silent even inside the minibuffer
+         (completion-auto-help nil)
+         (completion-extra-properties
+          (append (when ann `(:annotation-function ,ann))
+                  (when aff `(:affixation-function ,aff))
+                  (when cat `(:category ,cat))))
+         (choice (completing-read "Complete: " collection predicate
+                                  eon-minibuffer-completion-require-match
+                                  initial)))
+    (unless (equal choice initial)
+      (delete-region beg end)
+      (insert choice))
+    (when exitf (funcall exitf choice 'finished))
+    t))
+
+;; Make it the global default
+;; (setq completion-in-region-function #'eon-minibuffer-completion-in-region)
 
 ;; _____________________________________________________________________________
 ;;; HELP
@@ -1038,8 +1133,8 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; _____________________________________________________________________________
 ;;; CUSTOMIZATION UI
 
-;; Don't accumulate customization buffers
-(setopt custom-buffer-done-kill t)
+;; The most important Emacs ONBOARD preferences are customizable via GUI.
+;; Open the GUI via "<leader> x C"
 
 (defun eon-customize-group ()
   "Set preferences via GUI."
@@ -1047,6 +1142,9 @@ Some themes may come as functions -- wrap these ones in lambdas."
   (customize-group 'eon))
 
 (keymap-set ctl-z-x-map "C" #'eon-customize-group)
+
+;; Don't accumulate customization buffers
+(setopt custom-buffer-done-kill t)
 
 ;; _____________________________________________________________________________
 ;;; ELDOC
@@ -1072,10 +1170,15 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (keymap-global-set "C-S-r" #'isearch-backward)
 
 ;; Search and replace
-;; The 'query-' variant asks for each string. Confirm with "SPC",
-;; or jump to the next via "n"
-(keymap-global-set "M-%"   #'query-replace-regexp)
-(keymap-global-set "C-M-%" #'replace-regexp)
+;; If text is selected, then the commands act on that region only
+
+;; The 'query-' variant asks for each string.
+;; Confirm with "SPC", or jump to the next via "n"
+(keymap-global-set "M-%"    #'query-replace-regexp)
+(keymap-set ctl-z-s-map "r" #'query-replace-regexp)
+;; Replace all strings immediately
+(keymap-global-set "C-M-%"  #'replace-regexp)
+(keymap-set ctl-z-s-map "R" #'replace-regexp)
 
 ;; _____________________________________________________________________________
 ;;; PINENTRY
@@ -1103,6 +1206,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 ;; Default window navigation – simply switch to the next window in order.
 ;; Added for convenience; the default keybinding is "C-x o"
+(keymap-global-set "M-o" #'other-window)
 (keymap-set ctl-z-w-map "w" #'other-window)
 
 ;; Undo/redo window layouts
@@ -1125,6 +1229,11 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (keymap-set ctl-z-t-map "p" #'tab-previous)
 (keymap-set ctl-z-t-map "n" #'tab-next)
 
+;; Run commands in a new tab
+(keymap-set ctl-z-t-map "f" #'find-file-other-tab)
+(keymap-set ctl-z-t-map "d" #'dired-other-tab)
+(keymap-set ctl-z-t-map "b" #'switch-to-buffer-other-tab)
+
 ;; _____________________________________________________________________________
 ;;; BUFFER MANAGEMENT
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Buffers>
@@ -1146,7 +1255,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; Get the buffer out of the way, but let it alive
 (keymap-set ctl-z-b-map "k" #'bury-buffer)
 
-;; Kill all buffers at once – equivalent to "close all tabs"
+;; Kill all buffers at once
 (defun eon-kill-all-buffers ()
   "Close all buffers at once."
   (interactive)
@@ -1407,18 +1516,17 @@ Called without argument just syncs `eon-boring-buffers' to other places."
 (add-to-list 'recentf-exclude
              "^/\\(?:ssh\\|su\\|sudo\\)?:")
 
-;; Provide Keybindings for these useful commands
-(keymap-global-set "C-x f" #'recentf-open)  ; shadows `set-fill-column'
+;; Select from recently opened files via "<leader> f r"
 (keymap-set ctl-z-f-map "r" #'recentf-open)
 
 ;; _____________________________________________________________________________
 ;;; BACKUP FILES
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Backup>
 
-;; CAUTION: This mode makes copies of the files you are editing.
+;; ---> CAUTION: This mode makes copies of the files you are editing.
 ;; If you're editing files with sensitive data (e.g. on temporally mounted,
 ;; encrypted devices), either disable this mode or specify the location
-;; where to save (or not to save) backup copies of these files.
+;; via regexp where to save (or not to save) backup copies of these files.
 
 ;; Make backup before editing?
 (setopt make-backup-files t)
@@ -1475,6 +1583,10 @@ Called without argument just syncs `eon-boring-buffers' to other places."
 ;;; DIRED FILE MANAGER
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Dired>
 
+;; Define localleader keymap for `dired-mode'
+(eon-localleader-defkeymap dired-mode eon-localleader-dired-map
+  :doc "Local leader keymap for Dired buffers.")
+
 ;; The `dired' keybinding is "C-x d". This new keybinding is in accordance
 ;; with "C-x C-f" for visiting files
 (keymap-global-set "C-x C-d" #'dired)
@@ -1507,10 +1619,11 @@ Called without argument just syncs `eon-boring-buffers' to other places."
 (with-eval-after-load 'dired
   (keymap-set dired-mode-map "e" #'wdired-change-to-wdired-mode))
 
-;; Hide details in file listings? Toggle via "S-("
+;; Hide details in file listings? Toggle via "(" or "<localleader> d"
 (add-hook 'dired-mode-hook #'dired-hide-details-mode)
+(keymap-set eon-localleader-dired-map "d" #'dired-hide-details-mode)
 
-;; Highlight current line?
+;; Highlight current line in Dired?
 (add-hook 'dired-mode-hook #'hl-line-mode)
 
 ;; Linux/Unix only: hit "M-RET" to open files in the corresponding desktop app
@@ -1539,10 +1652,6 @@ Called without argument just syncs `eon-boring-buffers' to other places."
    ;; Store thumbnails in the system-wide thumbnail location
    ;; e.g. ~/.local/cache/thumbnails to make them reusable by other programs
    image-dired-thumbnail-storage 'standard-large))
-
-;; Define localleader keymap for `dired-mode'
-(eon-localleader-defkeymap dired-mode eon-localleader-dired-map
-  :doc "Local leader keymap for Dired buffers.")
 
 ;; _____________________________________________________________________________
 ;;; BOOKMARKS
@@ -1658,8 +1767,9 @@ Called without argument just syncs `eon-boring-buffers' to other places."
 ;; _____________________________________________________________________________
 ;;; NET-UTILS
 
-(setopt netstat-program "netstat"
-        netstat-program-options '("-atupe"))
+(when (executable-find "netstat")
+  (setopt netstat-program "netstat"
+          netstat-program-options '("-atupe")))
 
 ;; _____________________________________________________________________________
 ;;; WEB BROWSERS
@@ -1809,9 +1919,6 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 ;; Delete the whole indentation instead spaces one-by-one via <backspace>?
 ;; (Possibly shadowed by 3rd-party packages like `smartparens-mode'
 (setopt backward-delete-char-untabify-method 'hungry)
-
-;; Enable indentation and completion using the TAB key
-(setopt tab-always-indent 'complete)
 
 ;; Trigger automatic indentation by newline and DEL/backspace
 (setopt electric-indent-chars '(?\n ?\^?))
@@ -2490,7 +2597,7 @@ With SWITCH = \='hook, return ...-hook variables."
     (kill-emacs)))
 
 ;; Start the server?
-(add-hook 'emacs-startup-hook #'server-start)
+(add-hook 'after-init-hook #'server-start)
 
 ;; _____________________________________________________________________________
 (provide 'eon)
