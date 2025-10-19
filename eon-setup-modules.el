@@ -56,7 +56,6 @@
    eon-flycheck                  ; Syntax checker alternative
    ;; eon-fonts                     ; Curated font sets
    eon-helpful                   ; Extended help viewer
-   ;; eon-lispy                     ; Edit parenthesis structurally
    eon-git                       ; Git user interface inside Emacs
    eon-marginalia                ; Rich annotations
    ;; eon-pdftools                  ; PDF reader and editor
