@@ -36,16 +36,6 @@
   ;; How to display Vertico per default?
   (vertico-multiform-mode))
 
-;; Use `consult-completion-in-region' if a vertical completion is enabled.
-;; Otherwise use the default `completion--in-region' function.
-(when (eon-modulep 'consult)
-  (setq completion-in-region-function
-        (lambda (&rest args)
-          (apply (if (or vertico-mode fido-vertical-mode)
-                     #'consult-completion-in-region
-                   #'completion--in-region)
-                 args))))
-
 ;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; EMACS (built-in)
 

@@ -63,6 +63,8 @@
   ;; You may want to use `embark-prefix-help-command' or which-key instead.
   ;; (keymap-set consult-narrow-map (concat consult-narrow-key " ?") #'consult-narrow-help)
 
+  ;; Let Consult replace the *Completions* buffer and provide code completion
+  (setq-default completion-in-region-function #'consult-completion-in-region)
   :hook
   ;; Enable automatic preview at point in the *Completions* buffer. This is
   ;; relevant when you use the default completion UI.
