@@ -18,25 +18,25 @@
   :custom
   (gptel-default-mode 'org-mode))
 
-;; Setup for local LLMs via Ollama - see also `eon-ollama'
-(use-package gptel-ollama :ensure nil
-  :when (eon-modulep 'eon-ollama)
-  :init
-  (require 'eon-ollama)
-  :custom
-  ;; Register local Ollama models
-  (gptel-backend (gptel-make-ollama "Ollama"
-                   :host "localhost:11434"
-                   :endpoint "/api/chat"
-                   :stream t
-                   :models (eon-ollama-models 'symbol)))
-  :config
-  (defun eon-gptel--set-ollama-default-model ()
-    "Set the default LLM"
-    (interactive)
-    (setq-local gptel-model eon-ollama-default-model))
-  :hook
-  (gptel-mode . eon-gptel--set-ollama-default-model))
+;; Setup for local LLMs via Ollama - see also `eon-ai'
+(when (executable-find "ollama")
+  (use-package gptel-ollama :ensure nil
+    :init
+    (require 'eon-ai)
+    :custom
+    ;; Register local Ollama models
+    (gptel-backend (gptel-make-ollama "Ollama"
+                     :host "localhost:11434"
+                     :endpoint "/api/chat"
+                     :stream t
+                     :models (eon-ollama-models 'symbol)))
+    :config
+    (defun eon-gptel--set-ollama-default-model ()
+      "Set the default LLM"
+      (interactive)
+      (setq-local gptel-model eon-ollama-default-model))
+    :hook
+    (gptel-mode . eon-gptel--set-ollama-default-model)))
 
 ;; _____________________________________________________________________________
 (provide 'eon-gptel)
