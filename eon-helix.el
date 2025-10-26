@@ -71,15 +71,7 @@ Used by custom variables `eon-helix-leader-key' and `eon-helix-localleader-key'.
   ;; Explicitly bind the leader key
   (eon-helix--bind-leader-in-states nil eon-helix-leader-key))
 
-;; _____________________________________________________________________________
-;;; WHICH-KEY
 
-;; Let which-key appear a bit faster
-(use-package which-key :ensure nil
-  :after helix
-  :custom
-  (which-key-idle-delay 0.25)
-  (which-key-idle-secondary-delay 0.0))
 
 ;; _____________________________________________________________________________
 ;;; DIRED
