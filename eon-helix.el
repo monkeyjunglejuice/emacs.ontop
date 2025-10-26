@@ -71,6 +71,35 @@ Used by custom variables `eon-helix-leader-key' and `eon-helix-localleader-key'.
   (helix-mode)
 
   ;; Explicitly bind the leader key
+  (eon-helix--bind-leader-in-states nil eon-helix-leader-key)
+
+  ;;; Show extra cursor when Helix is in normal state
+
+  (defun eon-helix--selection-active-p ()
+    (or (region-active-p)
+        (and (boundp 'helix--current-selection)
+             helix--current-selection)))
+
+  (defun eon-helix--cursor-type-compute ()
+    "Return a cursor type when Helix modes are active, else nil."
+    (cond
+     ;; Insert/editing
+     ((bound-and-true-p helix-insert-mode)
+      eon-cursor-type-write)
+     ;; Visual/selection while normal keymap is active
+     ((and (bound-and-true-p helix-normal-mode)
+           (eon-helix--selection-active-p))
+      eon-cursor-type-write)
+     ;; Plain normal state; no selection
+     ((bound-and-true-p helix-normal-mode)
+      eon-cursor-type-extra)
+     (t nil)))
+
+  (add-hook 'eon-cursor-type-functions #'eon-helix--cursor-type-compute)
+
+  ;; Refresh on Helix state flips
+  (add-hook 'helix-normal-mode-hook #'eon-cursor-type-update)
+  (add-hook 'helix-insert-mode-hook #'eon-cursor-type-update))
 
 ;; _____________________________________________________________________________
 ;;; DIRED
