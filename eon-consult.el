@@ -15,6 +15,7 @@
 (use-package consult :ensure t
 
   :init
+
   ;; Tweak the register preview for `consult-register-load',
   ;; `consult-register-store' and the built-in commands.  This improves the
   ;; register formatting, adds thin separator lines, register sorting and hides
@@ -41,6 +42,7 @@
       eon-localleader-global-map "," "..."))
 
   :config
+
   ;; Optionally configure preview. The default value
   ;; is 'any, such that any key triggers the preview.
   ;; (setq consult-preview-key 'any)
@@ -65,12 +67,15 @@
 
   ;; Let Consult replace the *Completions* buffer and provide code completion
   (setq-default completion-in-region-function #'consult-completion-in-region)
+
   :hook
+
   ;; Enable automatic preview at point in the *Completions* buffer. This is
   ;; relevant when you use the default completion UI.
   (completion-list-mode . consult-preview-at-point-mode)
 
   :bind
+
   (;; C-c bindings in `mode-specific-map'
    ;; ("C-c M-x" . consult-mode-command)
    ;; ("C-c h" . consult-history)
