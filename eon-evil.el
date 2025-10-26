@@ -28,6 +28,9 @@
   (setopt evil-want-integration t
           evil-want-keybinding nil)
 
+  ;; Let Evil handle cursor types
+  (eon-cursor-type-mode -1)
+
   ;; We're not using Evil's leader/localleader implementation. Instead we're
   ;; wiring the agnostic implementation from Emacs ONBOARD `eon.el' that works
   ;; independently from Evil.
@@ -72,6 +75,11 @@ Used by custom variables `eon-evil-leader-key' and `eon-evil-localleader-key'."
 
   ;; Activate Evil first
   (evil-mode 1)
+
+  (setq evil-normal-state-cursor eon-cursor-type-extra
+        evil-emacs-state-cursor  eon-cursor-type-write
+        evil-insert-state-cursor eon-cursor-type-write
+        evil-visual-state-cursor eon-cursor-type-select)
 
   ;; Explicitly bind the leader key
   (eon-evil--bind-leader-in-states nil eon-evil-leader-key)
