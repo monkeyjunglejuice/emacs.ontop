@@ -30,6 +30,7 @@
   :diminish helix-normal-mode helix-insert-mode
 
   :init
+
   (defun eon-helix--bind-leader-in-states (old new)
     "Explicitly bind the leader key to prevent hijacking."
     (when (and (stringp new) (> (length new) 0))
@@ -66,6 +67,7 @@ Used by custom variables `eon-helix-leader-key' and `eon-helix-localleader-key'.
     :initialize 'custom-initialize-set)
 
   :config
+
   (helix-mode)
 
   ;; Explicitly bind the leader key
