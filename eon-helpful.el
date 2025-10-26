@@ -30,15 +30,14 @@
   ("C-h v" . #'helpful-variable)
   ("C-h k" . #'helpful-key)
   (:map ctl-z-h-map
-        ("o" . #'helpful-at-point)
+        ("c" . #'helpful-command)
         ("f" . #'helpful-callable)
         ("F" . #'helpful-function)
-        ("v" . #'helpful-variable)
-        ("K" . #'helpful-key)
-        ("c" . #'helpful-command))
+        ("o" . #'helpful-at-point)
+        ("k" . #'helpful-key)
+        ("v" . #'helpful-variable))
   (:map eon-localleader-elisp-map
-        ("h" . #'helpful-at-point)
-        ("H" . #'helpful-symbol)))
+        ("h" . #'helpful-symbol)))
 
 ;;  ____________________________________________________________________________
 (provide 'eon-helpful)
