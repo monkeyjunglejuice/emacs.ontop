@@ -1,10 +1,17 @@
-;;; eon-ollama.el --- Ollama shared config -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-ai.el --- Shared config for AI -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
 ;;
 ;;; Code:
+
+;; _____________________________________________________________________________
+;;; GLOBAL DEFINITIONS
+
+(defgroup eon-ai nil
+  "AI integration."
+  :group 'eon)
 
 ;; _____________________________________________________________________________
 ;;; OLLAMA
@@ -54,8 +61,8 @@ prepended to each model name."
           (let ((choices (eon-ollama-models 'symbol)))
             (or (memq v choices)
                 (and (null choices) (null v)))))
-  :group 'eon)
+  :group 'eon-ai)
 
 ;; _____________________________________________________________________________
-(provide 'eon-ollama)
-;;; eon-ollama.el ends here
+(provide 'eon-ai)
+;;; eon-ai.el ends here
