@@ -190,11 +190,14 @@ Adapted from Doom Emacs")
 ;;  ____________________________________________________________________________
 ;;; NAVIGATION
 
-;;; Goto visible character
+;; Goto visible character
 (use-package avy :ensure t
   :bind
+  ("M-g c" . avy-goto-char)
+  ("M-g l" . avy-goto-line)
   (:map ctl-z-g-map
-        ("g" . avy-goto-char-2)))
+        ("g" . avy-goto-char)
+        ("l" . avy-goto-line)))
 
 ;;; Goto last change
 ;; <https://github.com/emacs-evil/goto-chg>
@@ -207,6 +210,11 @@ Adapted from Doom Emacs")
         ("M-p" . goto-last-change)
         ("M-n" . goto-last-change-reverse)))
 
+;; Expand region
+;; <https://github.com/magnars/expand-region.el>
+(use-package expand-region :ensure t
+  :bind
+  ("C-=" . er/expand-region))
 ;;  ____________________________________________________________________________
 ;;; COLOR NAMES
 ;; <https://elpa.gnu.org/packages/rainbow-mode.html>
