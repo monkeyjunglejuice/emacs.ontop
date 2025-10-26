@@ -31,8 +31,9 @@
         ("v" . magit-status)
         ("V" . magit-project-status)
         ("f" . magit-file-dispatch)
-        ("," . magit-dispatch)
-        ("k" . eon-magit-kill-buffers)))
+        ("k" . eon-magit-kill-buffers)
+        ("r" . magit-file-rename)
+        ("," . magit-dispatch)))
 
 ;; _____________________________________________________________________________
 ;;; GIT TIMEMACHINE
