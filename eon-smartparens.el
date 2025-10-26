@@ -14,16 +14,21 @@
 ;; <https://smartparens.readthedocs.io/en/latest/>
 
 (use-package smartparens :ensure t
+
   :init
   ;; Turn off other modes that clash with Smartparens
+
   (electric-pair-mode -1)
   (show-paren-mode -1)
+
   :config
+
   ;; Enable language-specific configurations
   (require 'smartparens-config)
   ;; Only use the pseudo-quote inside strings where it serves as hyperlink
   (sp-with-modes 'emacs-lisp-mode
                  (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p)))
+
   ;; Minibuffer
   (defun eon-smartparens-enable-minibuffer ()
     "Enable `smartparens-mode' in the minibuffer during `eval-expression'."
@@ -35,11 +40,13 @@
   ;; Specific configurations are within the respective language module files.
   ;; (smartparens-global-mode 1)
   (show-smartparens-global-mode 1)
+
   :hook
   ((prog-mode conf-mode eshell-mode) . smartparens-mode)
   ((emacs-lisp-mode lisp-interaction-mode lisp-mode) . smartparens-strict-mode)
   (eval-expression-minibuffer-setup . eon-smartparens-enable-minibuffer)
   :bind
+
   ;; Custom keybinding set, a blend of standard Emacs sexp keybindings
   ;; and Paredit keybindings
   (:map smartparens-mode-map
