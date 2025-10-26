@@ -390,44 +390,6 @@ Adapted from Doom Emacs")
         ("[" . #'macrostep-prev-macro)
         ("]" . #'macrostep-next-macro)))
 
-;; Listing of Lisp-related modes, can be used to enable/disable hooks
-;; all at once
-(eon-add-to-list 'eon-lisp-src-modes-registry
-                 '(clojure-mode
-                   clojurec-mode
-                   clojurescript-mode
-                   clojurex-mode
-                   clojure-ts-mode
-                   clojurescript-ts-mode
-                   clojurec-ts-mode
-                   common-lisp-mode
-                   emacs-lisp-mode
-                   fennel-mode
-                   gerbil-mode
-                   lfe-mode
-                   lisp-mode
-                   lisp-data-mode
-                   racket-mode
-                   scheme-mode
-                   stumpwm-mode))
-
-(eon-add-to-list 'eon-lisp-repl-modes-registry
-                 '(cider-repl-mode
-                   eshell-mode
-                   fennel-repl-mode
-                   geiser-repl-mode
-                   inf-clojure-mode
-                   inferior-emacs-lisp-mode
-                   inferior-lfe-mode
-                   inferior-lisp-mode
-                   inferior-scheme-mode
-                   lisp-interaction-mode
-                   monroe-mode
-                   racket-repl-mode
-                   scheme-interaction-mode
-                   slime-repl-mode
-                   sly-mrepl-mode))
-
 ;;  ____________________________________________________________________________
 (provide 'eon-core)
 ;;; eon-core.el ends here
