@@ -91,11 +91,12 @@ Once removed, they will start with `god-local-mode' enabled."
 
 
   :bind
-  ("<escape>" . god-local-mode)
 
+  ("<escape>" . eon-god-local-mode-activate)
   (:map god-local-mode-map
-        ("i" . god-local-mode)
-        ("z" . repeat)))
+        ("i" . eon-god-local-mode-disable)
+        ("." . repeat)
+        ("V" . scroll-down-command)))
 
 ;; Adjustments for Isearch
 (use-package god-mode-isearch :ensure nil
