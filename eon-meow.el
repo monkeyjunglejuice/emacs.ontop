@@ -12,6 +12,7 @@
 
 (use-package meow :ensure t
   :config
+
   ;; QWERTY layout
   (defun meow-setup ()
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
@@ -95,7 +96,9 @@
      '("z" . meow-pop-selection)
      '("'" . repeat)
      '("<escape>" . ignore)))
+
   (meow-setup)
+
   (meow-global-mode 1))
 
 (use-package meow-tree-sitter :ensure t
