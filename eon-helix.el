@@ -4,6 +4,21 @@
 
 ;;; Commentary:
 ;;
+;;; NOTE Helix-mode for Emacs is new and experimental.
+;;
+;;; Keys
+;; You can add new keys to the Helix keymaps via helix-define-key:
+;; Example:
+;; (helix-define-key 'space "w" #'do-something-cool)
+;; The first argument to helix-define-key is a Helix state.
+;; The valid options are: insert, normal, space, view, goto, and window.
+;;
+;;; Typable commands
+;; You can create new typable commands (invoked via ":command-name")
+;; with `helix-define-typable-command'.
+;; Example:
+;; (helix-define-typable-command "format" #'format-all-buffer)
+;;
 ;;; Code:
 
 ;; _____________________________________________________________________________
@@ -55,19 +70,6 @@ Used by custom variables `eon-helix-leader-key' and `eon-helix-localleader-key'.
 
   ;; Explicitly bind the leader key
   (eon-helix--bind-leader-in-states nil eon-helix-leader-key))
-
-;; KEYS
-;; You can add new keys to the Helix keymaps via helix-define-key:
-;; Example:
-;; (helix-define-key 'space "w" #'do-something-cool)
-;; The first argument to helix-define-key is a Helix state.
-;; The valid options are: insert, normal, space, view, goto, and window.
-
-;; TYPABLE COMMANDS
-;; You can create new typable commands (invoked via ":command-name")
-;; with `helix-define-typable-command'.
-;; Example:
-;; (helix-define-typable-command "format" #'format-all-buffer)
 
 ;; _____________________________________________________________________________
 ;;; WHICH-KEY
