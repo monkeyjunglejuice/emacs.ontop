@@ -114,12 +114,15 @@ Adapted from Doom Emacs")
 ;; (use-package system-packages :ensure t)
 
 ;;  ____________________________________________________________________________
-;;; DIMINISH
-;; <https://github.com/myrjola/diminish.el>
+;;; USER INTERFACE
 
 ;; Hide or alter the mode-line strings of certain minor modes
+;; <https://github.com/myrjola/diminish.el>
 (use-package diminish :ensure t)
 
+;; Hydra
+;; <https://github.com/abo-abo/hydra>
+(use-package hydra :ensure t)
 ;;  ____________________________________________________________________________
 ;;; ORDERLESS
 ;; <https://github.com/oantolin/orderless>
