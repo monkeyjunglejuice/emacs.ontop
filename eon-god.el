@@ -63,8 +63,6 @@ Used by custom variables `eon-god-leader-key' and `eon-god-localleader-key'."
 
   :config
 
-  (defun eon-god-unexempt (&rest modes)
-    "Remove certain MODES from God mode's blocklist."
   (defun eon-god-local-mode-activate ()
     (interactive)
     (god-local-mode 1))
@@ -73,11 +71,17 @@ Used by custom variables `eon-god-leader-key' and `eon-god-localleader-key'."
     (interactive)
     (god-local-mode -1))
 
+  (defun eon-god-unexempt-mode (&rest modes)
+    "Remove certain MODES from `god-exempt-major-modes'.
+Once removed, they will start with `god-local-mode' enabled."
     (setopt god-exempt-major-modes
-            (seq-difference god-exempt-major-modes modes 'eq)))
+            (seq-difference god-exempt-major-modes modes #'eq)))
 
-  (defun eon-god-update-cursor-type ()
-    (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar)))
+  (defun eon-god-unexempt-predicate (&rest predicates)
+    "Remove certain PREDICATES from `god-exempt-predicates'.
+Once removed, they will start with `god-local-mode' enabled."
+    (setopt god-exempt-predicates
+            (seq-difference god-exempt-predicates predicates #'eq)))
 
   ;; Explicitly bind the leader key
   (eon-god--bind-leader-in-states nil eon-god-leader-key)
