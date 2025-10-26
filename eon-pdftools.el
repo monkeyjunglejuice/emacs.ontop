@@ -1,4 +1,4 @@
-;;; eon-pdftools.el --- PDF reader -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-pdftools.el --- Sophisticated PDF tool suite -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
@@ -11,7 +11,6 @@
 ;; <https://github.com/vedang/pdf-tools/>
 ;; Compiles binary automatically at the first run and after upgrades
 
-;; Sophisticated PDF viewer
 (use-package pdf-tools :ensure t
   :magic
   ("%PDF" . pdf-view-mode)
