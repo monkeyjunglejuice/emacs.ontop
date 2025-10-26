@@ -16,8 +16,8 @@
 (use-package smartparens :ensure t
 
   :init
-  ;; Turn off other modes that clash with Smartparens
 
+  ;; Disable conflicting modes
   (electric-pair-mode -1)
   (show-paren-mode -1)
 
