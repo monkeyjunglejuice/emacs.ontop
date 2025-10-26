@@ -9,6 +9,7 @@
 ;;  ____________________________________________________________________________
 ;;; CORFU
 ;; <https://github.com/minad/corfu>
+;; <https://github.com/minad/corfu?tab=readme-ov-file#orderless-completion>
 
 ;; (use-package corfu :ensure t
 ;;   :init
