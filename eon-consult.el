@@ -34,7 +34,7 @@
     (if (executable-find "fd") #'consult-fd #'consult-find)
     "Run consult-fd if fd is available, else consult-find.")
 
-  ;; Localleader label
+  ;; Provide the "..." label for the global local leader keymap
   (keymap-set eon-localleader-global-map "," #'consult-mode-command)
   (with-eval-after-load 'which-key
     (which-key-add-keymap-based-replacements
@@ -88,11 +88,6 @@
    ("C-x r b" . consult-bookmark)            ; orig. bookmark-jump
    ("C-x p b" . consult-project-buffer)      ; orig. project-switch-to-buffer
 
-   ;; Custom M-# bindings for fast register access
-   ("M-#"   . consult-register-load)
-   ("M-'"   . consult-register-store)          ; orig. abbrev-prefix-mark (unrelated)
-   ("C-M-#" . consult-register)
-
    ;; Other custom bindings
    ("M-y" . consult-yank-pop)                ; orig. yank-pop
 
@@ -102,18 +97,18 @@
    ;; ("M-g f" . consult-flymake)               ; Alternative: consult-flycheck
    ("M-g g"   . consult-goto-line)           ; orig. goto-line
    ("M-g M-g" . consult-goto-line)           ; orig. goto-line
-   ;; ("M-g o" . consult-outline)               ; Alternative: consult-org-heading
-   ;; ("M-g m" . consult-mark)
-   ;; ("M-g k" . consult-global-mark)
+   ("M-g o" . consult-outline)               ; Alternative: consult-org-heading
+   ("M-g m" . consult-mark)
+   ("M-g M" . consult-global-mark)
    ("M-g i" . consult-imenu)
-   ;; ("M-g I" . consult-imenu-multi)
+   ("M-g I" . consult-imenu-multi)
 
    ;; M-s bindings in `search-map'
-   ;; ("M-s d" . consult-find)                  ; Alternative: consult-fd
+   ("M-s f" . eon-consult-find)
    ;; ("M-s c" . consult-locate)
    ;; ("M-s G" . consult-git-grep)
-   ;; ("M-s l" . consult-line)
-   ;; ("M-s L" . consult-line-multi)
+   ("M-s s" . consult-line)
+   ("M-s S" . consult-line-multi)
    ;; ("M-s k" . consult-keep-lines)
    ;; ("M-s u" . consult-focus-lines)
 
@@ -134,8 +129,7 @@
 
    ;; Leader
    :map ctl-z-map
-   ("SPC" . consult-buffer)
-   ("n" . consult-project-buffer)
+   ("SPC" . consult-project-buffer)
 
    ;; Buffer
    :map ctl-z-b-map
@@ -143,7 +137,7 @@
 
    ;; Code
    :map ctl-z-c-map
-   ("c" . consult-flymake)
+   ("e" . consult-flymake)
 
    ;; Exec
    :map ctl-z-e-map
@@ -155,13 +149,13 @@
 
    ;; File
    :map ctl-z-f-map
-   ("r" . consult-recent-file)
+   ("h" . consult-recent-file)
 
    ;; Goto
    :map ctl-z-g-map
    ("e" . consult-compile-error)
    ("r" . consult-grep-match)
-   ("l" . consult-goto-line)
+   ("L" . consult-goto-line)
    ("o" . consult-outline)
    ("m" . consult-mark)
    ("M" . consult-global-mark)
@@ -180,6 +174,12 @@
    ;; Org localleader
    :map eon-localleader-org-mode-map
    ("g" . consult-org-heading)
+
+   ;; Register
+   :map ctl-z-r-map
+   ("l" . consult-register-load)
+   ("s" . consult-register-store)
+   ("r" . consult-register)
 
    ;; Search
    :map ctl-z-s-map
@@ -219,8 +219,7 @@
   (use-package consult-flycheck :ensure t
     :bind
     (:map ctl-z-c-map
-          ;; Override `consult-flymake' in the `ctl-z-g-map'
-          ("c" . consult-flycheck))))
+          ("e" . consult-flycheck))))
 
 ;; _____________________________________________________________________________
 ;;; CONSULT-TODO
