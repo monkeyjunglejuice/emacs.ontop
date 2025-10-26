@@ -13,6 +13,7 @@
 (use-package god-mode :ensure t
 
   :init
+
   (defun eon-god--bind-leader-in-states (old new)
     "Explicitly bind the leader key to prevent hijacking."
     (when (and (stringp new) (> (length new) 0))
@@ -47,7 +48,9 @@ Used by custom variables `eon-god-leader-key' and `eon-god-localleader-key'."
     :set #'eon-god--set-leaders
     :initialize 'custom-initialize-set)
 
+
   :custom
+
   (god-mode-lighter-string "G")
   (god-mode-enable-function-key-translation nil)
 
@@ -56,6 +59,8 @@ Used by custom variables `eon-god-leader-key' and `eon-god-localleader-key'."
 
   (defun eon-god-unexempt (&rest modes)
     "Remove certain MODES from God mode's blocklist."
+
+
     (setopt god-exempt-major-modes
             (seq-difference god-exempt-major-modes modes 'eq)))
 
@@ -68,8 +73,10 @@ Used by custom variables `eon-god-leader-key' and `eon-god-localleader-key'."
   :hook
   (post-command . eon-god-update-cursor-type)
 
+
   :bind
   ("<escape>" . god-local-mode)
+
   (:map god-local-mode-map
         ("i" . god-local-mode)
         ("z" . repeat)))
