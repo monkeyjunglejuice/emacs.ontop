@@ -11,38 +11,6 @@
 ;; <https://github.com/minad/corfu>
 ;; <https://github.com/minad/corfu?tab=readme-ov-file#orderless-completion>
 
-;; (use-package corfu :ensure t
-;;   :init
-;;   ;; Disable Emacs ONBOARD standard first
-;;   (global-completion-preview-mode -1)
-;;   :custom
-;;   (global-corfu-minibuffer t)
-;;   (corfu-cycle t)
-;;   (corfu-auto t)
-;;   (corfu-auto-prefix 2)
-;;   (corfu-auto-delay 0.2)
-;;   (corfu-popupinfo-delay '(0.3 . 0.1))
-;;   (corfu-popupinfo-max-height 10)
-;;   (corfu-quit-at-boundary nil)
-;;   (corfu-quit-no-match 'separator)
-;;   (corfu-preview-current nil)
-;;   (corfu-preselect 'valid)
-;;   (corfu-on-exact-match 'nil)
-;;   :config
-;;   (global-corfu-mode)
-;;   (corfu-history-mode)
-;;   ;; (corfu-popupinfo-mode)
-;;   :bind
-;;   (:map corfu-map
-;;         ;; ("TAB" . corfu-next)
-;;         ;; ([tab] . corfu-next)
-;;         ;; ("S-TAB" . corfu-previous)
-;;         ;; ([backtab] . corfu-previous)
-;;         ;; ("S-RET" . corfu-insert)
-;;         ;; ("S-<return>" . corfu-insert)
-;;         ("RET" . nil)))
-
-;; TODO Corfu config needs an overhaul
 (use-package corfu :ensure t
   :init
   ;; Prevent *Completions* buffer from popping up
