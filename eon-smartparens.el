@@ -18,12 +18,6 @@
   ;; Turn off other modes that clash with Smartparens
   (electric-pair-mode -1)
   (show-paren-mode -1)
-  ;; :custom
-  ;; Smartparens comes without keybindings defined, it's totally up to you
-  ;; if you go with a pre-defined keybinding set or your personal set.
-  ;; Before you load one of the default sets, comment out the :bind form below.
-  ;; (sp-base-key-bindings 'sp)  ; default smartparens bindings
-  ;; (sp-base-key-bindings 'paredit)  ; default paredit bindings
   :config
   ;; Enable language-specific configurations
   (require 'smartparens-config)
