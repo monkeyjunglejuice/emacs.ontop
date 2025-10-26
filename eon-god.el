@@ -4,6 +4,11 @@
 
 ;;; Commentary:
 ;;
+;; What god-mode does:
+;;
+;; Before: C-p C-k C-n M-^ ) C-j C-y M-r C-x z z M-2 M-f C-x C-s
+;; After:    p   k   n g ^ )   j   y g r     . .   2 g f   x   s
+;;
 ;;; Code:
 
 ;; _____________________________________________________________________________
