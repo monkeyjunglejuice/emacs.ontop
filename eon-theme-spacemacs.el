@@ -13,7 +13,6 @@
 (use-package spacemacs-theme :ensure t
   :custom
   (spacemacs-theme-underline-parens t)
-  (spacemacs-theme-keyword-italic t)
   (spacemacs-theme-org-height nil)
   (spacemacs-theme-org-highlight t))
 
