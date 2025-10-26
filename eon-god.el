@@ -53,6 +53,8 @@ Used by custom variables `eon-god-leader-key' and `eon-god-localleader-key'."
     :set #'eon-god--set-leaders
     :initialize 'custom-initialize-set)
 
+  ;; Enable almost everywhere
+  (god-mode-all 1)
 
   :custom
 
@@ -60,11 +62,16 @@ Used by custom variables `eon-god-leader-key' and `eon-god-localleader-key'."
   (god-mode-enable-function-key-translation nil)
 
   :config
-  (god-mode)
 
   (defun eon-god-unexempt (&rest modes)
     "Remove certain MODES from God mode's blocklist."
+  (defun eon-god-local-mode-activate ()
+    (interactive)
+    (god-local-mode 1))
 
+  (defun eon-god-local-mode-disable ()
+    (interactive)
+    (god-local-mode -1))
 
     (setopt god-exempt-major-modes
             (seq-difference god-exempt-major-modes modes 'eq)))
