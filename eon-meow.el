@@ -11,6 +11,12 @@
 ;; <https://github.com/meow-edit/meow>
 
 (use-package meow :ensure t
+
+  :init
+
+  ;; Meow handles cursor types itself. So turn off cursor type handling
+  (eon-cursor-mode -1)
+
   :config
 
   ;; QWERTY layout
