@@ -71,9 +71,6 @@ Used by custom variables `eon-helix-leader-key' and `eon-helix-localleader-key'.
   (helix-mode)
 
   ;; Explicitly bind the leader key
-  (eon-helix--bind-leader-in-states nil eon-helix-leader-key))
-
-
 
 ;; _____________________________________________________________________________
 ;;; DIRED
