@@ -7,26 +7,40 @@
 ;;; Code:
 
 ;;  ____________________________________________________________________________
-;;; YASNIPPET
-;; <https://github.com/joaotavora/yasnippet>
+;;; TEMPEL
+;; <https://github.com/minad/tempel>
 
-(use-package yasnippet :ensure t
-  :defer t
-  :diminish yas-minor-mode
-  :config
-  (add-to-list 'hippie-expand-try-functions-list #'yas-hippie-try-expand)
-  :hook
-  ((prog-mode text-mode) . yas-minor-mode))
+(use-package tempel :ensure t
+  ;; Require trigger prefix before template name when completing.
+  ;; :custom
+  ;; (tempel-trigger-prefix "<")
 
-;; <https://github.com/AndreaCrotti/yasnippet-snippets>
-(use-package yasnippet-snippets :ensure t
-  :defer t)
+  :init
 
-;; <https://github.com/elken/yasnippet-capf>
-(use-package yasnippet-capf :ensure t
-  :after cape
-  :config
-  (add-to-list 'completion-at-point-functions #'yasnippet-capf))
+  ;; Setup completion at point
+  (defun tempel-setup-capf ()
+    ;; Add the Tempel Capf to `completion-at-point-functions'.
+    ;; `tempel-expand' only triggers on exact matches. Alternatively use
+    ;; `tempel-complete' if you want to see all matches, but then you
+    ;; should also configure `tempel-trigger-prefix', such that Tempel
+    ;; does not trigger too often when you don't expect it. NOTE: We add
+    ;; `tempel-expand' *before* the main programming mode Capf, such
+    ;; that it will be tried first.
+    (setq-local completion-at-point-functions
+                (cons #'tempel-expand
+                      completion-at-point-functions)))
+
+  (add-hook 'conf-mode-hook 'tempel-setup-capf)
+  (add-hook 'prog-mode-hook 'tempel-setup-capf)
+  (add-hook 'text-mode-hook 'tempel-setup-capf)
+
+  ;; Optionally make the Tempel templates available to Abbrev,
+  ;; either locally or globally. `expand-abbrev' is bound to C-x '.
+  ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
+  ;; (global-tempel-abbrev-mode)
+  )
+
+(use-package tempel-collection :ensure t)
 
 ;;  ____________________________________________________________________________
 (provide 'eon-snippets)
