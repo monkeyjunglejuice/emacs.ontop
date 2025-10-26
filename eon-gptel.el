@@ -1,4 +1,4 @@
-;;; eon-gptel.el --- LLM chat client -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-gptel.el --- Comprehensive AI chat client -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
