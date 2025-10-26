@@ -123,6 +123,7 @@ Adapted from Doom Emacs")
 ;; Hydra
 ;; <https://github.com/abo-abo/hydra>
 (use-package hydra :ensure t)
+
 ;;  ____________________________________________________________________________
 ;;; ORDERLESS
 ;; <https://github.com/oantolin/orderless>
