@@ -87,7 +87,7 @@ Adapted from Doom Emacs")
       names))
 
   :custom
-  ;; Example: '("-l") or nil for non-interactive shells (faster).
+  ;; Example: '("-l") or nil for non-interactive shells; supposedly faster
   (exec-path-from-shell-arguments '("-l"))
   ;; You can set the variables manually, then no autoselection will happen:
   ;; (exec-path-from-shell-variables '("PATH" "MANPATH"))
@@ -199,7 +199,7 @@ Adapted from Doom Emacs")
         ("g" . avy-goto-char)
         ("l" . avy-goto-line)))
 
-;;; Goto last change
+;; Goto last change
 ;; <https://github.com/emacs-evil/goto-chg>
 (use-package goto-chg :ensure t
   :bind
