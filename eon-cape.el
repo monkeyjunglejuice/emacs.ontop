@@ -58,6 +58,7 @@ buffer-locally in `completion-at-point-functions'."
         (setq-local completion-at-point-functions (list super)))))
 
   :init
+
   ;; Install for common editing modes.
   (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
     (add-hook hook #'eon-cape--install-super-capf))
