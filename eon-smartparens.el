@@ -25,6 +25,10 @@
 
   ;; Enable language-specific configurations
   (require 'smartparens-config)
+
+  (smartparens-global-mode 1)
+  (show-smartparens-global-mode 1)
+
   ;; Only use the pseudo-quote inside strings where it serves as hyperlink
   (sp-with-modes 'emacs-lisp-mode
                  (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p)))
@@ -36,14 +40,8 @@
     (sp-local-pair 'minibuffer-pairs "`" nil :actions nil)
     (sp-update-local-pairs 'minibuffer-pairs)
     (smartparens-mode 1))
-  ;; Globally enable non-strict delimiter handling?
-  ;; Specific configurations are within the respective language module files.
-  ;; (smartparens-global-mode 1)
-  (show-smartparens-global-mode 1)
 
   :hook
-  ((prog-mode conf-mode eshell-mode) . smartparens-mode)
-  ((emacs-lisp-mode lisp-interaction-mode lisp-mode) . smartparens-strict-mode)
   (eval-expression-minibuffer-setup . eon-smartparens-enable-minibuffer)
   :bind
 
