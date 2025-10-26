@@ -23,7 +23,7 @@
     (auto-package-update-show-preview nil)
     (auto-package-update-hide-results t)
     (auto-package-update-prompt-before-update t)
-    (auto-package-update-delete-old-versions t)
+    (auto-package-update-delete-old-versions nil)
     (auto-package-update-excluded-packages '())))
 
 ;;  ____________________________________________________________________________
