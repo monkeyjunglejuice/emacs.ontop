@@ -19,10 +19,10 @@
   (corfu-auto t)
   (corfu-auto-prefix 2)
   :config
-  (corfu-history-mode 1)
   (corfu-echo-mode 1)
   :hook
   ((prog-mode conf-mode) . corfu-mode))
+  (corfu-mode . corfu-history-mode))
 
 ;;  ____________________________________________________________________________
 (provide 'eon-corfu)
