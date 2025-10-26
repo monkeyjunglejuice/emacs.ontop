@@ -123,7 +123,6 @@ Adapted from Doom Emacs")
 ;;  ____________________________________________________________________________
 ;;; ORDERLESS
 ;; <https://github.com/oantolin/orderless>
-;; <https://github.com/minad/corfu?tab=readme-ov-file#orderless-completion>
 
 (use-package orderless :ensure t
   :custom
