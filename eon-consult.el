@@ -213,6 +213,7 @@
 ;;; CONSULT-DIR
 
 (use-package consult-dir :ensure t
+  :after consult
   :bind
   (:map ctl-z-map
         ("d" . consult-dir)))
@@ -222,6 +223,7 @@
 
 (when (eon-modulep 'eon-flycheck)
   (use-package consult-flycheck :ensure t
+    :after consult
     :bind
     (:map ctl-z-c-map
           ("e" . consult-flycheck))))
@@ -230,6 +232,7 @@
 ;;; CONSULT-TODO
 
 (use-package consult-todo :ensure t
+  :after consult
   :bind
   (:map ctl-z-g-map
         ("t" . consult-todo)
