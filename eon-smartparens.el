@@ -34,7 +34,7 @@
                  (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p)))
 
   ;; Minibuffer
-  (defun eon-smartparens-enable-minibuffer ()
+  (defun eon-smartparens-minibuffer-setup ()
     "Enable `smartparens-mode' in the minibuffer during `eval-expression'."
     (sp-local-pair 'minibuffer-pairs "'" nil :actions nil)
     (sp-local-pair 'minibuffer-pairs "`" nil :actions nil)
@@ -42,7 +42,9 @@
     (smartparens-mode 1))
 
   :hook
-  (eval-expression-minibuffer-setup . eon-smartparens-enable-minibuffer)
+
+  (eval-expression-minibuffer-setup . eon-smartparens-minibuffer-setup)
+
   :bind
 
   ;; Custom keybinding set, a blend of standard Emacs sexp keybindings
