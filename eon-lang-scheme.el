@@ -27,26 +27,7 @@
 (use-package srfi :ensure t)
 
 ;;  ____________________________________________________________________________
-;;; STRUCTURAL EDITING
-
-;; SMARTPARENS
-;; <https://github.com/Fuco1/smartparens>
-;; <https://smartparens.readthedocs.io/en/latest/>
-
-(when (eon-modulep 'eon-smartparens)
-  (use-package smartparens :ensure t
-    :hook
-    (scheme-mode . smartparens-strict-mode)
-    ((inferior-scheme-mode geiser-repl-mode) . smartparens-mode)))
-
-;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
-
-;; Rainbow-delimiters color-coding of nested parens is already enabled
-;; for all prog-modes in `eon-core.el'
-(use-package rainbow-delimiters :ensure t
-  :hook
-  ((inferior-scheme-mode geiser-repl-mode) . rainbow-delimiters-mode))
 
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
