@@ -25,11 +25,11 @@
 
   :init
 
+  ;; Let Evil handle the cursor styles
+  (eon-cursor-type-mode -1)
+
   (setopt evil-want-integration t
           evil-want-keybinding nil)
-
-  ;; Let Evil handle cursor types
-  (eon-cursor-type-mode -1)
 
   ;; We're not using Evil's leader/localleader implementation. Instead we're
   ;; wiring the agnostic implementation from Emacs ONBOARD `eon.el' that works
