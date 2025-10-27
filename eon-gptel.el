@@ -24,8 +24,7 @@
         ("a" . gptel-add)
         ("f" . gptel-add-file)
         ("r" . gptel-rewrite)
-        ("s" . gptel-send)
-        ("S" . (lambda () (interactive) (gptel-send t)))))
+        ("s" . gptel-send)))
 
 ;; Setup for local and cloud LLMs via Ollama - see also `./eon-ai'
 (when (executable-find "ollama")
