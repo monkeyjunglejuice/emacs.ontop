@@ -13,6 +13,9 @@
   "AI integration."
   :group 'eon)
 
+(defvar-keymap ctl-z-l-map :doc "AI / Large Language Models")
+(keymap-set ctl-z-map "l" `("AI" . ,ctl-z-l-map))
+
 ;; _____________________________________________________________________________
 ;;; OLLAMA
 
