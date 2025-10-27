@@ -116,7 +116,7 @@ Used by custom variables `eon-evil-leader-key' and `eon-evil-localleader-key'."
   ;; - helpful-at-point for Elisp (implemented for now)
   ;; - sly-hyperspec-lookup for Common Lisp / Sly that opens page in EWW
   ;; - eglot doc buffer (eldoc) for LSP-enabled modes
-  ;; - etc. -- there's probably a package for that already existing.
+  ;; - etc. -- there's probably a package for that already existing
   (evil-lookup-func #'helpful-at-point))
 
 ;; _____________________________________________________________________________

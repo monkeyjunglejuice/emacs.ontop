@@ -32,7 +32,7 @@ prepended to each model name."
     (user-error "PREFIX must be a string without whitespace: %S" prefix))
   (let* ((out (shell-command-to-string "ollama list"))
          (lines (split-string out "\n" t))
-         (rows (cdr lines)) ; drop header
+         (rows (cdr lines))  ; drop header
          (names (mapcar (lambda (line) (car (split-string line)))
                         rows))
          (strings (if prefix
