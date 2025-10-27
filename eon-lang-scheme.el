@@ -27,15 +27,6 @@
 (use-package srfi :ensure t)
 
 ;;  ____________________________________________________________________________
-;;; PARENTHESIS DISPLAY
-
-;; Make parens styleable, e.g. more or less prominent
-;; <https://github.com/tarsius/paren-face>
-;; (use-package paren-face
-;;   :hook
-;;   ((scheme-mode inferior-scheme-mode geiser-repl-mode) . paren-face-mode))
-
-;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://orgmode.org/worg/org-contrib/babel/index.html>
 ;; Notebook-like literate programming in Emacs

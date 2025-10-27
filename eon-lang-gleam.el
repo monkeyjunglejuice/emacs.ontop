@@ -55,18 +55,6 @@
 ;;   :hook
 ;;   ((gleam-ts-mode) . mix-minor-mode))
 
-;;  ____________________________________________________________________________
-;;; PARENTHESIS DISPLAY
-
-;; Rainbow-delimiters color-coding of nested parens is already enabled
-;; for all prog-modes in `eon-core.el'
-
-;; Make parens styleable, e.g. more or less prominent
-;; <https://github.com/tarsius/paren-face>
-;; (use-package paren-face :ensure t
-;;   :hook
-;;   (gleam-ts-mode . paren-face-mode))
-
 ;; _____________________________________________________________________________
 (provide 'eon-lang-gleam)
 ;;; eon-lang-gleam.el ends here

@@ -57,15 +57,6 @@
                                #'eglot-format-buffer nil 'local))))
 
 ;;  ____________________________________________________________________________
-;;; PARENTHESIS DISPLAY
-
-;; Rainbow-delimiters color-coding of nested parens is already enabled
-;; for all prog-modes in `eon-core.el'
-(use-package rainbow-delimiters :ensure t
-  :hook
-  (julia-snail-mode . rainbow-delimiters-mode))
-
-;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://orgmode.org/worg/org-contrib/babel/index.html>
 ;; Notebook-like literate programming in Emacs

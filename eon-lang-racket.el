@@ -35,22 +35,6 @@
   ((racket-mode racket-hash-lang-mode) . racket-xp-mode))
 
 ;;  ____________________________________________________________________________
-;;; PARENTHESIS DISPLAY
-
-;; Rainbow-delimiters color-coding of nested parens is already enabled
-;; for all prog-modes in `eon-core.el'
-(use-package rainbow-delimiters :ensure t
-  :hook
-  (racket-repl-mode . rainbow-delimiters-mode))
-
-;; Make parens styleable, e.g. more or less prominent
-;; <https://github.com/tarsius/paren-face>
-;; (use-package paren-face :ensure t
-;;   :hook
-;;   ((racket-mode racket-hash-lang-mode racket-repl-mode)
-;;    . paren-face-mode))
-
-;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://www.orgmode.org/worg/org-contrib/babel/languages/ob-doc-scheme.html>
 

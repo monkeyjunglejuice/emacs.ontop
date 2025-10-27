@@ -27,32 +27,6 @@
   (clojure-ts-mode . cider-mode))
 
 ;;  ____________________________________________________________________________
-;;; STRUCTURAL EDITING
-
-;; SMARTPARENS
-;; <https://github.com/Fuco1/smartparens>
-;; <https://smartparens.readthedocs.io/en/latest/>
-(when (eon-modulep 'eon-smartparens)
-  (use-package smartparens :ensure t
-    :hook
-    (clojure-ts-mode . smartparens-strict-mode)))
-
-;;  ____________________________________________________________________________
-;;; PARENTHESIS DISPLAY
-
-;; Rainbow-delimiters color-coding of nested parens is already enabled
-;; for all prog-modes in `eon-core.el'
-(use-package rainbow-delimiters :ensure t
-  :hook
-  (cider-repl-mode . rainbow-delimiters-mode))
-
-;; Make parens styleable, e.g. more or less prominent
-;; <https://github.com/tarsius/paren-face>
-;; (use-package paren-face
-;;   :hook
-;;   ((clojure-ts-mode cider-repl-mode) . paren-face-mode))
-
-;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://org-babel.readthedocs.io/en/latest/eval/>
 ;; Notebook-like literate programming in Emacs

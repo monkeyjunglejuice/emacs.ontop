@@ -87,15 +87,6 @@
   (add-to-list 'sly-mrepl-shortcut-alist '("quickload" . sly-quickload)))
 
 ;;  ____________________________________________________________________________
-;;; PARENTHESIS DISPLAY
-
-;; Make parens styleable, e.g. more or less prominent
-;; <https://github.com/tarsius/paren-face>
-;; (use-package paren-face
-;;   :hook
-;;   ((lisp-mode inferior-lisp-mode sly-mrepl-mode) . paren-face-mode))
-
-;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://orgmode.org/worg/org-contrib/babel/intro.html>
 ;; Support literate programming in Emacs with Common Lisp
