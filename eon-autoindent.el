@@ -17,7 +17,7 @@
   (global-aggressive-indent-mode 1)
   :custom
   (aggressive-indent-dont-electric-modes t)
-  (aggressive-indent-sit-for-time 0.0))
+  (aggressive-indent-sit-for-time 0.05))
 
 ;;  ____________________________________________________________________________
 (provide 'eon-autoindent)
