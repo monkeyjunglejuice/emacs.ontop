@@ -11,22 +11,31 @@
 ;; <https://magit.vc/>
 
 (use-package magit :ensure t
+
   :custom
-  ;; How many directoriess deep Magit looks for Git repos
+
+  (magit-bury-buffer-function #'magit-restore-window-configuration)
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+
+  ;; how many directoriess deep magit looks for git repos
   (magit-repository-directories '(("~/" . 1)))
-  ;; Inject Magit into the `project-switch-commands' dispatch menu
+  ;; inject magit into the `project-switch-commands' dispatch menu
   (project-switch-commands
-   (cl-substitute '(magit-status "Magit" ?v) 'project-vc-dir
+   (cl-substitute '(magit-status "magit" ?v) 'project-vc-dir
                   project-switch-commands
                   :key #'car :test #'eq))
+
   :config
+
   (defun eon-magit-kill-buffers ()
     "Restore window configuration and kill all Magit buffers."
     (interactive)
     (let ((buffers (magit-mode-get-buffers)))
       (magit-restore-window-configuration)
       (mapc #'kill-buffer buffers)))
+
   :bind
+
   (:map ctl-z-v-map
         ("v" . magit-status)
         ("V" . magit-project-status)
