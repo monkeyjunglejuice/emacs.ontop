@@ -87,20 +87,6 @@
   (add-to-list 'sly-mrepl-shortcut-alist '("quickload" . sly-quickload)))
 
 ;;  ____________________________________________________________________________
-;;; STRUCTURAL EDITING
-
-;; SMARTPARENS
-;; <https://github.com/Fuco1/smartparens>
-;; <https://smartparens.readthedocs.io/en/latest/>
-
-(when (eon-modulep 'eon-smartparens)
-  (use-package smartparens :ensure t
-    :when (featurep 'eon-smartparens)
-    :hook
-    (sly-editing-mode . smartparens-strict-mode)
-    (sly-mrepl-mode . smartparens-mode)))
-
-;;  ____________________________________________________________________________
 ;;; PARENTHESIS DISPLAY
 
 ;; Make parens styleable, e.g. more or less prominent
