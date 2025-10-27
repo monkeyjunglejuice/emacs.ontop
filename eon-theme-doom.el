@@ -4,6 +4,13 @@
 
 ;;; Commentary:
 ;;
+;; Example how to set Doom themes in your init.el:
+;; (with-eval-after-load 'eon-theme-doom
+;;   (setopt eon-theme-light 'doom-one-light
+;;           eon-theme-dark 'doom-one
+;;           eon-theme-variant-default 'light)
+;;   (eon-theme-load-default))
+;;
 ;;; Code:
 
 ;;  ____________________________________________________________________________
@@ -14,13 +21,6 @@
   :custom
   (doom-themes-enable-bold t)
   (doom-themes-enable-italic t))
-
-;; Example how to set Doom themes in your init.el:
-;; (with-eval-after-load 'eon-theme-doom
-;;   (setopt eon-theme-light 'doom-one-light
-;;           eon-theme-dark 'doom-one
-;;           eon-theme-variant-default 'light)
-;;   (eon-theme-load-default))
 
 ;;  ____________________________________________________________________________
 (provide 'eon-theme-doom)

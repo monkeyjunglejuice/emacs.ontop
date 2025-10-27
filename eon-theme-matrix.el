@@ -4,6 +4,12 @@
 
 ;;; Commentary:
 ;;
+;; Example how to set "The Matrix" theme in your init.el:
+;; (with-eval-after-load 'eon-theme-matrix
+;;   (setopt eon-theme-dark 'the-matrix
+;;           eon-theme-variant-default 'dark)
+;;   (eon-theme-load-default))
+;;
 ;;; Code:
 
 ;;  ____________________________________________________________________________
@@ -11,12 +17,6 @@
 ;; <https://github.com/monkeyjunglejuice/matrix-emacs-theme>
 
 (use-package the-matrix-theme :ensure t)
-
-;; Example how to set "The Matrix" theme in your init.el:
-;; (with-eval-after-load 'eon-theme-matrix
-;;   (setopt eon-theme-dark 'the-matrix
-;;           eon-theme-variant-default 'dark)
-;;   (eon-theme-load-default))
 
 ;;  ____________________________________________________________________________
 (provide 'eon-theme-matrix)
