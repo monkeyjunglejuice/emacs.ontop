@@ -16,7 +16,16 @@
   (unless (package-installed-p 'transient '(0 7 4))
     (package-upgrade 'transient))
   :custom
-  (gptel-default-mode 'org-mode))
+  (gptel-default-mode 'org-mode)
+  :bind
+  (:map ctl-z-l-map
+        ("l" . gptel)
+        ("m" . gptel-menu)
+        ("a" . gptel-add)
+        ("f" . gptel-add-file)
+        ("r" . gptel-rewrite)
+        ("s" . gptel-send)
+        ("S" . (lambda () (interactive) (gptel-send t)))))
 
 ;; Setup for local LLMs via Ollama - see also `eon-ai'
 (when (executable-find "ollama")
