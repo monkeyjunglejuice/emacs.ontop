@@ -103,9 +103,15 @@ Used by custom variables `eon-evil-leader-key' and `eon-evil-localleader-key'."
 (use-package evil-vars :ensure nil
   :after evil
   :custom
+  (evil-default-cursor 'box)
   (evil-echo-state nil)
+  (evil-ex-interactive-search-highlight 'selected-window)
+  (evil-ex-search-vim-style-regexp t)
+  (evil-ex-visual-char-range t)
+  (evil-kbd-macro-suppress-motion-error t)
   (evil-move-cursor-back nil)
-  (evil-undo-system 'undo-fu)
+  (evil-symbol-word-search t)
+  (evil-undo-system (if (featurep 'undo-fu) 'undo-fu 'undo-redo))
   ;; TODO `evil-lookup-func' should be a context-dependent documentation lookup;
   ;; - helpful-at-point for Elisp (implemented for now)
   ;; - sly-hyperspec-lookup for Common Lisp / Sly that opens page in EWW
