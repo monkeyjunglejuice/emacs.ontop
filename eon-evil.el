@@ -120,18 +120,32 @@ Used by custom variables `eon-evil-leader-key' and `eon-evil-localleader-key'."
   (evil-lookup-func #'helpful-at-point))
 
 ;; _____________________________________________________________________________
+;;; EVIL COLLECTION
+;; Ongoing mission to evilize everything - a bottomless hole
 ;; <https://github.com/emacs-evil/evil-collection>
 
 (use-package evil-collection :ensure t
   :after evil
   :diminish evil-collection-unimpaired-mode
+
   :init
+
   (setopt evil-collection-setup-minibuffer t)
+
+  ;; :custom
+
+  ;; (evil-collection-key-blacklist '(eon-leader-key
+  ;;                                  eon-evil-leader-key))
+
   :config
+
   (evil-collection-init)
 
   ;; Prevent the current leader from getting shadowed by evil-collection
   ;; (e.g. as it does with "SPC" in `customize-mode').
+  ;; NOTE Functionality seems partly implemented as
+  ;; `evil-collection-key-blacklist'. TODO Feature parity needs to be checked,
+  ;; as the following implementation works in real-time via setter.
 
   (defun eon-evil--unshadow-leader-in-maps (maps)
     (let ((lk eon-evil-leader-key))
