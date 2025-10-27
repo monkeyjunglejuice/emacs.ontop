@@ -216,6 +216,7 @@ Adapted from Doom Emacs")
 (use-package expand-region :ensure t
   :bind
   ("C-=" . er/expand-region))
+
 ;;  ____________________________________________________________________________
 ;;; COLOR NAMES
 ;; <https://elpa.gnu.org/packages/rainbow-mode.html>
