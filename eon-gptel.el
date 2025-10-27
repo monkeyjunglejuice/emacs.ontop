@@ -17,18 +17,28 @@
     (package-upgrade 'transient))
   :custom
   (gptel-default-mode 'org-mode)
+  :config
+  ;; Highlight LLM responses
+  (gptel-highlight-mode)
   :bind
   (:map ctl-z-l-map
         ("l" . gptel)
         ("m" . gptel-menu)
         ("a" . gptel-add)
+        ("k" . gptel-abort)
         ("f" . gptel-add-file)
+        ("h" . gptel-highlight-mode)
+        ("o" . gptel-org-set-topic)
+        ("O" . gptel-org-set-properties)
+        ("p" . gptel-system-prompt)
         ("r" . gptel-rewrite)
-        ("s" . gptel-send)))
+        ("s" . gptel-send)
+        ("t" . gptel-tools)))
 
 ;; Setup for local and cloud LLMs via Ollama - see also `./eon-ai'
 (when (executable-find "ollama")
   (use-package gptel-ollama :ensure nil
+    :after gptel
     :init
     (require 'eon-ai)
     :custom
