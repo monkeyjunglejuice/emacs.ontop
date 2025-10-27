@@ -37,20 +37,6 @@
     (lfe-mode . smartparens-strict-mode)
     (inferior-lfe-mode . smartparens-mode)))
 
-;;  ____________________________________________________________________________
-;;; PARENTHESIS DISPLAY
-
-;; Rainbow-delimiters color-coding of nested parens is already enabled
-;; for all prog-modes in `eon-core.el'
-(use-package rainbow-delimiters
-  :hook
-  (inferior-lfe-mode . rainbow-delimiters-mode))
-
-;; Make parens styleable, e.g. more or less prominent
-;; <https://github.com/tarsius/paren-face>
-;; (use-package paren-face
-;;   :hook
-;;   ((lfe-mode inferior-lfe-mode) . paren-face-mode))
 
 ;;  ____________________________________________________________________________
 ;;; ORG-MODE BABEL

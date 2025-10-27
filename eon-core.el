@@ -180,7 +180,8 @@ Adapted from Doom Emacs")
 ;; <https://github.com/Fanael/rainbow-delimiters>
 (use-package rainbow-delimiters :ensure t
   :hook
-  ((prog-mode conf-mode) . rainbow-delimiters-mode))
+  ((prog-mode conf-mode comint-mode eshell-mode shell-mode)
+   . rainbow-delimiters-mode))
 
 ;; … and/or make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
