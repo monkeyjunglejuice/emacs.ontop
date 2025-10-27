@@ -17,9 +17,9 @@
   (magit-bury-buffer-function #'magit-restore-window-configuration)
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
 
-  ;; how many directoriess deep magit looks for git repos
+  ;; How many directoriess deep magit looks for git repos
   (magit-repository-directories '(("~/" . 1)))
-  ;; inject magit into the `project-switch-commands' dispatch menu
+  ;; Inject magit into the `project-switch-commands' dispatch menu
   (project-switch-commands
    (cl-substitute '(magit-status "magit" ?v) 'project-vc-dir
                   project-switch-commands
