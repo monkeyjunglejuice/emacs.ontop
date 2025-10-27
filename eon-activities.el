@@ -19,7 +19,7 @@
 
   (defvar-keymap ctl-z-a-map :doc "Activity")
   (keymap-set ctl-z-map "a" `("Activity" . ,ctl-z-a-map))
-  
+
   (activities-mode)
   (activities-tabs-mode)
 
@@ -29,7 +29,7 @@
   :custom
 
   (activities-kill-buffers t)
-  
+
 
   :bind
 
