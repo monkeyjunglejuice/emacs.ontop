@@ -27,7 +27,7 @@
         ("s" . gptel-send)
         ("S" . (lambda () (interactive) (gptel-send t)))))
 
-;; Setup for local LLMs via Ollama - see also `eon-ai'
+;; Setup for local and cloud LLMs via Ollama - see also `./eon-ai'
 (when (executable-find "ollama")
   (use-package gptel-ollama :ensure nil
     :init
