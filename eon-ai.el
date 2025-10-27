@@ -14,13 +14,13 @@
   :group 'eon)
 
 (defvar-keymap ctl-z-l-map :doc "AI / Large Language Models")
-(keymap-set ctl-z-map "l" `("AI" . ,ctl-z-l-map))
+(keymap-set ctl-z-map "l" `("AI/LLM" . ,ctl-z-l-map))
 
 ;; _____________________________________________________________________________
 ;;; OLLAMA
 
 (defun eon-ollama-models (type &optional prefix)
-  "Return a list of local Ollama models.
+  "Return a list of installed Ollama models.
 TYPE must be either 'string or 'symbol. PREFIX, when non-nil, must be a
 string with no whitespace (space, tab, newline, CR, FF, VT) and is
 prepended to each model name."
