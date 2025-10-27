@@ -17,9 +17,6 @@
     (package-upgrade 'transient))
   :custom
   (gptel-default-mode 'org-mode)
-  :config
-  ;; Highlight LLM responses
-  (gptel-highlight-mode)
   :bind
   (:map ctl-z-l-map
         ("l" . gptel)
