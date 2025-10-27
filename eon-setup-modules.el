@@ -49,6 +49,7 @@
    ;; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ;;; OPTIONAL MODULES
 
+   eon-activities                ; Suspend/resume windows, buffers, etc.
    ;; eon-autoindent                ; Indent code immediately
    ;; eon-autoupdate                ; Update packages automatically
    eon-cape                      ; Completion-at-point extensions
