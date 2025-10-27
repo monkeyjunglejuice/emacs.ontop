@@ -53,32 +53,26 @@
         ;; Navigation
         ("C-M-f"           . sp-forward-sexp)
         ("C-M-b"           . sp-backward-sexp)
-        ("C-M-u"           . sp-backward-up-sexp)
+        ("C-M-u"           . sp-up-sexp)
         ("C-M-d"           . sp-down-sexp)
-        ("C-M-p"           . sp-backward-down-sexp)
-        ("C-M-n"           . sp-up-sexp)
         ("C-M-a"           . sp-beginning-of-sexp)
         ("C-M-e"           . sp-end-of-sexp)
         ;; Depth-changing commands
-        ("C-M-g"           . sp-unwrap-sexp)
-        ("C-M-s"           . sp-splice-sexp)
+        ("C-M-S-u"         . sp-unwrap-sexp)
+        ("C-M-S-s"         . sp-splice-sexp)
         ;; Forward slurp/barf
-        ("C-)"             . sp-forward-slurp-sexp)
-        ("C-}"             . sp-forward-barf-sexp)
-        ("C-<right>"       . sp-forward-slurp-sexp)
-        ("C-<left>"        . sp-forward-barf-sexp)
+        ("C-M-)"           . sp-forward-slurp-sexp)
+        ("C-M-}"           . sp-forward-barf-sexp)
         ;; Backward slurp/barf
-        ("C-("             . sp-backward-slurp-sexp)
-        ("C-{"             . sp-backward-barf-sexp)
-        ("C-M-<left>"      . sp-backward-slurp-sexp)
-        ("C-M-<right>"     . sp-backward-barf-sexp)
+        ("C-M-("           . sp-backward-slurp-sexp)
+        ("C-M-{"           . sp-backward-barf-sexp)
         ;; Misc
         ("C-M-k"           . sp-kill-sexp)
-        ("C-M-<backspace>" . sp-backward-kill-sexp)
+        ("C-M-DEL"         . sp-backward-kill-sexp)
         ("C-M-SPC"         . sp-mark-sexp)
+        ("C-M-@"           . sp-mark-sexp)
         ("C-M-w"           . sp-copy-sexp)
-        ("C-M-t"           . sp-transpose-sexp)
-        ("M-("             . sp-wrap-round)))
+        ("C-M-t"           . sp-transpose-sexp)))
 
 ;;  ____________________________________________________________________________
 (provide 'eon-smartparens)
