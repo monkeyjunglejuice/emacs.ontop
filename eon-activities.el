@@ -30,7 +30,6 @@
 
   (activities-kill-buffers t)
 
-
   :bind
 
   (:map ctl-z-a-map
