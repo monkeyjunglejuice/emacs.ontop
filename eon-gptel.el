@@ -55,12 +55,15 @@
                      :models (eon-ollama-models 'symbol)))
 
     :config
-    (defun eon-gptel--set-ollama-default-model ()
-      "Set the default LLM"
+
+    (defun eon-gptel--maybe-set-ollama-model ()
+      "Set the default LLM."
       (interactive)
-      (setq-local gptel-model eon-ollama-default-model))
-    :hook
-    (gptel-mode . eon-gptel--set-ollama-default-model)))
+      (cond
+       (eon-ollama-default-model
+        (setopt gptel-model eon-ollama-default-model))
+       (t gptel-model)))
+    (eon-gptel--maybe-set-ollama-model)))
 
 ;; _____________________________________________________________________________
 (provide 'eon-gptel)
