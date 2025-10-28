@@ -11,13 +11,19 @@
 ;; <https://github.com/karthink/gptel>
 
 (use-package gptel :ensure t
+
   :init
+
   ;; Gptel requires built-in package `transient' version 0.7.4 or later
   (unless (package-installed-p 'transient '(0 7 4))
     (package-upgrade 'transient))
+
   :custom
+
   (gptel-default-mode 'org-mode)
+
   :bind
+
   (:map ctl-z-l-map
         ("l" . gptel)
         ("m" . gptel-menu)
@@ -36,7 +42,9 @@
 (when (executable-find "ollama")
   (use-package gptel-ollama :ensure nil
     :after gptel
+
     :init
+
     (require 'eon-ai)
     :custom
     ;; Register local Ollama models
@@ -45,6 +53,7 @@
                      :endpoint "/api/chat"
                      :stream t
                      :models (eon-ollama-models 'symbol)))
+
     :config
     (defun eon-gptel--set-ollama-default-model ()
       "Set the default LLM"
