@@ -110,7 +110,8 @@ Once removed, they will start with `god-local-mode' enabled."
   (:map god-local-mode-map
         ("i" . eon-god-local-mode-disable)
         ("." . repeat)
-        ("V" . scroll-down-command)))
+        ("V" . scroll-down-command)
+        ))
 
 ;; Adjustments for Isearch
 (use-package god-mode-isearch :ensure nil
