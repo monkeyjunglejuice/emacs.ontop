@@ -58,7 +58,7 @@
 
 ;; TODO Maybe the whole loader should be extended to provide real value, for
 ;; instance clean unloading and undefining on the fly for vars, functions and
-;; keybindings introduced by a module; meaning all of that should work without
+;; keybindings introduced by a module; meaning all of that may work without
 ;; restarting Emacs. And also a module-selection menu based on `completing-read'
 ;; (targeting `fido-vertical-mode' and `vertico'), and/or the `customize' UI.
 
