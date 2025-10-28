@@ -219,7 +219,8 @@ cause OS paging."
   :type 'number)
 
 ;; Set the high value immediately to prevent frequent garbage collections
-;; during initialization
+;; during initialization. Will be adjusted dynamically when eon-gcmh-mode
+;; is activated via `emacs-startup-hook'.
 (setq gc-cons-threshold eon-gcmh-high-cons-threshold)
 
 (defcustom eon-gcmh-low-cons-threshold 800000
@@ -725,6 +726,7 @@ Use the Customization UI to change, or `setopt' in Elisp code."
 (defvar-keymap ctl-z-f-map   :doc "File")
 (defvar-keymap ctl-z-g-map   :doc "Goto")
 (defvar-keymap ctl-z-h-map   :doc "Help")
+(defvar-keymap ctl-z-j-map   :doc "User")
 (defvar-keymap ctl-z-o-map   :doc "Org")
 (defvar-keymap ctl-z-p-map   :doc "Project")
 (defvar-keymap ctl-z-q-map   :doc "Quit")
@@ -746,6 +748,7 @@ Use the Customization UI to change, or `setopt' in Elisp code."
   "f"   `("File"     . ,ctl-z-f-map)
   "g"   `("Goto"     . ,ctl-z-g-map)
   "h"   `("Help"     . ,ctl-z-h-map)
+  "j"   `("User"     . ,ctl-z-j-map)
   "o"   `("Org"      . ,ctl-z-o-map)
   "p"   `("Project"  . ,ctl-z-p-map)
   "q"   `("Quit"     . ,ctl-z-q-map)
@@ -1356,15 +1359,53 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (keymap-set ctl-z-b-map "n" #'next-buffer)
 (keymap-set ctl-z-b-map "b" #'switch-to-buffer)
 
-;; Kill the current buffer immediately instead of presenting a selection.
-;; It's the equivalent to "close tab" in other editors.
-(keymap-set ctl-z-map "k" #'kill-current-buffer)
+;; Get the buffer out of the way, but keep it alive
+(defun eon-bury-buffer (&optional restore)
+  "Bury the current buffer.
+If visiting a file and modified, ask to save first; then bury the buffer.
+If called from the minibuffer, exit via `abort-recursive-edit'.
+With prefix arg RESTORE is non-nil, bring the buffer back."
+  (interactive "P")
+  (if (minibufferp)
+      (abort-recursive-edit)
+    (if restore
+        (unbury-buffer)
+      (when (and buffer-file-name (buffer-modified-p))
+        (when (y-or-n-p (format "Save buffer %s before bury? "
+                                (buffer-name)))
+          (basic-save-buffer)))
+      (bury-buffer))))
+
+(keymap-set ctl-z-map "k" #'eon-bury-buffer)
+
+;; Get the buffer out of the way and close the window
+(defun eon-bury-window (&optional restore)
+  "Bury the current buffer.
+If visiting a file and modified, ask to save first; then bury the buffer.
+With prefix arg RESTORE non-nil, restore the previous window configuration.
+If called from the minibuffer, exit via `abort-recursive-edit'."
+  (interactive "P")
+  (if (minibufferp)
+      (abort-recursive-edit)
+    (if restore
+        (progn
+          (winner-undo)
+          (unbury-buffer))
+      (when (and buffer-file-name (buffer-modified-p))
+        (when (y-or-n-p (format "Save buffer %s before bury? "
+                                (buffer-name)))
+          (basic-save-buffer)))
+      (bury-buffer)
+      (unless (one-window-p)
+        (delete-window)))))
+
+(keymap-set ctl-z-map "K" #'eon-bury-window)
+
+;; Kill the current buffer immediately instead of presenting a selection
+(keymap-set ctl-z-b-map "k" #'kill-current-buffer)
 
 ;; Kill the window too
-(keymap-set ctl-z-map "K" #'kill-buffer-and-window)
-
-;; Get the buffer out of the way, but let it alive
-(keymap-set ctl-z-b-map "k" #'bury-buffer)
+(keymap-set ctl-z-b-map "K" #'kill-buffer-and-window)
 
 ;; Kill all buffers at once
 (defun eon-kill-all-buffers ()
@@ -1374,7 +1415,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
   (let ((kill-buffer-query-functions '()))
     (mapc #'kill-buffer (buffer-list))))
 
-(keymap-set ctl-z-b-map "K" #'eon-kill-all-buffers)
+(keymap-set ctl-z-b-map "C-k" #'eon-kill-all-buffers)
 
 ;; Uniquify buffer names for buffers that would have identical names
 (setopt uniquify-buffer-name-style 'forward)
@@ -1748,6 +1789,15 @@ pretending to clear it."
 ;; Open directory of the currently visited file via leader menu: "<leader> f d"
 (keymap-set ctl-z-f-map "d" #'dired-jump)
 
+;; Keybindings in Dired
+(with-eval-after-load 'dired
+  ;; Switch to wdired-mode and edit directory content like a text buffer
+  (keymap-set dired-mode-map "e" #'wdired-change-to-wdired-mode)
+  ;; Open file in associated OS application
+  (keymap-set dired-mode-map "M-RET" #'dired-do-open)
+  ;; "f" opens file/directory; bring forward/backward pattern to Dired
+  (keymap-set dired-mode-map "b" #'dired-up-directory))
+
 (with-eval-after-load 'dired
   (setopt
    ;; Don't accumulate useless Dired buffers
@@ -1765,10 +1815,6 @@ pretending to clear it."
    ;; Check for directory modifications?
    dired-auto-revert-buffer t))
 
-;; Switch to wdired-mode and edit directory content like a text buffer
-(with-eval-after-load 'dired
-  (keymap-set dired-mode-map "e" #'wdired-change-to-wdired-mode))
-
 ;; Hide details in file listings? Toggle via "(" or "<localleader> d"
 (add-hook 'dired-mode-hook #'dired-hide-details-mode)
 (keymap-set eon-localleader-dired-map "d" #'dired-hide-details-mode)
@@ -1776,17 +1822,14 @@ pretending to clear it."
 ;; Highlight current line in Dired?
 (add-hook 'dired-mode-hook #'hl-line-mode)
 
-;; Linux/Unix only: hit "M-RET" to open files in the corresponding desktop app
-(with-eval-after-load 'dired
-  (when (eon-linp)
-    (defun eon-dired-xdg-open ()
-      "Open files and folders with the default desktop app."
-      (interactive)
-      (let* ((file (dired-get-filename nil t)))
-        (message "Opening %s..." file)
-        (call-process "xdg-open" nil 0 nil file)
-        (message "Opening %s done" file)))
-    (keymap-set dired-mode-map "M-RET" #'eon-dired-xdg-open)))
+;; Images
+(with-eval-after-load 'image-dired
+  (setopt
+   image-dired-thumb-margin 1
+   image-dired-thumb-relief 0
+   ;; Store thumbnails in the system-wide thumbnail location
+   ;; e.g. ~/.local/cache/thumbnails to make them reusable by other programs
+   image-dired-thumbnail-storage 'standard-large))
 
 ;; Open '~/.emacs.d' directory in Dired
 (defun eon-dired-user-emacs-directory ()
@@ -1800,16 +1843,7 @@ pretending to clear it."
   (interactive)
   (dired eon-user-directory))
 (with-eval-after-load 'dired
-  (keymap-set dired-mode-map "h" #'eon-visit-user-directory))
-
-;; Images
-(with-eval-after-load 'image-dired
-  (setopt
-   image-dired-thumb-margin 1
-   image-dired-thumb-relief 0
-   ;; Store thumbnails in the system-wide thumbnail location
-   ;; e.g. ~/.local/cache/thumbnails to make them reusable by other programs
-   image-dired-thumbnail-storage 'standard-large))
+  (keymap-set dired-mode-map "h" #'eon-dired-user-directory))
 
 ;; _____________________________________________________________________________
 ;;; COMINT
@@ -1905,6 +1939,7 @@ pretending to clear it."
 (setopt url-privacy-level '(email lastloc cookies))
 (url-setup-privacy-info)
 
+;; TODO Refactor to make the user-agent string customizable/selectable
 (defun eon-user-agent (browser-name)
   "Accepts a symbol in order to return a pre-defined user-agent string.
 BROWSER-NAME can be either \='safari-macos, \='safari-iphone, \='w3m or t -
@@ -1995,7 +2030,9 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 ;; Define a keymap in order to group formatting commands
 (defvar-keymap ctl-z-c-f-map :doc "Formatting"
                "a" #'align-regexp
-               "s" #'sort-lines)
+               ;; Tipps: <https://susam.github.io/sorting-in-emacs.html>
+               "s" #'sort-lines
+               "S" #'sort-fields)
 ;; Hook the keymap into the "Code" sub-keymap under the leader
 ;; in order to make it available via "<leader> c f"
 (keymap-set ctl-z-c-map "f" `("Format" . ,ctl-z-c-f-map))
