@@ -53,7 +53,8 @@ Used by custom variables `eon-god-leader-key' and `eon-god-localleader-key'."
     :set #'eon-god--set-leaders
     :initialize 'custom-initialize-set)
 
-  ;; Enable almost everywhere
+  ;; Enable almost everywhere;
+  ;; see `god-exempt-major-modes' and `god-exempt-preticates' where not.
   (god-mode-all 1)
 
   :custom
