@@ -89,7 +89,7 @@ Used by custom variables `eon-helix-leader-key' and `eon-helix-localleader-key'.
      ;; Visual/selection while normal keymap is active
      ((and (bound-and-true-p helix-normal-mode)
            (eon-helix--selection-active-p))
-      eon-cursor-type-write)
+      'hollow)
      ;; Plain normal state; no selection
      ((bound-and-true-p helix-normal-mode)
       eon-cursor-type-extra)
