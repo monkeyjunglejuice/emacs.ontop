@@ -79,7 +79,7 @@ Used by custom variables `eon-evil-leader-key' and `eon-evil-localleader-key'."
   (setq evil-normal-state-cursor eon-cursor-type-extra
         evil-emacs-state-cursor  eon-cursor-type-write
         evil-insert-state-cursor eon-cursor-type-write
-        evil-visual-state-cursor eon-cursor-type-select)
+        evil-visual-state-cursor 'hollow)
 
   ;; Explicitly bind the leader key
   (eon-evil--bind-leader-in-states nil eon-evil-leader-key)
