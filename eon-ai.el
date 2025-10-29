@@ -1,4 +1,4 @@
-;;; eon-ai.el --- Shared config for AI -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-ai.el --- Shared functionality for AI integration -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 

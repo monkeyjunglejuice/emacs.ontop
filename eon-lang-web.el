@@ -1,4 +1,4 @@
-;;; eon-lang-web.el --- HTML, CSS, JavaScript -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-lang-web.el --- HTML/CSS editing -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 

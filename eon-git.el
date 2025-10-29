@@ -1,4 +1,4 @@
-;;; eon-git.el --- Git tools -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-git.el --- Magit user interface and friends -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 

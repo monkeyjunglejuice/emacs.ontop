@@ -1,4 +1,4 @@
-;;; eon-smartparens.el --- Structural editing -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-smartparens.el --- Edit parenthesis structurally -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 

@@ -1,4 +1,4 @@
-;;; eon-todo.el --- Todo keywords -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-todo.el --- Highlight todo keywords in comments -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 

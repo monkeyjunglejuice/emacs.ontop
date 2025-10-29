@@ -1,4 +1,4 @@
-;;; eon-setup-personal.el --- Personal Elisp -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-setup-personal.el --- Personal Emacs Lisp -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;;; Commentary:
 ;; The code within this file will load last, so that you can shadow or override

@@ -1,4 +1,4 @@
-;;; eon-theme-spacemacs.el --- Spacemacs theme -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-theme-spacemacs.el --- Spacemacs themes -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 

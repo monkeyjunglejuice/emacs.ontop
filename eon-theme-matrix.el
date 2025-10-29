@@ -1,4 +1,4 @@
-;;; eon-theme-matrix.el --- The Matrix theme -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-theme-matrix.el --- Theme inspired by The Matrix movie -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 

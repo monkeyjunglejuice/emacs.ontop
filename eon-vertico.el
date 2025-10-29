@@ -1,4 +1,4 @@
-;;; eon-vertico.el --- Versatile vertical completion UI -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-vertico.el --- Vertical minibuffer completion UI -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 

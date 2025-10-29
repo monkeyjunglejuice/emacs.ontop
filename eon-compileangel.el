@@ -1,4 +1,4 @@
-;;; eon-compileangel.el --- Native compilation -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-compileangel.el --- Improved native compilation -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 

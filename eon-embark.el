@@ -1,4 +1,4 @@
-;;; eon-embark.el --- Embark -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-embark.el --- Minibuffer actions and context menu -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;; Commentary:
 ;;; Code:
 

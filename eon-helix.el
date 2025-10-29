@@ -1,4 +1,4 @@
-;;; eon-helix.el --- Helix keybindings -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-helix.el --- Modular editing: Helix keybindings -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 

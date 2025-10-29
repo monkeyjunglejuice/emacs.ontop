@@ -1,4 +1,4 @@
-;;; eon-flycheck.el --- Syntax check / linters -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-flycheck.el --- Syntax checker alternative -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
