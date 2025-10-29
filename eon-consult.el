@@ -22,6 +22,7 @@
   ;; the window mode line.
   (advice-add #'register-preview :override #'consult-register-window)
   (setq register-preview-delay 0.5)
+
   ;; Use Consult to select xref locations with preview
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
@@ -30,6 +31,7 @@
   (defalias 'eon-consult-grep
     (if (executable-find "rg") #'consult-ripgrep #'consult-grep)
     "Run consult-ripgrep if rg is available, else consult-grep.")
+
   ;; Find
   (defalias 'eon-consult-find
     (if (executable-find "fd") #'consult-fd #'consult-find)
@@ -58,9 +60,11 @@
    consult--source-recent-file consult--source-project-recent-file
    ;; :preview-key "M-."
    :preview-key '(:debounce 0.4 any))
+
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
   (setq consult-narrow-key "<")
+
   ;; Optionally make narrowing help available in the minibuffer.
   ;; You may want to use `embark-prefix-help-command' or which-key instead.
   ;; (keymap-set consult-narrow-map (concat consult-narrow-key " ?") #'consult-narrow-help)
