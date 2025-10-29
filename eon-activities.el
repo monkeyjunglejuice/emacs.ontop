@@ -33,16 +33,17 @@
   :bind
 
   (:map ctl-z-a-map
-   ("d"   . activities-define)
-   ("k"   . activities-kill)
-   ("l"   . activities-list)
-   ("n"   . activities-new)
-   ("r"   . activities-rename)
-   ("a"   . activities-resume)
-   ("g"   . activities-revert)
-   ("c"   . activities-suspend)
-   ("RET" . activities-switch)
-   ("b"   . activities-switch-buffer)))
+        ("d"   . activities-define)
+        ("D"   . activities-discard)
+        ("k"   . activities-kill)
+        ("l"   . activities-list)
+        ("n"   . activities-new)
+        ("r"   . activities-rename)
+        ("a"   . activities-resume)
+        ("g"   . activities-revert)
+        ("c"   . activities-suspend)
+        ("RET" . activities-switch)
+        ("b"   . activities-switch-buffer)))
 
 ;; _____________________________________________________________________________
 (provide 'eon-activities)
