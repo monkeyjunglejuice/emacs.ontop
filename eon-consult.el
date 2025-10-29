@@ -186,11 +186,16 @@
 
    ;; Leader -> Register
    :map ctl-z-r-map
-   ("l" . consult-register-load)
-   ("s" . consult-register-store)
-   ("r" . consult-register)
-
-   ;; Search
+   ;; Unbind redundant built-in commands
+   ("i"   . nil)                     ; `insert-register'
+   ("R"   . nil)                     ; `copy-rectangle-to-register'
+   ("n"   . nil)                     ; `number-to-register'
+   ("w"   . nil)                     ; `window-configuration-to-register'
+   ("f"   . nil)                     ; `frameset-to-register'
+   ("SPC" . nil)                     ; `point-to-register'
+   ("j"   . consult-register-load)   ; shadow `jump-to-register'
+   ("r"   . consult-register-store)  ; shadow `copy-to-register'
+   ("v"   . consult-register)        ; shadow `view-register'
 
    ;; Leader -> Search
    :map ctl-z-s-map
