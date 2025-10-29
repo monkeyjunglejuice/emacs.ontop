@@ -45,7 +45,7 @@
 ;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; EMACS (built-in)
 
-;; A few more useful configurations ...
+;; A few more useful configurations
 (use-package emacs :ensure nil
   :init
   ;; Add prompt indicator to `completing-read-multiple'.
