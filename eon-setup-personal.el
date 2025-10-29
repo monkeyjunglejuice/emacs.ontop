@@ -18,12 +18,8 @@
 ;;  ____________________________________________________________________________
 ;;; ELISP
 
-;; (setq user-full-name "My Name"
-;;       user-mail-address "my-email@example.com")
-
-
-
-
+(setopt user-full-name "My Name"
+        user-mail-address "my-email@example.com")
 
 
 
