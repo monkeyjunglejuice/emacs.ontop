@@ -482,7 +482,9 @@ Cancel the previous one if present."
             ;; Highlight current line in special modes?
             (hl-line-mode 1)))
 
-;;; Change the cursor type based on a certain state
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - Change the cursor type based on a certain state
+
 ;; To learn about available cursor types, place your cursor on `cursor-type'
 ;; and do "C-h o"; or do "M-x describe-symbol RET cursor-type RET"
 
@@ -824,11 +826,11 @@ BODY is forwarded to `defvar-keymap'."
 
 (with-eval-after-load 'viper
   (setopt
-   viper-inhibit-startup-message t    ; Don't show viper's start up message
-   viper-expert-level            '5   ; Use max Emacs experience level [1,5]
-   viper-case-fold-search        t    ; Ingore case when searching
-   viper-ex-style-editing        nil  ; Delete past line's beginning
-   viper-ex-style-motion         nil  ; Move past line's beginning
+   viper-inhibit-startup-message t    ; don't show viper's start up message
+   viper-expert-level            '5   ; use max Emacs experience level [1,5]
+   viper-case-fold-search        t    ; ingore case when searching
+   viper-ex-style-editing        nil  ; delete past line's beginning
+   viper-ex-style-motion         nil  ; move past line's beginning
    ))
 
 (with-eval-after-load 'viper-cmd
@@ -992,7 +994,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; Keybinding to toggle between light and dark: "<leader> x t"
 (keymap-set ctl-z-x-map "t" #'eon-theme-toggle)
 
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;; _____________________________________________________________________________
 ;;; THEME CONFIG
 
 ;; Set some defaults for the Modus themes; doesn't affect other themes.
@@ -1006,13 +1008,13 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 ;; Customize via "M-x eon-customize-group" or via `setopt' in your init.el
 
-;;; Set your light theme:
+;;; - Set your light theme:
 ;; (setopt eon-theme-light 'modus-operandi-tinted)
 
-;;; Set your dark theme:
+;;; - Set your dark theme:
 ;; (setopt eon-theme-dark 'modus-vivendi-tinted)
 
-;;; Set 'light or 'dark as your default theme variant:
+;;; - Set 'light or 'dark as your default theme variant:
 ;; (setopt eon-theme-variant-default 'light)
 
 ;; The hooks below can be used to run additional functions before or after
@@ -1020,7 +1022,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; variables that otherwise would get overwritten by themes.
 ;; Restart Emacs to take effect after changing the hooks.
 
-;;; Light theme hooks
+;;; - Light theme hooks
 
 ;; Call a function before/after loading the light theme
 ;; Example for commands ("interactive" functions):
@@ -1037,7 +1039,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; (remove-hook 'eon-theme-dark-post-load-hook #'eon-fonts-default)
 (add-hook 'eon-theme-light-post-load-hook #'eon-fonts-default)
 
-;;; Dark theme hooks
+;;; - Dark theme hooks
 
 ;; Call a function before/after loading the dark theme
 ;; Example for commands ("interactive" functions):
@@ -1145,7 +1147,9 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (setopt completion-category-overrides
         '((file (styles . (basic partial-completion)))))
 
-;;; Dabbrev
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - Dabbrev
+
 (with-eval-after-load 'dabbrev
   (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
   (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
@@ -1156,13 +1160,6 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Completions buffer
-
-;; There's now `eon-minicomp-mode', an alternative to the *Completions* buffer
-;; that displays completion candidates in the minibuffer via fuzzy search.
-;; Enable via "M-x eon-minicomp-mode".
-;;
-;; There's also a second alternative `eon-buffcomp-mode 'in the making
-;; for inline code completion, similar to Company or Corfu (but much simpler).
 
 ;; Allow the *Completions* buffer to pop up?
 (setopt completion-auto-help 'always)
@@ -1320,6 +1317,9 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; Focus follows mouse?
 (setopt mouse-autoselect-window nil
         focus-follows-mouse nil)
+
+;; Make window splits more evenly sized?
+(setopt window-resize-pixelwise t)
 
 ;; Undo/redo window layouts
 (setopt winner-dont-bind-my-keys t)
@@ -1577,7 +1577,7 @@ Called without argument just syncs `eon-boring-buffers' to other places."
 ;; _____________________________________________________________________________
 ;;; REGISTERS
 
-(setopt register-use-preview t)
+;; (setopt register-use-preview t)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - General keybindings
@@ -1602,7 +1602,7 @@ pretending to clear it."
 (keymap-set ctl-z-r-map "c" #'eon-register-clear)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - Insertable
+;;; - insertable
 
 ;; Insert from register
 (keymap-set ctl-z-r-map "i" #'insert-register)
@@ -1648,13 +1648,14 @@ pretending to clear it."
 
 ;; Which histories to save between Emacs sessions?
 (savehist-mode 1)
-(eon-add-to-list 'savehist-additional-variables
-                 '(kill-ring
-                   register-alist
-                   mark-ring
-                   global-mark-ring
-                   search-ring
-                   regexp-search-ring))
+(eon-add-to-list-setopt 'savehist-additional-variables
+                        '(kill-ring
+                          register-alist
+                          mark-ring
+                          global-mark-ring
+                          search-ring
+                          regexp-search-ring
+                          compile-command))
 
 ;; History length for various histories
 (setopt history-length 1024)
@@ -1723,7 +1724,7 @@ pretending to clear it."
 
 ;; Auto refresh buffers when contents change?
 (setopt global-auto-revert-non-file-buffers t
-        auto-revert-stop-on-user-input nil
+        auto-revert-stop-on-user-input t
         auto-revert-verbose t)
 (global-auto-revert-mode 1)
 
@@ -1915,17 +1916,21 @@ pretending to clear it."
 ;; List directory content after changing into it?
 (setopt eshell-list-files-after-cd t)
 
+;; Jump to Eshell prompts
+(add-hook eshell-mode-hook
+          (lambda () (setq outline-regexp eshell-prompt-regexp)))
+
+;; Launch an Eshell buffer: "<leader> e e"; re-visit the buffer by repeating
+(keymap-set ctl-z-e-map "e" #'eshell)
+
+;; Launch a fresh Eshell buffer: "<leader> e E"
 (defun eon-eshell-new ()
   "Open a new eshell instance."
   (interactive)
   (eshell 't))
-
-;; Launch an Eshell buffer: "<leader> e e"; re-visit the buffer by repeating
-(keymap-set ctl-z-e-map "e" #'eshell)
-;; Launch a fresh Eshell buffer: "<leader> e E"
 (keymap-set ctl-z-e-map "E" #'eon-eshell-new)
 
-;; Create Eshell loacalleader keymap
+;; Create Eshell loacal leader keymap
 (eon-localleader-defkeymap eshell-mode eon-localleader-eshell-map
   :doc "Local leader keymap for Eshell")
 
@@ -1942,15 +1947,19 @@ pretending to clear it."
 ;; Make `shell' behave like `eshell'
 (setopt shell-kill-buffer-on-exit t)
 
+;; Launch a Shell buffer: "<leader> e s"; re-visit the buffer by repeating
+(keymap-set ctl-z-e-map "s" #'shell)
+
+;; Launch a fresh Shell buffer: "<leader> e S"
 (defun eon-shell-new ()
   "Open a new shell instance."
   (interactive)
   (shell (generate-new-buffer-name "*shell*")))
-
-;; Launch a Shell buffer: "<leader> e s"; re-visit the buffer by repeating
-(keymap-set ctl-z-e-map "s" #'shell)
-;; Launch a fresh Shell buffer: "<leader> e S"
 (keymap-set ctl-z-e-map "S" #'eon-shell-new)
+
+;; Create Shell loacal leader keymap
+(eon-localleader-defkeymap shell-mode eon-localleader-shell-map
+  :doc "Local leader keymap for Shell")
 
 ;; _____________________________________________________________________________
 ;;; PROCED
@@ -2100,9 +2109,7 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 
 ;; If you prefer to see all text within a window in programming modes, enable
 ;; visual line breaks, a.k.a soft wrapping
-;; (add-hook 'prog-mode-hook
-;;           (lambda ()
-;;             (visual-line-mode 1)))
+;; (add-hook 'prog-mode-hook (lambda () (visual-line-mode 1)))
 
 ;; Visual line wrapping in text mode
 (add-hook 'text-mode-hook #'visual-line-mode)
@@ -2120,9 +2127,7 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Hideshow>
 
 ;; Code folding on or off? Show available commands: "M-x hs-"
-;; (add-hook 'prog-mode-hook
-;;           (lambda ()
-;;             (hs-minor-mode 1)))
+;; (add-hook 'prog-mode-hook (lambda () (hs-minor-mode 1)))
 
 ;; _____________________________________________________________________________
 ;;; INDENTATION
@@ -2662,7 +2667,7 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
         org-html-self-link-headlines t)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - LITERATE PROGRAMMING
+;;; - ORG LITERATE PROGRAMMING
 ;; <https://orgmode.org/worg/org-contrib/babel/intro.html>
 
 ;; Activate code blocks via Babel languages
@@ -2676,7 +2681,7 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
 ;;; LISP
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Executing-Lisp>
 
-;;; Helpers for lisp-type languages
+;;; - Helpers for lisp-type languages
 
 (defvar eon-lisp-src-modes-registry
   '(;; Built-in modes
@@ -2744,7 +2749,7 @@ With SWITCH = \='hook, return ...-hook variables."
    switch))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; CHECK PARENS MODE
+;;; - Check-parens mode
 
 ;; Minor mode that prevents from accidently saving files with mismatched
 ;; parenthesis and quotes
