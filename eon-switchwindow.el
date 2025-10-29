@@ -7,7 +7,7 @@
 ;;; Code:
 
 ;;  ___________________________________________________________________________
-;;; WINDOW MANAGEMENT
+;;; SWITCH-WINDOW
 ;; <https://github.com/dimitri/switch-window>
 
 (use-package switch-window :ensure t
