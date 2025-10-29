@@ -94,7 +94,7 @@ Once removed, they will start with `god-local-mode' enabled."
      ;; Selection while god-local-mode is active
      ((and (bound-and-true-p god-local-mode)
            (region-active-p))
-      'hollow)
+      eon-cursor-type-extra-select)
      ;; Normal god-local-mode state; no selection
      ((bound-and-true-p god-local-mode)
       eon-cursor-type-extra)

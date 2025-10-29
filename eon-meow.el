@@ -14,7 +14,7 @@
 
   :init
 
-  ;; Meow handles cursor types itself. So turn off cursor type handling
+  ;; Let Meow handle the cursor style
   (eon-cursor-mode -1)
 
   :config
