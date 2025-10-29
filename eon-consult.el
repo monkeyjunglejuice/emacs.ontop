@@ -140,27 +140,27 @@
    :map ctl-z-map
    ("SPC" . consult-project-buffer)
 
-   ;; Buffer
+   ;; Leader -> Buffer
    :map ctl-z-b-map
    ("b" . consult-buffer)
 
-   ;; Code
+   ;; Leader -> Code
    :map ctl-z-c-map
    ("e" . consult-flymake)
 
-   ;; Exec
+   ;; Leader -> Exec
    :map ctl-z-e-map
    ("k" . consult-kmacro)
 
-   ;; Eshell local leader
+   ;; Local leader -> Eshell
    :map eon-localleader-eshell-map
    ("h" . consult-history)
 
-   ;; File
+   ;; Leader -> File
    :map ctl-z-f-map
    ("h" . consult-recent-file)
 
-   ;; Goto
+   ;; Leader -> Goto
    :map ctl-z-g-map
    ("e" . consult-compile-error)
    ("r" . consult-grep-match)
@@ -171,45 +171,47 @@
    ("i" . consult-imenu)
    ("I" . consult-imenu-multi)
 
-   ;; Help
+   ;; Leader -> Help
    :map ctl-z-h-map
    ("m" . consult-man)
    ("i" . consult-info)
 
-   ;; Org
+   ;; Leader -> Org
    :map ctl-z-o-map
    ("a" . consult-org-agenda)
 
-   ;; Org localleader
+   ;; Local leader -> Org
    :map eon-localleader-org-mode-map
    ("g" . consult-org-heading)
 
-   ;; Register
+   ;; Leader -> Register
    :map ctl-z-r-map
    ("l" . consult-register-load)
    ("s" . consult-register-store)
    ("r" . consult-register)
 
    ;; Search
+
+   ;; Leader -> Search
    :map ctl-z-s-map
    ("f" . eon-consult-find)
    ("g" . eon-consult-grep)
    ("s" . consult-line)
    ("S" . consult-line-multi)
 
-   ;; Tab/Workspace
+   ;; Leader -> Tab
    :map ctl-z-t-map
    ("b" . consult-buffer-other-tab)
 
-   ;; VC/Git
+   ;; Leader -> VC/Git
    :map ctl-z-v-map
    ("g" . consult-git-grep)
 
-   ;; Window
+   ;; Leader -> Window
    :map ctl-z-w-map
    ("b" . consult-buffer-other-window)
 
-   ;; Misc
+   ;; Leader -> Misc
    :map ctl-z-x-map
    ("T" . consult-theme)))
 
