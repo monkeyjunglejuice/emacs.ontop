@@ -218,7 +218,11 @@
 
    ;; Leader -> Misc
    :map ctl-z-x-map
-   ("T" . consult-theme)))
+   ("T" . consult-theme)
+
+   ;; Leader -> Bookmark
+   :map ctl-z-ret-map
+   ("RET" . consult-bookmark)))
 
 ;; _____________________________________________________________________________
 ;;; CONSULT-DIR
