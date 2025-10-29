@@ -27,6 +27,9 @@
   (setopt xref-show-xrefs-function #'consult-xref
           xref-show-definitions-function #'consult-xref)
 
+  ;; Let Consult replace the *Completions* buffer and provide code completion
+  (setq-default completion-in-region-function #'consult-completion-in-region)
+
   ;; Grep
   (defalias 'eon-consult-grep
     (if (executable-find "rg") #'consult-ripgrep #'consult-grep)
@@ -69,8 +72,6 @@
   ;; You may want to use `embark-prefix-help-command' or which-key instead.
   ;; (keymap-set consult-narrow-map (concat consult-narrow-key " ?") #'consult-narrow-help)
 
-  ;; Let Consult replace the *Completions* buffer and provide code completion
-  (setq-default completion-in-region-function #'consult-completion-in-region)
 
   :hook
 
