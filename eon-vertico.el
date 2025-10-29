@@ -40,7 +40,19 @@
   ;; Enable Vertico
   (vertico-mode)
   ;; How to display Vertico per default?
-  (vertico-multiform-mode))
+  (vertico-multiform-mode)
+
+  ;; :hook
+
+  ;; Enable repeatable Vertico sessions
+  ;; (minibuffer-setup . vertico-repeat-save)
+
+  ;; :bind
+
+  ;; (:map vertico-map
+  ;;       ("M-P" . vertico-repeat-previous)
+  ;;       ("M-N" . vertico-repeat-next))
+  )
 
 ;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; EMACS (built-in)
