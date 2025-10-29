@@ -206,8 +206,8 @@
    ("g" . consult-git-grep)
 
    ;; Window
-   ;; :map ctl-z-w-map
-   ;; ("b" . consult-buffer-other-window)
+   :map ctl-z-w-map
+   ("b" . consult-buffer-other-window)
 
    ;; Misc
    :map ctl-z-x-map
