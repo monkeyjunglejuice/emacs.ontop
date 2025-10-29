@@ -31,7 +31,7 @@
 ;; Maintainer: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Created: 28 Apr 2021
-;; Version: 2.3.1
+;; Version: 2.3.3
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
 ;; Keywords: config dotemacs convenience
@@ -510,7 +510,7 @@ See also `cursor-type'"
   :set #'eon-cursor-type--set)
 
 (defcustom eon-cursor-type-select 'bar
-  "Cursor type for selecting text.
+  "Cursor type for selecting text in writing- or modal insert states.
 Accepts an expression that returns either:
 - t or nil
 - one of the symbols: 'bar 'hbar 'box 'hollow
@@ -532,7 +532,18 @@ See also `cursor-type'"
   :set #'eon-cursor-type--set)
 
 (defcustom eon-cursor-type-extra 'box
-  "Cursor type for special or command states.
+  "Cursor type for command- and modal \"normal\" states.
+Accepts an expression that returns either:
+- t or nil
+- one of the symbols: 'bar 'hbar 'box 'hollow
+- a pair (SYMBOL . INTEGER) e.g., (hbar . 3).
+See also `cursor-type'"
+  :type 'sexp
+  :group 'eon-cursor-type
+  :set #'eon-cursor-type--set)
+
+(defcustom eon-cursor-type-extra-select 'hollow
+  "Cursor type for command- and modal \"normal\" states when region is active.
 Accepts an expression that returns either:
 - t or nil
 - one of the symbols: 'bar 'hbar 'box 'hollow
@@ -1323,6 +1334,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (keymap-set ctl-z-w-map "f" #'find-file-other-window)
 (keymap-set ctl-z-w-map "k" #'kill-buffer-and-window)
 (keymap-set ctl-z-w-map "m" #'delete-other-windows)
+(keymap-set ctl-z-w-map "q" #'quit-window)
 (keymap-set ctl-z-w-map "s" #'split-window-below)
 (keymap-set ctl-z-w-map "v" #'split-window-right)
 (keymap-set ctl-z-w-map "w" #'other-window)
@@ -1359,6 +1371,9 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (keymap-set ctl-z-b-map "n" #'next-buffer)
 (keymap-set ctl-z-b-map "b" #'switch-to-buffer)
 
+;; Reload buffer; when visiting a file, discard all unsaved changes
+(keymap-set ctl-z-b-map "C-r" #'revert-buffer)
+
 ;; Get the buffer out of the way, but keep it alive
 (defun eon-bury-buffer (&optional restore)
   "Bury the current buffer.
@@ -1375,7 +1390,6 @@ With prefix arg RESTORE is non-nil, bring the buffer back."
                                 (buffer-name)))
           (basic-save-buffer)))
       (bury-buffer))))
-
 (keymap-set ctl-z-map "k" #'eon-bury-buffer)
 
 ;; Get the buffer out of the way and close the window
@@ -1398,7 +1412,6 @@ If called from the minibuffer, exit via `abort-recursive-edit'."
       (bury-buffer)
       (unless (one-window-p)
         (delete-window)))))
-
 (keymap-set ctl-z-map "K" #'eon-bury-window)
 
 ;; Kill the current buffer immediately instead of presenting a selection
@@ -1414,7 +1427,6 @@ If called from the minibuffer, exit via `abort-recursive-edit'."
   (save-some-buffers)
   (let ((kill-buffer-query-functions '()))
     (mapc #'kill-buffer (buffer-list))))
-
 (keymap-set ctl-z-b-map "C-k" #'eon-kill-all-buffers)
 
 ;; Uniquify buffer names for buffers that would have identical names
@@ -1563,14 +1575,20 @@ Called without argument just syncs `eon-boring-buffers' to other places."
   (keymap-set ctl-z-map "C-y" #'eon-wsl-paste))
 
 ;; _____________________________________________________________________________
-;;; REGISTER
+;;; REGISTERS
+
+(setopt register-use-preview t)
+
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - General keybindings
+
+;; View register content
+(keymap-set ctl-z-r-map "v" #'view-register)
 
 (defun eon-register-clear ()
   "Pick a register with the built-in preview and clear it.
-
 Prompts using `register-read-with-preview', the same UI `view-register'
 uses.  After selection, remove the entry from `register-alist'.
-
 If the chosen register is empty, signal a user error instead of
 pretending to clear it."
   (interactive)
@@ -1581,10 +1599,38 @@ pretending to clear it."
                   (single-key-description reg)))
     (set-register reg nil)
     (message "Cleared register %s" (single-key-description reg))))
-
 (keymap-set ctl-z-r-map "c" #'eon-register-clear)
 
-(keymap-set ctl-z-r-map "r" #'jump-to-register)
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - Insertable
+
+;; Insert from register
+(keymap-set ctl-z-r-map "i" #'insert-register)
+
+;; Copy the region into register
+(keymap-set ctl-z-r-map "r" #'copy-to-register)
+;; Copy the region-rectangle into register
+(keymap-set ctl-z-r-map "R" #'copy-rectangle-to-register)
+
+;; Store number in register. Example: "C-u 23 <leader> r n"
+(keymap-set ctl-z-r-map "n" #'number-to-register)
+;; Increment register by number; behaves differently when register contains text
+(keymap-set ctl-z-r-map "+" #'increment-register)
+
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - Jumpable
+
+;; Jump to a "jumpable" register
+(keymap-set ctl-z-r-map "j" #'jump-to-register)
+
+;; Save the state of the selected frame's windows in register
+(keymap-set ctl-z-r-map "w" #'window-configuration-to-register)
+;; Save the state of all frames in register
+(keymap-set ctl-z-r-map "f" #'frameset-to-register)
+;; Store keyboard macro in register
+(keymap-set ctl-z-r-map "k" #'kmacro-to-register)
+;; Record the position of point and the current buffer in register
+(keymap-set ctl-z-r-map "SPC" #'point-to-register)
 
 ;; _____________________________________________________________________________
 ;;; BOOKMARKS
