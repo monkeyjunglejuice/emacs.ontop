@@ -13,13 +13,17 @@
 
 (use-package vertico :ensure t
   :after orderless
+
   :init
+
   ;; Disable ONBOARD default completion
   (fido-mode -1)
   (fido-vertical-mode -1)
   (icomplete-mode -1)
   (icomplete-vertical-mode -1)
+
   :custom
+
   ;; Display certain listings in another form?
   (vertico-multiform-commands '((consult-imenu buffer)
                                 (consult-outline buffer)
@@ -30,7 +34,9 @@
   (vertico-resize 'grow-only)
   ;; Enable cycling for `vertico-next' and `vertico-previous'?
   (vertico-cycle nil)
+
   :config
+
   ;; Enable Vertico
   (vertico-mode)
   ;; How to display Vertico per default?
