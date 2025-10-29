@@ -11,7 +11,6 @@
 ;; <https://github.com/minad/vertico>
 ;; <https://github.com/minad/vertico#key-bindings>
 
-;; TODO Still needs a proper setup
 (use-package vertico :ensure t
   :after orderless
   :init
