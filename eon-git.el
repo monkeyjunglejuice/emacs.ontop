@@ -21,7 +21,7 @@
   (magit-repository-directories '(("~/" . 1)))
   ;; Inject magit into the `project-switch-commands' dispatch menu
   (project-switch-commands
-   (cl-substitute '(magit-status "magit" ?v) 'project-vc-dir
+   (cl-substitute '(magit-status "Magit" ?v) 'project-vc-dir
                   project-switch-commands
                   :key #'car :test #'eq))
 
