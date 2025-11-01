@@ -10,6 +10,9 @@
 ;; AGGRESSIVE INDENT
 ;; <https://github.com/Malabarba/aggressive-indent-mode>
 
+;; TODO Aggressive-indent causes weird issues, either fix them or switch
+;; to another package, e.g. <https://github.com/jeffvalk/snap-indent>
+
 (use-package aggressive-indent :ensure t
   :diminish aggressive-indent-mode
   :init
