@@ -380,8 +380,7 @@ Adapted from Doom Emacs.")
 ;;; MARKUP- / SERIALIZATION FORMATS
 
 ;; <https://github.com/emacsorphanage/adoc-mode>
-(use-package adoc-mode
-  :ensure t
+(use-package adoc-mode :ensure t
   :mode (("\\.asciidoc\\'" . adoc-mode)
          ("\\.adoc\\'" . adoc-mode)))
 
