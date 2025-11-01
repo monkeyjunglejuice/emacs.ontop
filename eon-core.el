@@ -116,7 +116,7 @@ Adapted from Doom Emacs.")
 ;; The package attempts to guess which system package manager you use,
 ;; and lets you manage your system packages directly from Emacs via
 ;; "M-x system-packages"
-;; (use-package system-packages :ensure t)
+(use-package system-packages :ensure t)
 
 ;;  ____________________________________________________________________________
 ;;; USER INTERFACE
