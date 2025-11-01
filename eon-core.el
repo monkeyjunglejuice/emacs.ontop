@@ -21,6 +21,7 @@
   (or (daemonp) (and (eon-macp) (display-graphic-p)))
 
   :preface
+
   (defvar eon-exec-path-from-shell-blocklist
     '(;; Unix/shell state
       "^HOME$" "^\\(OLD\\)?PWD$" "^SHLVL$" "^PS1$" "^R?PROMPT$"
@@ -39,7 +40,7 @@
       "^SSH_\\(AUTH_SOCK\\|AGENT_PID\\)$" "^\\(SSH\\|GPG\\)_TTY$"
       "^GPG_AGENT_INFO$")
     "Regexps for env var names to omit when exporting from the shell.
-Adapted from Doom Emacs")
+Adapted from Doom Emacs.")
   
   (defun eon-exec-path-from-shell--blocklisted-p (var)
     (seq-some (lambda (re) (string-match-p re var))
@@ -87,14 +88,18 @@ Adapted from Doom Emacs")
       names))
 
   :custom
+
   ;; Example: '("-l") or nil for non-interactive shells; supposedly faster
   (exec-path-from-shell-arguments '("-l"))
+
   ;; You can set the variables manually, then no autoselection will happen:
   ;; (exec-path-from-shell-variables '("PATH" "MANPATH"))
+
   ;; Use a specific shell if you like:
   ;; (exec-path-from-shell-shell-name "/bin/bash")
 
   :config
+
   (eon-exec-path-from-shell-refresh))
 
 ;;  ____________________________________________________________________________
@@ -138,12 +143,13 @@ Adapted from Doom Emacs")
 ;;  ____________________________________________________________________________
 ;;; COPY / PASTE
 
-;; Copy/paste between TUI Emacs and graphical apps.
+;; Copy/paste between TUI Emacs and graphical applications.
 ;; Installs and loads only if Emacs really runs in the terminal emulator.
 ;; <https://elpa.gnu.org/packages/xclip.html>
 (use-package emacs :ensure nil
   :functions (xclip-mode)
   :preface
+  ;; TODO Factor out tty-recognition as a predicate
   (defun eon-xclip--ensure-on-tty (&optional frame)
     (with-selected-frame (or frame (selected-frame))
       (unless (display-graphic-p)
@@ -165,7 +171,7 @@ Adapted from Doom Emacs")
 
 (use-package undo-fu :ensure t)
 
-;; Keep the undo/redo history even if you close the file and shutdown Emacs
+;; Keep the undo/redo history, even if you close the file and shutdown Emacs
 (use-package undo-fu-session :ensure t
   :custom
   (undo-fu-session-incompatible-files
@@ -331,7 +337,7 @@ Adapted from Doom Emacs")
   ;; ditto for C-g
   (delete [?\C-g] eat-semi-char-non-bound-keys)
   (eat-update-semi-char-mode-map)
-  ;; Awkward workaround for the need to call eat-reload after changing
+  ;; Workaround for the need to call eat-reload after changing
   ;; Eat's keymaps, but reloading from :config section causes infinite recursion
   ;; because :config wraps with-eval-after-load.
   (defvar eat--prevent-use-package-config-recursion nil)
@@ -346,7 +352,7 @@ Adapted from Doom Emacs")
   (eshell-load . eat-eshell-visual-command-mode)
   :bind
   (:map ctl-z-e-map
-        ;; Terminal emulator
+        ;; Set Eat as terminal emulator
         ("t" . eat)))
 
 (when (executable-find "fish")
