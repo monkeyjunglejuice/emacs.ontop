@@ -1,50 +1,47 @@
 * 🚀 Emacs ONTOP
 
-Emacs ONTOP is an extension to the [[https://github.com/monkeyjunglejuice/emacs.onboard][Emacs ONBOARD starterkit]] with certain niceties and setups for several programming languages. It stays close to original Emacs though.
+Emacs ONTOP is an extension to the [[https://github.com/monkeyjunglejuice/emacs.onboard][Emacs ONBOARD starterkit]] with certain niceties and setups for several programming languages.
 
 - /Compilers, language servers and build systems must be installed separately./
 
 ** Emacs for Common Lisp ★★★★★
-*eon-commonlisp*: Complete Common Lisp setup with Slime or [[https://github.com/joaotavora/sly][Sly]]. Just install SBCL with your package manager and then [[https://www.quicklisp.org/beta/][Quicklisp]]. The setup covers most needs.
+*eon-lang-commonlisp*: Complete Common Lisp setup with [[https://github.com/joaotavora/sly][Sly]]. Just install SBCL with your package manager and then [[https://www.quicklisp.org/beta/][Quicklisp]]. The setup covers most needs.
 
 ** Emacs for Clojure ★★★★☆
-*eon-clojure*: The Clojure setup is just a basic setup with Cider right now, but is usable out-of-the-box. Further tweaks might provide an even better experience.
+*eon-lang-clojure*: The Clojure setup is just a basic setup with Cider right now, but is usable out-of-the-box. Further tweaks might provide an even better experience.
 
 ** Emacs for Julia ★★★★☆
-*eon-julia*: The Julia setup is based on the Julia language server, [[https://github.com/gcv/julia-snail][Snail]] and Tree-sitter. The REPL runs within [[Eat][Eat]], the embedded terminal emulator.
+*eon-lang-julia*: The Julia setup is based on the Julia language server, [[https://github.com/gcv/julia-snail][Snail]] and Tree-sitter. The REPL runs within [[Eat][Eat]], the embedded terminal emulator.
 
 ** Emacs for OCaml ★★★★☆
-*eon-ocaml*: OCaml setup in Emacs based on Tuareg and Merlin. Completion in Utop is working, with completion candidates provided by Merlin.
+*eon-lang-ocaml*: OCaml setup in Emacs based on Tuareg and Merlin. Completion in Utop is working, with completion candidates provided by Merlin.
 
 ** Emacs for Haskell ★★★★☆
-*eon-haskell*: Interactive Haskell setup based on Haskell language server. The GHCi provides a much better experience within Emacs than in a terminal. This configuration works well with both Cabal and Stack projects, both on Linux and MacOS.
+*eon-lang-haskell*: Interactive Haskell setup based on Haskell language server. The GHCi provides a much better experience within Emacs than in a terminal. This configuration works well with both Cabal and Stack projects, both on Linux and MacOS.
 
 ** Emacs for Elixir ★★★★☆
-*eon-elixir*: Elixir setup comes with the language server pre-configured (Elixir-ls), Tree-sitter, Mix integration and a REPL. [[https://github.com/J3RN/inf-elixir/issues/20][Autocompletion doesn't work in the REPL]] yet, unfortunately. "Jump-to-definition" doesn't work either, but that limitation seems to come from the language servers themselves.
-
-** Emacs for Scheme ★★★★☆
-*eon-scheme*: The Emacs Scheme setup supports eight major Scheme implementations via Geiser and comes with SRFI-browser and structural editing. The Scheme implementations have either more or less comprehensive tooling, hence the user experience varies. Tested on Debian Linux with GNU Guile (most interactive experience and easy setup) and Chicken scheme (rather bare-bones).
-
-** Emacs for Racket ★★★★☆
-*eon-racket*: The Racket setup based on [[https://github.com/greghendershott/racket-mode][Racket-mode]] provides more interactivity than DrRacket, and the new "racket-hash-lang-mode" supports arbitrary syntax for DSLs in Emacs. However, the syntax highlighting could be configured more in-depth.
+*eon-lang-elixir*: Elixir setup comes with the language server pre-configured (Elixir-ls), Tree-sitter, Mix integration and a REPL. [[https://github.com/J3RN/inf-elixir/issues/20][Autocompletion doesn't work in the REPL]] yet, unfortunately. "Jump-to-definition" doesn't work either, but that limitation seems to come from the language servers themselves.
 
 ** Emacs for Erlang ★★★☆☆
-*eon-erlang*: Comprehensive Erlang setup with Erlang shell, Tree-sitter and Org-mode babel for notebook-style literate programming.
+*eon-lang-erlang*: Comprehensive Erlang setup with Erlang shell, Tree-sitter and Org-mode babel for notebook-style literate programming.
+
+** Emacs for LFE (Lisp Flavoured Erlang) ★★★☆☆
+*eon-lang-lfe*: Basic LFE setup with REPL.
 
 ** Emacs for Gleam ★★☆☆☆
-*eon-gleam*: Basic setup for the Gleam language with LSP and Treesitter support. No interactive programming, since Gleam doesn't come with a REPL.
+*eon-lang-gleam*: Basic setup for the Gleam language with LSP and Treesitter support. No interactive programming, since Gleam doesn't come with a REPL.
+
+** Emacs for Scheme ★★★★☆
+*eon-lang-scheme*: The Emacs Scheme setup supports eight major Scheme implementations via Geiser and comes with SRFI-browser and structural editing. The Scheme implementations have either more or less comprehensive tooling, hence the user experience varies. Tested on Debian Linux with GNU Guile (most interactive experience and easy setup) and Chicken scheme (rather bare-bones).
+
+** Emacs for Racket ★★★★☆
+*eon-lang-racket*: The Racket setup based on [[https://github.com/greghendershott/racket-mode][Racket-mode]] provides more interactivity than DrRacket, and the new "racket-hash-lang-mode" supports arbitrary syntax for DSLs in Emacs. However, the syntax highlighting could be configured more in-depth.
 
 ** Emacs for Lua ★★☆☆☆
-*eon-lua*: Basic Lua setup with REPL and lua-language-server. Rudimentary setup suitable for editing Lua code -- the available features don't come close to the Lua IDE [[https://studio.zerobrane.com/][ZeroBrane Studio]], TextAdept or Neovim.
-
-** Emacs for LFE (Lisp Flavoured Erlang) ★★☆☆☆
-*eon-lfe*: Basic LFE setup with REPL.
+*eon-lang-lua*: Basic Lua setup with REPL and lua-language-server. Rudimentary setup suitable for editing Lua code -- the available features don't come close to the Lua IDE [[https://studio.zerobrane.com/][ZeroBrane Studio]], TextAdept or Neovim.
 
 ** Emacs for Web Development ★☆☆☆☆
-*eon-webdev*: Just basic HTML, CSS and JavaScript editing and linting (linters have to be installed separately); includes web-mode. Highly under-developed, since I don't do web stuff usually.
-
-** Emacs for Emacs Package Development ☆☆☆☆☆
-*eon-emacsdev*: Not yet included -- scheduled for next time when I'm about to publish a package on Melpa.
+*eon-lang-webdev*: Just basic HTML, CSS and JavaScript editing and linting (linters have to be installed separately); includes web-mode. Highly under-developed, since I don't do web stuff usually.
 
 * Full Installation -- Get Emacs ONTOP:
 
@@ -61,7 +58,7 @@ git clone https://github.com/monkeyjunglejuice/emacs.ontop.git ~/.emacs.ontop
 - *3.* Edit =~/.emacs.ontop/eon-setup-modules.el= to select your desired modules, then restart Emacs. The installation process begins: Emacs will download and install the required Emacs packages from MELPA. It will take approx. 1--3 min, depending on your module selection and internet speed. If the process gets interupted, that's no problem -- just restart Emacs, and it will continue. There will be some warnings, which can be ignored -- these are mostly related to the compilation of the downloaded Emacs packages.
 
 * Get comfortable
-Look into the module files in order to learn about the commands and key bindings -- all documentation lives there. If you want to change settings, re-define these settings within the file =eon-setup-personal.el=.
+Look into the module files in order to learn about the commands and key bindings -- all documentation lives there. If you want to change settings, re-define these settings within your =init.el= or =eon-setup-personal.el=.
 
 ** For new Emacs users:
 "M-x" — Press <Alt>+<x> to show all commands
@@ -74,7 +71,7 @@ Look into the module files in order to learn about the commands and key bindings
 
 - Consistency: Adhering to Emacs conventions and doing common actions in the same way is crucial for the user experience (e.g. same Eglot keybindings across all languages; consistant keybindings for "evaluate expression", "compile", etc.). If in doubt, follow Emacs conventions, `eon-commonlisp.el' or `eon-ocaml.el'.
 
-- Beginner-friendly: No complex "Emacs-framework". Novice Emacs users willing to touch Elisp code should be able to follow, adapt code and and immediately celebrate their achievements. Code should not be intertwined, but easily modificable, separately usable and stealable -- if that leads to some redundancy, it's fine.
+- Beginner-friendly: No complex "Emacs-framework". Novice Emacs users willing to touch Elisp code should be able to follow, adapt code and and immediately celebrate their achievements. Code should be decoupled and modificable, separately usable and stealable -- if that leads to some redundancy, it's fine.
 
 - Reading the documentation in the Elisp files shall be a reward in itself. Include tipps, tricks, alternatives.
 
