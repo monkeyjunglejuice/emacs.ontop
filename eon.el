@@ -69,9 +69,9 @@
 ;;; Code:
 
 ;; _____________________________________________________________________________
-;;; GLOBAL DEFINITIONS & UTILITIES
+;;; CUSTOMIZATION GROUPS
 
-;; Define groups for Customizations
+;; Customize Emacs ONBOARD via "<leader> x C"
 
 (defgroup eon nil
   "Emacs ONBOARD starter kit & ONTOP extension layer."
@@ -80,124 +80,6 @@
 (defgroup eon-misc nil
   "Various settings that don't belong to another group."
   :group 'eon)
-
-;; Simplify writing of operating-system-specific Elisp code
-
-(defun eon-linp ()
-  "True if `system-type' is Linux or something compatible.
-For finer granularity, use the variables `system-type'
-or `system-configuration' directly."
-  (memq system-type '(gnu/linux berkeley-unix gnu gnu/kfreebsd)))
-
-(defun eon-winp ()
-  "True if `system-type' is Windows or something compatible.
-For finer granularity, use the variables `system-type'
-or `system-configuration' directly."
-  (memq system-type '(windows-nt cygwin ms-dos)))
-
-(defun eon-androidp ()
-  "True if `system-type' is Android or something compatible.
-For finer granularity, use the variables `system-type'
-or `system-configuration' directly."
-  (eq system-type 'android))
-
-(defun eon-macp ()
-  "True if `system-type' is MacOS or something compatible.
-For finer granularity, use the variables `system-type'
-or `system-configuration' directly."
-  (eq system-type 'darwin))
-
-;; Extended `add-to-list' and friends
-
-(defun eon-list-adjoin (cur elements &optional append compare-fn)
-  "Return a new list like CUR with ELEMENTS added once.
-
-ELEMENTS may be an item or a list. If APPEND is non-nil, append items
-left->right; otherwise prepend while preserving ELEMENTS order.
-COMPARE-FN is the membership predicate (default `equal').
-
-Examples:
-  (eon-list-adjoin '(a b) 'c)                                 ; => (c a b)
-  (eon-list-adjoin '(a b) '(c a))                             ; => (c a b)
-  (eon-list-adjoin '(a b) '(d) t)                             ; => (a b d)
-  (eon-list-adjoin '(a b) '(\"x\" \"x\") nil #'string-equal)  ; => (\"x\" a b)"
-  (declare (pure t) (side-effect-free t))
-  (let* ((xs   (if (consp elements) elements (list elements)))
-         (test (or compare-fn #'equal)))
-    (cl-labels
-        ((prepend-step (res items)
-           (if (null items)
-               res
-             (let ((x (car items)))
-               (prepend-step
-                (if (cl-find x res :test test) res (cons x res))
-                (cdr items)))))
-         (append-step (res items seen extra)
-           (if (null items)
-               (append res (nreverse extra))
-             (let ((x (car items)))
-               (if (cl-find x seen :test test)
-                   (append-step res (cdr items) seen extra)
-                 (append-step res (cdr items)
-                              (cons x seen) (cons x extra)))))))
-      (if append
-          (append-step cur xs cur nil)
-        ;; Preserve ELEMENTS order when prepending
-        (prepend-step cur (reverse xs))))))
-
-(defun eon-add-to-list (list-sym elements &optional append compare-fn)
-  "Rebind LIST-SYM to a new list with ELEMENTS adjoined once.
-
-LIST-SYM is a symbol naming a list variable. ELEMENTS may be an item or
-a list. APPEND/COMPARE-FN as in `eon-list-adjoin'. Returns the new
-value of LIST-SYM.
-
-Examples (LIST-SYM value starts as (a b)):
-  (eon-add-to-list 'v 'c)           ; => (c a b)
-  (eon-add-to-list 'v '(c a))       ; => (c a b)
-  (eon-add-to-list 'v '(d) t)       ; => (a b d)"
-  (unless (symbolp list-sym)
-    (error "eon-add-to-list: LIST-SYM must be quoted: 'my-var"))
-  (set list-sym
-       (eon-list-adjoin
-        (if (boundp list-sym) (symbol-value list-sym) nil)
-        elements append compare-fn)))
-
-(defmacro eon-add-to-list-setopt
-    (list-sym elements &optional append compare-fn)
-  "Like `eon-add-to-list' but via `setopt'.
-
-LIST-SYM must be a quoted symbol, e.g. 'my-var. ELEMENTS may be an
-item or a list. If APPEND is non-nil, append items left->right;
-otherwise prepend while preserving ELEMENTS order. COMPARE-FN defaults
-to `equal'. See `eon-add-to-list' for examples."
-  (declare (debug (sexp form &optional form function)))
-  (unless (and (consp list-sym)
-               (eq (car list-sym) 'quote)
-               (symbolp (cadr list-sym)))
-    (error "eon-add-to-list-setopt: LIST-SYM must be quoted: 'my-var"))
-  (let ((sym (cadr list-sym)))
-    `(setopt ,sym
-             (eon-list-adjoin
-              (if (boundp ',sym) ,sym nil)
-              ,elements ,append ,compare-fn))))
-
-;; Get all the parent major modes
-(defun eon-get-parent-modes ()
-  "Return major-mode and its parents (child first).
-When called interactively, also echo the result."
-  (interactive)
-  (cl-labels ((collect (mode)
-                (if-let ((p (get mode 'derived-mode-parent)))
-                    (cons mode (collect p))
-                  (list mode))))
-    (let ((parents (collect major-mode)))
-      (if (called-interactively-p 'interactive)
-          (message "%S" parents)
-        parents))))
-
-(defvar eon-user-directory (expand-file-name "~/")
-  "The user's home directory with a trailing slash.")
 
 ;; _____________________________________________________________________________
 ;;; GARBAGE COLLECTION
@@ -308,8 +190,47 @@ Cancel the previous one if present."
 ;; Activate GCMH mode (idle timer) after Emacs startup
 (add-hook 'emacs-startup-hook #'eon-gcmh-mode)
 
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; DIAGNOSTICS
+;; _____________________________________________________________________________
+;;; ELISP NATIVE COMPILATION / BYTECODE
+
+;; Prevent stale elisp bytecode from shadowing more up-to-date source files?
+(setopt load-prefer-newer t)
+
+;; Natively compile packages at first use or immediately after installation?
+(setopt package-native-compile t)
+
+;; Native-compile .elc files asynchronously?
+(setopt native-comp-jit-compilation t)
+
+;; Ask whether to terminate asynchronous compilations on exit?
+;; Prevents from interrupted compilations and leftover artifacts.
+(setopt native-comp-async-query-on-exit t)
+
+;; This options are not set if Emacs is started via "emacs --debug-init"
+(unless init-file-debug
+  (setopt
+   ;; When to bring the buffer to the foreground?
+   warning-minimum-level :warning
+   ;; Allow bytecode compilation to be verbose?
+   byte-compile-verbose nil
+   ;; Turn off minor warnings
+   byte-compile-warnings (not '(callargs
+                                docstrings
+                                empty-body
+                                free-vars
+                                lexical
+                                noruntime
+                                obsolete))
+   ;; Reduce native code compilation verbosity?
+   native-comp-async-report-warnings-errors nil
+   native-comp-warning-on-missing-source nil))
+
+;; _____________________________________________________________________________
+;;; DEBUG / DIAGNOSTICS
+
+;; Enter debugger if an error is signaled
+(when init-file-debug
+  (setopt debug-on-error t))
 
 ;; Show Emacs init time and how many garbage collections happened during init
 (add-hook 'window-setup-hook
@@ -350,39 +271,128 @@ Cancel the previous one if present."
   )
 
 ;; _____________________________________________________________________________
-;;; ELISP NATIVE COMPILATION / BYTECODE
+;;; GLOBAL DEFINITIONS & UTILITIES
 
-;; Prevent stale elisp bytecode from shadowing more up-to-date source files?
-(setopt load-prefer-newer t)
+;; Simplify writing of operating-system-specific Elisp code
 
-;; Natively compile packages at first use or immediately after installation?
-(setopt package-native-compile t)
+(defun eon-linp ()
+  "True if `system-type' is Linux or something compatible.
+For finer granularity, use the variables `system-type'
+or `system-configuration' directly."
+  (memq system-type '(gnu/linux berkeley-unix gnu gnu/kfreebsd)))
 
-;; Native-compile .elc files asynchronously?
-(setopt native-comp-jit-compilation t)
+(defun eon-winp ()
+  "True if `system-type' is Windows or something compatible.
+For finer granularity, use the variables `system-type'
+or `system-configuration' directly."
+  (memq system-type '(windows-nt cygwin ms-dos)))
 
-;; Ask whether to terminate asynchronous compilations on exit?
-;; Prevents from interrupted compilations and leftover artifacts.
-(setopt native-comp-async-query-on-exit t)
+(defun eon-androidp ()
+  "True if `system-type' is Android or something compatible.
+For finer granularity, use the variables `system-type'
+or `system-configuration' directly."
+  (eq system-type 'android))
 
-;; This options are not set if Emacs is started via "emacs --debug-init"
-(unless init-file-debug
-  (setopt
-   ;; When to bring the buffer to the foreground?
-   warning-minimum-level :error
-   ;; Allow bytecode compilation to be verbose?
-   byte-compile-verbose nil
-   ;; Turn off minor warnings
-   byte-compile-warnings (not '(callargs
-                                docstrings
-                                empty-body
-                                free-vars
-                                lexical
-                                noruntime
-                                obsolete))
-   ;; Reduce native code compilation verbosity?
-   native-comp-async-report-warnings-errors nil
-   native-comp-warning-on-missing-source nil))
+(defun eon-macp ()
+  "True if `system-type' is MacOS or something compatible.
+For finer granularity, use the variables `system-type'
+or `system-configuration' directly."
+  (eq system-type 'darwin))
+
+;; Extended `add-to-list' and friends
+
+(require 'cl-lib)
+
+(defun eon-adjoin (cur elements &optional append compare-fn)
+  "Return a new list like CUR with ELEMENTS added once.
+
+ELEMENTS may be an item or a list. If APPEND is non-nil, append items
+left->right; otherwise prepend while preserving ELEMENTS order.
+COMPARE-FN is the membership predicate (default `equal').
+
+Examples:
+  (eon-adjoin '(a b) 'c)                                 ; => (c a b)
+  (eon-adjoin '(a b) '(c a))                             ; => (c a b)
+  (eon-adjoin '(a b) '(d) t)                             ; => (a b d)
+  (eon-adjoin '(a b) '(\"x\" \"x\") nil #'string-equal)  ; => (\"x\" a b)"
+  (declare (pure t) (side-effect-free t))
+  (let* ((xs   (if (consp elements) elements (list elements)))
+         (test (or compare-fn #'equal))
+         (cand (if append (append cur xs) (append xs cur))))
+    (cl-remove-duplicates cand :test test)))
+
+(defun eon-add-to-list (list-sym elements &optional append compare-fn)
+  "Rebind LIST-SYM to a new list with ELEMENTS adjoined once.
+
+LIST-SYM is a symbol naming a list variable whose *current binding*
+will be modified (i.e. buffer-local if such exists, otherwise global).
+
+ELEMENTS may be a single item or a list of items to add to LIST-SYM.
+If APPEND is non-nil, append items left→right; otherwise prepend them
+while preserving the order of ELEMENTS.
+
+COMPARE-FN, if non-nil, is a function used to test for membership; it
+defaults to `equal`.
+
+Returns the new current value of LIST-SYM.
+
+Examples (assuming LIST-SYM initially holds (a b)):
+  (eon-add-to-list 'v 'c)           ; => (c a b)
+  (eon-add-to-list 'v '(c a))       ; => (c a b)
+  (eon-add-to-list 'v '(d) t)       ; => (a b d)"
+  (unless (symbolp list-sym)
+    (error "eon-add-to-list: LIST-SYM must be quoted: 'my-var"))
+  (set list-sym
+       (eon-adjoin
+        (if (boundp list-sym) (symbol-value list-sym) nil)
+        elements append compare-fn)))
+
+(defun eon-add-to-list-setopt (list-sym elements &optional append compare-fn)
+  "Adjoin ELEMENTS to the *default* value of LIST-SYM.
+
+LIST-SYM is a symbol naming a variable or user option.  ELEMENTS may be
+a single item or a list of items to add to the variable’s *default* (global)
+value.
+
+If APPEND is non-nil, append items left->right; otherwise prepend them
+while preserving the order of ELEMENTS.
+
+COMPARE-FN, if non-nil, is a function used to test for membership; it
+defaults to `equal`.
+
+If LIST-SYM is a user option (see `custom-variable-p`), use
+`customize-set-variable` so its :set function and type checks are
+applied.  Otherwise, use `set-default` to modify the variable’s global
+default value directly.
+
+Returns the new default value of LIST-SYM.
+
+See `eon-add-to-list' for examples."
+  (unless (symbolp list-sym)
+    (error "eon-add-to-list-setopt: LIST-SYM must be a symbol"))
+  (let* ((cur (and (default-boundp list-sym) (default-value list-sym)))
+         (new (eon-adjoin cur elements append compare-fn)))
+    (if (custom-variable-p list-sym)
+        (customize-set-variable list-sym new 'setopt)
+      (set-default list-sym new))
+    new))
+
+;; Get all the parent major modes
+(defun eon-get-parent-modes ()
+  "Return major-mode and its parents (child first).
+When called interactively, also echo the result."
+  (interactive)
+  (cl-labels ((collect (mode)
+                (if-let ((p (get mode 'derived-mode-parent)))
+                    (cons mode (collect p))
+                  (list mode))))
+    (let ((parents (collect major-mode)))
+      (if (called-interactively-p 'interactive)
+          (message "%S" parents)
+        parents))))
+
+(defvar eon-user-directory (expand-file-name "~/")
+  "The user's home directory with a trailing slash.")
 
 ;; _____________________________________________________________________________
 ;;; EMACS SYSTEM LIMITS
@@ -522,7 +532,7 @@ See also `cursor-type'"
   :group 'eon-cursor-type
   :set #'eon-cursor-type--set)
 
-(defcustom eon-cursor-type-view 'hbar
+(defcustom eon-cursor-type-view '(hbar . 3)
   "Cursor type for read-only buffers.
 Accepts an expression that returns either:
 - t or nil
@@ -626,17 +636,18 @@ Each function is called with no args and should return either a
 
 ;; To avoid clashes, new keybindings introduced by Emacs ONBOARD will usually
 ;; live under the leader prefix (with only a few exceptions).
-
-;;; ---> Defaults for graphical Emacs:
+;;
+;;; - Defaults for graphical Emacs:
 ;; "C-," is the leader key, reach the local leader via "C-, C-,"
 ;;
-;;; ---> Defaults for Emacs with terminal UI (invoked by "emacs -nw"):
+;;; - Defaults for Emacs with terminal UI (invoked by "emacs -nw"):
 ;; "C-z" is the leader key, reach the local leader via "C-z C-z"
-
+;;
 ;; Terminal note: In `emacs -nw`, "C-z" is normally bound to suspend Emacs.
 ;; We rebind it as a leader, and it works in modern terminals (e.g. WezTerm).
 ;; If your TTY converts C-z to SIGTSTP before Emacs sees it (rare), disable
 ;; the suspend char or move it (see optional snippet below).
+
 ;; (add-hook 'tty-setup-hook
 ;;           (lambda ()
 ;;             (ignore-errors
@@ -645,28 +656,13 @@ Each function is called with no args and should return either a
 ;;               ;; No XON/XOFF flow control stealing C-s/C-q
 ;;               (call-process "stty" nil nil nil "-ixon" "-ixoff"))))
 
-;; Leader implementation
+;; Group for customizations
+(defgroup eon-leader nil
+  "Customize leader key and local leader key behavior."
+  :group 'eon)
 
-(defun eon-leader--set-key (sym value)
-  "Setter for `eon-leader-key'."
-  (let ((old (and (boundp sym) (symbol-value sym))))
-    (when (and old (stringp old) (> (length old) 0))
-      (keymap-global-unset old t))
-    (set-default sym value)
-    (when (boundp 'ctl-z-map)
-      (keymap-global-set value ctl-z-map))
-    (when (and old (string= eon-localleader-key old))
-      (eon-localleader--set-key 'eon-localleader-key value))))
-
-(defcustom eon-leader-key
-  (if (display-graphic-p) "C-," "C-z")
-  "Leader prefix key. GUI default: \"C-,\"; TTY default: \"C-z\".
-Use the Customization UI to change, or `setopt' in Elisp code."
-  :group 'eon
-  :type 'string
-  :set #'eon-leader--set-key)
-
-;; Localleader implementation
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - Local leader implementation
 
 (defvar-keymap eon-localleader-global-map
   :doc "Global local leader keymap (fallback for all major and minor modes).
@@ -695,7 +691,7 @@ Don't bind any keys/commands to this keymap.")
       (keymap-set ctl-z-map value ctl-z-localleader-map)))
   (set-default sym value))
 
-;; Empty named prefix, so which-key shows the label "Local".
+;; Empty named prefix, so which-key shows the label "Local"
 (defvar-keymap ctl-z-localleader-map
   :doc "Local leader"
   :name "Local")
@@ -712,7 +708,7 @@ localleader is shown."
                   eon-localleader-global-map))))
     (set-keymap-parent ctl-z-localleader-map map)))
 
-;; Keep the UI prefix parent fresh when modes change, even without which-key.
+;; Keep the UI prefix parent fresh when modes change, even without which-key
 (add-hook 'after-change-major-mode-hook
           #'eon-localleader--sync-local-prefix-parent)
 
@@ -727,9 +723,31 @@ localleader is shown."
 GUI default: \"C-,\" -> reach local leader via \"C-, C-,\"
 TTY default: \"C-z\" -> reach local leader via \"C-z C-z\"
 Use the Customization UI to change, or `setopt' in Elisp code."
-  :group 'eon
+  :group 'eon-leader
   :type 'string
   :set #'eon-localleader--set-key)
+
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - Leader implementation
+
+(defun eon-leader--set-key (sym value)
+  "Setter for `eon-leader-key'."
+  (let ((old (and (boundp sym) (symbol-value sym))))
+    (when (and old (stringp old) (> (length old) 0))
+      (keymap-global-unset old t))
+    (set-default sym value)
+    (when (boundp 'ctl-z-map)
+      (keymap-global-set value ctl-z-map))
+    (when (and old (string= eon-localleader-key old))
+      (eon-localleader--set-key 'eon-localleader-key value))))
+
+(defcustom eon-leader-key
+  (if (display-graphic-p) "C-," "C-z")
+  "Leader prefix key. GUI default: \"C-,\"; TTY default: \"C-z\".
+Use the Customization UI to change, or `setopt' in Elisp code."
+  :group 'eon-leader
+  :type 'string
+  :set #'eon-leader--set-key)
 
 ;; Sub-keymaps under the leader:
 
@@ -752,9 +770,10 @@ Use the Customization UI to change, or `setopt' in Elisp code."
 (defvar-keymap ctl-z-ret-map :doc "Bookmark")
 
 ;; Top-level leader keymap, referencing the sub-keymaps defined previously:
+;; TODO Rename  ctl-z-... prefix to eon-leader-...
 
 (defvar-keymap ctl-z-map
-  :doc "Leader (top-level) keymap."
+  :doc "Top-level leader keymap."
   "b"   `("Buffer"   . ,ctl-z-b-map)
   "c"   `("Code"     . ,ctl-z-c-map)
   "e"   `("Exec"     . ,ctl-z-e-map)
@@ -775,10 +794,70 @@ Use the Customization UI to change, or `setopt' in Elisp code."
   ;; Add dynamic localleader keymap
   eon-localleader-key `("Local" . ,ctl-z-localleader-map))
 
-;; Initial binding of the leader prefix to the leader keymap
-(keymap-global-set eon-leader-key ctl-z-map)
+;; Don't like the pre-defined keybindings of the default leader keymap?
+;; There is an alternative, empty leader keymap.
+(defvar-keymap eon-leader-user-map
+  :doc "Alternative top-level leader keymap, initially empty.
+Ready to populate with your own sub-keymaps and keybindings:
 
-;; Make the leader available in the minibuffer too
+- How to add single commands to the `eon-leader-user-map' top-level
+  (keymap-set eon-leader-user-map \"f\" #'find-file)
+
+- How to add new sub-keymaps
+1. Define a sub-keymap:
+   (defvar-keymap my-leader-g-map :doc \"Goto\")
+2. Add your sub-keymap to the `eon-leader-user-map':
+   (keymap-set eon-leader-user-map \"g\" `(\"Goto\" . ,my-leader-g-map))
+
+- How to add a keybinding to your previously defined sub-keymap
+  (keymap-set my-leader-g-map \"w\" #'browse-web)
+
+In order to activate this keymap instead of the default leader keymap,
+customize `eon-leader-map-active'."
+  ;; Add dynamic localleader keymap
+  eon-localleader-key `("Local" . ,ctl-z-localleader-map))
+
+;; TODO Setter should set the active leader keymap immediately
+(defun eon-leader-map--set-active (sym value)
+  "Setter for `eon-leader-map-active', storing VALUE in SYM.
+Warns if VALUE is bound but not a keymap; allows unbound symbols."
+  (set-default sym value)
+  (when (and (symbolp value) (boundp value)
+             (not (keymapp (symbol-value value))))
+    (message "Warning: %S is bound, but not to a keymap." value)))
+
+(defcustom eon-leader-map-active 'ctl-z-map
+   "Specify the keymap that will act as the top-level leader keymap.
+
+- 'Default leader keymap' sets `ctl-z-map':
+  The keymap is active per default and contains a useful set
+  of pre-defined keybindings.
+
+- 'User leader keymap' sets `eon-leader-user-map':
+  This keymap is initially empty, for you to roll your own keybindings.
+  See `eon-leader-user-map' for examples how to set them.
+
+- 'Other keymap':
+  Specify a symbol bound to a keymap or expression that evaluates to a symbol
+  bound to a keymap. You can use any keymap you like as your leader keymap."
+  :group 'eon-leader
+  :type '(choice (const :tag "Default leader keymap" ctl-z-map)
+                 (const :tag "User leader keymap" eon-leader-user-map)
+                 (symbol :tag "Other keymap"))
+  :set #'eon-leader-map--set-active)
+
+(defun eon-leader-active-map ()
+  "Return the keymap designated by `eon-leader-map-active'.
+Signals a user error if the symbol is not currently a keymap."
+  (let ((sym eon-leader-map-active))
+    (if (keymapp (symbol-value sym))
+        (symbol-value sym)
+      (user-error "%S is not bound to a keymap" sym))))
+
+;; Initial binding of the leader prefix to the enabled top-level leader keymap
+(keymap-global-set eon-leader-key (eon-leader-active-map))
+
+;; Make the leader key available in the minibuffer too
 (add-hook 'minibuffer-setup-hook
           (lambda ()
             (when (keymapp (current-local-map))
@@ -826,8 +905,8 @@ BODY is forwarded to `defvar-keymap'."
 
 (with-eval-after-load 'viper
   (setopt
-   viper-inhibit-startup-message t    ; don't show viper's start up message
-   viper-expert-level            '5   ; use max Emacs experience level [1,5]
+   viper-inhibit-startup-message t    ; don't show Viper's start up message
+   viper-expert-level            '5   ; use max Emacs experience level
    viper-case-fold-search        t    ; ingore case when searching
    viper-ex-style-editing        nil  ; delete past line's beginning
    viper-ex-style-motion         nil  ; move past line's beginning
@@ -838,7 +917,7 @@ BODY is forwarded to `defvar-keymap'."
 
 ;; _____________________________________________________________________________
 ;;; FONTS
-;;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Fonts>
+;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Fonts>
 
 ;; You can use this function definition as a template to define your own font
 ;; set, then call your personal function via `eon-load-after-light-theme-hook'
@@ -849,50 +928,58 @@ BODY is forwarded to `defvar-keymap'."
 (defun eon-fonts-default ()
   "The height value is in 1/10 pt, so 140 will give 14 pt."
   (interactive)
-  ;; Set the default monospaced font
+  ;; Default font
   (set-face-attribute 'default nil
                       ;; :family "Iosevka Curly"
-                      :slant  'normal
                       :weight 'normal
                       :width  'normal
                       :height 140)
-  ;; Set an alternative monospaced font. Can be the same as above.
-  ;; It should have the same character width as the default font
+  ;; Alternative monospaced font; can be the same as above
+  ;; Should have the same character width as the default font
   (set-face-attribute 'fixed-pitch nil
                       ;; :family "Iosevka Curly"
-                      :slant  'normal
                       :weight 'normal
                       :width  'normal
                       :height 1.0)
-  ;; Set an alternative monospaced font, preferably with serifs (optional)
-  ;; It should have the same character width as the other two fonts above
+  ;; Alternative monospaced font, e.g. with serifs; optional
+  ;; Should have the same character width as the other two fonts above
   (set-face-attribute 'fixed-pitch-serif nil
                       ;; :family "Iosevka Slab"
-                      :slant  'normal
                       :weight 'normal
                       :width  'normal
                       :height 1.0)
-  ;; Set the proportional font (toggle by "M-x variable-pitch-mode")
+  ;; Proportional font; toggle by "M-x variable-pitch-mode"
   (set-face-attribute 'variable-pitch nil
                       ;; :family "Iosevka Etoile"
-                      :slant  'normal
                       :weight 'normal
                       :width  'normal
                       :height 1.0)
-  ;; Set the fonts for the active mode line
+  ;; Active mode line
   (set-face-attribute 'mode-line nil
                       ;; :family "Iosevka Curly"
-                      :slant  'normal
                       :weight 'normal
                       :width  'normal
                       :height 0.9)
-  ;; Set the fonts for the inactive mode line
+  ;; Inactive mode line
   (set-face-attribute 'mode-line-inactive nil
                       ;; :family "Iosevka Curly"
-                      :slant  'normal
                       :weight 'normal
                       :width  'normal
-                      :height 0.9))
+                      :height 0.9)
+  ;; Tab bar
+  (set-face-attribute 'tab-bar nil
+                      ;; :family "Iosevka Curly"
+                      :weight 'normal
+                      :width  'normal
+                      :height 0.9)
+  ;; Tab line
+  (set-face-attribute 'tab-line nil
+                      ;; :family "Iosevka Curly"
+                      :weight 'normal
+                      :width  'normal
+                      :height 0.9)
+  ;; Don't extend the selection background past the end of the line
+  (set-face-attribute 'region nil :extend nil))
 
 ;; _____________________________________________________________________________
 ;;; TOGGLE THEME
@@ -999,9 +1086,12 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 ;; Set some defaults for the Modus themes; doesn't affect other themes.
 ;; These variables must be set before loading the Modus themes.
+
+;; Allow bold and italic fonts?
 (setopt modus-themes-bold-constructs t
         modus-themes-italic-constructs nil
         modus-themes-mixed-fonts t)
+;; Remove the border around the mode line
 (setopt modus-themes-common-palette-overrides
         '((border-mode-line-active bg-mode-line-active)
           (border-mode-line-inactive bg-mode-line-inactive)))
@@ -1017,39 +1107,31 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;;; - Set 'light or 'dark as your default theme variant:
 ;; (setopt eon-theme-variant-default 'light)
 
-;; The hooks below can be used to run additional functions before or after
+;;; - Theme hooks
+
+;; The hooks can be used to run additional functions before or after
 ;; loading the selected light and dark theme. That's useful for setting
 ;; variables that otherwise would get overwritten by themes.
 ;; Restart Emacs to take effect after changing the hooks.
 
-;;; - Light theme hooks
+;; Light theme hooks
 
-;; Call a function before/after loading the light theme
+;; Call a function before/after loading the light theme.
 ;; Example for commands ("interactive" functions):
 ;; (add-hook 'eon-theme-light-post-load-hook #'my-interactive-function)
-;; Normal functions not designated as "(interactive)" must be wrapped in lambdas:
-(add-hook 'eon-theme-light-post-load-hook
-          (lambda ()
-            ;; Extend `region' background past the end of the line?
-            (set-face-attribute 'region nil :extend nil)
-            ))
+;; Functions not designated as "(interactive)" must be wrapped in lambdas.
 
 ;; Load the default font set; if you want to load a different font set,
 ;; "unhook" `eon-fonts-default' first via:
 ;; (remove-hook 'eon-theme-dark-post-load-hook #'eon-fonts-default)
 (add-hook 'eon-theme-light-post-load-hook #'eon-fonts-default)
 
-;;; - Dark theme hooks
+;; Dark theme hooks
 
-;; Call a function before/after loading the dark theme
+;; Call a function before/after loading the dark theme.
 ;; Example for commands ("interactive" functions):
 ;; (add-hook 'eon-theme-dark-post-load-hook #'my-interactive-function)
-;; Normal functions not designated as "(interactive)" must be wrapped in lambdas:
-(add-hook 'eon-theme-dark-post-load-hook
-          (lambda ()
-            ;; Extend `region' background past the end of the line?
-            (set-face-attribute 'region nil :extend nil)
-            ))
+;; Functions not designated as "(interactive)" must be wrapped in lambdas.
 
 ;; Load the default font set; if you want to load your own font set,
 ;; "unhook" `eon-fonts-default' first via:
@@ -1155,7 +1237,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
   (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
   (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode))
 
-;; Make TAB try completion when appropriate.
+;; Make TAB try completion when appropriate
 (setopt tab-always-indent 'complete)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -1259,6 +1341,9 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 ;; Don't accumulate customization buffers
 (setopt custom-buffer-done-kill t)
+
+;; No line wrapping in descriptions
+(add-hook 'Custom-mode-hook (lambda () (setq-local truncate-lines t)))
 
 ;; _____________________________________________________________________________
 ;;; ELDOC
@@ -1378,8 +1463,8 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (defun eon-bury-buffer (&optional restore)
   "Bury the current buffer.
 If visiting a file and modified, ask to save first; then bury the buffer.
-If called from the minibuffer, exit via `abort-recursive-edit'.
-With prefix arg RESTORE is non-nil, bring the buffer back."
+When prefix arg RESTORE is non-nil, bring the buffer back.
+If called from the minibuffer, exit via `abort-recursive-edit'."
   (interactive "P")
   (if (minibufferp)
       (abort-recursive-edit)
@@ -1396,7 +1481,7 @@ With prefix arg RESTORE is non-nil, bring the buffer back."
 (defun eon-bury-window (&optional restore)
   "Bury the current buffer.
 If visiting a file and modified, ask to save first; then bury the buffer.
-With prefix arg RESTORE non-nil, restore the previous window configuration.
+When prefix arg RESTORE is non-nil, restore the previous window configuration.
 If called from the minibuffer, exit via `abort-recursive-edit'."
   (interactive "P")
   (if (minibufferp)
@@ -1577,7 +1662,8 @@ Called without argument just syncs `eon-boring-buffers' to other places."
 ;; _____________________________________________________________________________
 ;;; REGISTERS
 
-;; (setopt register-use-preview t)
+;; Better register preview
+(setopt register-use-preview t)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - General keybindings
@@ -1602,7 +1688,7 @@ pretending to clear it."
 (keymap-set ctl-z-r-map "c" #'eon-register-clear)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - insertable
+;;; - Insertable
 
 ;; Insert from register
 (keymap-set ctl-z-r-map "i" #'insert-register)
@@ -1917,7 +2003,7 @@ pretending to clear it."
 (setopt eshell-list-files-after-cd t)
 
 ;; Jump to Eshell prompts
-(add-hook eshell-mode-hook
+(add-hook 'eshell-mode-hook
           (lambda () (setq outline-regexp eshell-prompt-regexp)))
 
 ;; Launch an Eshell buffer: "<leader> e e"; re-visit the buffer by repeating
@@ -2681,7 +2767,24 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
 ;;; LISP
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Executing-Lisp>
 
-;;; - Helpers for lisp-type languages
+;; Define local leader keymap for `emacs-lisp-mode'
+(eon-localleader-defkeymap emacs-lisp-mode eon-localleader-elisp-map
+  :doc "Local leader keymap for Emacs Lisp buffers."
+  "d"   #'edebug-defun
+  "e"   #'eval-last-sexp
+  "E"   #'elisp-eval-region-or-buffer
+  "h"   #'describe-symbol
+  "l"   #'load-file
+  "m"   #'pp-macroexpand-last-sexp
+  "M"   #'emacs-lisp-macroexpand
+  "p"   #'pp-eval-last-sexp
+  "x"   #'eval-defun
+  "C-b" #'elisp-byte-compile-buffer
+  "C-f" #'elisp-byte-compile-file
+  "C-n" #'emacs-lisp-native-compile)
+
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - Lisp modes registry
 
 (defvar eon-lisp-src-modes-registry
   '(;; Built-in modes
@@ -2765,7 +2868,7 @@ With SWITCH = \='hook, return ...-hook variables."
 
 (define-minor-mode eon-check-parens-mode
   "Ask when saving with mismatching parens or quotes."
-  :group 'eon
+  :group 'eon-misc
   :global t
   :init-value t
   (if eon-check-parens-mode
@@ -2778,6 +2881,9 @@ With SWITCH = \='hook, return ...-hook variables."
 (mapc (lambda (mode) (add-hook mode #'eon-check-parens-mode))
       (eon-lisp-src-modes 'hook))
 
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - Further settings
+
 ;; Enable Flymake for Emacs Lisp, but never for `lisp-interaction-mode'
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()
@@ -2788,26 +2894,11 @@ With SWITCH = \='hook, return ...-hook variables."
 (setopt eval-expression-print-length nil
         eval-expression-print-level nil)
 
-;; Reach eval-expression via "<leader> x"
+;; Reach eval-expression via "<leader> e x"
 (keymap-set ctl-z-e-map "x" #'eval-expression)
 
 ;; Additional keybinding resembling other sexp-related keybindings
 (keymap-global-set "C-M-DEL" #'backward-kill-sexp)
-
-;; Define local leader keymap for `emacs-lisp-mode'
-(eon-localleader-defkeymap emacs-lisp-mode eon-localleader-elisp-map
-  :doc "Local leader keymap for Emacs Lisp buffers."
-  "d"   #'edebug-defun
-  "e"   #'eval-last-sexp
-  "E"   #'elisp-eval-region-or-buffer
-  "h"   #'describe-symbol
-  "l"   #'load-file
-  "m"   #'pp-macroexpand-last-sexp
-  "M"   #'emacs-lisp-macroexpand
-  "p"   #'pp-eval-last-sexp
-  "x"   #'eval-defun
-  "C-b" #'elisp-byte-compile-buffer
-  "C-f" #'elisp-byte-compile-file)
 
 ;; _____________________________________________________________________________
 ;;; SERVER
@@ -2834,15 +2925,14 @@ With SWITCH = \='hook, return ...-hook variables."
   (add-hook 'server-mode-hook
             (lambda ()
               "Run functions after entering or leaving server-mode."
-              (eon-frame-title)))
+              (eon-frame-title))))
 
-  ;; Shutdown the Emacs server process
-  (defun eon-server-stop ()
-    "Save buffers, quit and shutdown (kill) server."
-    (interactive)
-    (save-some-buffers)
-    (kill-emacs))
-  (keymap-set ctl-z-q-map "s" #'eon-server-stop))
+(defun eon-server-stop ()
+  "Save buffers, quit and shutdown (kill) server."
+  (interactive)
+  (save-some-buffers)
+  (kill-emacs))
+(keymap-set ctl-z-q-map "s" #'eon-server-stop)
 
 ;; Start the server?
 (add-hook 'after-init-hook #'server-start)
