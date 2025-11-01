@@ -6,7 +6,7 @@
 ;;
 ;;; Code:
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; LUA TS MODE
 
 (use-package lua-ts-mode :ensure nil
@@ -21,7 +21,7 @@
   (:map lua-ts-mode-map
         ("C-c C-z" . lua-ts-inferior-lua)))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; EGLOT LANGUAGE SERVER
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
 ;; Common keybindings are configured in `./eon.el'
@@ -36,7 +36,7 @@
   :hook
   ((lua-ts-mode) . eglot-ensure))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://orgmode.org/worg/org-contrib/babel/index.html>
 ;; Notebook-like literate programming in Emacs
@@ -49,6 +49,6 @@
   (org-babel-do-load-languages 'org-babel-load-languages
                                org-babel-load-languages))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 (provide 'eon-lang-lua)
 ;;; eon-lang-lua.el ends here

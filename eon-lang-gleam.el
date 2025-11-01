@@ -6,7 +6,7 @@
 ;;
 ;;; Code:
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; GLEAM TS MODE
 ;; <https://github.com/gleam-lang/gleam-mode>
 
@@ -16,14 +16,14 @@
    '(gleam "https://github.com/gleam-lang/tree-sitter-gleam"))
   :mode (rx ".gleam" eos))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; REPL
 
 ;; Gleam has no REPL yet!
 ;; <https://github.com/gleam-lang/gleam/discussions/1305>
 ;; <https://github.com/gleam-lang/gleam/issues/25>
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; LANGUAGE SERVER
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
 ;; Common keybindings are configured in `./eon-core.el'
@@ -46,7 +46,7 @@
      (add-hook 'before-save-hook
                #'eglot-format-buffer nil 'local))))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; MIX GLEAM
 ;; <https://github.com/gleam-lang/mix_gleam>
 

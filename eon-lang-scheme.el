@@ -10,7 +10,7 @@
 ;; 
 ;;; Code:
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; GEISER
 ;; <https://www.nongnu.org/geiser/>
 
@@ -20,13 +20,13 @@
   (geiser-repl-use-other-window t)
   (scheme-mit-dialect nil))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; SRFI BROWSER
 ;; <https://github.com/srfi-explorations/emacs-srfi>
 
 (use-package srfi :ensure t)
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://orgmode.org/worg/org-contrib/babel/index.html>
 ;; Notebook-like literate programming in Emacs
@@ -41,6 +41,6 @@
 ;;   (org-babel-do-load-languages 'org-babel-load-languages
 ;;                                org-babel-load-languages))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 (provide 'eon-lang-scheme)
 ;;; eon-lang-scheme.el ends here

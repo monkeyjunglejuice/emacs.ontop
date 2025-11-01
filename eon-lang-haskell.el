@@ -6,7 +6,7 @@
 ;;
 ;;; Code:
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; HASKELL-MODE
 ;;  <http://haskell.github.io/haskell-mode>
 
@@ -37,7 +37,7 @@
         ("C-c C-c" . haskell-compile)
         ("C-c C-e" . haskell-process-load-file)))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; EGLOT LANGUAGE SERVER
 ;;  <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
 ;;  <https://haskell-language-server.readthedocs.io/en/latest/configuration.html>
@@ -61,7 +61,7 @@
                     (add-hook 'before-save-hook
                               #'eglot-format-buffer t 'local))))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://org-babel.readthedocs.io/en/latest/eval/>
 ;; Notebook-like literate programming in Emacs
@@ -76,6 +76,6 @@
   (org-babel-do-load-languages 'org-babel-load-languages
                                org-babel-load-languages))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 (provide 'eon-lang-haskell)
 ;;; eon-lang-haskell.el ends here

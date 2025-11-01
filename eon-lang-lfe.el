@@ -6,7 +6,7 @@
 ;;
 ;;; Code:
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; LFE
 ;; <https://github.com/lfe/lfe>
 ;; <https://github.com/lfe/rebar3>
@@ -19,7 +19,7 @@
   (setq inferior-lfe-check-if-rebar-project t)
   (setq inferior-lfe-indent-on-Cj t))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; STRUCTURAL EDITING
 
 ;; SMARTPARENS
@@ -34,7 +34,7 @@
     (eon-add-to-list-setopt 'sp-lisp-modes 'lfe-mode)
     (eon-add-to-list-setopt 'sp-lisp-modes 'inferior-lfe-mode)))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://orgmode.org/worg/org-contrib/babel/index.html>
 ;; Notebook-like literate programming in Emacs
@@ -50,6 +50,6 @@
 ;;   (org-babel-do-load-languages 'org-babel-load-languages
 ;;                                org-babel-load-languages))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 (provide 'eon-lang-lfe)
 ;;; eon-lang-lfe.el ends here

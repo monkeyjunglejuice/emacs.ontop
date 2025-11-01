@@ -6,7 +6,7 @@
 ;;
 ;;; Code:
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; ERLANG MODE
 ;; <https://github.com/erlang/otp/tree/master/lib/tools/emacs>
 ;; <https://www.erlang.org/doc/apps/tools/erlang_mode_chapter.html>
@@ -18,7 +18,7 @@
    '(erlang "https://github.com/WhatsApp/tree-sitter-erlang"))
   :mode ("\\.erl\\'" . erlang-ts-mode))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; LANGUAGE SERVER
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
 ;; Common keybindings are configured in `./eon-core.el'
@@ -42,7 +42,7 @@
                    (add-hook 'before-save-hook
                              #'eglot-format-buffer nil 'local))))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://org-babel.readthedocs.io/en/latest/eval/>
 ;; Notebook-like literate programming in Emacs

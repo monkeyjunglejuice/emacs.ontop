@@ -6,7 +6,7 @@
 ;;
 ;;; Code:
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; PDF-TOOLS
 ;; <https://github.com/vedang/pdf-tools/>
 ;; Compiles binary automatically at the first run and after upgrades
@@ -18,6 +18,6 @@
   ;; Compile without asking
   (pdf-tools-install :no-query))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 (provide 'eon-pdftools)
 ;;; eon-pdftools.el ends here

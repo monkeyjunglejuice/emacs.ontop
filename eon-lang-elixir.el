@@ -6,7 +6,7 @@
 ;;
 ;;; Code:
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; ELIXIR TS MODE
 ;; <https://github.com/wkirschbaum/elixir-ts-mode>
 
@@ -17,7 +17,7 @@
   :init
   (eon-treesitter-ensure-grammar '(elixir heex)))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; REPL
 
 (use-package inf-elixir :ensure t
@@ -59,7 +59,7 @@ configuration or restarting applications."
         ("C" . inf-elixir-reload-module)
         ("o" . inf-elixir-observer)))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; LANGUAGE SERVER
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
 ;; Common keybindings are configured in `./eon-core.el'
@@ -89,7 +89,7 @@ configuration or restarting applications."
        (add-hook 'before-save-hook
                  #'eglot-format-buffer nil 'local))))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; MIX
 ;; <https://hexdocs.pm/mix/1.12/Mix.html>
 
@@ -98,7 +98,7 @@ configuration or restarting applications."
   :hook
   ((elixir-ts-mode heex-ts-mode) . mix-minor-mode))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; FLYCHECK CREDO
 ;; <http://credo-ci.org/>
 ;; Static analyzer and syntax checker. Must be installed first as a
@@ -119,7 +119,7 @@ configuration or restarting applications."
     :hook
     (flycheck-mode . flycheck-credo-setup)))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; EXUNIT
 ;; <https://github.com/ananthakumaran/exunit.el>
 
@@ -130,7 +130,7 @@ configuration or restarting applications."
   :hook
   (elixir-ts-mode . exunit-mode))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://orgmode.org/worg/org-contrib/babel/index.html>
 ;; Notebook-like literate programming in Emacs

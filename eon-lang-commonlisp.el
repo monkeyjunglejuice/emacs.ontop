@@ -6,7 +6,7 @@
 ;;
 ;;; Code:
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; COMMON LISP
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Executing-Lisp>
 
@@ -15,7 +15,7 @@
   ;; Set default Lisp implementation
   (inferior-lisp-program "sbcl"))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; SLY
 ;; <http://joaotavora.github.io/sly/>
 ;; <https://github.com/joaotavora/sly>
@@ -86,7 +86,7 @@
   :config
   (add-to-list 'sly-mrepl-shortcut-alist '("quickload" . sly-quickload)))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://orgmode.org/worg/org-contrib/babel/intro.html>
 ;; Support literate programming in Emacs with Common Lisp
@@ -104,6 +104,6 @@
   (org-babel-do-load-languages 'org-babel-load-languages
                                org-babel-load-languages))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 (provide 'eon-lang-commonlisp)
 ;;; eon-lang-commonlisp.el ends here

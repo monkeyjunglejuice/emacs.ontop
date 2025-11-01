@@ -6,7 +6,7 @@
 ;;
 ;;; Code:
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; EMACS SETTINGS
 
 ;; Prevent stale elisp bytecode from shadowing more up-to-date source files?
@@ -21,7 +21,7 @@
 ;; Ask whether to terminate asynchronous compilations on exit?
 (setq native-comp-async-query-on-exit t)
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; COMPILE-ANGEL
 ;; <https://github.com/jamescherti/compile-angel.el>
 
@@ -65,6 +65,6 @@
   ;; using `load' or `require'.
   (compile-angel-on-load-mode))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 (provide 'eon-compileangel)
 ;;; eon-compileangel.el ends here

@@ -6,7 +6,7 @@
 ;;
 ;;; Code:
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; AUTO-UPDATE PACKAGES
 ;; <https://github.com/rranelli/auto-package-update.el>
 
@@ -26,6 +26,6 @@
     (auto-package-update-delete-old-versions nil)
     (auto-package-update-excluded-packages '())))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 (provide 'eon-autoupdate)
 ;;; eon-autoupdate.el ends here

@@ -63,6 +63,6 @@
         ("b" . switch-window-then-display-buffer)
         ("x" . switch-window-then-swap-buffer)))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 (provide 'eon-switchwindow)
 ;;; eon-switchwindow.el ends here

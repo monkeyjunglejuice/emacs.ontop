@@ -6,7 +6,7 @@
 ;;
 ;;; Code:
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; EXEC PATH FROM SHELL
 ;; <https://github.com/purcell/exec-path-from-shell>
 
@@ -102,7 +102,7 @@ Adapted from Doom Emacs.")
 
   (eon-exec-path-from-shell-refresh))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; OS INTEGRATION
 
 ;; Use the MacOS trash instead of freedesktop.org ~/.local/share/Trash
@@ -118,7 +118,7 @@ Adapted from Doom Emacs.")
 ;; "M-x system-packages"
 (use-package system-packages :ensure t)
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; USER INTERFACE
 
 ;; Hide or alter the mode-line strings of certain minor modes
@@ -129,7 +129,7 @@ Adapted from Doom Emacs.")
 ;; <https://github.com/abo-abo/hydra>
 (use-package hydra :ensure t)
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; ORDERLESS
 ;; <https://github.com/oantolin/orderless>
 
@@ -140,7 +140,7 @@ Adapted from Doom Emacs.")
   (completion-category-overrides
    '((file (styles . (basic partial-completion))))))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; COPY / PASTE
 
 ;; Copy/paste between TUI Emacs and graphical applications.
@@ -166,7 +166,7 @@ Adapted from Doom Emacs.")
   :config
   (clean-kill-ring-mode))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; UNDO / REDO
 
 (use-package undo-fu :ensure t)
@@ -179,7 +179,7 @@ Adapted from Doom Emacs.")
   :config
   (undo-fu-session-global-mode))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;; PARENTHESIS DISPLAY
 
 ;; Color-code nested parens …
@@ -195,7 +195,7 @@ Adapted from Doom Emacs.")
 ;;   :hook
 ;;   (prog-mode . paren-face-mode))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; NAVIGATION
 
 ;; Goto visible character
@@ -224,7 +224,7 @@ Adapted from Doom Emacs.")
   :bind
   ("C-=" . er/expand-region))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; COLOR NAMES
 ;; <https://elpa.gnu.org/packages/rainbow-mode.html>
 
@@ -236,7 +236,7 @@ Adapted from Doom Emacs.")
   (:map ctl-z-x-map
         ("c" . rainbow-mode)))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; GIT-GUTTER
 
 ;; <https://github.com/emacsorphanage/git-gutter>
@@ -251,7 +251,7 @@ Adapted from Doom Emacs.")
   :custom
   (git-gutter-fr:side 'left-fringe))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; DIRED
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Dired>
 
@@ -291,7 +291,7 @@ Adapted from Doom Emacs.")
         ("<tab>" . dired-subtree-toggle)
         ("<backtab>" . dired-subtree-cycle)))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; GREP / RIPGREP
 ;; <https://github.com/BurntSushi/ripgrep>
 ;; Ripgrep must be installed on your computer for this to work
@@ -314,7 +314,7 @@ Adapted from Doom Emacs.")
 ;; <https://github.com/mhayashi1120/Emacs-wgrep/>
 (use-package wgrep :ensure t)
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; SHELL / TERMINAL
 ;; <https://codeberg.org/akib/emacs-eat>
 ;; <https://elpa.nongnu.org/nongnu-devel/doc/eat.html>
@@ -363,7 +363,7 @@ Adapted from Doom Emacs.")
   ;; <https://github.com/wwwjfy/emacs-fish>
   (use-package fish-mode :ensure t))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; ORG MODE EXTENSIONS
 
 ;; <https://github.com/alphapapa/org-sticky-header>
@@ -376,7 +376,7 @@ Adapted from Doom Emacs.")
   :hook
   (org-mode . eon-org--sticky-header-maybe))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; MARKUP- / SERIALIZATION FORMATS
 
 ;; <https://github.com/emacsorphanage/adoc-mode>
@@ -396,7 +396,7 @@ Adapted from Doom Emacs.")
   ;; Turn on visual word wrapping
   (markdown-mode . visual-line-mode))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; LISP
 
 ;; Sophisticated macro expander for Emacs Lisp
@@ -409,6 +409,6 @@ Adapted from Doom Emacs.")
         ("[" . #'macrostep-prev-macro)
         ("]" . #'macrostep-next-macro)))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 (provide 'eon-core)
 ;;; eon-core.el ends here

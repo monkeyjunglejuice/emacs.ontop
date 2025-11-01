@@ -8,7 +8,7 @@
 ;;
 ;;; Code:
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; SYNTAX CHECKER / LINTER
 ;; <https://www.flycheck.org/en/latest/>
 
@@ -62,6 +62,6 @@ If enabling non-interactively while Flycheck is on, skip enabling."
   :config
   (global-flycheck-eglot-mode))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 (provide 'eon-flycheck)
 ;;; eon-flycheck.el ends here

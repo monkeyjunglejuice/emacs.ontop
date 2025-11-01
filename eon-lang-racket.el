@@ -6,7 +6,7 @@
 ;;
 ;;; Code:
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; RACKET-MODE
 ;; <https://www.racket-mode.com/>
 
@@ -34,7 +34,7 @@
   :hook
   ((racket-mode racket-hash-lang-mode) . racket-xp-mode))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://www.orgmode.org/worg/org-contrib/babel/languages/ob-doc-scheme.html>
 
@@ -46,6 +46,6 @@
 ;;   (org-babel-do-load-languages 'org-babel-load-languages
 ;;                                org-babel-load-languages))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 (provide 'eon-lang-racket)
 ;;; eon-lang-racket.el ends here

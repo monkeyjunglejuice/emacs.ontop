@@ -6,7 +6,7 @@
 ;;
 ;;; Code:
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; CLOJURE MODE
 ;; <https://github.com/clojure-emacs/clojure-ts-mode>
 
@@ -18,7 +18,7 @@
   (clojure-ts-comment-macro-font-lock-body t)
   (clojure-ts-ensure-grammars t))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; CIDER
 ;; <https://github.com/clojure-emacs/cider>
 
@@ -26,7 +26,7 @@
   :hook
   (clojure-ts-mode . cider-mode))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://org-babel.readthedocs.io/en/latest/eval/>
 ;; Notebook-like literate programming in Emacs

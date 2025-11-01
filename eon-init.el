@@ -50,7 +50,7 @@
 ;; Enable the built-in `use-package' extension ":ensure-system-package"
 (use-package use-package-ensure-system-package)
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; LOADER
 
 ;; TODO The loader is very primitive right now. It just `require's the features
@@ -111,6 +111,6 @@ The modules then will install necessary 3rd-party Emacs packages."
 (defalias 'eon-load-module #'load-library)
 (defalias 'eon-unload-module #'unload-feature)
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 (provide 'eon-init)
 ;;; eon-init.el ends here

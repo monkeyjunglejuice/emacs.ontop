@@ -8,7 +8,7 @@
 
 ;;; Code:
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; JULIA MODE
 ;; <https://github.com/ronisbr/julia-ts-mode>
 
@@ -18,7 +18,7 @@
    '(julia "https://github.com/tree-sitter/tree-sitter-julia"))
   :mode "\\.jl$")
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; JULIA SNAIL
 ;; <https://github.com/gcv/julia-snail/>
 ;; Interactive Julia with REPL
@@ -36,7 +36,7 @@
   :hook
   (julia-ts-mode . julia-snail-mode))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; EGLOT LANGUAGE SERVER
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
 ;; Common keybindings are configured in `./eon-core.el'
@@ -56,7 +56,7 @@
                      (add-hook 'before-save-hook
                                #'eglot-format-buffer nil 'local))))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://orgmode.org/worg/org-contrib/babel/index.html>
 ;; Notebook-like literate programming in Emacs
@@ -70,6 +70,6 @@
   (org-babel-do-load-languages 'org-babel-load-languages
                                org-babel-load-languages))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 (provide 'eon-lang-julia)
 ;;; eon-lang-julia.el ends here

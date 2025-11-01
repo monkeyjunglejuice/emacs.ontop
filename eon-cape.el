@@ -6,7 +6,7 @@
 ;;
 ;;; Code:
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 ;;; CAPE
 
 ;; Cape extends the capabilities of in-buffer completion. It integrates with
@@ -71,6 +71,6 @@ buffer-locally in `completion-at-point-functions'."
   (setq cape-dabbrev-check-other-buffers t
         cape-dabbrev-min-length 3))
 
-;;  ____________________________________________________________________________
+;; _____________________________________________________________________________
 (provide 'eon-cape)
 ;;; eon-cape.el ends here
