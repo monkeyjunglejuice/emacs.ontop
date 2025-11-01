@@ -84,8 +84,8 @@
 
   :hook
 
-  ;; Enable automatic preview at point in the *Completions* buffer. This is
-  ;; relevant when you use the default completion UI.
+  ;; Enable automatic preview at point in the *Completions* buffer.
+  ;; This is relevant when you use the default completion UI.
   (completion-list-mode . consult-preview-at-point-mode)
 
   ;; Enable initial narrowing
