@@ -238,14 +238,6 @@
    ("RET" . consult-bookmark)))
 
 ;; _____________________________________________________________________________
-;;; CONSULT-DIR
-
-(use-package consult-dir :ensure t
-  :bind
-  (:map ctl-z-map
-        ("d" . consult-dir)))
-
-;; _____________________________________________________________________________
 ;;; CONSULT-FLYCHECK
 
 (when (eon-modulep 'eon-flycheck)
