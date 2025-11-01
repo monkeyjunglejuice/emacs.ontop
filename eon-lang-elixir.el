@@ -68,7 +68,7 @@ configuration or restarting applications."
 ;; Here's an Elixir language server comparison:
 ;; <https://gist.github.com/Nezteb/dc63f1d5ad9d88907dd103da2ca000b1>
 
-;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; ELIXIR-LS
 ;; <https://github.com/elixir-lsp/elixir-ls>
 

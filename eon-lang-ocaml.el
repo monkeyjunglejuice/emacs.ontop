@@ -101,7 +101,7 @@
 ;; "C-c C-r": `tuareg-eval-region'
 ;; "C-c C-b": `tuareg-eval-buffer'
 
-;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; ALTERNATIVE REPL (UTOP)
 
 ;; Alternatively, there's Utop that also intergrates with Dune projects.

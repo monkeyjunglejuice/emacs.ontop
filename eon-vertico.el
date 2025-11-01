@@ -54,7 +54,7 @@
   ;;       ("M-N" . vertico-repeat-next))
   )
 
-;;  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; EMACS (built-in)
 
 ;; A few more useful configurations
