@@ -43,13 +43,15 @@ Used by custom variables `eon-god-leader-key' and `eon-god-localleader-key'."
 
   (defcustom eon-god-leader-key ","
     "Leader key for God mode."
-    :group 'eon :type 'string
+    :group 'eon-leader
+    :type 'string
     :set #'eon-god--set-leaders
     :initialize 'custom-initialize-set)
 
   (defcustom eon-god-localleader-key ","
     "Local leader key for God mode."
-    :group 'eon :type 'string
+    :group 'eon-leader
+    :type 'string
     :set #'eon-god--set-leaders
     :initialize 'custom-initialize-set)
 

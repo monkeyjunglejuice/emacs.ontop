@@ -56,13 +56,15 @@ Used by custom variables `eon-helix-leader-key' and `eon-helix-localleader-key'.
 
   (defcustom eon-helix-leader-key ","
     "Leader key for Helix."
-    :group 'eon :type 'string
+    :group 'eon-leader
+    :type 'string
     :set #'eon-helix--set-leaders
     :initialize 'custom-initialize-set)
 
   (defcustom eon-helix-localleader-key ","
     "Local leader key for Helix."
-    :group 'eon :type 'string
+    :group 'eon-leader
+    :type 'string
     :set #'eon-helix--set-leaders
     :initialize 'custom-initialize-set)
 

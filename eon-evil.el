@@ -61,13 +61,15 @@ Used by custom variables `eon-evil-leader-key' and `eon-evil-localleader-key'."
 
   (defcustom eon-evil-leader-key ","
     "Leader key for Evil."
-    :group 'eon :type 'string
+    :group 'eon-leader
+    :type 'string
     :set #'eon-evil--set-leaders
     :initialize 'custom-initialize-set)
 
   (defcustom eon-evil-localleader-key ","
     "Local leader key for Evil."
-    :group 'eon :type 'string
+    :group 'eon-leader
+    :type 'string
     :set #'eon-evil--set-leaders
     :initialize 'custom-initialize-set)
 
