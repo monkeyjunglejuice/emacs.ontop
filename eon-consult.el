@@ -73,13 +73,13 @@
   ;; You may want to use `embark-prefix-help-command' or which-key instead.
   ;; (keymap-set consult-narrow-map (concat consult-narrow-key " ?") #'consult-narrow-help)
 
-  ;; Configure initial narrowing per command
-  (defvar consult-initial-narrow-config
+  ;; Which Consult commands should be narrowed initially?
+  (defvar eon-consult--initial-narrow-config
     '((consult-mode-command . ?m)))
 
-  ;; Add initial narrowing hook
-  (defun consult-initial-narrow ()
-    (when-let (key (alist-get this-command consult-initial-narrow-config))
+  ;; Hook for initial narrowing for configured Consult commands
+  (defun eon-consult--initial-narrow ()
+    (when-let (key (alist-get this-command eon-consult--initial-narrow-config))
       (setq unread-command-events (append unread-command-events (list key 32)))))
 
   :hook
@@ -89,7 +89,7 @@
   (completion-list-mode . consult-preview-at-point-mode)
 
   ;; Enable initial narrowing
-  (minibuffer-setup-hook . consult-initial-narrow)
+  (minibuffer-setup-hook . eon-consult--initial-narrow)
 
   :bind
 
