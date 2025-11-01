@@ -20,6 +20,7 @@
   ;; `consult-register-store' and the built-in commands.  This improves the
   ;; register formatting, adds thin separator lines, register sorting and hides
   ;; the window mode line.
+  (setopt register-use-preview 'traditional)  ; reset to default
   (advice-add #'register-preview :override #'consult-register-window)
   (setopt register-preview-delay 0.0)
 
