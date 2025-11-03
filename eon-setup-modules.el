@@ -10,7 +10,7 @@
 ;;     and unload manually loaded modules via "M-x eon-unload-module RET eon-"
 ;;
 ;; --> Documentation lives in the module files. To learn more, place the cursor
-;;     on a module symbol below and do "<leader> f o" to visit the file.
+;;     on a module symbol below and do "<leader> f p" to visit the file.
 ;;
 ;;; Code:
 
