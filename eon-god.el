@@ -39,7 +39,7 @@ Used by custom variables `eon-god-leader-key' and `eon-god-localleader-key'."
           ('eon-god-localleader-key
            (when old (define-key ctl-z-map (kbd old) nil))
            (define-key ctl-z-map (kbd val)
-                       (cons "Local" ctl-z-localleader-map)))))))
+                       (cons "Local" eon-localleader-map)))))))
 
   (defcustom eon-god-leader-key ","
     "Leader key for God mode."
