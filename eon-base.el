@@ -1,4 +1,4 @@
-;;; eon-core.el --- Shared packages and definitions -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-base.el --- Shared packages and definitions -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
@@ -410,5 +410,5 @@ Adapted from Doom Emacs.")
         ("]" . #'macrostep-next-macro)))
 
 ;; _____________________________________________________________________________
-(provide 'eon-core)
-;;; eon-core.el ends here
+(provide 'eon-base)
+;;; eon-base.el ends here

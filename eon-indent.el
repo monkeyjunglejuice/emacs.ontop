@@ -1,4 +1,4 @@
-;;; eon-autoindent.el --- Indent code immediately -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-indent.el --- Indent code immediately -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
@@ -23,5 +23,5 @@
   (aggressive-indent-sit-for-time 0.05))
 
 ;; _____________________________________________________________________________
-(provide 'eon-autoindent)
-;;; eon-autoindent.el ends here
+(provide 'eon-indent)
+;;; eon-indent.el ends here
