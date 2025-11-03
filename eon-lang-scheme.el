@@ -21,6 +21,18 @@
   (scheme-mit-dialect nil))
 
 ;; _____________________________________________________________________________
+;;; MACRO STEPPER
+;; <https://github.com/nbfalcon/macrostep-geiser>
+
+(use-package macrostep-geiser :ensure t
+  :after geiser-mode
+  :config (add-hook 'geiser-mode-hook #'macrostep-geiser-setup))
+
+(use-package macrostep-geiser :ensure t
+  :after geiser-repl
+  :config (add-hook 'geiser-repl-mode-hook #'macrostep-geiser-setup))
+
+;; _____________________________________________________________________________
 ;;; SRFI BROWSER
 ;; <https://github.com/srfi-explorations/emacs-srfi>
 
