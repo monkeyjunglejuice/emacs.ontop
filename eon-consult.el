@@ -1,4 +1,4 @@
-;;; eon-consult.el --- Navigation and search framework -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-consult.el --- Navigation and search -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
