@@ -203,10 +203,12 @@
    ("i"   . nil)                     ; `insert-register'
    ("R"   . nil)                     ; `copy-rectangle-to-register'
    ("n"   . nil)                     ; `number-to-register'
-   ("w"   . nil)                     ; `window-configuration-to-register'
+   ("j"   . nil)                     ; `register-jump'
    ("f"   . nil)                     ; `frameset-to-register'
+   ("w"   . nil)                     ; `window-configuration-to-register'
    ("SPC" . nil)                     ; `point-to-register'
-   ("j"   . consult-register-load)   ; shadow `jump-to-register'
+   ;; Add Consult commands
+   ("l"   . consult-register-load)
    ("r"   . consult-register-store)  ; shadow `copy-to-register'
    ("v"   . consult-register)        ; shadow `view-register'
 
