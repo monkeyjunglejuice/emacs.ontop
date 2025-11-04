@@ -114,6 +114,7 @@ Once removed, they will start with `god-local-mode' enabled."
         ("i" . eon-god-local-mode-disable)
         ("." . repeat)
         ("V" . scroll-down-command)
+        ("q" . quit-window)
         ))
 
 ;; Adjustments for Isearch
