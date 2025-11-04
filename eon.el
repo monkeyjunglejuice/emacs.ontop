@@ -71,7 +71,7 @@
 ;; _____________________________________________________________________________
 ;;; CUSTOMIZATION GROUPS
 
-;; Customize Emacs ONBOARD via "<leader> x C"
+;; Customize the most important Emacs ONBOARD settings via "<leader> x C"
 
 (defgroup eon nil
   "Emacs ONBOARD starter kit & ONTOP extension layer."
@@ -209,8 +209,8 @@ Cancel the previous one if present."
 ;; This options are not set if Emacs is started via "emacs --debug-init"
 (unless init-file-debug
   (setopt
-   ;; When to bring the buffer to the foreground?
-   warning-minimum-level :warning
+   ;; When to bring the buffer to the foreground? Defaults to :warning
+   warning-minimum-level :error
    ;; Allow bytecode compilation to be verbose?
    byte-compile-verbose nil
    ;; Turn off minor warnings
@@ -350,7 +350,7 @@ Examples (assuming LIST-SYM initially holds (a b)):
 (defun eon-add-to-list-setopt (list-sym elements &optional append compare-fn)
   "Adjoin ELEMENTS to the *default* value of LIST-SYM.
 
-LIST-SYM is a symbol naming a variable or user option.  ELEMENTS may be
+LIST-SYM is a symbol naming a variable or user option. ELEMENTS may be
 a single item or a list of items to add to the variable’s *default* (global)
 value.
 
@@ -421,11 +421,13 @@ When called interactively, also echo the result."
 ;; Either start Emacs maximized …
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-;; … or set the default width of the Emacs frame in characters
+;; … or set the default width of the Emacs frame - in columns or full width
 ;; (add-to-list 'default-frame-alist '(width . 80))
+;; (add-to-list 'default-frame-alist '(fullscreen . fullwidth))
 
-;; … and set the default height of the Emacs frame in lines
+;; … or set the default height of the Emacs frame - in lines or full height
 ;; (add-to-list 'default-frame-alist '(height . 32))
+;; (add-to-list 'default-frame-alist '(fullscreen . fullheight))
 
 ;; Horizontal position: set the distance from the left screen edge in pixels
 ;; That way, only the first frame created will get a fixed position:
@@ -487,10 +489,9 @@ When called interactively, also echo the result."
 
 ;; Make sure to highlight the current line only in the active window
 (setopt hl-line-sticky-flag nil)
-(add-hook 'special-mode-hook
-          (lambda ()
-            ;; Highlight current line in special modes?
-            (hl-line-mode 1)))
+
+;; Highlight current line in special modes?
+(add-hook 'special-mode-hook (lambda () (hl-line-mode 1)))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Change the cursor type based on a certain state
@@ -688,16 +689,26 @@ Don't bind any keys/commands to this keymap.")
   (let ((old (and (boundp sym) (symbol-value sym))))
     (when (boundp 'ctl-z-map)
       (when old (keymap-unset ctl-z-map old))
-      (keymap-set ctl-z-map value ctl-z-localleader-map)))
+      (keymap-set ctl-z-map value eon-localleader-map)))
   (set-default sym value))
 
 ;; Empty named prefix, so which-key shows the label "Local"
-(defvar-keymap ctl-z-localleader-map
-  :doc "Local leader"
+(defvar-keymap eon-localleader-map
+  :doc "Don't bind keys/commands in this keymap.
+It's a frontend to make the local leader keymap machinery to appear
+like a regular keymap.
+
+- If you want to bind/rebind a key/command to a mode-specific local leader
+  keymap, then use `keymap-set'.
+  Example: (keymap-set eon-localleader-elisp-map \"x\" #'eval-defun)
+- If you want to define a local leader keymap for a specific mode,
+  use `eon-localleader-defkeymap'.
+- If you want to bind a certain key/command in all mode-specific local leader
+  keymaps, bind the key/command to `eon-localleader-global-map'."
   :name "Local")
 
 (defun eon-localleader--sync-local-prefix-parent ()
-  "Make `ctl-z-localleader-map' inherit the effective local leader keymap.
+  "Make `eon-localleader-map' inherit the effective local leader keymap.
 Respects the which-key origin window so that the correct buffer's
 localleader is shown."
   (let* ((win (eon-localleader--context-window))
@@ -706,7 +717,7 @@ localleader is shown."
                 (if (keymapp eon-localleader--map)
                     eon-localleader--map
                   eon-localleader-global-map))))
-    (set-keymap-parent ctl-z-localleader-map map)))
+    (set-keymap-parent eon-localleader-map map)))
 
 ;; Keep the UI prefix parent fresh when modes change, even without which-key
 (add-hook 'after-change-major-mode-hook
@@ -749,7 +760,7 @@ Use the Customization UI to change, or `setopt' in Elisp code."
   :type 'string
   :set #'eon-leader--set-key)
 
-;; Sub-keymaps under the leader:
+;; Sub-keymaps under the leader
 
 (defvar-keymap ctl-z-b-map   :doc "Buffer")
 (defvar-keymap ctl-z-c-map   :doc "Code")
@@ -769,8 +780,9 @@ Use the Customization UI to change, or `setopt' in Elisp code."
 (defvar-keymap ctl-z-x-map   :doc "Misc")
 (defvar-keymap ctl-z-ret-map :doc "Bookmark")
 
-;; Top-level leader keymap, referencing the sub-keymaps defined previously:
-;; TODO Rename  ctl-z-... prefix to eon-leader-...
+;; Default Top-level leader keymap, referencing the sub-keymaps
+;; TODO Rename ctl-z-.*-map to eon-leader-default-.*-map;
+;; the ctl-z-... part is merely historical
 
 (defvar-keymap ctl-z-map
   :doc "Top-level leader keymap."
@@ -792,10 +804,11 @@ Use the Customization UI to change, or `setopt' in Elisp code."
   "x"   `("Misc"     . ,ctl-z-x-map)
   "RET" `("Bookmark" . ,ctl-z-ret-map)
   ;; Add dynamic localleader keymap
-  eon-localleader-key `("Local" . ,ctl-z-localleader-map))
+  eon-localleader-key `("Local" . ,eon-localleader-map))
 
 ;; Don't like the pre-defined keybindings of the default leader keymap?
-;; There is an alternative, empty leader keymap.
+;; There is an alternative, blank-slate leader keymap.
+;; The only bound key/command is the local leader.
 (defvar-keymap eon-leader-user-map
   :doc "Alternative top-level leader keymap, initially empty.
 Ready to populate with your own sub-keymaps and keybindings:
@@ -813,55 +826,74 @@ Ready to populate with your own sub-keymaps and keybindings:
   (keymap-set my-leader-g-map \"w\" #'browse-web)
 
 In order to activate this keymap instead of the default leader keymap,
-customize `eon-leader-map-active'."
+customize `eon-leader-map-name'."
   ;; Add dynamic localleader keymap
-  eon-localleader-key `("Local" . ,ctl-z-localleader-map))
+  eon-localleader-key `("Local" . ,eon-localleader-map))
 
-;; TODO Setter should set the active leader keymap immediately
-(defun eon-leader-map--set-active (sym value)
-  "Setter for `eon-leader-map-active', storing VALUE in SYM.
+(defvar eon-leader-map nil
+  "Resolved leader keymap from `eon-leader-map-name'.
+This variable always holds the actual keymap object currently selected
+as the leader keymap.
+
+You usually should bind keys in the source keymap you selected,
+because changing `eon-leader-map-name' will make this variable
+point to a different keymap. The source keymaps are:
+- `ctl-z-map'; contains default leader keybindings
+- `eon-leader-user-map'; a pre-defined but clean-slate leader keymap
+- Other keymap you specified via `eon-leader-map-name'")
+
+(defun eon-leader-map--set (sym value)
+  "Setter for `eon-leader-map-name', storing VALUE in SYM.
 Warns if VALUE is bound but not a keymap; allows unbound symbols."
   (set-default sym value)
-  (when (and (symbolp value) (boundp value)
-             (not (keymapp (symbol-value value))))
-    (message "Warning: %S is bound, but not to a keymap." value)))
+  (cond
+   ;; Bound, but not a keymap
+   ((and (symbolp value) (boundp value)
+         (not (keymapp (symbol-value value))))
+    (setq eon-leader-map nil)
+    (message "Warning: %S is bound, but not to a keymap." value))
+   ;; Bound and a keymap: resolve + rebind
+   ((and (symbolp value) (boundp value)
+         (keymapp (symbol-value value)))
+    (setq eon-leader-map (symbol-value value))
+    (when (boundp 'eon-leader-key)
+      (keymap-global-set eon-leader-key eon-leader-map)))
+   ;; Unbound symbol allowed, but nothing to bind yet
+   (t
+    (setq eon-leader-map nil))))
 
-(defcustom eon-leader-map-active 'ctl-z-map
-   "Specify the keymap that will act as the top-level leader keymap.
+(defcustom eon-leader-map-name 'ctl-z-map
+  "Name of the keymap that will act as the top-level leader keymap.
 
-- 'Default leader keymap' sets `ctl-z-map':
+When setting this variable from Lisp, make sure to quote the symbol.
+Example: (setopt eon-leader-map-name 'eon-leader-user-map)
+
+- 'Default leader keymap' points to `ctl-z-map':
   The keymap is active per default and contains a useful set
   of pre-defined keybindings.
 
-- 'User leader keymap' sets `eon-leader-user-map':
+- 'User leader keymap' points to `eon-leader-user-map':
   This keymap is initially empty, for you to roll your own keybindings.
   See `eon-leader-user-map' for examples how to set them.
 
 - 'Other keymap':
-  Specify a symbol bound to a keymap or expression that evaluates to a symbol
-  bound to a keymap. You can use any keymap you like as your leader keymap."
+  Specify a symbol bound to a keymap, or expression that evaluates to
+  a quoted symbol bound to a keymap. You can use any keymap you like."
   :group 'eon-leader
   :type '(choice (const :tag "Default leader keymap" ctl-z-map)
                  (const :tag "User leader keymap" eon-leader-user-map)
                  (symbol :tag "Other keymap"))
-  :set #'eon-leader-map--set-active)
-
-(defun eon-leader-active-map ()
-  "Return the keymap designated by `eon-leader-map-active'.
-Signals a user error if the symbol is not currently a keymap."
-  (let ((sym eon-leader-map-active))
-    (if (keymapp (symbol-value sym))
-        (symbol-value sym)
-      (user-error "%S is not bound to a keymap" sym))))
+  :set #'eon-leader-map--set)
 
 ;; Initial binding of the leader prefix to the enabled top-level leader keymap
-(keymap-global-set eon-leader-key (eon-leader-active-map))
+(keymap-global-set eon-leader-key eon-leader-map)
 
 ;; Make the leader key available in the minibuffer too
 (add-hook 'minibuffer-setup-hook
           (lambda ()
             (when (keymapp (current-local-map))
-              (keymap-set (current-local-map) eon-leader-key ctl-z-map))))
+              (keymap-set (current-local-map)
+                          eon-leader-key eon-leader-map))))
 
 (defmacro eon-localleader-defkeymap (mode map-sym &rest body)
   "Define MAP-SYM for MODE; inherit global localleader and activate it.
@@ -919,65 +951,132 @@ BODY is forwarded to `defvar-keymap'."
 ;;; FONTS
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Fonts>
 
-;; You can use this function definition as a template to define your own font
-;; set, then call your personal function via `eon-load-after-light-theme-hook'
-;; and `eon-load-after-light-theme-hook' (under section 'THEME CONFIG').
-;; TODO Make it easy to configure by setting a font, the size, etc.
-;; TODO Decouple from eon-load-.*-theme-hook
+;; Either set your preferred fonts with the Customization UI "<leader> x C"
+;; or in your 'init.el' (fonts must be installed on your computer).
+;; Example:
+;; (setopt eon-font-default "Iosevka Curly"      ; font name
+;;         eon-font-default-size 150             ; base size in 1/10 pt
+;;         eon-font-proportional "Gentium Plus"  ; font name
+;;         eon-font-proportional-size 160        ; size in 1/10 pt
+;;         eon-font-marginal-size 0.9)           ; 90% for mode line and tabs
 
-(defun eon-fonts-default ()
-  "The height value is in 1/10 pt, so 140 will give 14 pt."
+(defgroup eon-font-settings nil
+  "Font settings."
+  :group 'eon)
+
+(defcustom eon-font-default nil
+  "Name of the default font; set it to a monospaced or duospaced font you like.
+If not set explicitly, choosen by Emacs according to your system's default."
+  :group 'eon-font-settings)
+
+(defcustom eon-font-default-size 140
+  "Set the default font size in 1/10 of the desired point size.
+Example: 140 -> 14 pt
+You must specify an absolute size as an integer."
+  :group 'eon-font-settings)
+
+(defcustom eon-font-fixed eon-font-default
+  "Optionally name a fixed-width font.
+When `eon-font-default' is set to a fixed-width font,
+the font specified here should have the same character width.
+If not set explicitly, fall back to `eon-font-default'."
+  :group 'eon-font-settings)
+
+(defcustom eon-font-fixed-alt eon-font-fixed
+  "Optionally name an alternative fixed-width font.
+It should have the same character width as `eon-font-fixed'.
+If not set explicitly, fall back to `eon-font-fixed'."
+  :group 'eon-font-settings)
+
+(defcustom eon-font-proportional nil
+  "Name for the proportional font, used for text that isn't code.
+If not set explicitly, choosen by Emacs according to your system's default."
+  :group 'eon-font-settings)
+
+(defcustom eon-font-proportional-size eon-font-default-size
+  "Set the size for the proportinal font.
+You can specify an absolute size as an integer, or a relative size as a float.
+Examples: 140 -> 14 pt / 0.9 -> 90% of `eon-font-default-size'.
+If not set explicitly, fall back to `eon-font-default-size'."
+  :group 'eon-font-settings)
+
+(defcustom eon-font-marginal-size 0.9
+  "Size for `eon-font-mode-line', `eon-font-tab-bar' and `eon-font-tab-line'.
+You can specify an absolute size as an integer, or a relative size as a float.
+Examples: 140 -> 14 pt / 0.9 -> 90% of `eon-font-default-size'.
+If not set explicitly, fall back to 90% of `eon-font-default-size'."
+  :group 'eon-font-settings)
+
+(defcustom eon-font-mode-line eon-font-default
+  "Base font face for the mode-line.
+If not set explicitly, fall back to `eon-font-default'."
+  :group 'eon-font-settings)
+
+(defcustom eon-font-tab-bar eon-font-mode-line
+  "Base font face used for the tab bar.
+When not set explicitly, fall back to `eon-font-mode-line'."
+  :group 'eon-font-settings)
+
+(defcustom eon-font-tab-line eon-font-tab-bar
+  "Base font face for the tab line.
+When not set explicitly, fall back to `eon-font-tab-bar'."
+  :group 'eon-font-settings)
+
+(defun eon-fonts ()
+  "Set the font faces.
+Per default, the function is called by the hooks:
+`eon-theme-light-post-load-hook' - set font faces after loading the light theme;
+`eon-theme-dark-post-load-hook' - set font faces after loading the dark theme."
   (interactive)
   ;; Default font
   (set-face-attribute 'default nil
-                      ;; :family "Iosevka Curly"
+                      :family eon-font-default
                       :weight 'normal
                       :width  'normal
-                      :height 140)
-  ;; Alternative monospaced font; can be the same as above
-  ;; Should have the same character width as the default font
+                      :height eon-font-default-size)
+  ;; Fixed-width font face
   (set-face-attribute 'fixed-pitch nil
-                      ;; :family "Iosevka Curly"
+                      :family eon-font-fixed
                       :weight 'normal
                       :width  'normal
                       :height 1.0)
-  ;; Alternative monospaced font, e.g. with serifs; optional
-  ;; Should have the same character width as the other two fonts above
+  ;; Alternative fixed-width font face
   (set-face-attribute 'fixed-pitch-serif nil
-                      ;; :family "Iosevka Slab"
+                      :family eon-font-fixed-alt
                       :weight 'normal
                       :width  'normal
                       :height 1.0)
-  ;; Proportional font; toggle by "M-x variable-pitch-mode"
+  ;; Proportional font face;
+  ;; can be toggled for the current buffer via "M-x variable-pitch-mode"
   (set-face-attribute 'variable-pitch nil
-                      ;; :family "Iosevka Etoile"
+                      :family eon-font-proportional
                       :weight 'normal
                       :width  'normal
-                      :height 1.0)
-  ;; Active mode line
+                      :height eon-font-proportional-size)
+  ;; Base font face for the active mode line
   (set-face-attribute 'mode-line nil
-                      ;; :family "Iosevka Curly"
+                      :family eon-font-mode-line
                       :weight 'normal
                       :width  'normal
-                      :height 0.9)
-  ;; Inactive mode line
+                      :height eon-font-marginal-size)
+  ;; Base font face for the inactive mode line
   (set-face-attribute 'mode-line-inactive nil
-                      ;; :family "Iosevka Curly"
+                      :family eon-font-mode-line
                       :weight 'normal
                       :width  'normal
-                      :height 0.9)
-  ;; Tab bar
+                      :height eon-font-marginal-size)
+  ;; Base font face for the tab bar
   (set-face-attribute 'tab-bar nil
-                      ;; :family "Iosevka Curly"
+                      :family eon-font-tab-bar
                       :weight 'normal
                       :width  'normal
-                      :height 0.9)
-  ;; Tab line
+                      :height eon-font-marginal-size)
+  ;; Base font face for the tab line
   (set-face-attribute 'tab-line nil
-                      ;; :family "Iosevka Curly"
+                      :family eon-font-tab-line
                       :weight 'normal
                       :width  'normal
-                      :height 0.9)
+                      :height eon-font-marginal-size)
   ;; Don't extend the selection background past the end of the line
   (set-face-attribute 'region nil :extend nil))
 
@@ -985,7 +1084,7 @@ BODY is forwarded to `defvar-keymap'."
 ;;; TOGGLE THEME
 
 ;; Default/fallback definitions – don't change them here,
-;; but further down in 'THEME CONFIG' - or set them in your init.el.
+;; but set them in your init.el. For examples, see THEME CONFIG.
 ;; TODO Refactor in order to dissolve duplication
 ;; TODO Add setters to custom variables
 
@@ -1096,7 +1195,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
         '((border-mode-line-active bg-mode-line-active)
           (border-mode-line-inactive bg-mode-line-inactive)))
 
-;; Customize via "M-x eon-customize-group" or via `setopt' in your init.el
+;; Customize via "M-x eon-customize-group" or via `setopt' in your init.el:
 
 ;;; - Set your light theme:
 ;; (setopt eon-theme-light 'modus-operandi-tinted)
@@ -1122,9 +1221,9 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; Functions not designated as "(interactive)" must be wrapped in lambdas.
 
 ;; Load the default font set; if you want to load a different font set,
-;; "unhook" `eon-fonts-default' first via:
-;; (remove-hook 'eon-theme-dark-post-load-hook #'eon-fonts-default)
-(add-hook 'eon-theme-light-post-load-hook #'eon-fonts-default)
+;; "unhook" `eon-fonts' first via:
+;; (remove-hook 'eon-theme-dark-post-load-hook #'eon-fonts)
+(add-hook 'eon-theme-light-post-load-hook #'eon-fonts)
 
 ;; Dark theme hooks
 
@@ -1134,9 +1233,9 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; Functions not designated as "(interactive)" must be wrapped in lambdas.
 
 ;; Load the default font set; if you want to load your own font set,
-;; "unhook" `eon-fonts-default' first via:
-;; (remove-hook 'eon-theme-dark-post-load-hook #'eon-fonts-default)
-(add-hook 'eon-theme-dark-post-load-hook #'eon-fonts-default)
+;; "unhook" `eon-fonts' first via:
+;; (remove-hook 'eon-theme-dark-post-load-hook #'eon-fonts)
+(add-hook 'eon-theme-dark-post-load-hook #'eon-fonts)
 
 ;; Load the theme
 (eon-theme-load-default)
@@ -1159,7 +1258,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
         hscroll-margin 1
         hscroll-step 1)
 
-;; Enable pixel-based scrolling
+;; Enable pixel-based scrolling?
 (when (fboundp #'pixel-scroll-precision-mode)
   (pixel-scroll-precision-mode 1))
 
@@ -1173,15 +1272,19 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 ;; Compress the mode line?
 ;; If non-nil, repeating spaces are compressed into a single space.
-;; If 'long, this is only done when the mode line is longer than
-;; the current window width (in columns).
-(setopt mode-line-compact nil)
+;; If 'long, this is only done when the mode line is longer
+;; than the current window width in columns.
+(setopt mode-line-compact 'long)
 
 ;; Show the buffer size in the modeline?
 (size-indication-mode 1)
 
 ;; Show the current line number along with column number in mode line?
+;; This is nice if you think line numbers on the left margin are distracting.
+;; The line number indicator turnes off if you enable
+;; `display-line-numbers-mode' or `global-display-line-numbers-mode'.
 (column-number-mode 1)
+(line-number-mode 1)
 
 ;; _____________________________________________________________________________
 ;;; MINIBUFFER
@@ -1191,29 +1294,27 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Recursive-Edit>
 ;; Allow minibuffer commands while in the minibuffer!
 ;; There are two commands to get out of recursive minibuffers:
-;; "C-M-c" exit-recursive-edit and "C-]" abort-recursive-edit
+;; "C-M-c" `exit-recursive-edit' and "C-]" `abort-recursive-edit'.
 (setopt enable-recursive-minibuffers t)
 ;; Show how deep you're in there?
 (minibuffer-depth-indicate-mode 1)
 
 ;; Do not allow the cursor in the minibuffer prompt
-(setq minibuffer-prompt-properties
-      '( read-only t
-         cursor-intangible t
-         face minibuffer-prompt))
+(setopt minibuffer-prompt-properties
+        (plist-put minibuffer-prompt-properties 'cursor-intangible t))
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
 ;; Prevent visual line wrapping in narrow frames
 (add-hook 'minibuffer-setup-hook (lambda () (setq-local truncate-lines t)))
 
-;; For mouse commands to ask questions, use dialog box instead of minibuffer?
+;; For mouse commands to ask questions, use a dialog box instead of minibuffer?
 (setopt use-dialog-box nil)
 
 ;; Grow and shrink the minibuffer according to its lines of content?
-;; If there's too much jumping, set it to 'grow-only.
+;; If you experience too much jumping, set it to 'grow-only.
 (setopt resize-mini-windows t)
 
-;; Allow for shorter responses? "y" for "yes" and "n" for "no"
+;; Allow for shorter responses? Lets you type "y" for "yes" and "n" for "no"
 (setopt read-answer-short t)
 (setopt use-short-answers t)
 
@@ -1224,10 +1325,13 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; There are many matching styles available, see `completion-styles-alist'
 ;; <https://www.gnu.org/software/emacs/manual/html_node/emacs/Completion-Styles.html>
 ;; The order within the list determines their priority.
-(setopt completion-styles '(basic substring initials flex))
+(setopt completion-styles '(basic partial-completion flex))
 (setopt completion-category-defaults nil)
 (setopt completion-category-overrides
         '((file (styles . (basic partial-completion)))))
+
+;; Make TAB try completion when appropriate
+(setopt tab-always-indent 'complete)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Dabbrev
@@ -1236,9 +1340,6 @@ Some themes may come as functions -- wrap these ones in lambdas."
   (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
   (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
   (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode))
-
-;; Make TAB try completion when appropriate
-(setopt tab-always-indent 'complete)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Completions buffer
@@ -1269,7 +1370,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Icomplete
 
-;; Tweaking Icomplete
+;; Make Icomplete snappy and tweak it further
 (with-eval-after-load 'icomplete
   (setopt icomplete-compute-delay 0.01
           icomplete-delay-completions-threshold 256
@@ -1281,11 +1382,11 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 ;; The default vertical minibuffer completion UI for Emacs ONBOARD
 
-;; Prevent jumping minibuffer window when the number of candidates changes.
+;; Prevent minibuffer window from jumping when the number of candidates changes
 (add-hook 'icomplete-minibuffer-setup-hook
           (lambda () (setq-local resize-mini-windows 'grow-only)))
 
-;; TAB accepts the current candidates in Icomplete/Fido minibuffers
+;; Let TAB accept the current candidates in Icomplete/Fido minibuffers
 (with-eval-after-load 'icomplete
   (keymap-set icomplete-minibuffer-map "TAB" #'icomplete-force-complete)
   (keymap-set icomplete-minibuffer-map "<tab>" #'icomplete-force-complete)
@@ -1300,6 +1401,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;;; HELP
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Help>
 
+;; Make commonly used help commands available under the leader key
 (keymap-set ctl-z-h-map "," `("..." . ,help-map))
 (keymap-set ctl-z-h-map "e" #'view-echo-area-messages)
 (keymap-set ctl-z-h-map "f" #'describe-function)
@@ -1310,7 +1412,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; Focus a help window when it appears?
 (setopt help-window-select t)
 
-;; Show all options when running 'apropos' "C-h a" (fulltext search)
+;; Show all options when running `apropos' (fulltext search)? Keybinding: "C-h a"
 (setopt apropos-do-all t)
 
 ;; _____________________________________________________________________________
@@ -1318,13 +1420,11 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 (when package-enable-at-startup
 
-  ;; Open the package manager interface: "<leader> x p"
+  ;; Open the package manager interface: "<leader> x P"
   (keymap-set ctl-z-x-map "P" #'list-packages)
 
-  ;; Highlight current line in the package manager
-  (add-hook 'package-menu-mode-hook
-            (lambda ()
-              (hl-line-mode 1))))
+  ;; Highlight current line in the package manager UI?
+  (add-hook 'package-menu-mode-hook (lambda () (hl-line-mode 1))))
 
 ;; _____________________________________________________________________________
 ;;; CUSTOMIZATION UI SETTINGS
@@ -1339,10 +1439,10 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 (keymap-set ctl-z-x-map "C" #'eon-customize-group)
 
-;; Don't accumulate customization buffers
+;; Don't accumulate customization buffers?
 (setopt custom-buffer-done-kill t)
 
-;; No line wrapping in descriptions
+;; No line wrapping in descriptions?
 (add-hook 'Custom-mode-hook (lambda () (setq-local truncate-lines t)))
 
 ;; _____________________________________________________________________________
@@ -1356,6 +1456,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
         eldoc-echo-area-prefer-doc-buffer nil
         eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
 
+;; Open the documentation buffer via "<leader> c d"
 (keymap-set ctl-z-c-map "d" #'eldoc)
 
 ;; _____________________________________________________________________________
@@ -1368,19 +1469,22 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (keymap-global-set "C-S-s" #'isearch-forward)
 (keymap-global-set "C-S-r" #'isearch-backward)
 
-;; Search and replace
+;;; - Search and replace
 ;; If text is selected, then the commands act on that region only
 
-;; The 'query-' variant asks for each string.
-;; Confirm with "SPC", or jump to the next via "n"
-(keymap-global-set "M-%"    #'query-replace-regexp)
-(keymap-set ctl-z-s-map "r" #'query-replace-regexp)
+;; The 'query-' variant asks for each replacement
+;; Confirm with "SPC" / "y", or deny and jump to the next via "n"
+(keymap-global-set      "M-%"   #'query-replace-regexp)
+(keymap-set ctl-z-s-map "r"     #'query-replace-regexp)
+(keymap-set ctl-z-s-map "R"     #'query-replace)
+
 ;; Replace all strings immediately
-(keymap-global-set "C-M-%"  #'replace-regexp)
-(keymap-set ctl-z-s-map "R" #'replace-regexp)
+(keymap-global-set      "C-M-%" #'replace-regexp)
+(keymap-set ctl-z-s-map "C-r"   #'replace-regexp)
 
 ;; _____________________________________________________________________________
 ;;; IMENU
+;; Imenu provides navigation for buffer content, e.g. code, outlines and more
 
 (keymap-set ctl-z-g-map "i" #'imenu)
 
@@ -1419,6 +1523,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (keymap-set ctl-z-w-map "f" #'find-file-other-window)
 (keymap-set ctl-z-w-map "k" #'kill-buffer-and-window)
 (keymap-set ctl-z-w-map "m" #'delete-other-windows)
+(keymap-set ctl-z-w-map "o" #'other-window-prefix)
 (keymap-set ctl-z-w-map "q" #'quit-window)
 (keymap-set ctl-z-w-map "s" #'split-window-below)
 (keymap-set ctl-z-w-map "v" #'split-window-right)
@@ -1480,7 +1585,8 @@ If called from the minibuffer, exit via `abort-recursive-edit'."
 ;; Get the buffer out of the way and close the window
 (defun eon-bury-window (&optional restore)
   "Bury the current buffer.
-If visiting a file and modified, ask to save first; then bury the buffer.
+If visiting a file and modified, ask to save first;
+then bury the buffer and delete the window.
 When prefix arg RESTORE is non-nil, restore the previous window configuration.
 If called from the minibuffer, exit via `abort-recursive-edit'."
   (interactive "P")
@@ -1517,8 +1623,12 @@ If called from the minibuffer, exit via `abort-recursive-edit'."
 ;; Uniquify buffer names for buffers that would have identical names
 (setopt uniquify-buffer-name-style 'forward)
 
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - Boring buffers
+
 ;; Define boring buffers globally, so they can be hidden. These buffers
 ;; remain accessible via Ibuffer: "C-x C-b" or "<leader> b i"
+
 (defcustom eon-boring-buffers
   '("\\` "
     "\\`\\*Echo Area"
@@ -1531,7 +1641,7 @@ If called from the minibuffer, exit via `abort-recursive-edit'."
     "\\`\\*tramp"
     "\\`\\*EGLOT"
     ;; And some hidden buffers can be visited by ...
-    "\\`\\*Bookmark List"  ; "C-x r l"
+    "\\`\\*Bookmark List"  ; "<leader> RET l"
     "\\`\\*Ibuffer"        ; "<leader> b i"
     "\\`\\*Messages"       ; "<leader> h e"
     )
@@ -1547,22 +1657,17 @@ Called without argument just syncs `eon-boring-buffers' to other places."
   (when regexp
     (eon-add-to-list 'eon-boring-buffers regexp))
   ;; Define other places where `eon-boring-buffers' are synced to:
-  (setopt switch-to-prev-buffer-skip-regexp eon-boring-buffers
-          switch-to-next-buffer-skip-regexp eon-boring-buffers))
+  (eon-add-to-list-setopt 'switch-to-prev-buffer-skip-regexp eon-boring-buffers)
+  (eon-add-to-list-setopt 'switch-to-next-buffer-skip-regexp eon-boring-buffers))
 
-;; Hide boring buffers from `next-buffer' and `prev-buffer'.
+;; Hide boring buffers
 (with-eval-after-load 'window (eon-boring-buffers-add))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Ibuffer, the buffer manager
 ;; <https://protesilaos.com/codelog/2020-04-02-emacs-intro-ibuffer/>
 
-(add-hook 'ibuffer-mode-hook
-          (lambda ()
-            (ibuffer-auto-mode 1)))
-
-;; Hide the boring buffers from Ibuffer too?
-;; (setopt ibuffer-never-show-predicates eon-boring-buffers)
+(add-hook 'ibuffer-mode-hook (lambda () (ibuffer-auto-mode 1)))
 
 (keymap-global-set "C-x C-b" #'ibuffer)
 (keymap-set ctl-z-b-map "i" #'ibuffer)
@@ -1572,12 +1677,11 @@ Called without argument just syncs `eon-boring-buffers' to other places."
 
 ;; Set an initial major mode for the *scratch* buffer:
 
-;; Lisp-interaction-mode is the default mode for the scratch buffer
+;; `lisp-interaction-mode' is the default mode for the scratch buffer
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Lisp-Interaction>
-;; (setopt initial-major-mode #'lisp-interaction-mode)
 
-;; You can set the scratch buffer to Org-mode which may be more useful
-;; for quick notes, writing and literate programming
+;; You can set the scratch buffer to `org-mode' or `text-mode',
+;; which may be more useful for quick notes or writing.
 ;; (setopt initial-major-mode #'org-mode)
 
 ;; Should the *scratch* buffer contain some initial content?
@@ -1608,8 +1712,8 @@ Called without argument just syncs `eon-boring-buffers' to other places."
 ;; Allow Emacs to copy to and paste from the GUI clipboard
 ;; when running in a text terminal
 ;; --> recommended 3rd-party package 'xclip'
-;; If you would like to install this 3rd-party package, uncomment and evaluate
-;; the following expression – either via "C-M-x", or simply restart Emacs:
+;; If you want to install this 3rd-party package, set this in your `init.el'
+;; and then restart Emacs:
 ;; (use-package xclip :ensure t)
 
 ;; Copy the full path of the current file
@@ -1625,15 +1729,15 @@ Called without argument just syncs `eon-boring-buffers' to other places."
                filename))))
 (keymap-set ctl-z-f-map "M-w" #'eon-copy-file-path)
 
-;; Simple alternative for 'yank-pop' – present a selection of the kill ring
+;; Simple alternative for `yank-pop' – present a selection of the kill ring
 (defun eon-yank-from-kill-ring ()
-  "Select and insert an item from the \=`'kill-ring'."
+  "Select and insert an item from the `kill-ring'."
   (interactive)
   (insert (completing-read "Yank: " kill-ring nil t)))
 (keymap-global-set "M-y" #'eon-yank-from-kill-ring)
 
 ;; Copy & paste between Windows and Emacs running within WSL
-;; (Windows Subsystem for Linux) - which is technically a Linux, not Windows
+;; (Windows Subsystem for Linux)
 
 ;; Copy "kill" text from an Emacs buffer for pasting it into a Windows app
 (when (and (eon-linp)
@@ -1709,10 +1813,10 @@ pretending to clear it."
 ;; Jump to a "jumpable" register
 (keymap-set ctl-z-r-map "j" #'jump-to-register)
 
-;; Save the state of the selected frame's windows in register
-(keymap-set ctl-z-r-map "w" #'window-configuration-to-register)
 ;; Save the state of all frames in register
 (keymap-set ctl-z-r-map "f" #'frameset-to-register)
+;; Save the state of the selected frame's windows in register
+(keymap-set ctl-z-r-map "w" #'window-configuration-to-register)
 ;; Store keyboard macro in register
 (keymap-set ctl-z-r-map "k" #'kmacro-to-register)
 ;; Record the position of point and the current buffer in register
@@ -1733,15 +1837,29 @@ pretending to clear it."
 ;;; HISTORY
 
 ;; Which histories to save between Emacs sessions?
-(savehist-mode 1)
 (eon-add-to-list-setopt 'savehist-additional-variables
-                        '(kill-ring
+                        '(kill-ring  ; CAUTION, persists copied text - see below
                           register-alist
-                          mark-ring
-                          global-mark-ring
                           search-ring
                           regexp-search-ring
                           compile-command))
+
+;; Enable `savehist-mode' after setting the variables
+(savehist-mode 1)
+
+; Wipe Emacs' kill ring and quit via "<leader> q Q"
+(defun eon-clear-kill-ring ()
+  "Clear the kill ring; do not touch the system clipboard."
+  (interactive)
+  (setq kill-ring nil
+        kill-ring-yank-pointer nil))
+
+(defun eon-quit-clear-kill-ring ()
+  "Clear kill ring (not the system clipboard), save buffers, then quit Emacs."
+  (interactive)
+  (eon-clear-kill-ring)
+  (save-buffers-kill-terminal))
+(keymap-set ctl-z-q-map "Q" #'eon-quit-clear-kill-ring)
 
 ;; History length for various histories
 (setopt history-length 1024)
@@ -1822,7 +1940,8 @@ pretending to clear it."
 (defun eon-visit-user-init-file ()
   "Visit the init file."
   (interactive)
-  (find-file user-init-file))
+  (when user-init-file (find-file user-init-file)))
+(keymap-set ctl-z-x-map "i" #'eon-visit-user-init-file)
 
 ;; _____________________________________________________________________________
 ;;; RECENT FILES
@@ -1993,6 +2112,10 @@ pretending to clear it."
 ;; that runs within Emacs. It is independent from the OS. Eshell looks like
 ;; a POSIX shell superficially, but is also a REPL for Emacs Lisp expressions.
 
+;; Create Eshell loacal leader keymap
+(eon-localleader-defkeymap eshell-mode eon-localleader-eshell-map
+  :doc "Local leader keymap for `eshell-mode'.")
+
 ;; Get rid of the Eshell startup message?
 (setopt eshell-banner-message ""
         eshell-history-size 1024
@@ -2016,16 +2139,16 @@ pretending to clear it."
   (eshell 't))
 (keymap-set ctl-z-e-map "E" #'eon-eshell-new)
 
-;; Create Eshell loacal leader keymap
-(eon-localleader-defkeymap eshell-mode eon-localleader-eshell-map
-  :doc "Local leader keymap for Eshell")
-
 ;; _____________________________________________________________________________
 ;;; SHELL
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Shell-Mode>
 
 ;; This is also no terminal emulator, but a buffer to issue shell commands
 ;; and display their output
+
+;; Create Shell local leader keymap
+(eon-localleader-defkeymap shell-mode eon-localleader-shell-map
+  :doc "Local leader keymap for `shell-mode'.")
 
 ;; Set another shell than your default one?
 ;; (setopt shell-file-name "/usr/bin/bash")
@@ -2042,10 +2165,6 @@ pretending to clear it."
   (interactive)
   (shell (generate-new-buffer-name "*shell*")))
 (keymap-set ctl-z-e-map "S" #'eon-shell-new)
-
-;; Create Shell loacal leader keymap
-(eon-localleader-defkeymap shell-mode eon-localleader-shell-map
-  :doc "Local leader keymap for Shell")
 
 ;; _____________________________________________________________________________
 ;;; PROCED
@@ -2182,9 +2301,17 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 ;;; LINE NUMBERS
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Display-Custom>
 
-;; Line numbers on or off? Toggle with "M-x display-line-numbers-mode"
-;; or set it here for all programming modes. Goto line: "M-g M-g"
+;; Line numbers on or off? Toggle with "M-x display-line-numbers-mode",
+;; or set it for all programming modes. Goto line via "M-g M-g"
 (add-hook 'prog-mode-hook (lambda () (display-line-numbers-mode -1)))
+
+;; If line numbers are enabled, we don't need to show them in the mode line;
+;; so only the column number still appears there.
+(add-hook 'display-line-numbers-mode-hook
+          (lambda ()
+            (if display-line-numbers-mode
+                (line-number-mode -1)
+              (line-number-mode 1))))
 
 ;; _____________________________________________________________________________
 ;;; LINE WRAPPING
@@ -2203,7 +2330,7 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 ;; _____________________________________________________________________________
 ;;; TEXT / PROSE
 
-;; Sentences end with a single space
+;; Sentences end with a single or double spaces?
 (setopt sentence-end-double-space nil)
 
 ;; TODO Add Flyspell / Ispell presets here
@@ -2561,8 +2688,7 @@ Return an alist of (LANG . STATUS)."
 
 (defun eon-treesitter-add-specs (&rest specs)
   "Add SPECS to `eon-treesitter-specs' and merge them into the source alist.
-Use this only if you merely want to register SPECS, but not build/install
-them.
+Use this if you merely want to register SPECS, but not build/install them.
 
 - SPECS can be many specs or a single list of specs.
   Each spec has the form (LANG URL [REVISION] [SOURCE-DIR]).
@@ -2665,7 +2791,7 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
 (keymap-set eon-localleader-org-mode-map "c" #'org-ctrl-c-ctrl-c)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - ORG CAPTURE
+;;; - Org capture
 ;; <https://orgmode.org/org.html#Capture>
 
 ;; Capture a note via `C-z o c'
@@ -2685,7 +2811,7 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
 (keymap-set ctl-z-o-map "o" #'eon-visit-org-notes)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - ORG TODO
+;;; - Org todo
 ;; <https://orgmode.org/org.html#TODO-Items>
 
 ;; Set some sensible default states for todo-items
@@ -2695,7 +2821,7 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
           (sequence "|" "OKAY(o)" "YES(y)" "NO(n)")))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - ORG AGENDA
+;;; - Org agenda
 ;; <https://orgmode.org/org.html#Agenda-Views>
 
 (setopt org-agenda-files (list org-directory))
@@ -2709,7 +2835,7 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
             (hl-line-mode 1)))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - ORG LINKS
+;;; - Org links
 ;; <https://orgmode.org/org.html#Hyperlinks>
 
 ;; Store a link via "<localleader> L"
@@ -2722,7 +2848,7 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
 (keymap-set eon-localleader-org-mode-map "M-l" #'org-toggle-link-display)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - ORG PUBLISH
+;;; - Org publish
 
 ;; Select a project to publish a project via "<localleader> p";
 ;; This can be used to generate and publish a static blog, ebooks, etc.
@@ -2745,7 +2871,7 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
            (message "Don't re-export unchanged files (default)"))))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - ORG EXPORT
+;;; - Org export
 
 ;; HTML export
 (setopt org-html-checkbox-type 'unicode
@@ -2753,15 +2879,11 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
         org-html-self-link-headlines t)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - ORG LITERATE PROGRAMMING
+;;; - Org code blocks / literate programming
 ;; <https://orgmode.org/worg/org-contrib/babel/intro.html>
 
 ;; Activate code blocks via Babel languages
 (org-babel-do-load-languages 'org-babel-load-languages '((emacs-lisp . t)))
-
-;; In case you're using the Emacs ONTOP extensions, further languages
-;; should not be configured here, but within their specific ONTOP modules
-;; ("eon-*.el" files)
 
 ;; _____________________________________________________________________________
 ;;; LISP
@@ -2772,14 +2894,14 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
   :doc "Local leader keymap for Emacs Lisp buffers."
   "d"   #'edebug-defun
   "e"   #'eval-last-sexp
-  "E"   #'elisp-eval-region-or-buffer
+  "E"   #'pp-eval-last-sexp
   "h"   #'describe-symbol
   "l"   #'load-file
   "m"   #'pp-macroexpand-last-sexp
   "M"   #'emacs-lisp-macroexpand
-  "p"   #'pp-eval-last-sexp
   "x"   #'eval-defun
   "C-b" #'elisp-byte-compile-buffer
+  "C-e" #'elisp-eval-region-or-buffer
   "C-f" #'elisp-byte-compile-file
   "C-n" #'emacs-lisp-native-compile)
 
@@ -2896,6 +3018,9 @@ With SWITCH = \='hook, return ...-hook variables."
 
 ;; Reach eval-expression via "<leader> e x"
 (keymap-set ctl-z-e-map "x" #'eval-expression)
+
+;; Load an Emacs Lisp file (executes the code)
+(keymap-set ctl-z-f-map "l" #'load-file)
 
 ;; Additional keybinding resembling other sexp-related keybindings
 (keymap-global-set "C-M-DEL" #'backward-kill-sexp)
