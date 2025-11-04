@@ -25,7 +25,7 @@
       (dolist (m (list god-local-mode-map))
         (when (and (stringp old) (> (length old) 0))
           (define-key m (kbd old) nil))
-        (define-key m (kbd new) ctl-z-map))))
+        (define-key m (kbd new) eon-leader-map))))
 
   (defun eon-god--set-leaders (sym val)
     "Setter for leader and local leader keys.
@@ -37,8 +37,8 @@ Used by custom variables `eon-god-leader-key' and `eon-god-localleader-key'."
           ('eon-god-leader-key
            (eon-god--bind-leader-in-states old val))
           ('eon-god-localleader-key
-           (when old (define-key ctl-z-map (kbd old) nil))
-           (define-key ctl-z-map (kbd val)
+           (when old (define-key eon-leader-map (kbd old) nil))
+           (define-key eon-leader-map (kbd val)
                        (cons "Local" eon-localleader-map)))))))
 
   (defcustom eon-god-leader-key ","

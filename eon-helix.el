@@ -38,7 +38,7 @@
                        helix-view-map))
         (when (and (stringp old) (> (length old) 0))
           (define-key m (kbd old) nil))
-        (define-key m (kbd new) ctl-z-map))))
+        (define-key m (kbd new) eon-leader-map))))
 
   (defun eon-helix--set-leaders (sym val)
     "Setter for leader and local leader keys.
@@ -50,9 +50,9 @@ Used by custom variables `eon-helix-leader-key' and `eon-helix-localleader-key'.
           ('eon-helix-leader-key
            (eon-helix--bind-leader-in-states old val))
           ('eon-helix-localleader-key
-           (when old (define-key ctl-z-map (kbd old) nil))
-           (define-key ctl-z-map (kbd val)
-                       (cons "Local" ctl-z-localleader-map)))))))
+           (when old (define-key eon-leader-map (kbd old) nil))
+           (define-key eon-leader-map (kbd val)
+                       (cons "Local" eon-localleader-map)))))))
 
   (defcustom eon-helix-leader-key ","
     "Leader key for Helix."
