@@ -143,13 +143,14 @@ Adapted from Doom Emacs.")
 ;; _____________________________________________________________________________
 ;;; COPY / PASTE
 
-;; Copy/paste between TUI Emacs and graphical applications.
+;;; - Copy/paste between TUI Emacs and graphical applications
+
 ;; Installs and loads only if Emacs really runs in the terminal emulator.
 ;; <https://elpa.gnu.org/packages/xclip.html>
 (use-package emacs :ensure nil
   :functions (xclip-mode)
   :preface
-  ;; TODO Factor out tty-recognition as a predicate
+  ;; TODO Factor out tty-recognition heuristic as a re-usable predicate
   (defun eon-xclip--ensure-on-tty (&optional frame)
     (with-selected-frame (or frame (selected-frame))
       (unless (display-graphic-p)
@@ -160,7 +161,8 @@ Adapted from Doom Emacs.")
   (window-setup . eon-xclip--ensure-on-tty)
   (after-make-frame-functions . eon-xclip--ensure-on-tty))
 
-;; No empty lines etc. in the kill ring
+;;; -  No empty lines etc. in the kill ring
+
 ;; <https://github.com/NicholasBHubbard/clean-kill-ring.el>
 (use-package clean-kill-ring :ensure t
   :config
@@ -182,14 +184,16 @@ Adapted from Doom Emacs.")
 ;; _____________________________________________________________________________
 ;; PARENTHESIS DISPLAY
 
-;; Color-code nested parens …
+;;; - Color-code nested parens
+
 ;; <https://github.com/Fanael/rainbow-delimiters>
 (use-package rainbow-delimiters :ensure t
   :hook
   ((prog-mode conf-mode comint-mode eshell-mode shell-mode)
    . rainbow-delimiters-mode))
 
-;; … and/or make parens styleable, e.g. more or less prominent
+;;; - Make parens styleable, e.g. more or less prominent
+
 ;; <https://github.com/tarsius/paren-face>
 ;; (use-package paren-face :ensure t
 ;;   :hook
