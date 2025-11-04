@@ -1,4 +1,4 @@
-;;; eon-evil.el --- Modular editing: Vim keybindings -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-evil.el --- Modal editing: Vim keybindings -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
