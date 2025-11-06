@@ -95,7 +95,7 @@ Adapted from Doom Emacs.")
   ;; You can set the variables manually, then no autoselection will happen:
   ;; (exec-path-from-shell-variables '("PATH" "MANPATH"))
 
-  ;; Use a specific shell if you like:
+  ;; Use a specific shell if you need:
   ;; (exec-path-from-shell-shell-name "/bin/bash")
 
   :config
