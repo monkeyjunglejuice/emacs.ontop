@@ -16,9 +16,11 @@
 
 (use-package exec-path-from-shell :ensure t
   :when
-  ;; TODO Refine the loading conditions, so it doesn't load when
-  ;; graphical Emacs has been started *from* the terminal
-  (or (daemonp) (and (eon-macp) (display-graphic-p)))
+  (or (daemonp)
+      ;; Enable on macOS if not started from the terminal
+      (and (eon-macp)
+           (not (eon-terminalp))
+           (not (getenv "TERM_PROGRAM"))))
 
   :preface
 
