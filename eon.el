@@ -1,4 +1,4 @@
-;;; eon.el --- Emacs ONBOARD Starter Kit -*- lexical-binding: t; no-byte-compile: t; -*-
+;; eon.el --- Emacs ONBOARD Starter Kit -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;;    ▒░▒░▒░   ▒░     ▒░ ▒░▒░▒░▒░     ▒░▒░▒░      ▒░    ▒░▒░▒░▒░    ▒░▒░▒░▒░
 ;;   ▒░    ▒░  ▒░▒░   ▒░  ▒░     ▒░  ▒░    ▒░    ▒░▒░    ▒░     ▒░   ▒░    ▒░
@@ -9,8 +9,8 @@
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 
 ;; Emacs ONBOARD offers a clean slate to build your personal Emacs config.
-;; It stays as close as possible to vanilla Emacs, but offers some convenience
-;; and a much better user experience, while only relying on built-in packages.
+;; It stays close to vanilla Emacs, but offers convenience and a better
+;; user experience, while only relying on built-in packages.
 
 ;; Copyright (C) 2021–2025 Dan Dee
 ;;
@@ -98,10 +98,10 @@
 This should be set to a value that makes GC unlikely but does not
 cause OS paging."
   :group 'eon-gcmh
-  :type 'number)
+  :type '(number))
 
 ;; Set the high value immediately to prevent frequent garbage collections
-;; during initialization. Will be adjusted dynamically when eon-gcmh-mode
+;; during initialization. Will be adjusted dynamically when `eon-gcmh-mode'
 ;; is activated via `emacs-startup-hook'.
 (setq gc-cons-threshold eon-gcmh-high-cons-threshold)
 
@@ -110,7 +110,7 @@ cause OS paging."
 This is the GC threshold used while idling. Default value is the
 same of `gc-cons-threshold' default."
   :group 'eon-gcmh
-  :type 'number)
+  :type '(number))
 
 (defcustom eon-gcmh-idle-delay 15
   "Idle time to wait in seconds before triggering GC.
@@ -123,12 +123,12 @@ If `auto', this is auto-computed based on `eon-gcmh-auto-idle-delay-factor'."
 The idle delay will be `eon-gcmh-auto-idle-delay-factor' times the
 time the last non idle garbage collection time."
   :group 'eon-gcmh
-  :type 'number)
+  :type '(number))
 
 (defcustom eon-gcmh-verbose nil
   "If t, print a message when garbage collecting."
   :group 'eon-gcmh
-  :type 'boolean)
+  :type '(boolean))
 
 (defvar eon-gcmh-idle-timer nil
   "Idle timer for triggering GC.")
@@ -191,6 +191,18 @@ Cancel the previous one if present."
 (add-hook 'emacs-startup-hook #'eon-gcmh-mode)
 
 ;; _____________________________________________________________________________
+;;; DEBUG / DIAGNOSTICS
+
+;; Show Emacs init time and how many garbage collections happened during init
+(add-hook 'window-setup-hook
+          (lambda ()
+            (message "Emacs started in %s with %d garbage collections."
+                     (format "%.3f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
+
+;; _____________________________________________________________________________
 ;;; ELISP NATIVE COMPILATION / BYTECODE
 
 ;; Prevent stale elisp bytecode from shadowing more up-to-date source files?
@@ -226,22 +238,6 @@ Cancel the previous one if present."
    native-comp-warning-on-missing-source nil))
 
 ;; _____________________________________________________________________________
-;;; DEBUG / DIAGNOSTICS
-
-;; Enter debugger if an error is signaled
-(when init-file-debug
-  (setopt debug-on-error t))
-
-;; Show Emacs init time and how many garbage collections happened during init
-(add-hook 'window-setup-hook
-          (lambda ()
-            (message "Emacs started in %s with %d garbage collections."
-                     (format "%.3f seconds"
-                             (float-time
-                              (time-subtract after-init-time before-init-time)))
-                     gcs-done)))
-
-;; _____________________________________________________________________________
 ;;; PACKAGE MANAGEMENT INIT
 
 ;; Browse, select and install 3rd-party packages with "M-x list-packages RET"
@@ -273,16 +269,16 @@ Cancel the previous one if present."
 ;; _____________________________________________________________________________
 ;;; GLOBAL DEFINITIONS & UTILITIES
 
-;; Simplify writing of operating-system-specific Elisp code
+;;; - Some commonly used predicates
 
 (defun eon-linp ()
-  "True if `system-type' is Linux or something compatible.
+  "True if `system-type' is GNU/Linux or something compatible.
 For finer granularity, use the variables `system-type'
 or `system-configuration' directly."
   (memq system-type '(gnu/linux berkeley-unix gnu gnu/kfreebsd)))
 
 (defun eon-winp ()
-  "True if `system-type' is Windows or something compatible.
+  "True if `system-type' is Microsoft Windows or something compatible.
 For finer granularity, use the variables `system-type'
 or `system-configuration' directly."
   (memq system-type '(windows-nt cygwin ms-dos)))
@@ -299,8 +295,15 @@ For finer granularity, use the variables `system-type'
 or `system-configuration' directly."
   (eq system-type 'darwin))
 
-;; Extended `add-to-list' and friends
+(defun eon-terminalp ()
+  "True if Emacs does run in the terminal UI."
+  (and (tty-type)
+       (not (display-graphic-p))))
 
+;;; - Extended `add-to-list' and friends
+
+;; TODO Since we're using `cl-lib' anyway, we could use keyword arguments
+;; instead of merely positional arguments.
 (require 'cl-lib)
 
 (defun eon-adjoin (cur elements &optional append compare-fn)
@@ -334,12 +337,12 @@ while preserving the order of ELEMENTS.
 COMPARE-FN, if non-nil, is a function used to test for membership; it
 defaults to `equal`.
 
-Returns the new current value of LIST-SYM.
-
 Examples (assuming LIST-SYM initially holds (a b)):
   (eon-add-to-list 'v 'c)           ; => (c a b)
   (eon-add-to-list 'v '(c a))       ; => (c a b)
-  (eon-add-to-list 'v '(d) t)       ; => (a b d)"
+  (eon-add-to-list 'v '(d) t)       ; => (a b d)
+
+Returns the new current value of LIST-SYM."
   (unless (symbolp list-sym)
     (error "eon-add-to-list: LIST-SYM must be quoted: 'my-var"))
   (set list-sym
@@ -354,20 +357,18 @@ LIST-SYM is a symbol naming a variable or user option. ELEMENTS may be
 a single item or a list of items to add to the variable’s *default* (global)
 value.
 
-If APPEND is non-nil, append items left->right; otherwise prepend them
-while preserving the order of ELEMENTS.
+If APPEND is non-nil, append items left->right;
+otherwise prepend them while preserving the order of ELEMENTS.
 
-COMPARE-FN, if non-nil, is a function used to test for membership; it
-defaults to `equal`.
+COMPARE-FN, if non-nil, is a function used to test for membership;
+it defaults to `equal'.
 
-If LIST-SYM is a user option (see `custom-variable-p`), use
-`customize-set-variable` so its :set function and type checks are
-applied.  Otherwise, use `set-default` to modify the variable’s global
+If LIST-SYM is a user option (see `custom-variable-p'),
+use `customize-set-variable' so its :set function and type checks are
+applied. Otherwise, use `set-default' to modify the variable’s global
 default value directly.
 
-Returns the new default value of LIST-SYM.
-
-See `eon-add-to-list' for examples."
+Returns the new default value of LIST-SYM."
   (unless (symbolp list-sym)
     (error "eon-add-to-list-setopt: LIST-SYM must be a symbol"))
   (let* ((cur (and (default-boundp list-sym) (default-value list-sym)))
@@ -379,7 +380,7 @@ See `eon-add-to-list' for examples."
 
 ;; Get all the parent major modes
 (defun eon-get-parent-modes ()
-  "Return major-mode and its parents (child first).
+  "Return a list with `major-mode' as the `car' and its parents as the `cdr'.
 When called interactively, also echo the result."
   (interactive)
   (cl-labels ((collect (mode)
@@ -392,7 +393,7 @@ When called interactively, also echo the result."
         parents))))
 
 (defvar eon-user-directory (expand-file-name "~/")
-  "The user's home directory with a trailing slash.")
+  "Full path of the user's home directory with a trailing slash.")
 
 ;; _____________________________________________________________________________
 ;;; EMACS SYSTEM LIMITS
@@ -405,7 +406,7 @@ When called interactively, also echo the result."
         undo-strong-limit (* 96 1024 1024)   ; 96 MiB
         undo-outer-limit (* 960 1024 1024))  ; 960 MiB
 
-;; Increase the amount of data which Emacs reads from subprocesses
+;; Increase the amount of data that Emacs reads from subprocesses
 (setopt read-process-output-max (* 1024 1024))  ; 1 MiB
 
 ;; _____________________________________________________________________________
@@ -415,6 +416,7 @@ When called interactively, also echo the result."
 ;; while "window" refers to tiled panels within an Emacs frame. Why?
 ;; Because Emacs had it first, and today's convention what "window" means
 ;; appeared later.
+;;
 ;; In order to define properties generally, add them to `default-frame-alist';
 ;; to affect only the first frame created, add them to `initial-frame-alist'.
 
@@ -454,10 +456,10 @@ When called interactively, also echo the result."
 (menu-bar-mode 1)
 
 ;; Scroll bar: on/off by default?
-(when (display-graphic-p) (scroll-bar-mode -1))
+(when (fboundp #'scroll-bar-mode) (scroll-bar-mode -1))
 
 ;; Tool bar: on/off by default?
-(when (display-graphic-p) (tool-bar-mode -1))
+(when (fboundp #'tool-bar-mode) (tool-bar-mode -1))
 
 ;; Tooltips: enable/disable?
 (tooltip-mode -1)
@@ -512,57 +514,57 @@ When called interactively, also echo the result."
   (force-mode-line-update t))
 
 (defcustom eon-cursor-type-write 'bar
-  "Cursor type for text input.
+  "Cursor style for text input.
 Accepts an expression that returns either:
 - t or nil
 - one of the symbols: 'bar 'hbar 'box 'hollow
-- a pair (SYMBOL . INTEGER) e.g., (hbar . 3).
+- a pair '(SYMBOL . INTEGER), e.g. '(hbar . 3).
 See also `cursor-type'"
-  :type 'sexp
+  :type '(sexp)
   :group 'eon-cursor-type
   :set #'eon-cursor-type--set)
 
 (defcustom eon-cursor-type-select 'bar
-  "Cursor type for selecting text in writing- or modal insert states.
+  "Cursor style for selecting text in writing- or modal insert states.
 Accepts an expression that returns either:
 - t or nil
 - one of the symbols: 'bar 'hbar 'box 'hollow
-- a pair (SYMBOL . INTEGER) e.g., (hbar . 3).
+- a pair '(SYMBOL . INTEGER), e.g. '(hbar . 3).
 See also `cursor-type'"
-  :type 'sexp
+  :type '(sexp)
   :group 'eon-cursor-type
   :set #'eon-cursor-type--set)
 
 (defcustom eon-cursor-type-view '(hbar . 3)
-  "Cursor type for read-only buffers.
+  "Cursor style for read-only buffers.
 Accepts an expression that returns either:
 - t or nil
 - one of the symbols: 'bar 'hbar 'box 'hollow
-- a pair (SYMBOL . INTEGER) e.g., (hbar . 3).
+- a pair '(SYMBOL . INTEGER), e.g. '(hbar . 3).
 See also `cursor-type'"
-  :type 'sexp
+  :type '(sexp)
   :group 'eon-cursor-type
   :set #'eon-cursor-type--set)
 
 (defcustom eon-cursor-type-extra 'box
-  "Cursor type for command- and modal \"normal\" states.
+  "Cursor style for command- and modal \"normal\" states.
 Accepts an expression that returns either:
 - t or nil
 - one of the symbols: 'bar 'hbar 'box 'hollow
-- a pair (SYMBOL . INTEGER) e.g., (hbar . 3).
+- a pair '(SYMBOL . INTEGER), e.g. '(hbar . 3).
 See also `cursor-type'"
-  :type 'sexp
+  :type '(sexp)
   :group 'eon-cursor-type
   :set #'eon-cursor-type--set)
 
 (defcustom eon-cursor-type-extra-select 'hollow
-  "Cursor type for command- and modal \"normal\" states when region is active.
+  "Cursor style for command- and modal \"normal\" states when region is active.
 Accepts an expression that returns either:
 - t or nil
 - one of the symbols: 'bar 'hbar 'box 'hollow
-- a pair (SYMBOL . INTEGER) e.g., (hbar . 3).
-See also `cursor-type'"
-  :type 'sexp
+- a pair '(SYMBOL . INTEGER), e.g. '(hbar . 3)
+See also `cursor-type'."
+  :type '(sexp)
   :group 'eon-cursor-type
   :set #'eon-cursor-type--set)
 
@@ -584,7 +586,7 @@ Each function is called with no args and should return either a
   (setq-local cursor-type (eon-cursor-type--desired)))
 
 (define-minor-mode eon-cursor-type-mode
-  "Globally change cursor type according to status."
+  "Globally change cursor type according to state."
   :group 'eon-cursor-type
   :global t
   :init-value t
@@ -593,25 +595,26 @@ Each function is called with no args and should return either a
         (mapc (lambda (buf)
                 (with-current-buffer buf (eon-cursor-type-update)))
               (buffer-list))
-        ;; It seems unreasonabe to use `after-command-hook'
-        ;; to update the cursor type, because of the overhead.
+        ;; It seems unreasonable to use `after-command-hook' to update
+        ;; the cursor type; better avoid that potential overhead.
         ;; Instead we're listing the triggers one-by-one.
-        (add-hook 'buffer-list-update-hook      #'eon-cursor-type-update)
-        (add-hook 'read-only-mode-hook          #'eon-cursor-type-update)
-        (add-hook 'after-change-major-mode-hook #'eon-cursor-type-update)
+        (add-hook   'buffer-list-update-hook      #'eon-cursor-type-update)
+        (add-hook   'read-only-mode-hook          #'eon-cursor-type-update)
+        (add-hook   'after-change-major-mode-hook #'eon-cursor-type-update)
         ;; React to selections
-        (add-hook 'activate-mark-hook           #'eon-cursor-type-update)
-        (add-hook 'deactivate-mark-hook         #'eon-cursor-type-update)
+        (add-hook   'activate-mark-hook           #'eon-cursor-type-update)
+        (add-hook   'deactivate-mark-hook         #'eon-cursor-type-update)
         ;; Make sure the cursor will be updated after leaving wdired
-        (advice-add 'wdired-abort-changes :after #'eon-cursor-type-update)
-        (advice-add 'wdired-finish-edit :after   #'eon-cursor-type-update))
-    (remove-hook 'buffer-list-update-hook      #'eon-cursor-type-update)
-    (remove-hook 'read-only-mode-hook          #'eon-cursor-type-update)
-    (remove-hook 'after-change-major-mode-hook #'eon-cursor-type-update)
-    (remove-hook 'activate-mark-hook           #'eon-cursor-type-update)
-    (remove-hook 'deactivate-mark-hook         #'eon-cursor-type-update)
-    (advice-remove 'wdired-abort-changes #'eon-cursor-type-update)
-    (advice-remove 'wdired-finish-edit   #'eon-cursor-type-update)))
+        (advice-add 'wdired-abort-changes :after  #'eon-cursor-type-update)
+        (advice-add 'wdired-finish-edit :after    #'eon-cursor-type-update))
+    ;; Tear down
+    (remove-hook   'buffer-list-update-hook      #'eon-cursor-type-update)
+    (remove-hook   'read-only-mode-hook          #'eon-cursor-type-update)
+    (remove-hook   'after-change-major-mode-hook #'eon-cursor-type-update)
+    (remove-hook   'activate-mark-hook           #'eon-cursor-type-update)
+    (remove-hook   'deactivate-mark-hook         #'eon-cursor-type-update)
+    (advice-remove 'wdired-abort-changes         #'eon-cursor-type-update)
+    (advice-remove 'wdired-finish-edit           #'eon-cursor-type-update)))
 
 ;; Turn it on
 (eon-cursor-type-mode 1)
@@ -641,14 +644,14 @@ Each function is called with no args and should return either a
 ;;; - Defaults for graphical Emacs:
 ;; "C-," is the leader key, reach the local leader via "C-, C-,"
 ;;
-;;; - Defaults for Emacs with terminal UI (invoked by "emacs -nw"):
+;;; - Defaults for Emacs with terminal UI - invoked by "emacs -nw":
 ;; "C-z" is the leader key, reach the local leader via "C-z C-z"
 ;;
-;; Terminal note: In `emacs -nw`, "C-z" is normally bound to suspend Emacs.
-;; We rebind it as a leader, and it works in modern terminals (e.g. WezTerm).
+;; Terminal note: In "emacs -nw", "C-z" is normally bound to suspend Emacs.
+;; We rebind it as a leader, and it works in modern terminals - e.g. WezTerm.
 ;; If your TTY converts C-z to SIGTSTP before Emacs sees it (rare), disable
-;; the suspend char or move it (see optional snippet below).
-
+;; the suspend char or move it - see optional snippet below.
+;;
 ;; (add-hook 'tty-setup-hook
 ;;           (lambda ()
 ;;             (ignore-errors
@@ -674,8 +677,8 @@ You can bind commands here that should appear in all local leader keymaps."
   "Active localleader keymap for the current buffer.
 Don't bind any keys/commands to this keymap.")
 
-;; KLUDGE Relies currently on `which-key' internals, what's a bit of an eyesore,
-;; but seems to work reliably.
+;; KLUDGE Relies currently on `which-key' internals;
+;; that's a bit of an eyesore, but seems to work reliably.
 (defun eon-localleader--context-window ()
   "Return the window where the key sequence started."
   (cond
@@ -694,17 +697,25 @@ Don't bind any keys/commands to this keymap.")
 
 ;; Empty named prefix, so which-key shows the label "Local"
 (defvar-keymap eon-localleader-map
-  :doc "Don't bind keys/commands in this keymap.
-It's a frontend to make the local leader keymap machinery to appear
-like a regular keymap.
+  :doc "Frontend; lets the loacal leader machinery appear as a single keymap.
 
-- If you want to bind/rebind a key/command to a mode-specific local leader
+You may not want to bind keys/commands to this map, because they will be
+globally visible under the local leader and override commands bound
+to the same keys.
+
+- If you actually want a certain key/command always appear under the
+  local leader, bind the key/command to `eon-localleader-global-map'.
+
+- If you want to bind/rebind a key/command in a mode-specific local leader
   keymap, then use `keymap-set'.
   Example: (keymap-set eon-localleader-elisp-map \"x\" #'eval-defun)
-- If you want to define a local leader keymap for a specific mode,
-  use `eon-localleader-defkeymap'.
-- If you want to bind a certain key/command in all mode-specific local leader
-  keymaps, bind the key/command to `eon-localleader-global-map'."
+
+  Pre-defined local leader keymaps are named according to the schema
+  'eon-localleader-[mode name or purpose]-map'. You can look them up
+  via '<leader> h v'.
+
+- If you want to define a new local leader keymap for a specific mode,
+  use `eon-localleader-defkeymap'."
   :name "Local")
 
 (defun eon-localleader--sync-local-prefix-parent ()
@@ -731,12 +742,43 @@ localleader is shown."
 (defcustom eon-localleader-key
   (if (display-graphic-p) "C-," "C-z")
   "Local leader key, pressed after the leader.
-GUI default: \"C-,\" -> reach local leader via \"C-, C-,\"
-TTY default: \"C-z\" -> reach local leader via \"C-z C-z\"
-Use the Customization UI to change, or `setopt' in Elisp code."
+
+- GUI default: \"C-,\" -> reach local leader via \"C-, C-,\"
+- TTY default: \"C-z\" -> reach local leader via \"C-z C-z\"
+
+Use `eon-customize-group' to change, or use `setopt' from Lisp."
   :group 'eon-leader
-  :type 'string
+  :type '(string)
   :set #'eon-localleader--set-key)
+
+(defmacro eon-localleader-defkeymap (mode map-sym &rest body)
+  "Define a mode-specific local leader keymap.
+
+MODE can be any major or minor mode.
+MAP-SYM can be an arbitrary name for your keymap.
+BODY will be forwarded to `defvar-keymap'.
+
+- Example how to define an empty mode-specific local leader keymap:
+  (eon-localleader-defkeymap org-mode eon-localleader-org-mode-map
+    :doc \"Localleader map for Org mode.\")
+
+  Bind keys/commands or sub-keymaps with `keymap-set' later.
+
+- Example how to define a mode-specific local leader keymap with bindings:
+  (eon-localleader-defkeymap emacs-lisp-mode eon-localleader-elisp-map
+    :doc \"Local leader keymap for Emacs Lisp buffers.\"
+    \"e\"   #'eval-last-sexp
+    \"E\"   #'pp-eval-last-sexp
+    \"h\"   #'describe-symbol)"
+  (declare (indent 2))
+  (let ((hook (intern (format "%s-hook" mode))))
+    `(progn
+       (defvar-keymap ,map-sym ,@body)
+       ;; Inherit global entries so globals are always available
+       (set-keymap-parent ,map-sym eon-localleader-global-map)
+       ;; Activate buffer-locally in this mode
+       (add-hook ',hook (lambda ()
+                          (setq-local eon-localleader--map ,map-sym))))))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Leader implementation
@@ -754,10 +796,10 @@ Use the Customization UI to change, or `setopt' in Elisp code."
 
 (defcustom eon-leader-key
   (if (display-graphic-p) "C-," "C-z")
-  "Leader prefix key. GUI default: \"C-,\"; TTY default: \"C-z\".
-Use the Customization UI to change, or `setopt' in Elisp code."
+  "Leader prefix key. GUI default: \"C-,\" - TTY default: \"C-z\".
+Use `eon-customize-group' to change, or `setopt' from Lisp."
   :group 'eon-leader
-  :type 'string
+  :type '(string)
   :set #'eon-leader--set-key)
 
 ;; Sub-keymaps under the leader
@@ -781,8 +823,8 @@ Use the Customization UI to change, or `setopt' in Elisp code."
 (defvar-keymap ctl-z-ret-map :doc "Bookmark")
 
 ;; Default Top-level leader keymap, referencing the sub-keymaps
-;; TODO Rename ctl-z-.*-map to eon-leader-default-.*-map;
-;; the ctl-z-... part is merely historical
+;; TODO Rename ctl-z-.*-map to eon-leader-default-.*-map, because
+;; the ctl-z-... part is merely historical and has no meaning anymore.
 
 (defvar-keymap ctl-z-map
   :doc "Top-level leader keymap."
@@ -895,19 +937,6 @@ Example: (setopt eon-leader-map-name 'eon-leader-user-map)
               (keymap-set (current-local-map)
                           eon-leader-key eon-leader-map))))
 
-(defmacro eon-localleader-defkeymap (mode map-sym &rest body)
-  "Define MAP-SYM for MODE; inherit global localleader and activate it.
-BODY is forwarded to `defvar-keymap'."
-  (declare (indent 2))
-  (let ((hook (intern (format "%s-hook" mode))))
-    `(progn
-       (defvar-keymap ,map-sym ,@body)
-       ;; Inherit global entries so globals are always available
-       (set-keymap-parent ,map-sym eon-localleader-global-map)
-       ;; Activate buffer-locally in this mode
-       (add-hook ',hook (lambda ()
-                          (setq-local eon-localleader--map ,map-sym))))))
-
 ;; _____________________________________________________________________________
 ;;; GENERAL KEYBINDINGS
 
@@ -935,6 +964,10 @@ BODY is forwarded to `defvar-keymap'."
 ;; _____________________________________________________________________________
 ;;; VI KEYBINDINGS (VIPER-MODE)
 
+;; FIXME Needs a customizable leader key;
+;; e.g. eon-viper-leader-key and eon-viper-localleader-key.
+;; Best keymap to bind it seems `viper-vi-global-user-map'.
+
 (with-eval-after-load 'viper
   (setopt
    viper-inhibit-startup-message t    ; don't show Viper's start up message
@@ -955,7 +988,7 @@ BODY is forwarded to `defvar-keymap'."
 ;; or in your 'init.el' (fonts must be installed on your computer).
 ;; Example:
 ;; (setopt eon-font-default "Iosevka Curly"      ; font name
-;;         eon-font-default-size 150             ; base size in 1/10 pt
+;;         eon-font-default-size 150             ; 15pt - base size in 1/10 pt
 ;;         eon-font-proportional "Gentium Plus"  ; font name
 ;;         eon-font-proportional-size 160        ; size in 1/10 pt
 ;;         eon-font-marginal-size 0.9)           ; 90% for mode line and tabs
@@ -964,64 +997,78 @@ BODY is forwarded to `defvar-keymap'."
   "Font settings."
   :group 'eon)
 
+;; FIXME Fix inheritance, so that the falllbacks are actually set
+;; TODO add a setter function to the custom variables
+
 (defcustom eon-font-default nil
-  "Name of the default font; set it to a monospaced or duospaced font you like.
+  "Name of the default font; set it to a monospaced or duospaced font.
 If not set explicitly, choosen by Emacs according to your system's default."
-  :group 'eon-font-settings)
+  :group 'eon-font-settings
+  :type '(string))
 
 (defcustom eon-font-default-size 140
   "Set the default font size in 1/10 of the desired point size.
 Example: 140 -> 14 pt
 You must specify an absolute size as an integer."
-  :group 'eon-font-settings)
+  :group 'eon-font-settings
+  :type '(integer))
 
 (defcustom eon-font-fixed eon-font-default
   "Optionally name a fixed-width font.
 When `eon-font-default' is set to a fixed-width font,
 the font specified here should have the same character width.
 If not set explicitly, fall back to `eon-font-default'."
-  :group 'eon-font-settings)
+  :group 'eon-font-settings
+  :type '(string))
 
 (defcustom eon-font-fixed-alt eon-font-fixed
   "Optionally name an alternative fixed-width font.
 It should have the same character width as `eon-font-fixed'.
 If not set explicitly, fall back to `eon-font-fixed'."
-  :group 'eon-font-settings)
+  :group 'eon-font-settings
+  :type '(string))
 
 (defcustom eon-font-proportional nil
   "Name for the proportional font, used for text that isn't code.
 If not set explicitly, choosen by Emacs according to your system's default."
-  :group 'eon-font-settings)
+  :group 'eon-font-settings
+  :type '(string))
 
 (defcustom eon-font-proportional-size eon-font-default-size
-  "Set the size for the proportinal font.
+  "Size for the proportinal font.
 You can specify an absolute size as an integer, or a relative size as a float.
 Examples: 140 -> 14 pt / 0.9 -> 90% of `eon-font-default-size'.
 If not set explicitly, fall back to `eon-font-default-size'."
-  :group 'eon-font-settings)
+  :group 'eon-font-settings
+  :type '(number))
 
 (defcustom eon-font-marginal-size 0.9
-  "Size for `eon-font-mode-line', `eon-font-tab-bar' and `eon-font-tab-line'.
+  "Size for the mode line, tab bar and the tab line.
 You can specify an absolute size as an integer, or a relative size as a float.
 Examples: 140 -> 14 pt / 0.9 -> 90% of `eon-font-default-size'.
 If not set explicitly, fall back to 90% of `eon-font-default-size'."
-  :group 'eon-font-settings)
+  :group 'eon-font-settings
+  :type '(number))
 
 (defcustom eon-font-mode-line eon-font-default
   "Base font face for the mode-line.
 If not set explicitly, fall back to `eon-font-default'."
-  :group 'eon-font-settings)
+  :group 'eon-font-settings
+  :type '(string))
 
 (defcustom eon-font-tab-bar eon-font-mode-line
   "Base font face used for the tab bar.
 When not set explicitly, fall back to `eon-font-mode-line'."
-  :group 'eon-font-settings)
+  :group 'eon-font-settings
+  :type '(string))
 
 (defcustom eon-font-tab-line eon-font-tab-bar
   "Base font face for the tab line.
 When not set explicitly, fall back to `eon-font-tab-bar'."
-  :group 'eon-font-settings)
+  :group 'eon-font-settings
+  :type '(string))
 
+;; TODO Refactor into a setter function for the custom variables
 (defun eon-fonts ()
   "Set the font faces.
 Per default, the function is called by the hooks:
@@ -1084,7 +1131,8 @@ Per default, the function is called by the hooks:
 ;;; TOGGLE THEME
 
 ;; Default/fallback definitions – don't change them here,
-;; but set them in your init.el. For examples, see THEME CONFIG.
+;; but set them in your 'init.el'. For examples, see THEME CONFIG.
+
 ;; TODO Refactor in order to dissolve duplication
 ;; TODO Add setters to custom variables
 
@@ -1117,22 +1165,22 @@ Per default, the function is called by the hooks:
 (defcustom eon-theme-light-pre-load-hook nil
   "Run before loading the light theme."
   :group 'eon-theme
-  :type 'hook)
+  :type '(hook))
 
 (defcustom eon-theme-light-post-load-hook nil
   "Run after loading the light theme."
   :group 'eon-theme
-  :type 'hook)
+  :type '(hook))
 
 (defcustom eon-theme-dark-pre-load-hook nil
   "Run before loading the dark theme."
   :group 'eon-theme
-  :type 'hook)
+  :type '(hook))
 
 (defcustom eon-theme-dark-post-load-hook nil
   "Run after loading the dark theme."
   :group 'eon-theme
-  :type 'hook)
+  :type '(hook))
 
 (defun eon-theme-load-light ()
   "Load the light theme and apply some modifications.
@@ -2116,8 +2164,9 @@ pretending to clear it."
 (eon-localleader-defkeymap eshell-mode eon-localleader-eshell-map
   :doc "Local leader keymap for `eshell-mode'.")
 
-;; Get rid of the Eshell startup message?
 (setopt eshell-banner-message ""
+        eshell-scroll-to-bottom-on-input t
+        eshell-buffer-maximum-lines 65536
         eshell-history-size 1024
         eshell-hist-ignoredups t
         eshell-cmpl-ignore-case t)
@@ -2908,6 +2957,14 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Lisp modes registry
 
+;; Collection of known Lisp-related modes (might be incomplete).
+;; Probably useful to pre-configure Lisp-related modes when `prog-mode-hook' or
+;; targeting parent modes are insufficient.
+;;
+;; Comes with 2 functions that return a list which of these modes are installed:
+;; `eon-lisp-src-modes' and `eon-lisp-repl-modes'
+;; If called with the argument 'hook, both functions return ...-hook symbols.
+
 (defvar eon-lisp-src-modes-registry
   '(;; Built-in modes
     common-lisp-mode
@@ -3060,7 +3117,8 @@ With SWITCH = \='hook, return ...-hook variables."
 (keymap-set ctl-z-q-map "s" #'eon-server-stop)
 
 ;; Start the server?
-(add-hook 'after-init-hook #'server-start)
+(unless (daemonp)
+  (add-hook 'after-init-hook #'server-start))
 
 ;; _____________________________________________________________________________
 (provide 'eon)
