@@ -144,25 +144,13 @@ Adapted from Doom Emacs.")
 ;; _____________________________________________________________________________
 ;;; COPY / PASTE
 
-;;; - Copy/paste between TUI Emacs and graphical applications
-
-;; Installs and loads only if Emacs really runs in the terminal emulator.
+;; Copy/paste between TUI Emacs and graphical applications
+;; Only installed and loaded if Emacs really runs in the terminal UI,
+;; e.g. via 'emacs -nw'.
 ;; <https://elpa.gnu.org/packages/xclip.html>
-(use-package emacs :ensure nil
-  :functions (xclip-mode)
-  :preface
-  ;; TODO Factor out tty-recognition heuristic as a re-usable predicate
-  (defun eon-xclip--ensure-on-tty (&optional frame)
-    (with-selected-frame (or frame (selected-frame))
-      (unless (display-graphic-p)
-        (use-package xclip :ensure t
-          :demand t
-          :config (xclip-mode 1)))))
-  :hook
-  (window-setup . eon-xclip--ensure-on-tty)
-  (after-make-frame-functions . eon-xclip--ensure-on-tty))
-
-;;; -  No empty lines etc. in the kill ring
+(when (eon-terminalp)
+  (use-package xclip :ensure t
+    :config (xclip-mode 1)))
 
 ;; No empty lines etc. in the kill ring
 ;; <https://github.com/NicholasBHubbard/clean-kill-ring.el>
