@@ -41,11 +41,11 @@
       "^GPG_AGENT_INFO$")
     "Regexps for env var names to omit when exporting from the shell.
 Adapted from Doom Emacs.")
-  
+
   (defun eon-exec-path-from-shell--blocklisted-p (var)
     (seq-some (lambda (re) (string-match-p re var))
               eon-exec-path-from-shell-blocklist))
-  
+
   (defun eon-exec-path-from-shell--env-lines ()
     (let* ((sh (or exec-path-from-shell-shell-name
                    shell-file-name
@@ -59,13 +59,13 @@ Adapted from Doom Emacs.")
                (split-string (shell-command-to-string "env") "\n" t)))
        ((executable-find "printenv") (process-lines "printenv"))
        (t (split-string (shell-command-to-string "env") "\n" t)))))
-  
+
   (defun eon-exec-path-from-shell--env-names ()
     (seq-keep (lambda (s)
                 (when (string-match-p "=" s)
                   (car (split-string s "="))))
               (eon-exec-path-from-shell--env-lines)))
-  
+
   (defun eon-exec-path-from-shell-refresh ()
     (interactive)
     (require 'exec-path-from-shell)
