@@ -164,6 +164,7 @@ Adapted from Doom Emacs.")
 
 ;;; -  No empty lines etc. in the kill ring
 
+;; No empty lines etc. in the kill ring
 ;; <https://github.com/NicholasBHubbard/clean-kill-ring.el>
 (use-package clean-kill-ring :ensure t
   :config
@@ -185,16 +186,14 @@ Adapted from Doom Emacs.")
 ;; _____________________________________________________________________________
 ;; PARENTHESIS DISPLAY
 
-;;; - Color-code nested parens
-
+;; Color-code nested parens
 ;; <https://github.com/Fanael/rainbow-delimiters>
 (use-package rainbow-delimiters :ensure t
   :hook
   ((prog-mode conf-mode comint-mode eshell-mode shell-mode)
    . rainbow-delimiters-mode))
 
-;;; - Make parens styleable, e.g. more or less prominent
-
+;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
 ;; (use-package paren-face :ensure t
 ;;   :hook
@@ -324,6 +323,8 @@ Adapted from Doom Emacs.")
 ;; <https://codeberg.org/akib/emacs-eat>
 ;; <https://elpa.nongnu.org/nongnu-devel/doc/eat.html>
 
+;;; - Terminal emulator
+
 ;; To setup shell integration for GNU Bash, insert at the end of your .bashrc:
 ;; [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
 ;; source "$EAT_SHELL_INTEGRATION_DIR/bash"
@@ -351,14 +352,16 @@ Adapted from Doom Emacs.")
     (eat-reload))
   (makunbound 'eat--prevent-use-package-config-recursion)
   :hook
-  ;; Run Eshell always in eat: `eat-eshell-mode'.
+  ;; Run Eshell always in Eat
   (eshell-load . eat-eshell-mode)
-  ;; Run TUI programs in Eshell: `eat-eshell-visual-command-mode'.
+  ;; Run TUI programs in Eshell
   (eshell-load . eat-eshell-visual-command-mode)
   :bind
   (:map ctl-z-e-map
         ;; Set Eat as terminal emulator
         ("t" . eat)))
+
+;;; - Fish
 
 (when (executable-find "fish")
   ;; <https://github.com/LemonBreezes/emacs-fish-completion>
