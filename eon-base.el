@@ -337,20 +337,6 @@ Adapted from Doom Emacs.")
   :custom
   (eat-term-name "xterm-256color")
   (eat-kill-buffer-on-exit t)
-  :config
-  ;; make C-u work in Eat terminals like in normal terminals
-  (delete [?\C-u] eat-semi-char-non-bound-keys)
-  ;; ditto for C-g
-  (delete [?\C-g] eat-semi-char-non-bound-keys)
-  (eat-update-semi-char-mode-map)
-  ;; Workaround for the need to call eat-reload after changing
-  ;; Eat's keymaps, but reloading from :config section causes infinite recursion
-  ;; because :config wraps with-eval-after-load.
-  (defvar eat--prevent-use-package-config-recursion nil)
-  (unless eat--prevent-use-package-config-recursion
-    (setq eat--prevent-use-package-config-recursion t)
-    (eat-reload))
-  (makunbound 'eat--prevent-use-package-config-recursion)
   :hook
   ;; Run Eshell always in Eat
   (eshell-load . eat-eshell-mode)
