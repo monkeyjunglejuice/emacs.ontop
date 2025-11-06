@@ -1,4 +1,4 @@
-;;; eon-fonts.el --- Curated  font set -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-fonts.el --- Curated font sets -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 

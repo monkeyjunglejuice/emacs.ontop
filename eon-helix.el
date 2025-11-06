@@ -6,14 +6,14 @@
 ;;
 ;;; NOTE Helix-mode for Emacs is new and experimental.
 ;;
-;;; Keys
+;;; - Keys
 ;; You can add new keys to the Helix keymaps via helix-define-key:
 ;; Example:
 ;; (helix-define-key 'space "w" #'do-something-cool)
 ;; The first argument to helix-define-key is a Helix state.
 ;; The valid options are: insert, normal, space, view, goto, and window.
 ;;
-;;; Typable commands
+;;; - Typable commands
 ;; You can create new typable commands (invoked via ":command-name")
 ;; with `helix-define-typable-command'.
 ;; Example:

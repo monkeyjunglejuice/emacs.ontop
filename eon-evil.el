@@ -75,7 +75,7 @@ Used by custom variables `eon-evil-leader-key' and `eon-evil-localleader-key'."
 
   :config
 
-  ;; Activate Evil first
+  ;; Enable Evil first
   (evil-mode 1)
 
   (setq evil-normal-state-cursor eon-cursor-type-extra
