@@ -1,4 +1,4 @@
-;; eon.el --- Emacs ONBOARD Starter Kit -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon.el --- Emacs ONBOARD Starter Kit -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;;    ▒░▒░▒░   ▒░     ▒░ ▒░▒░▒░▒░     ▒░▒░▒░      ▒░    ▒░▒░▒░▒░    ▒░▒░▒░▒░
 ;;   ▒░    ▒░  ▒░▒░   ▒░  ▒░     ▒░  ▒░    ▒░    ▒░▒░    ▒░     ▒░   ▒░    ▒░
@@ -31,7 +31,7 @@
 ;; Maintainer: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Created: 28 Apr 2021
-;; Version: 2.3.3
+;; Version: 2.3.4
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
 ;; Keywords: config dotemacs convenience
@@ -269,7 +269,7 @@ Cancel the previous one if present."
 ;; _____________________________________________________________________________
 ;;; GLOBAL DEFINITIONS & UTILITIES
 
-;;; - Some commonly used predicates
+;;; - Some commonly useful predicates
 
 (defun eon-linp ()
   "True if `system-type' is GNU/Linux or something compatible.
@@ -392,6 +392,7 @@ When called interactively, also echo the result."
           (message "%S" parents)
         parents))))
 
+;; Home directory
 (defvar eon-user-directory (expand-file-name "~/")
   "Full path of the user's home directory with a trailing slash.")
 
@@ -509,8 +510,18 @@ When called interactively, also echo the result."
   :group 'eon)
 
 (defun eon-cursor-type--set (symbol value)
-  "Set SYMBOL to VALUE and refresh the mode line."
+  "Set SYMBOL to VALUE.
+Only `eon-cursor-type-write' updates frame cursor defaults."
   (set-default symbol value)
+  (when (eq symbol 'eon-cursor-type-write)
+    (setopt initial-frame-alist
+            (cons (cons 'cursor-type value)
+                (assq-delete-all 'cursor-type
+                                 initial-frame-alist)))
+    (setopt default-frame-alist
+            (cons (cons 'cursor-type value)
+                  (assq-delete-all 'cursor-type
+                                 default-frame-alist))))
   (force-mode-line-update t))
 
 (defcustom eon-cursor-type-write 'bar
@@ -519,7 +530,7 @@ Accepts an expression that returns either:
 - t or nil
 - one of the symbols: 'bar 'hbar 'box 'hollow
 - a pair '(SYMBOL . INTEGER), e.g. '(hbar . 3).
-See also `cursor-type'"
+See also `cursor-type'."
   :type '(sexp)
   :group 'eon-cursor-type
   :set #'eon-cursor-type--set)
@@ -530,7 +541,7 @@ Accepts an expression that returns either:
 - t or nil
 - one of the symbols: 'bar 'hbar 'box 'hollow
 - a pair '(SYMBOL . INTEGER), e.g. '(hbar . 3).
-See also `cursor-type'"
+See also `cursor-type'."
   :type '(sexp)
   :group 'eon-cursor-type
   :set #'eon-cursor-type--set)
@@ -541,7 +552,7 @@ Accepts an expression that returns either:
 - t or nil
 - one of the symbols: 'bar 'hbar 'box 'hollow
 - a pair '(SYMBOL . INTEGER), e.g. '(hbar . 3).
-See also `cursor-type'"
+See also `cursor-type'."
   :type '(sexp)
   :group 'eon-cursor-type
   :set #'eon-cursor-type--set)
@@ -552,7 +563,7 @@ Accepts an expression that returns either:
 - t or nil
 - one of the symbols: 'bar 'hbar 'box 'hollow
 - a pair '(SYMBOL . INTEGER), e.g. '(hbar . 3).
-See also `cursor-type'"
+See also `cursor-type'."
   :type '(sexp)
   :group 'eon-cursor-type
   :set #'eon-cursor-type--set)
@@ -570,8 +581,8 @@ See also `cursor-type'."
 
 (defvar eon-cursor-type-functions nil
   "Hook of functions that may compute a cursor type.
-Each function is called with no args and should return either a
-`cursor-type' or nil. The first non-nil return wins.")
+Each function is called with no args and should return either
+a `cursor-type' or nil. The first non-nil return wins.")
 
 (defun eon-cursor-type--desired ()
   "Compute desired cursor type for the current buffer."
@@ -997,8 +1008,8 @@ Example: (setopt eon-leader-map-name 'eon-leader-user-map)
   "Font settings."
   :group 'eon)
 
-;; FIXME Fix inheritance, so that the falllbacks are actually set
-;; TODO add a setter function to the custom variables
+;; FIXME Fix inheritance, so that the fallbacks are actually set
+;; TODO Add a setter function to the custom variables
 
 (defcustom eon-font-default nil
   "Name of the default font; set it to a monospaced or duospaced font.
@@ -1460,16 +1471,18 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; Focus a help window when it appears?
 (setopt help-window-select t)
 
-;; Show all options when running `apropos' (fulltext search)? Keybinding: "C-h a"
+;; Show all options when running `apropos' and friends (fulltext search)?
+;; Keybinding: <leader> h a"
 (setopt apropos-do-all t)
+(keymap-set ctl-z-h-map "a" #'apropos)
 
 ;; _____________________________________________________________________________
 ;;; PACKAGE MANAGER UI SETTINGS
 
 (when package-enable-at-startup
 
-  ;; Open the package manager interface: "<leader> x P"
-  (keymap-set ctl-z-x-map "P" #'list-packages)
+  ;; Open the package manager interface: "<leader> x p"
+  (keymap-set ctl-z-x-map "p" #'list-packages)
 
   ;; Highlight current line in the package manager UI?
   (add-hook 'package-menu-mode-hook (lambda () (hl-line-mode 1))))
