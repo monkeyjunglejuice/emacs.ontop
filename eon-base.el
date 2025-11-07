@@ -156,28 +156,31 @@ Adapted from Doom Emacs.")
 ;;; - Manage OS packages from Emacs
 ;; <https://gitlab.com/jabranham/system-packages>
 
-;; System-packages is an Emacs frontend to your system's package manager.
+;; System-packages is an Emacs frontend to system package managers.
 ;; It attempts to guess which system package manager to use,
 ;; and lets you manage your system packages directly from Emacs via
 ;; "M-x system-packages".
 ;;
 ;; If the detected package manager is wrong or you prefer a different one,
-;; then set `system-packages-package-manager' directly, e.g. via
+;; then set `system-packages-package-manager' directly, e.g.
 ;; (setopt system-packages-package-manager 'pacman) in your 'init.el',
 ;; or use the Customization UI "M-x customize-group RET system-packages RET".
+;;
+;; Default mapping from Emacs commands to package manager commands defined by
+;; `system-packages-supported-package-managers'.
 
 (use-package system-packages :ensure t
 
   :config
 
-  ;; Rerun detection logic, because 'brew' seems not recognized
-  ;; with Emacs started from macOS app (Emacs started from terminal works).
+  ;; Rerun detection logic, because 'brew' seems not recognized with Emacs
+  ;; started from macOS app (Emacs started from the terminal works).
   ;;
   ;; In the current upstream system-packages.el the detection is done inside
   ;; the defcustom’s initform.
   ;;
   ;; If that initform was evaluated when the file was compiled/loaded in
-  ;; an Emacs that didn’t have brew (or any of the others) on PATH,
+  ;; an Emacs that didn’t have brew (or any of the others) on $PATH,
   ;; then the result of the initform is nil, and that nil is what Emacs keeps
   ;; as the value.
   ;;
