@@ -18,7 +18,7 @@
 ;; Copyright (C) 2022-2025 Dan Dee
 ;; Author: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
-;; Version: 1.3.0
+;; Version: 1.3.1
 ;; Package-Requires: ((emacs "30.1"))
 ;; Keywords: convenience
 ;; SPDX-License-Identifier: MIT
