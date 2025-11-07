@@ -152,11 +152,86 @@ Adapted from Doom Emacs.")
     :config
     (osx-trash-setup)))
 
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - Manage OS packages from Emacs
 ;; <https://gitlab.com/jabranham/system-packages>
-;; The package attempts to guess which system package manager you use,
+
+;; System-packages is an Emacs frontend to your system's package manager.
+;; It attempts to guess which system package manager to use,
 ;; and lets you manage your system packages directly from Emacs via
-;; "M-x system-packages"
-(use-package system-packages :ensure t)
+;; "M-x system-packages".
+;;
+;; If the detected package manager is wrong or you prefer a different one,
+;; then set `system-packages-package-manager' directly, e.g. via
+;; (setopt system-packages-package-manager 'pacman) in your 'init.el',
+;; or use the Customization UI "M-x customize-group RET system-packages RET".
+
+(use-package system-packages :ensure t
+
+  :config
+
+  ;; Rerun detection logic, because 'brew' seems not recognized
+  ;; with Emacs started from macOS app (Emacs started from terminal works).
+  ;;
+  ;; In the current upstream system-packages.el the detection is done inside
+  ;; the defcustom’s initform.
+  ;;
+  ;; If that initform was evaluated when the file was compiled/loaded in
+  ;; an Emacs that didn’t have brew (or any of the others) on PATH,
+  ;; then the result of the initform is nil, and that nil is what Emacs keeps
+  ;; as the value.
+  ;;
+  ;; So later, even though now (executable-find "brew") is non-nil,
+  ;; the variable stays nil, because defcustom doesn’t re-run its initform
+  ;; on every load.
+
+  (when (null system-packages-package-manager)
+    ;; Re-evaluate the original initform the package used
+    (setopt system-packages-package-manager
+          (eval (car (get 'system-packages-package-manager
+                          'standard-value)))))
+
+  (when (null system-packages-use-sudo)
+    (let* ((entry (assoc system-packages-package-manager
+                         system-packages-supported-package-managers))
+           (sudo (cdr (assoc 'default-sudo (cdr entry)))))
+      (when sudo
+        (setopt system-packages-use-sudo sudo))))
+
+  ;; Use an `eshell' buffer instead of `async-shell-command'
+
+  (defcustom eon-system-packages-backend 'eshell
+    "Run system-packages commands via this backend."
+    :type '(choice (const eshell) (const async))
+    :group 'eon-misc)
+
+  (defun eon-system-packages--eshell (cmd dir)
+    (let ((buf (get-buffer "*system-packages*")))
+      (unless (and buf (buffer-live-p buf)
+                   (with-current-buffer buf
+                     (derived-mode-p 'eshell-mode)))
+        (setq buf (get-buffer-create "*system-packages*"))
+        (with-current-buffer buf
+          (setq default-directory dir)
+          (eshell-mode)))
+      (with-current-buffer buf
+        (setq default-directory dir)
+        (goto-char (point-max))
+        (insert cmd)
+        (eshell-send-input))
+      (pop-to-buffer buf)
+      buf))
+
+  (defun eon-system-packages--run (orig action &optional pack args)
+    (let* ((cmd (system-packages-get-command action pack args))
+           (dir (if system-packages-use-sudo "/sudo::" default-directory)))
+      (if (eq eon-system-packages-backend 'eshell)
+          (eon-system-packages--eshell cmd dir)
+        (let ((default-directory dir))
+          (funcall orig action pack args)))))
+
+  (advice-add 'system-packages--run-command
+              :around #'eon-system-packages--run))
 
 ;; _____________________________________________________________________________
 ;;; USER INTERFACE
