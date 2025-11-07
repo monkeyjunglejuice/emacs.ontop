@@ -204,8 +204,10 @@ Adapted from Doom Emacs.")
   ;; Use an `eshell' buffer instead of `async-shell-command'
 
   (defcustom eon-system-packages-backend 'eshell
-    "Run system-packages commands via this backend."
-    :type '(choice (const eshell) (const async))
+    "Run system-packages commands via this backend.
+- 'eshell' provides a nicer output and interactivity afterwards.
+- 'async-shell-command' dumps the output verbatim into a simple buffer."
+    :type '(choice (const eshell) (const async-shell-command))
     :group 'eon-misc)
 
   (defun eon-system-packages--eshell (cmd dir)
