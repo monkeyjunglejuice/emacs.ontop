@@ -38,7 +38,7 @@
 
 ;; Setup `use-package' options
 (setopt use-package-always-ensure nil
-        use-package-expand-minimally t)
+        use-package-expand-minimally nil)
 
 ;; Options when Emacs is started via "emacs --debug-init"
 (when init-file-debug
