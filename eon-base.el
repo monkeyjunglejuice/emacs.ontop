@@ -105,6 +105,44 @@ Adapted from Doom Emacs.")
   (eon-exec-path-from-shell-refresh))
 
 ;; _____________________________________________________________________________
+;;; SHELL / TERMINAL
+;; <https://codeberg.org/akib/emacs-eat>
+;; <https://elpa.nongnu.org/nongnu-devel/doc/eat.html>
+
+;;; - Terminal emulator
+
+;; To setup shell integration for GNU Bash, insert at the end of your .bashrc:
+;; [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
+;; source "$EAT_SHELL_INTEGRATION_DIR/bash"
+;;
+;; For Zsh, put the following in your .zshrc:
+;; [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
+;; source "$EAT_SHELL_INTEGRATION_DIR/zsh"
+
+(use-package eat :ensure t
+  :custom
+  (eat-term-name "xterm-256color")
+  (eat-kill-buffer-on-exit t)
+  :hook
+  ;; Run Eshell always in Eat; `eshell-mode-hook' is the most robust trigger
+  (eshell-mode . eat-eshell-mode)
+  (eshell-mode . eat-eshell-visual-command-mode)
+  :bind
+  (:map ctl-z-e-map
+        ;; Set Eat as terminal emulator
+        ("t" . eat)))
+
+;;; - Fish
+
+(when (executable-find "fish")
+  ;; <https://github.com/LemonBreezes/emacs-fish-completion>
+  (use-package fish-completion :ensure t
+    :config
+    (global-fish-completion-mode))
+  ;; <https://github.com/wwwjfy/emacs-fish>
+  (use-package fish-mode :ensure t))
+
+;; _____________________________________________________________________________
 ;;; OS INTEGRATION
 
 ;; Use the MacOS trash instead of freedesktop.org ~/.local/share/Trash
@@ -305,45 +343,6 @@ Adapted from Doom Emacs.")
 
 ;; <https://github.com/mhayashi1120/Emacs-wgrep/>
 (use-package wgrep :ensure t)
-
-;; _____________________________________________________________________________
-;;; SHELL / TERMINAL
-;; <https://codeberg.org/akib/emacs-eat>
-;; <https://elpa.nongnu.org/nongnu-devel/doc/eat.html>
-
-;;; - Terminal emulator
-
-;; To setup shell integration for GNU Bash, insert at the end of your .bashrc:
-;; [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
-;; source "$EAT_SHELL_INTEGRATION_DIR/bash"
-;;
-;; For Zsh, put the following in your .zshrc:
-;; [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
-;; source "$EAT_SHELL_INTEGRATION_DIR/zsh"
-
-(use-package eat :ensure t
-  :custom
-  (eat-term-name "xterm-256color")
-  (eat-kill-buffer-on-exit t)
-  :hook
-  ;; Run Eshell always in Eat
-  (eshell-load . eat-eshell-mode)
-  ;; Run TUI programs in Eshell
-  (eshell-load . eat-eshell-visual-command-mode)
-  :bind
-  (:map ctl-z-e-map
-        ;; Set Eat as terminal emulator
-        ("t" . eat)))
-
-;;; - Fish
-
-(when (executable-find "fish")
-  ;; <https://github.com/LemonBreezes/emacs-fish-completion>
-  (use-package fish-completion :ensure t
-    :config
-    (global-fish-completion-mode))
-  ;; <https://github.com/wwwjfy/emacs-fish>
-  (use-package fish-mode :ensure t))
 
 ;; _____________________________________________________________________________
 ;;; ORG MODE EXTENSIONS
