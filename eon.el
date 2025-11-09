@@ -3007,6 +3007,10 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
 ;; Comes with 2 functions that return a list which of these modes are installed:
 ;; `eon-lisp-src-modes' and `eon-lisp-repl-modes'
 ;; If called with the argument 'hook, both functions return ...-hook symbols.
+;;
+;; Example how to use it:
+;; (mapc (lambda (mode) (add-hook mode #'eon-check-parens-mode))
+;;       (eon-lisp-src-modes 'hook))
 
 (defvar eon-lisp-src-modes-registry
   '(;; Built-in modes
@@ -3024,6 +3028,7 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
     clojure-ts-mode
     clojurescript-ts-mode
     clojurec-ts-mode
+    dune-mode
     fennel-mode
     gerbil-mode
     lfe-mode
@@ -3079,7 +3084,7 @@ With SWITCH = \='hook, return ...-hook variables."
 ;; Minor mode that prevents from accidently saving files with mismatched
 ;; parenthesis and quotes
 
-(defun eon-check-parens ()
+(defun eon-check-parens--ask ()
   "Check parens; prompt to proceed on mismatch."
   (if (condition-case nil (progn (check-parens) t) (error nil))
       nil
@@ -3094,8 +3099,8 @@ With SWITCH = \='hook, return ...-hook variables."
   :global t
   :init-value t
   (if eon-check-parens-mode
-      (add-hook 'write-contents-functions #'eon-check-parens nil t)
-    (remove-hook 'write-contents-functions #'eon-check-parens t)))
+      (add-hook 'write-contents-functions #'eon-check-parens--ask nil t)
+    (remove-hook 'write-contents-functions #'eon-check-parens--ask t)))
 
 ;; Enable minor mode per default; toggle via "M-x eon-check-parens-mode".
 ;; How to remove the hook permanently from a specific lisp major mode:
