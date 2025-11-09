@@ -43,6 +43,17 @@ If enabling non-interactively while Flycheck is on, skip enabling."
         nil
       (funcall orig arg)))
 
+  :config
+
+  (defun eon-flycheck-elisp-maybe ()
+    "Conditionally enable `flycheck-mode' for Emacs Lisp.
+Don't enable in:
+- buffers without a file, e.g. created by `pp-eval-last-sexp';
+- `lisp-interaction-mode', e.g. the *scratch* buffer."
+    (when (or buffer-file-name
+              (not (derived-mode-p 'lisp-interaction-mode)))
+      (flycheck-mode 1)))
+
   :init
 
   (advice-add 'flycheck-mode :around #'eon-flycheck--prefer)
@@ -51,17 +62,16 @@ If enabling non-interactively while Flycheck is on, skip enabling."
 
   :hook
 
-  ((emacs-lisp-mode . flycheck-mode)
-   (lisp-interaction-mode . (lambda () (flycheck-mode -1)))))
-
+  (emacs-lisp-mode . eon-flycheck-elisp-maybe))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Use Eglot with Flycheck rather than Flymake
 ;; <https://github.com/flycheck/flycheck-eglot>
 
 (use-package flycheck-eglot :ensure t
-  :after (flycheck eglot)
-  :custom (flycheck-eglot-exclusive nil)
+  :after eglot
+  :custom
+  (flycheck-eglot-exclusive nil)
   :config
   (global-flycheck-eglot-mode))
 
