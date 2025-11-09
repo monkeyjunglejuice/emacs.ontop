@@ -109,7 +109,8 @@ Adapted from Doom Emacs.")
 ;; <https://codeberg.org/akib/emacs-eat>
 ;; <https://elpa.nongnu.org/nongnu-devel/doc/eat.html>
 
-;;; - Terminal emulator
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - Faster terminal emulator than `term' or `ansi-term'
 
 ;; To setup shell integration for GNU Bash, insert at the end of your .bashrc:
 ;; [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
@@ -120,14 +121,21 @@ Adapted from Doom Emacs.")
 ;; source "$EAT_SHELL_INTEGRATION_DIR/zsh"
 
 (use-package eat :ensure t
+
   :custom
+
   (eat-term-name "xterm-256color")
   (eat-kill-buffer-on-exit t)
+
   :hook
   ;; Run Eshell always in Eat; `eshell-mode-hook' is the most robust trigger
+
   (eshell-mode . eat-eshell-mode)
   (eshell-mode . eat-eshell-visual-command-mode)
+
+
   :bind
+
   (:map ctl-z-e-map
         ;; Set Eat as terminal emulator
         ("t" . eat)))
@@ -156,7 +164,7 @@ Adapted from Doom Emacs.")
 ;;; - Manage OS packages from Emacs
 ;; <https://gitlab.com/jabranham/system-packages>
 
-;; System-packages is an Emacs frontend to system package managers.
+;; System-packages is an Emacs frontend to various system package managers.
 ;; It attempts to guess which system package manager to use,
 ;; and lets you manage your system packages directly from Emacs via
 ;; "M-x system-packages".

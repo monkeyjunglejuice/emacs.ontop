@@ -20,6 +20,7 @@
     "Return non-nil if the mode should enable given CUR and ARG.
 CUR is the current mode state (non-nil means enabled).
 ARG is the raw prefix arg: nil toggles, >0 enables, <=0 disables.")
+
   (defun eon-flycheck--prefer (orig &optional arg)
     "Prefer Flycheck on auto-enable, then call ORIG with ARG.
 ORIG is the advised `flycheck-mode'. ARG is the prefix arg.
@@ -54,8 +55,10 @@ If enabling non-interactively while Flycheck is on, skip enabling."
    (lisp-interaction-mode . (lambda () (flycheck-mode -1)))))
 
 
-;; Use Eglot with Flycheck rather than Flymake
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - Use Eglot with Flycheck rather than Flymake
 ;; <https://github.com/flycheck/flycheck-eglot>
+
 (use-package flycheck-eglot :ensure t
   :after (flycheck eglot)
   :custom (flycheck-eglot-exclusive nil)
