@@ -29,6 +29,30 @@
 ;;; Code:
 
 ;; _____________________________________________________________________________
+;;; PLANS AND IDEAS
+
+;; TODO The loader is very primitive right now. It just `require's the features
+;; listed in `eon-modules' in order.
+
+;; TODO Maybe the loader could be extended to provide additional value, for
+;; instance clean unloading and undefining on the fly for vars, functions and
+;; keybindings introduced by a module; meaning all of that may work without
+;; restarting Emacs.
+
+;; TODO Enabling/disabling modules shouldn't be done by uncommenting/commenting.
+;; There are more elegant and sensible ways; must work from Lisp code,
+;; the `customize' UI and maybe `completing-read'.
+
+;; TODO Modules are currently implemented as Emacs "features". It might may
+;; sense to implement them as global minor modes and/or Emacs packages instead.
+;; That way they could be available as "meta-packages" on Melpa / GNU Elpa.
+
+;; TODO Deprecate 'eon-setup-personal.el' in favor of a directory for personal
+;; modules and config files; e.g. '~/.emacs.d/eon'.
+
+;; TODO Change license to GPL v3 and greater.
+
+;; _____________________________________________________________________________
 ;;; USE-PACKAGE
 
 ;; Let `imenu' recognize `use-package' and `require' forms?
@@ -52,15 +76,6 @@
 
 ;; _____________________________________________________________________________
 ;;; LOADER
-
-;; TODO The loader is very primitive right now. It just `require's the features
-;; listed in `eon-modules' in order.
-
-;; TODO Maybe the whole loader should be extended to provide real value, for
-;; instance clean unloading and undefining on the fly for vars, functions and
-;; keybindings introduced by a module; meaning all of that may work without
-;; restarting Emacs. And also a module-selection menu based on `completing-read'
-;; (targeting `fido-vertical-mode' and `vertico'), and/or the `customize' UI.
 
 ;; Define the path of the Emacs ONTOP directory
 (defvar eon-ontop-directory

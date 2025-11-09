@@ -167,7 +167,9 @@
 
    ;; Local leader -> Eshell
    :map eon-localleader-eshell-map
+   ("n" . nil)  ; redundant due to `consult-outline'
    ("h" . consult-history)
+   ("p" . consult-outline)
 
    ;; Leader -> File
    :map ctl-z-f-map
