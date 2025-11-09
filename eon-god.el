@@ -74,18 +74,6 @@ Used by custom variables `eon-god-leader-key' and `eon-god-localleader-key'."
     (interactive)
     (god-local-mode -1))
 
-  (defun eon-god-unexempt-mode (&rest modes)
-    "Remove certain MODES from `god-exempt-major-modes'.
-Once removed, they will start with `god-local-mode' enabled."
-    (setopt god-exempt-major-modes
-            (seq-difference god-exempt-major-modes modes #'eq)))
-
-  (defun eon-god-unexempt-predicate (&rest predicates)
-    "Remove certain PREDICATES from `god-exempt-predicates'.
-Once removed, they will start with `god-local-mode' enabled."
-    (setopt god-exempt-predicates
-            (seq-difference god-exempt-predicates predicates #'eq)))
-
   ;; Explicitly bind the leader key
   (eon-god--bind-leader-in-states nil eon-god-leader-key)
 
@@ -105,6 +93,23 @@ Once removed, they will start with `god-local-mode' enabled."
 
   ;; Refresh cursor when god-mode toggles
   (add-hook 'god-local-mode-hook #'eon-cursor-update)
+
+  ;; Unblock a major mode
+  (defun eon-god-unexempt-mode (&rest modes)
+    "Remove certain MODES from `god-exempt-major-modes'.
+Once removed, they will start with `god-local-mode' enabled."
+    (setopt god-exempt-major-modes
+            (seq-difference god-exempt-major-modes modes #'eq)))
+
+  ;; Unblock by predicate
+  (defun eon-god-unexempt-predicate (&rest predicates)
+    "Remove certain PREDICATES from `god-exempt-predicates'.
+Once removed, they will start with `god-local-mode' enabled."
+    (setopt god-exempt-predicates
+            (seq-difference god-exempt-predicates predicates #'eq)))
+
+  ;; Don't start with God-mode enabled
+  (eon-add-to-list-setopt 'god-exempt-major-modes 'eat-mode)
 
   :bind
 
