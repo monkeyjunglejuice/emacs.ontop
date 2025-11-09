@@ -26,7 +26,7 @@
   :init
 
   ;; Let Evil handle the cursor styles
-  (eon-cursor-type-mode -1)
+  (eon-cursor-mode -1)
 
   (setopt evil-want-integration t
           evil-want-keybinding nil)

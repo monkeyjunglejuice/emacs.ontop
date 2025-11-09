@@ -90,7 +90,7 @@ Once removed, they will start with `god-local-mode' enabled."
   (eon-god--bind-leader-in-states nil eon-god-leader-key)
 
   ;; Show special cursor while `god-local-mode' is active in a buffer
-  (defun eon-god--cursor-type-compute ()
+  (defun eon-god--cursor-compute ()
     "Return a cursor type when God-mode is active, else nil."
     (cond
      ;; Selection while god-local-mode is active
@@ -101,11 +101,10 @@ Once removed, they will start with `god-local-mode' enabled."
      ((bound-and-true-p god-local-mode)
       eon-cursor-type-extra)
      (t nil)))
-
-  (add-hook 'eon-cursor-type-functions #'eon-god--cursor-type-compute)
+  (add-hook 'eon-cursor-functions #'eon-god--cursor-compute)
 
   ;; Refresh cursor when god-mode toggles
-  (add-hook 'god-local-mode-hook #'eon-cursor-type-update)
+  (add-hook 'god-local-mode-hook #'eon-cursor-update)
 
   :bind
 

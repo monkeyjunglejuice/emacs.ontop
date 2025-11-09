@@ -82,7 +82,7 @@ Used by custom variables `eon-helix-leader-key' and `eon-helix-localleader-key'.
         (and (boundp 'helix--current-selection)
              helix--current-selection)))
 
-  (defun eon-helix--cursor-type-compute ()
+  (defun eon-helix--cursor-compute ()
     "Return a cursor type when Helix modes are active, else nil."
     (cond
      ;; Insert/editing
@@ -97,11 +97,11 @@ Used by custom variables `eon-helix-leader-key' and `eon-helix-localleader-key'.
       eon-cursor-type-extra)
      (t nil)))
 
-  (add-hook 'eon-cursor-type-functions #'eon-helix--cursor-type-compute)
+  (add-hook 'eon-cursor-functions #'eon-helix--cursor-compute)
 
   ;; Refresh on Helix state flips
-  (add-hook 'helix-normal-mode-hook #'eon-cursor-type-update)
-  (add-hook 'helix-insert-mode-hook #'eon-cursor-type-update))
+  (add-hook 'helix-normal-mode-hook #'eon-cursor-update)
+  (add-hook 'helix-insert-mode-hook #'eon-cursor-update))
 
 ;; _____________________________________________________________________________
 ;;; DIRED

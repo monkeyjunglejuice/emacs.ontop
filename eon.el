@@ -505,7 +505,7 @@ When called interactively, also echo the result."
 ;; Example how to set your default cursor in your init.el:
 ;; (setopt eon-cursor-type-write 'box)  ; block-style cursor
 
-(defgroup eon-cursor-type nil
+(defgroup eon-cursor nil
   "Cursor styles."
   :group 'eon)
 
@@ -532,7 +532,7 @@ Accepts an expression that returns either:
 - a pair '(SYMBOL . INTEGER), e.g. '(hbar . 3).
 See also `cursor-type'."
   :type '(sexp)
-  :group 'eon-cursor-type
+  :group 'eon-cursor
   :set #'eon-cursor-type--set)
 
 (defcustom eon-cursor-type-select 'bar
@@ -543,7 +543,7 @@ Accepts an expression that returns either:
 - a pair '(SYMBOL . INTEGER), e.g. '(hbar . 3).
 See also `cursor-type'."
   :type '(sexp)
-  :group 'eon-cursor-type
+  :group 'eon-cursor
   :set #'eon-cursor-type--set)
 
 (defcustom eon-cursor-type-view '(hbar . 3)
@@ -554,7 +554,7 @@ Accepts an expression that returns either:
 - a pair '(SYMBOL . INTEGER), e.g. '(hbar . 3).
 See also `cursor-type'."
   :type '(sexp)
-  :group 'eon-cursor-type
+  :group 'eon-cursor
   :set #'eon-cursor-type--set)
 
 (defcustom eon-cursor-type-extra 'box
@@ -565,7 +565,7 @@ Accepts an expression that returns either:
 - a pair '(SYMBOL . INTEGER), e.g. '(hbar . 3).
 See also `cursor-type'."
   :type '(sexp)
-  :group 'eon-cursor-type
+  :group 'eon-cursor
   :set #'eon-cursor-type--set)
 
 (defcustom eon-cursor-type-extra-select 'hollow
@@ -576,59 +576,59 @@ Accepts an expression that returns either:
 - a pair '(SYMBOL . INTEGER), e.g. '(hbar . 3)
 See also `cursor-type'."
   :type '(sexp)
-  :group 'eon-cursor-type
+  :group 'eon-cursor
   :set #'eon-cursor-type--set)
 
-(defvar eon-cursor-type-functions nil
+(defvar eon-cursor-functions nil
   "Hook of functions that may compute a cursor type.
 Each function is called with no args and should return either
 a `cursor-type' or nil. The first non-nil return wins.")
 
 (defun eon-cursor-type--desired ()
   "Compute desired cursor type for the current buffer."
-  (or (run-hook-with-args-until-success 'eon-cursor-type-functions)
+  (or (run-hook-with-args-until-success 'eon-cursor-functions)
       (cond
        ((region-active-p) eon-cursor-type-select)
        (buffer-read-only eon-cursor-type-view)
        (t eon-cursor-type-write))))
 
-(defun eon-cursor-type-update (&rest _)
+(defun eon-cursor-update (&rest _)
   "Apply the desired cursor type to the current buffer."
   (setq-local cursor-type (eon-cursor-type--desired)))
 
-(define-minor-mode eon-cursor-type-mode
+(define-minor-mode eon-cursor-mode
   "Globally change cursor type according to state."
-  :group 'eon-cursor-type
+  :group 'eon-cursor
   :global t
   :init-value t
-  (if eon-cursor-type-mode
+  (if eon-cursor-mode
       (progn
         (mapc (lambda (buf)
-                (with-current-buffer buf (eon-cursor-type-update)))
+                (with-current-buffer buf (eon-cursor-update)))
               (buffer-list))
         ;; It seems unreasonable to use `after-command-hook' to update
         ;; the cursor type; better avoid that potential overhead.
         ;; Instead we're listing the triggers one-by-one.
-        (add-hook   'buffer-list-update-hook      #'eon-cursor-type-update)
-        (add-hook   'read-only-mode-hook          #'eon-cursor-type-update)
-        (add-hook   'after-change-major-mode-hook #'eon-cursor-type-update)
+        (add-hook   'buffer-list-update-hook      #'eon-cursor-update)
+        (add-hook   'read-only-mode-hook          #'eon-cursor-update)
+        (add-hook   'after-change-major-mode-hook #'eon-cursor-update)
         ;; React to selections
-        (add-hook   'activate-mark-hook           #'eon-cursor-type-update)
-        (add-hook   'deactivate-mark-hook         #'eon-cursor-type-update)
+        (add-hook   'activate-mark-hook           #'eon-cursor-update)
+        (add-hook   'deactivate-mark-hook         #'eon-cursor-update)
         ;; Make sure the cursor will be updated after leaving wdired
-        (advice-add 'wdired-abort-changes :after  #'eon-cursor-type-update)
-        (advice-add 'wdired-finish-edit :after    #'eon-cursor-type-update))
+        (advice-add 'wdired-abort-changes :after  #'eon-cursor-update)
+        (advice-add 'wdired-finish-edit :after    #'eon-cursor-update))
     ;; Tear down
-    (remove-hook   'buffer-list-update-hook      #'eon-cursor-type-update)
-    (remove-hook   'read-only-mode-hook          #'eon-cursor-type-update)
-    (remove-hook   'after-change-major-mode-hook #'eon-cursor-type-update)
-    (remove-hook   'activate-mark-hook           #'eon-cursor-type-update)
-    (remove-hook   'deactivate-mark-hook         #'eon-cursor-type-update)
-    (advice-remove 'wdired-abort-changes         #'eon-cursor-type-update)
-    (advice-remove 'wdired-finish-edit           #'eon-cursor-type-update)))
+    (remove-hook   'buffer-list-update-hook      #'eon-cursor-update)
+    (remove-hook   'read-only-mode-hook          #'eon-cursor-update)
+    (remove-hook   'after-change-major-mode-hook #'eon-cursor-update)
+    (remove-hook   'activate-mark-hook           #'eon-cursor-update)
+    (remove-hook   'deactivate-mark-hook         #'eon-cursor-update)
+    (advice-remove 'wdired-abort-changes         #'eon-cursor-update)
+    (advice-remove 'wdired-finish-edit           #'eon-cursor-update)))
 
 ;; Turn it on
-(eon-cursor-type-mode 1)
+(eon-cursor-mode 1)
 
 ;; _____________________________________________________________________________
 ;;; WHICH-KEY
@@ -2177,22 +2177,22 @@ pretending to clear it."
 (eon-localleader-defkeymap eshell-mode eon-localleader-eshell-map
   :doc "Local leader keymap for `eshell-mode'.")
 
-(setopt eshell-banner-message ""
-        eshell-scroll-to-bottom-on-input t
-        eshell-buffer-maximum-lines 65536
-        eshell-history-size 1024
-        eshell-hist-ignoredups t
-        eshell-cmpl-ignore-case t)
-
-;; List directory content after changing into it?
-(setopt eshell-list-files-after-cd t)
-
-;; Jump to Eshell prompts
-(add-hook 'eshell-mode-hook
-          (lambda () (setq outline-regexp eshell-prompt-regexp)))
+(with-eval-after-load 'eshell
+  (setopt eshell-banner-message ""
+          eshell-scroll-to-bottom-on-input 'this
+          eshell-buffer-maximum-lines 65536
+          eshell-history-size 1024
+          eshell-hist-ignoredups t
+          eshell-cmpl-ignore-case t
+          eshell-list-files-after-cd t
+          eshell-destroy-buffer-when-process-dies t))
 
 ;; Launch an Eshell buffer: "<leader> e e"; re-visit the buffer by repeating
 (keymap-set ctl-z-e-map "e" #'eshell)
+
+;; Use Outline commands with Eshell prompts/buffers
+(add-hook 'eshell-mode-hook
+          (lambda () (setq outline-regexp eshell-prompt-regexp)))
 
 ;; Launch a fresh Eshell buffer: "<leader> e E"
 (defun eon-eshell-new ()
@@ -2229,22 +2229,50 @@ pretending to clear it."
 (keymap-set ctl-z-e-map "S" #'eon-shell-new)
 
 ;; _____________________________________________________________________________
+;;; TERMINAL EMULATOR
+
+(with-eval-after-load 'term
+  (setopt term-input-ignoredups t
+          term-buffer-maximum-size 65536))
+
+(keymap-set ctl-z-e-map "t" #'term)
+
+(defcustom eon-term-kill-on-exit t
+  "Kill `term' and `ansi-term' buffers when their process exits."
+  :type 'boolean
+  :group 'eon-misc)
+
+(defun eon-term--kill-buffer-on-exit (proc _event)
+  "Kill buffer of PROC when it exits."
+  (when (and eon-term-kill-on-exit
+             (memq (process-status proc) '(exit signal)))
+    (let ((buf (process-buffer proc)))
+      (when (buffer-live-p buf)
+        (kill-buffer buf)))))
+
+(defun eon-term-init (&rest _ignore)
+  "Initialize `term' and `ansi-term' buffers."
+  (when (derived-mode-p 'term-mode)
+    (eon-cursor-update)
+    (let ((proc (get-buffer-process (current-buffer))))
+      (when proc
+        (set-process-sentinel proc
+                              #'eon-term--kill-buffer-on-exit)))))
+
+;; Trigger initialization
+(advice-add 'term :after #'eon-term-init)
+(advice-add 'ansi-term :after #'eon-term-init)
+
+;; _____________________________________________________________________________
 ;;; PROCED
 
 ;; Show and manage OS processes, like the command line programs top and htop
 
-(setopt proced-auto-update-interval 1)
-
-(setopt proced-auto-update-flag t
-        proced-enable-color-flag t
-        proced-descend t)
-
-;; _____________________________________________________________________________
-;;; NET-UTILS
-
-(when (executable-find "netstat")
-  (setopt netstat-program "netstat"
-          netstat-program-options '("-atupe")))
+(with-eval-after-load 'proced
+  (setopt proced-auto-update-interval 2
+          proced-auto-update-flag t
+          proced-enable-color-flag t
+          proced-descend t))
 
 ;; _____________________________________________________________________________
 ;;; PINENTRY
@@ -2318,9 +2346,11 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 ;;; CALENDAR
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Calendar_002fDiary>
 
-(setopt calendar-date-style 'iso
-        calendar-week-start-day 1
-        calendar-weekend-days '(6 0))
+(with-eval-after-load 'calendar
+  (setopt calendar-date-style 'iso      ; Year-Month-Day
+          calendar-week-start-day 1     ; Monday
+          calendar-weekend-days '(6 0)  ; Saturday and Sunday
+          ))
 
 ;; _____________________________________________________________________________
 ;;; EDITING
@@ -2462,12 +2492,12 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 ;; and additional checkers can be installed as 3rd-party packages via
 ;; "M-x package-install <RET> flymake-".
 
-;; Style the Flymake widget in the modeline
-(setopt flymake-mode-line-format
-        '(" " "FlyM" flymake-mode-line-exception flymake-mode-line-counters))
-
-;; Stop when first/last error is reached
-(setopt flymake-wrap-around nil)
+(with-eval-after-load 'flymake
+  ;; Style the Flymake widget in the modeline
+  (setopt flymake-mode-line-format
+          '(" " "FlyM" flymake-mode-line-exception flymake-mode-line-counters))
+  ;; Stop when first/last error is reached
+  (setopt flymake-wrap-around nil))
 
 (with-eval-after-load 'flymake
   (keymap-set flymake-mode-map "M-g E" #'flymake-show-project-diagnostics)
@@ -2750,7 +2780,7 @@ Return an alist of (LANG . STATUS)."
 
 (defun eon-treesitter-add-specs (&rest specs)
   "Add SPECS to `eon-treesitter-specs' and merge them into the source alist.
-Use this if you merely want to register SPECS, but not build/install them.
+Use this if you want to register SPECS, but not yet build/install them.
 
 - SPECS can be many specs or a single list of specs.
   Each spec has the form (LANG URL [REVISION] [SOURCE-DIR]).
@@ -2843,7 +2873,7 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
          org-tags-column 0)
 
 ;; Toggle indicator for headlines
-(setopt org-ellipsis " ▼ ")
+(setopt org-ellipsis "▼")
 
 ;; Don't add leading indentation to code blocks, remove them during export
 (setopt org-edit-src-content-indentation 0
@@ -3076,11 +3106,17 @@ With SWITCH = \='hook, return ...-hook variables."
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Further settings
 
-;; Enable Flymake for Emacs Lisp, but never for `lisp-interaction-mode'
-(add-hook 'emacs-lisp-mode-hook
-          (lambda ()
-            (unless (derived-mode-p 'lisp-interaction-mode)
-              (flymake-mode 1))))
+;; Enable Flymake for Emacs Lisp
+(defun eon-elisp-flymake-maybe ()
+  "Conditionally enable `flymake-mode' for Emacs Lisp.
+Don't enable in:
+- buffers without a file, e.g. created by `pp-eval-last-sexp';
+- `lisp-interaction-mode', e.g. the *scratch* buffer."
+  (when (or buffer-file-name
+            (not (derived-mode-p 'lisp-interaction-mode)))
+    (flymake-mode 1)))
+
+(add-hook 'emacs-lisp-mode-hook #'eon-elisp-flymake-maybe)
 
 ;; Emacs Lisp evaluation: don't truncate printed lists
 (setopt eval-expression-print-length nil
