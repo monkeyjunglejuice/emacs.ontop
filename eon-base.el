@@ -124,20 +124,26 @@ Adapted from Doom Emacs.")
 
   :custom
 
+  (eat-enable-auto-line-mode t)
   (eat-term-name "xterm-256color")
   (eat-kill-buffer-on-exit t)
 
   :hook
-  ;; Run Eshell always in Eat; `eshell-mode-hook' is the most robust trigger
 
+  ;; Run Eshell always in Eat; this gives Eshell full terminal capabilities.
+  ;; `eshell-mode-hook' seems the most robust trigger.
   (eshell-mode . eat-eshell-mode)
   (eshell-mode . eat-eshell-visual-command-mode)
 
+  ;; Start Eat always in line mode, so it blends into Emacs like `shell'
+  (eat-exec . (lambda (_)
+                (eat-line-mode)
+                (eon-cursor-update)))
 
   :bind
 
   (:map ctl-z-e-map
-        ;; Set Eat as terminal emulator
+        ;; Set Eat as the default terminal emulator
         ("t" . eat)))
 
 ;;; - Fish
