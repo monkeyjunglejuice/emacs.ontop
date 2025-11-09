@@ -173,6 +173,7 @@
      "opam" "install"     ; shell command
      "--yes"              ; answer "yes" to all questions
      ;; Package selection
+     "user-setup"
      "dune"
      "dune-release"
      "merlin"
