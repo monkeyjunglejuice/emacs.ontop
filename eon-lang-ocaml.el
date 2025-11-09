@@ -46,9 +46,8 @@
   (merlin-report-errors-in-lighter t)
   (merlin-occurrences-show-buffer 'same)
   :config
-  ;; Don't show *merlin* buffer in buffers list
-  (when (boundp 'eon-boring-buffers)
-    (add-to-list 'eon-boring-buffers "\\`\\*merlin"))
+  ;; Flag the merlin buffer as boring
+  (eon-boring-buffers-add "\\`\\*merlin")
   :hook
   ((tuareg-mode tuareg-interactive-mode) . merlin-mode)
   (tuareg-mode . merlin-use-merlin-imenu)
