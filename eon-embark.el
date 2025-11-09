@@ -22,22 +22,12 @@
                  nil
                  (window-parameters (mode-line-format . none))))
   :bind
-  ("C-h B" . embark-bindings))
+  ("<menu>"   . embark-act)
+  ("M-<menu>" . embark-dwim)
+  ("C-h B"    . embark-bindings))
 
 (use-package embark :ensure t
-  :when (or (eon-linp) (eon-winp))
-  :bind
-  ("<menu>" . embark-act)
-  ("M-<menu>" . embark-dwim))
-
-(use-package embark :ensure t
-  :when (eon-macp)
-  :bind
-  ("C-." . embark-act)
-  ("C-;" . embark-dwim))
-
-(use-package embark :ensure t
-  :when (featurep 'eon-vertico)
+  :when (eon-modulep 'eon-vertico)
   :after vertico
   :config
   (defun +embark-live-vertico ()
@@ -52,6 +42,7 @@
 
 ;; Consult users will also want the embark-consult package
 (use-package embark-consult :ensure t
+  :when (eon-modulep 'eon-consult)
   :after consult
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
