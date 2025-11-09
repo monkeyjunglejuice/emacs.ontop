@@ -157,13 +157,16 @@
 ;; Use the command "M-x opam-switch-set-switch" to select the opam switch for
 ;; your OCaml project
 (use-package opam-switch-mode :ensure t
-  :after tuareg
+
   :config
+
   (setq tuareg-opam-insinuate t)
-  (opam-switch-set-switch (tuareg-opam-current-compiler))
+
+  ;; (opam-switch-set-switch (tuareg-opam-current-compiler))
+
   ;; Install basic package selection via Opam
-  (defun opam-switch-install-packages ()
-    "Install standard package selection for editor support and development."
+  (defun eon-opam-switch-install-packages ()
+    "Install basic package selection for editor support and development."
     (interactive)
     (message (concat "Opam: installing packages for switch: "
                      (opam-switch--get-current-switch)))
@@ -183,8 +186,7 @@
      "utop"
      "odoc"
      "omod"
-     "domainslib"
-     )))
+     "domainslib")))
 
 ;; _____________________________________________________________________________
 ;;; ORG-MODE BABEL
