@@ -22,9 +22,9 @@
                  nil
                  (window-parameters (mode-line-format . none))))
   :bind
-  ("<menu>"   . embark-act)
-  ("M-<menu>" . embark-dwim)
-  ("C-h B"    . embark-bindings))
+  ("C-."   . embark-act)
+  ("C-;"   . embark-dwim)
+  ("C-h B" . embark-bindings))
 
 (use-package embark :ensure t
   :when (eon-modulep 'eon-vertico)
