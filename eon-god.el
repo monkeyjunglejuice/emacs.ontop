@@ -109,7 +109,7 @@ Once removed, they will start with `god-local-mode' enabled."
             (seq-difference god-exempt-predicates predicates #'eq)))
 
   ;; Don't start with God-mode enabled
-  (eon-add-to-list-setopt 'god-exempt-major-modes 'eat-mode)
+  (eon-add-to-list* 'god-exempt-major-modes 'eat-mode)
 
   :bind
 

@@ -31,8 +31,8 @@
     :config
     ;; As of version 20240713.1002, smartparens doesn't recognize LFE as a Lisp,
     ;; so let's add it manually
-    (eon-add-to-list-setopt 'sp-lisp-modes 'lfe-mode)
-    (eon-add-to-list-setopt 'sp-lisp-modes 'inferior-lfe-mode)))
+    (eon-add-to-list* 'sp-lisp-modes 'lfe-mode)
+    (eon-add-to-list* 'sp-lisp-modes 'inferior-lfe-mode)))
 
 ;; _____________________________________________________________________________
 ;;; ORG-MODE BABEL

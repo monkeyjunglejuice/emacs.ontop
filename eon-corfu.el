@@ -44,7 +44,7 @@
 
 (use-package corfu-history :ensure nil
   :config
-  (eon-add-to-list-setopt 'savehist-additional-variables 'corfu-history)
+  (eon-add-to-list* 'savehist-additional-variables 'corfu-history)
   :hook
   (corfu-mode . corfu-history-mode))
 
