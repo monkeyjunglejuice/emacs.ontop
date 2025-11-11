@@ -31,7 +31,7 @@
 ;; Maintainer: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Created: 28 Apr 2021
-;; Version: 2.3.4
+;; Version: 2.4.1
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
 ;; Keywords: config dotemacs convenience
@@ -318,14 +318,13 @@ Examples:
   (eon-adjoin '(a b) '(c a))                             ; => (c a b)
   (eon-adjoin '(a b) '(d) t)                             ; => (a b d)
   (eon-adjoin '(a b) '(\"x\" \"x\") nil #'string-equal)  ; => (\"x\" a b)"
-  (declare (pure t) (side-effect-free t))
   (let* ((xs   (if (consp elements) elements (list elements)))
          (test (or compare-fn #'equal))
          (cand (if append (append cur xs) (append xs cur))))
     (cl-remove-duplicates cand :test test)))
 
 (defun eon-add-to-list (list-sym elements &optional append compare-fn)
-  "Rebind LIST-SYM to a new list with ELEMENTS adjoined once.
+  "Modifies the current binding of LIST-SYM, respects buffer-local.
 
 LIST-SYM is a symbol naming a list variable whose *current binding*
 will be modified (i.e. buffer-local if such exists, otherwise global).
@@ -350,12 +349,16 @@ Returns the new current value of LIST-SYM."
         (if (boundp list-sym) (symbol-value list-sym) nil)
         elements append compare-fn)))
 
-(defun eon-add-to-list-setopt (list-sym elements &optional append compare-fn)
-  "Adjoin ELEMENTS to the *default* value of LIST-SYM.
+(defun eon-add-to-list* (list-sym elements &optional append compare-fn)
+  "Modifies the default, custom or global value of LIST-SYM.
 
-LIST-SYM is a symbol naming a variable or user option. ELEMENTS may be
-a single item or a list of items to add to the variable’s *default* (global)
-value.
+If LIST-SYM is a user option (see `custom-variable-p'), use
+`customize-set-variable' so its :set function and type checks are
+applied. Otherwise, use `set-default' to modify the variable’s global
+default value directly.
+
+ELEMENTS may be a single item or a list of items to add to the
+variable’s *default* (global) value.
 
 If APPEND is non-nil, append items left->right;
 otherwise prepend them while preserving the order of ELEMENTS.
@@ -363,20 +366,43 @@ otherwise prepend them while preserving the order of ELEMENTS.
 COMPARE-FN, if non-nil, is a function used to test for membership;
 it defaults to `equal'.
 
-If LIST-SYM is a user option (see `custom-variable-p'),
-use `customize-set-variable' so its :set function and type checks are
-applied. Otherwise, use `set-default' to modify the variable’s global
-default value directly.
-
 Returns the new default value of LIST-SYM."
   (unless (symbolp list-sym)
-    (error "eon-add-to-list-setopt: LIST-SYM must be a symbol"))
+    (error "eon-add-to-list*: LIST-SYM must be a symbol"))
   (let* ((cur (and (default-boundp list-sym) (default-value list-sym)))
          (new (eon-adjoin cur elements append compare-fn)))
     (if (custom-variable-p list-sym)
         (customize-set-variable list-sym new 'setopt)
       (set-default list-sym new))
     new))
+
+;; General helper to update association lists
+(cl-defun eon-alist-update (key value alist
+                                &key (test #'equal) unique)
+  "Return a new ALIST like ALIST but with KEY mapped to VALUE.
+
+- If KEY is present (per TEST), replace the first occurrence,
+  preserving order.
+- If UNIQUE is non-nil, also remove any later occurrences of KEY
+  in the tail.
+- If KEY is not present, cons (KEY . VALUE) to the front.
+
+Does not mutate ALIST, so if ALIST should to be set, it must be
+set explicitly."
+  (let ((found nil))
+    (setq alist
+          (cl-loop for (k . v) in alist
+                   unless (and unique
+                               found
+                               (funcall test key k))
+                   collect (if (and (not found)
+                                    (funcall test key k))
+                               (prog1 (cons key value)
+                                 (setq found t))
+                             (cons k v))))
+    (if found
+        alist
+      (cons (cons key value) alist))))
 
 ;; Get all the parent major modes
 (defun eon-get-parent-modes ()
@@ -420,29 +446,30 @@ When called interactively, also echo the result."
 ;;
 ;; In order to define properties generally, add them to `default-frame-alist';
 ;; to affect only the first frame created, add them to `initial-frame-alist'.
+;; The following examples set the default for all Emacs frames created:
 
-;; Either start Emacs maximized …
-;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; Either start each Emacs frame maximized …
+;; (setf (alist-get 'fullscreen default-frame-alist) 'maximized)
 
-;; … or set the default width of the Emacs frame - in columns or full width
-;; (add-to-list 'default-frame-alist '(width . 80))
-;; (add-to-list 'default-frame-alist '(fullscreen . fullwidth))
+;; … or set the default width of each frame - in columns, or full width.
+;; (setf (alist-get 'width default-frame-alist) 80)
+;; (setf (alist-get 'fullscreen default-frame-alist) 'fullwidth)
 
-;; … or set the default height of the Emacs frame - in lines or full height
-;; (add-to-list 'default-frame-alist '(height . 32))
-;; (add-to-list 'default-frame-alist '(fullscreen . fullheight))
+;; … or set the default height of each frame - in lines, or full height.
+;; (setf (alist-get 'height default-frame-alist) 32)
+;; (setf (alist-get 'fullscreen default-frame-alist) 'fullheight)
 
-;; Horizontal position: set the distance from the left screen edge in pixels
-;; That way, only the first frame created will get a fixed position:
-;; (add-to-list 'initial-frame-alist '(left . 0))
+;; Horizontal position - set the distance from the screen edge in pixels.
+;; Distance from the left edge:
+;; (setf (alist-get 'left default-frame-alist) 1)
+;; Distance from the right edge, using negative numbers:
+;; (setf (alist-get 'left default-frame-alist) -1)
 
-;; Vertical position: set the distance from the top screen edge in pixels
-;; That way, only the first frame created will get a fixed position:
-;; (add-to-list 'initial-frame-alist '(top . 0))
-
-;; Fringe: choose on which sides (not) to show it
-;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Fringes>
-;; (add-to-list 'default-frame-alist '(right-fringe . 0))
+;; Vertical position - set the distance from the screen edge in pixels.
+;; Distance from the top edge:
+;; (setf (alist-get 'top default-frame-alist) 1)
+;; Distance from the bottom edge, using negative numbers:
+;; (setf (alist-get 'top default-frame-alist) -1)
 
 ;; Bring frame to the front (steals focus)
 (add-hook 'window-setup-hook
@@ -516,12 +543,12 @@ Only `eon-cursor-type-write' updates frame cursor defaults."
   (when (eq symbol 'eon-cursor-type-write)
     (setopt initial-frame-alist
             (cons (cons 'cursor-type value)
-                (assq-delete-all 'cursor-type
-                                 initial-frame-alist)))
+                  (assq-delete-all 'cursor-type
+                                   initial-frame-alist)))
     (setopt default-frame-alist
             (cons (cons 'cursor-type value)
                   (assq-delete-all 'cursor-type
-                                 default-frame-alist))))
+                                   default-frame-alist))))
   (force-mode-line-update t))
 
 (defcustom eon-cursor-type-write 'bar
@@ -1718,8 +1745,8 @@ Called without argument just syncs `eon-boring-buffers' to other places."
   (when regexp
     (eon-add-to-list 'eon-boring-buffers regexp))
   ;; Define other places where `eon-boring-buffers' are synced to:
-  (eon-add-to-list-setopt 'switch-to-prev-buffer-skip-regexp eon-boring-buffers)
-  (eon-add-to-list-setopt 'switch-to-next-buffer-skip-regexp eon-boring-buffers))
+  (eon-add-to-list* 'switch-to-prev-buffer-skip-regexp eon-boring-buffers)
+  (eon-add-to-list* 'switch-to-next-buffer-skip-regexp eon-boring-buffers))
 
 ;; Hide boring buffers
 (with-eval-after-load 'window (eon-boring-buffers-add))
@@ -1789,13 +1816,6 @@ Called without argument just syncs `eon-boring-buffers' to other places."
       (message "Copied buffer file name '%s' to the kill ring."
                filename))))
 (keymap-set ctl-z-f-map "M-w" #'eon-copy-file-path)
-
-;; Simple alternative for `yank-pop' – present a selection of the kill ring
-(defun eon-yank-from-kill-ring ()
-  "Select and insert an item from the `kill-ring'."
-  (interactive)
-  (insert (completing-read "Yank: " kill-ring nil t)))
-(keymap-global-set "M-y" #'eon-yank-from-kill-ring)
 
 ;; Copy & paste between Windows and Emacs running within WSL
 ;; (Windows Subsystem for Linux)
@@ -1898,17 +1918,17 @@ pretending to clear it."
 ;;; HISTORY
 
 ;; Which histories to save between Emacs sessions?
-(eon-add-to-list-setopt 'savehist-additional-variables
-                        '(kill-ring  ; CAUTION, persists copied text - see below
-                          register-alist
-                          search-ring
-                          regexp-search-ring
-                          compile-command))
+(eon-add-to-list* 'savehist-additional-variables
+                  '(kill-ring  ; CAUTION, persists copied text - see below
+                    register-alist
+                    search-ring
+                    regexp-search-ring
+                    compile-command))
 
 ;; Enable `savehist-mode' after setting the variables
 (savehist-mode 1)
 
-; Wipe Emacs' kill ring and quit via "<leader> q Q"
+;; Wipe Emacs' kill ring and quit via "<leader> q Q"
 (defun eon-clear-kill-ring ()
   "Clear the kill ring; do not touch the system clipboard."
   (interactive)
@@ -2177,15 +2197,14 @@ pretending to clear it."
 (eon-localleader-defkeymap eshell-mode eon-localleader-eshell-map
   :doc "Local leader keymap for `eshell-mode'.")
 
-(with-eval-after-load 'eshell
-  (setopt eshell-banner-message ""
-          eshell-scroll-to-bottom-on-input 'this
-          eshell-buffer-maximum-lines 65536
-          eshell-history-size 1024
-          eshell-hist-ignoredups t
-          eshell-cmpl-ignore-case t
-          eshell-list-files-after-cd t
-          eshell-destroy-buffer-when-process-dies t))
+(setopt eshell-banner-message ""
+        eshell-scroll-to-bottom-on-input 'this
+        eshell-buffer-maximum-lines 65536
+        eshell-history-size 1024
+        eshell-hist-ignoredups t
+        eshell-cmpl-ignore-case t
+        eshell-list-files-after-cd t
+        eshell-destroy-buffer-when-process-dies t)
 
 ;; Launch an Eshell buffer: "<leader> e e"; re-visit the buffer by repeating
 (keymap-set ctl-z-e-map "e" #'eshell)
@@ -3117,8 +3136,8 @@ With SWITCH = \='hook, return ...-hook variables."
 Don't enable in:
 - buffers without a file, e.g. created by `pp-eval-last-sexp';
 - `lisp-interaction-mode', e.g. the *scratch* buffer."
-  (when (or buffer-file-name
-            (not (derived-mode-p 'lisp-interaction-mode)))
+  (when (and buffer-file-name
+             (not (derived-mode-p 'lisp-interaction-mode)))
     (flymake-mode 1)))
 
 (add-hook 'emacs-lisp-mode-hook #'eon-elisp-flymake-maybe)
