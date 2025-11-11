@@ -50,8 +50,8 @@ If enabling non-interactively while Flycheck is on, skip enabling."
 Don't enable in:
 - buffers without a file, e.g. created by `pp-eval-last-sexp';
 - `lisp-interaction-mode', e.g. the *scratch* buffer."
-    (when (or buffer-file-name
-              (not (derived-mode-p 'lisp-interaction-mode)))
+    (when (and buffer-file-name
+               (not (derived-mode-p 'lisp-interaction-mode)))
       (flycheck-mode 1)))
 
   :init
