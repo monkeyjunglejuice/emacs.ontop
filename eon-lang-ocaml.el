@@ -21,7 +21,7 @@
   (tuareg-electric-indent t)
   (tuareg-display-buffer-on-eval t)
   (tuareg-skip-after-eval-phrase nil)
-  ;; (tuareg-interactive-program "ocaml -nopromptcont")
+  (tuareg-interactive-program "ocaml -nopromptcont")
   (tuareg-interactive-echo-phrase t)
   (tuareg-interactive-read-only-input t)
   (tuareg-interactive-scroll-to-bottom-on-output t)
