@@ -36,7 +36,7 @@
 (when (eon-modulep 'eon-corfu)
   (use-package nerd-icons-corfu :ensure t
     :config
-    (eon-add-to-list-setopt 'corfu-margin-formatters
+    (eon-add-to-list* 'corfu-margin-formatters
                             #'nerd-icons-corfu-formatter)))
 
 ;; _____________________________________________________________________________
