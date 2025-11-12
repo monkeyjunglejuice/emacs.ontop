@@ -31,7 +31,7 @@
 ;; Maintainer: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Created: 28 Apr 2021
-;; Version: 2.4.1
+;; Version: 2.4.2
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
 ;; Keywords: config dotemacs convenience
@@ -225,15 +225,7 @@ Cancel the previous one if present."
    warning-minimum-level :error
    ;; Allow bytecode compilation to be verbose?
    byte-compile-verbose nil
-   ;; Turn off minor warnings
-   byte-compile-warnings (not '(callargs
-                                docstrings
-                                empty-body
-                                free-vars
-                                lexical
-                                noruntime
-                                obsolete))
-   ;; Reduce native code compilation verbosity?
+   ;; Allow native compilation to be verbose?
    native-comp-async-report-warnings-errors nil
    native-comp-warning-on-missing-source nil))
 
@@ -759,7 +751,7 @@ to the same keys.
 (defun eon-localleader--sync-local-prefix-parent ()
   "Make `eon-localleader-map' inherit the effective local leader keymap.
 Respects the which-key origin window so that the correct buffer's
-localleader is shown."
+local leader is shown."
   (let* ((win (eon-localleader--context-window))
          (buf (and (window-live-p win) (window-buffer win)))
          (map (with-current-buffer (or buf (current-buffer))
@@ -821,8 +813,22 @@ BODY will be forwarded to `defvar-keymap'.
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Leader implementation
 
+;; FIXME Customizing `eon-leader-key' doesn't set the label of the alternative
+;; (mirrored) local leader kebinding/keymap, so that the local leader keybinding
+;; shows only the default "+prefix" in which-key.
+;; But the leader setter for Evil and God mode in Emacs ONTOP work just fine,
+;; and that code has to be merged anyway - it will probably fix this issue.
 (defun eon-leader--set-key (sym value)
-  "Setter for `eon-leader-key'."
+  "Setter for `eon-leader-key'.
+SYM is the variable, VALUE is the keybinding as a string.
+
+Also sets the local leader key to the same keybinding within the
+local leader keymap, so that the local leader key can be typed rapidly
+by holding down one key and hitting the other twice.
+
+Example:
+Setting the leader to \"M-SPC\" will set the local leader to \"M-SPC\".
+Customize `eon-localleader-key' explicitly to override this default."
   (let ((old (and (boundp sym) (symbol-value sym))))
     (when (and old (stringp old) (> (length old) 0))
       (keymap-global-unset old t))
@@ -1448,7 +1454,9 @@ Some themes may come as functions -- wrap these ones in lambdas."
  ;; Maximum height of the *Completions* buffer in lines?
  completions-max-height 12
  ;; Enable grouping of completion candidates?
- completions-group t)
+ completions-group t
+ ;; Prefer recent completions?
+ completions-sort 'historical)
 
 ;; Prevent visual line wrapping in narrow frames
 (add-hook 'completion-list-mode-hook (lambda () (setq-local truncate-lines t)))
@@ -1487,6 +1495,11 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;;; HELP
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Help>
 
+;; Define local leader keymap for `help-mode'
+(eon-localleader-defkeymap help-mode eon-localleader-help-map
+  :doc "Local leader keymap for Help buffers."
+  "s" #'help-find-source)
+
 ;; Make commonly used help commands available under the leader key
 (keymap-set ctl-z-h-map "," `("..." . ,help-map))
 (keymap-set ctl-z-h-map "e" #'view-echo-area-messages)
@@ -1514,11 +1527,20 @@ Some themes may come as functions -- wrap these ones in lambdas."
   ;; Highlight current line in the package manager UI?
   (add-hook 'package-menu-mode-hook (lambda () (hl-line-mode 1))))
 
+(with-eval-after-load 'package-vc
+  (setopt package-vc-register-as-project nil))
+
 ;; _____________________________________________________________________________
 ;;; CUSTOMIZATION UI SETTINGS
 
 ;; The most important Emacs ONBOARD preferences are customizable via GUI.
 ;; Open the GUI via "<leader> x C"
+
+;; Define local leader keymap for `Custom-mode'
+(eon-localleader-defkeymap Custom-mode eon-localleader-customzation-map
+  :doc "Local leader keymap for Customization buffers."
+  ;; Pop up a  buffer to edit the settings in '.dir-locals.el'
+  "d" #'customize-dirlocals)
 
 (defun eon-customize-group ()
   "Set preferences via GUI."
@@ -1541,8 +1563,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (setopt eldoc-minor-mode-string nil
         eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly
         eldoc-echo-area-display-truncation-message nil
-        eldoc-echo-area-prefer-doc-buffer nil
-        eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
+        eldoc-echo-area-prefer-doc-buffer nil)
 
 ;; Open the documentation buffer via "<leader> c d"
 (keymap-set ctl-z-c-map "d" #'eldoc)
@@ -1566,9 +1587,9 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (keymap-set ctl-z-s-map "r"     #'query-replace-regexp)
 (keymap-set ctl-z-s-map "R"     #'query-replace)
 
-;; Replace all strings immediately
-(keymap-global-set      "C-M-%" #'replace-regexp)
-(keymap-set ctl-z-s-map "C-r"   #'replace-regexp)
+;; Replace all occurences immediately
+(keymap-global-set      "C-M-%" #'replace-regexp-as-diff)
+(keymap-set ctl-z-s-map "C-r"   #'replace-regexp-as-diff)
 
 ;; _____________________________________________________________________________
 ;;; IMENU
@@ -1614,6 +1635,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (keymap-set ctl-z-w-map "o" #'other-window-prefix)
 (keymap-set ctl-z-w-map "q" #'quit-window)
 (keymap-set ctl-z-w-map "s" #'split-window-below)
+(keymap-set ctl-z-w-map "t" #'toggle-window-dedicated)
 (keymap-set ctl-z-w-map "v" #'split-window-right)
 (keymap-set ctl-z-w-map "w" #'other-window)
 
@@ -1639,6 +1661,11 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (keymap-set ctl-z-t-map "f" #'find-file-other-tab)
 (keymap-set ctl-z-t-map "d" #'dired-other-tab)
 (keymap-set ctl-z-t-map "b" #'switch-to-buffer-other-tab)
+
+;; What to do with a window whose buffer was killed?
+;; nil = no special handling. Let `set-window-configuration' decide,
+;; instead of displaying a placeholder bufffer.
+(setopt tab-bar-select-restore-windows nil)
 
 ;; _____________________________________________________________________________
 ;;; BUFFER MANAGEMENT
@@ -1707,6 +1734,9 @@ If called from the minibuffer, exit via `abort-recursive-edit'."
   (let ((kill-buffer-query-functions '()))
     (mapc #'kill-buffer (buffer-list))))
 (keymap-set ctl-z-b-map "C-k" #'eon-kill-all-buffers)
+
+;; Kill matching buffers - select via regexp
+(keymap-set ctl-z-b-map "M-k" #'kill-matching-buffers)
 
 ;; Uniquify buffer names for buffers that would have identical names
 (setopt uniquify-buffer-name-style 'forward)
@@ -2000,7 +2030,7 @@ pretending to clear it."
 ;; Set the default
 (eon-trash-on)
 
-;; Inhibit using the system trash when deleting remote files?
+;; Suppress moving remote files to the local trash when deleting?
 (setopt remote-file-name-inhibit-delete-by-moving-to-trash t)
 
 ;; Resolve symlinks so that operations are conducted from the file's directory?
@@ -2126,8 +2156,6 @@ pretending to clear it."
 (with-eval-after-load 'dired
   ;; Switch to wdired-mode and edit directory content like a text buffer
   (keymap-set dired-mode-map "e" #'wdired-change-to-wdired-mode)
-  ;; Open file in associated OS application
-  (keymap-set dired-mode-map "M-RET" #'dired-do-open)
   ;; "f" opens file/directory; bring forward/backward pattern to Dired
   (keymap-set dired-mode-map "b" #'dired-up-directory))
 
@@ -2193,6 +2221,11 @@ pretending to clear it."
 ;; that runs within Emacs. It is independent from the OS. Eshell looks like
 ;; a POSIX shell superficially, but is also a REPL for Emacs Lisp expressions.
 
+;; Eshell scripts can run in batch mode.
+;; By adding the following interpreter directive to an Eshell script, you
+;; can make it executable like other shell scripts:
+;; #!/usr/bin/env -S emacs --batch -f eshell-batch-file
+
 ;; Create Eshell loacal leader keymap
 (eon-localleader-defkeymap eshell-mode eon-localleader-eshell-map
   :doc "Local leader keymap for `eshell-mode'.")
@@ -2201,6 +2234,7 @@ pretending to clear it."
         eshell-scroll-to-bottom-on-input 'this
         eshell-buffer-maximum-lines 65536
         eshell-history-size 1024
+        eshell-history-append t
         eshell-hist-ignoredups t
         eshell-cmpl-ignore-case t
         eshell-list-files-after-cd t
@@ -2334,7 +2368,8 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 
 (eon-localleader-defkeymap eww-mode eon-localleader-eww-map
   :doc "Local leader keymap for the Emacs Web Wowser"
-  "e" #'eww-browse-with-external-browser)
+  "e" #'eww-browse-with-external-browser
+  "r" #'eww-readable)
 
 ;; _____________________________________________________________________________
 ;;; EMAIL
@@ -2409,6 +2444,14 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 (keymap-set ctl-z-c-map "f" `("Format" . ,ctl-z-c-f-map))
 
 ;; _____________________________________________________________________________
+;;; TEXT / PROSE
+
+;; Sentences end with a single or double spaces?
+(setopt sentence-end-double-space nil)
+
+;; TODO Add Flyspell / Ispell presets here
+
+;; _____________________________________________________________________________
 ;;; LINE NUMBERS
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Display-Custom>
 
@@ -2437,14 +2480,6 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 
 ;; Visual line wrapping in text mode
 (add-hook 'text-mode-hook #'visual-line-mode)
-
-;; _____________________________________________________________________________
-;;; TEXT / PROSE
-
-;; Sentences end with a single or double spaces?
-(setopt sentence-end-double-space nil)
-
-;; TODO Add Flyspell / Ispell presets here
 
 ;; _____________________________________________________________________________
 ;;; FOLDING
@@ -2550,7 +2585,8 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 
 ;; Show all project keybindings in the selection?
 (setopt project-switch-use-entire-map nil)
-;; Show these insteads:
+
+;; Show these instead?
 (setopt project-switch-commands '((project-find-file   "File"   ?f)
                                   (project-find-dir    "Dired"  ?d)
                                   (project-find-regexp "Grep"   ?g)
