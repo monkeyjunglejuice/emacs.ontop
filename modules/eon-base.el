@@ -325,10 +325,10 @@ Adapted from Doom Emacs.")
 ;; Goto visible character
 (use-package avy :ensure t
   :bind
-  ("M-g c" . avy-goto-char)
+  ("M-g c" . avy-goto-char-timer)
   ("M-g l" . avy-goto-line)
   (:map ctl-z-g-map
-        ("g" . avy-goto-char)
+        ("g" . avy-goto-char-timer)
         ("l" . avy-goto-line)))
 
 ;; Goto last change
@@ -382,6 +382,7 @@ Adapted from Doom Emacs.")
 ;; Show/hide dotfiles
 ;; <https://github.com/mattiasb/dired-hide-dotfiles>
 (use-package dired-hide-dotfiles :ensure t
+  :after dired
   :diminish
   :custom
   (dired-hide-dotfiles-verbose nil)
@@ -393,12 +394,18 @@ Adapted from Doom Emacs.")
 
 ;; Filter Dired listings
 (use-package dired-narrow :ensure t
+  :after dired
+  :init
+  (require 'dired-narrow)
   :bind
   (:map eon-localleader-dired-map
         ("/" . dired-narrow-regexp)))
 
 ;; Ranger-like features
 (use-package dired-ranger :ensure t
+  :after dired
+  :init
+  (require 'dired-ranger)
   :bind
   (:map dired-mode-map
         ("w" . dired-ranger-copy)  ; was dired-copy-filename-as-kill
@@ -406,6 +413,7 @@ Adapted from Doom Emacs.")
         ("Y" . dired-ranger-move)))
 
 (use-package dired-subtree :ensure t
+  :after dired
   :init
   (require 'dired-subtree)
   :bind

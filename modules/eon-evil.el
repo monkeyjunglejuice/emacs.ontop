@@ -28,12 +28,24 @@
   ;; Let Evil handle the cursor styles
   (eon-cursor-mode -1)
 
+  ;; Required settings for Evil Collection to handle keybindings
   (setopt evil-want-integration t
           evil-want-keybinding nil)
 
-  ;; We're not using Evil's leader/localleader implementation. Instead we're
-  ;; wiring the agnostic implementation from Emacs ONBOARD `eon.el' that works
+  ;; We're not using Evil's leader/localleader implementation. Instead we
+  ;; wire the agnostic implementation from Emacs ONBOARD './eon.el' that works
   ;; independently from Evil.
+
+  ;; We define a separate leader key for Evil here, so that the default leader
+  ;; key fulfills the role of the alternative leader key. The alternative leader
+  ;; leader will be accessible from Evil states other than <normal> or <visual>,
+  ;; e.g. <insert> or <emacs>.
+  ;;
+  ;; You may want to customize the variables:
+  ;; `eon-evil-leader-key' - default "SPC"
+  ;; `eon-evil-localleader-key' - default ","
+  ;; `eon-leader-key' - default for Evil "C-SPC"
+  ;; `eon-localleader-key' - default "C-,"
 
   (defun eon-evil--bind-leader-in-states (old new)
     "Explicitly bind the leader key to prevent hijacking."
@@ -47,7 +59,8 @@
 
   (defun eon-evil--set-leaders (sym val)
     "Setter for leader and local leader keys.
-Used by custom variables `eon-evil-leader-key' and `eon-evil-localleader-key'."
+Used by the custom variables `eon-evil-leader-key'
+and `eon-evil-localleader-key'."
     (let ((old (and (boundp sym) (default-value sym))))
       (set-default sym val)
       (with-eval-after-load 'evil
@@ -59,7 +72,7 @@ Used by custom variables `eon-evil-leader-key' and `eon-evil-localleader-key'."
            (define-key eon-leader-map (kbd val)
                        (cons "Local" eon-localleader-map)))))))
 
-  (defcustom eon-evil-leader-key ","
+  (defcustom eon-evil-leader-key "SPC"
     "Leader key for Evil."
     :group 'eon-leader
     :type 'string
@@ -79,18 +92,19 @@ Used by custom variables `eon-evil-leader-key' and `eon-evil-localleader-key'."
   (evil-mode 1)
 
   (setq evil-normal-state-cursor eon-cursor-type-extra
-        evil-emacs-state-cursor  eon-cursor-type-write
+        evil-visual-state-cursor eon-cursor-type-extra-select
         evil-insert-state-cursor eon-cursor-type-write
-        evil-visual-state-cursor eon-cursor-type-extra-select)
+        evil-emacs-state-cursor  eon-cursor-type-write)
 
-  ;; Explicitly bind the leader key
+  ;; Explicitly bind the Evil leader key, defaults to "SPC". Customize
+  ;; `eon-evil-leader-key' and/or `eon-evil-localleader-key' to change.
   (eon-evil--bind-leader-in-states nil eon-evil-leader-key)
+  ;; Set "M-SPC" as the default alternative leader key for Evil;
+  ;; customize `eon-leader-key' to change the binding.
+  (setopt eon-leader-key "M-SPC")
 
   ;; Escape from Evil Emacs state
   (evil-define-key 'emacs 'global [escape] #'evil-normal-state)
-
-  ;; Fast window switching
-  (evil-define-key 'normal 'global (kbd "SPC") #'evil-window-mru)
 
   ;; Comment/uncomment by pressing "gcc" in normal mode and "gc" in visual mode
   (evil-define-operator eon-evil-comment-or-uncomment (beg end)
@@ -136,8 +150,8 @@ Used by custom variables `eon-evil-leader-key' and `eon-evil-localleader-key'."
 
   ;; :custom
 
-  ;; (evil-collection-key-blacklist '(eon-leader-key
-  ;;                                  eon-evil-leader-key))
+  ;; (evil-collection-key-blacklist '(eon-evil-leader-key
+  ;;                                  eon-leader-key))
 
   :config
 
