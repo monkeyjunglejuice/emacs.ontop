@@ -1,8 +1,20 @@
-* 🚀 Emacs ONTOP
+* 🚀 EON
 
-Emacs ONTOP is an extension to the [[https://github.com/monkeyjunglejuice/emacs.onboard][Emacs ONBOARD starterkit]] with certain niceties and setups for several programming languages.
+Emacs ONTOP is a new Emacs distribution in the making, built on top of the [[https://github.com/monkeyjunglejuice/emacs.onboard][Emacs ONBOARD starterkit]].
 
+- /Under heavy development right now./
 - /Compilers, language servers and build systems must be installed separately./
+- /If Tree Sitter is installed on your machine, Emacs ONBOARD will download, build and install required grammars automatically./
+
+It is supposed to be fully modular with strictly separated concerns. There are 4 stages:
+
+0. If you disable them all, you have bare bones, stock Emacs.
+
+1. With just the =eon= module enabled but nothing else, the experience is exactly that of Emacs ONBOARD -- only built-in Emacs packages are set up and configured, without any 3rd-party packages.
+
+2. With =eon= and =eon-base= modules enabled, you'll get extended comfort.
+
+3. Everything else builds on top of the stages 0, 1 and 2: AI/LLM integration, programming languages, etc (have a look at =eon-setup-modules= for the full list).
 
 ** Emacs for Common Lisp ★★★★★
 *eon-lang-commonlisp*: Complete Common Lisp setup with [[https://github.com/joaotavora/sly][Sly]]. Just install SBCL with your package manager and then [[https://www.quicklisp.org/beta/][Quicklisp]]. The setup covers most needs.
@@ -55,10 +67,16 @@ git clone https://github.com/monkeyjunglejuice/emacs.ontop.git ~/.emacs.ontop
 (load-file "~/.emacs.ontop/eon-init.el")
 #+end_src
 
-- *3.* Edit =~/.emacs.ontop/eon-setup-modules.el= to select your desired modules, then restart Emacs. The installation process begins: Emacs will download and install the required Emacs packages from MELPA. It will take approx. 1--3 min, depending on your module selection and internet speed. If the process gets interupted, that's no problem -- just restart Emacs, and it will continue. There will be some warnings, which can be ignored -- these are mostly related to the compilation of the downloaded Emacs packages.
+- *3.* Uncomment your desired modules in =~/.emacs.ontop/eon-setup-modules.el=, then restart Emacs.
+
+  The installation process begins: Emacs will download and install the required Emacs packages from Melpa, GNU/non-GNU Elpa and download/build Treesitter grammars according to your programming language selection.
+
+  Emacs packages will be natively compiled during the installation. It will take a couple of minutes, depending on your module selection and internet speed.
+
+  If the process gets interupted, that's no problem -- just restart Emacs, and it will continue. There might be some warnings, which can be ignored -- these are mostly related to the compilation of the downloaded Emacs packages.
 
 * Get comfortable
-Look into the module files in order to learn about the commands and key bindings -- all documentation lives there. If you want to change settings, re-define these settings within your =init.el= or =eon-setup-personal.el=.
+Look into the module files in order to learn about the commands and key bindings -- all documentation lives there. If you want to change settings, re-define these settings within your =init.el= (recommended) or =eon-setup-personal.el=.
 
 ** For new Emacs users:
 "M-x" — Press <Alt>+<x> to show all commands
