@@ -12,7 +12,10 @@
 
 (use-package hl-todo :ensure t
   :config
-  (global-hl-todo-mode))
+  (global-hl-todo-mode)
+  :bind
+  (:map ctl-z-c-map
+        ("t" . #'hl-todo-insert)))
 
 (when (eon-modulep 'eon-consult)
   (use-package consult-todo :ensure t
