@@ -31,22 +31,39 @@
 ;; _____________________________________________________________________________
 ;;; PLANS AND IDEAS
 
-;; TODO The loader is very primitive right now. It just `require's the features
-;; listed in `eon-modules' in order.
+;; KLUDGE The loader is very primitive right now. It just `require's the
+;; features listed in `eon-modules' in order.
 
-;; TODO Maybe the loader could be extended to provide additional value, for
+;; MAYBE The loader could be extended to provide additional value, for
 ;; instance clean unloading and undefining on the fly for vars, functions and
 ;; keybindings introduced by a module; meaning all of that may work without
 ;; restarting Emacs.
 
-;; TODO Enabling/disabling modules shouldn't be done by uncommenting/commenting.
-;; There are more elegant and sensible ways; must work from Lisp code,
-;; the `customize' UI and maybe `completing-read'.
+;; TODO Enabling/disabling modules maybe shouldn't be done by uncommenting and
+;; commenting. There might be more elegant and sensible ways; must work from
+;; Lisp code, the `customize' UI and maybe `completing-read'.
 
 ;; TODO Modules are currently implemented as Emacs "features". Therefore they
-;; are basically Emacs packages, after the required metadata has been added to
+;; are basically Emacs packages, if the required metadata has been added to
 ;; each module. That way they could be available as "meta-packages" on Melpa /
 ;; GNU Elpa. It might be interesting to treat them as global minor modes also.
+
+;; TODO Add package metadata to all modules; as there are:
+;; - Version number
+;; - Minimum required Emacs version
+;; - Dependencies
+;; - License header
+;; - what else?
+
+;; MAYBE Define and add a metadata format for modules, if the metadata
+;; required for packages turns out as not enough.
+
+;; TODO Hooks should be automatically generated for all modules, since
+;; using `with-eval-after-load' is ok but doesn't cover all cases.
+;; As there are:
+;; before-load-hook, after-load-hook, before-unload-hook, after-unload-hook.
+
+;; MAYBE Explore how to further leverage `use-package' regarding modules.
 
 ;; TODO Deprecate 'eon-setup-personal.el' in favor of a directory for personal
 ;; modules and config files; e.g. '~/.emacs.d/eon/'.
@@ -79,35 +96,26 @@
 ;; _____________________________________________________________________________
 ;;; LOADER
 
-;; Function to load a single module
-;; TODO Will be extended further
-(defun eon-require-module (feature)
-  "Require FEATURE, report an error if loading fails.
-Central function to load an Eon module."
-  (condition-case err
-      (require feature)
-    (error (message "Failed to load %s: %s" feature err))))
-
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - Built-in modules
-
 ;; Detect and define the path of the EON root directory
 (defvar eon-root-dir
   (file-name-directory (or load-file-name buffer-file-name
                            (locate-library "eon-init")))
   "Detected absolute path of the directory containing 'eon-init.el'.
-The path ends with a trailing slash; will be added to the `load-path'.")
+The path ends with a trailing slash.")
 
-;; Add the directory to the `load-path'
+;; Add the root directory to the `load-path'
 (add-to-list 'load-path eon-root-dir)
+
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - Built-in modules
 
 ;; Define the directory for built-in modules
 (defvar eon-modules-dir
   (concat eon-root-dir "modules/")
   "Path of the directory containing the EON modules.
-The path ends with a trailing slash; will be added to the `load-path'.")
+The path ends with a trailing slash.")
 
-;; Add the directory to the `load-path'
+;; Add the modules directory to the `load-path'
 (add-to-list 'load-path eon-modules-dir)
 
 ;; List of modules ready to load
@@ -133,26 +141,26 @@ loaded, use `featurep' instead."
 ;; This might further enable specific logic, e.g. determining precedence,
 ;; managing dependencies, etc.
 
-;; Define the path of the EON user directory
+;; Define the path of the Emacs ONTOP user directory
 (defcustom eon-user-dir
   (expand-file-name (concat user-emacs-directory "eon-user/"))
   "Path of the EON user directory.
 Defaults to the directory 'eon-user/' within the Emacs init directory;
 e.g. '~/.emacs.d/eon-user/' or similar, depending on your system/config.
-The path must end with a trailing slash; will be added to the `load-path'."
+The path must end with a trailing slash."
   :type '(directory)
   :group 'eon)
 
-;; Add the directory to the `load-path'
+;; Add the user directory to the `load-path'
 (add-to-list 'load-path eon-user-dir)
 
-;; Define the path of the EON user modules directory
+;; Define the path of the Emacs ONTOP user modules directory
 (defvar eon-user-modules-dir
   (concat eon-user-dir "modules/")
   "Path of the directory containing the EON user modules.
-The path ends with a trailing slash; will be added to the `load-path'.")
+The path ends with a trailing slash.")
 
-;; Add the directory to the `load-path'
+;; Add the user modules directory to the `load-path'
 (add-to-list 'load-path eon-user-modules-dir)
 
 ;; List of user-defined modules ready to load
@@ -173,6 +181,9 @@ loaded, use `featurep' instead."
 ;;; - Contrib modules
 ;; NOTE Not implemented yet
 
+;; Distinct from built-in modules and user-defined modules,
+;; in order to tell them apart.
+
 ;; Contrib modules will be:
 ;; - Meta-Packages available on Melpa etc.
 ;; - Meta-Packages as Git/VC repos
@@ -180,26 +191,72 @@ loaded, use `featurep' instead."
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Bootstrap
 
+(defun eon-module-load-path ()
+  "Return list of existing EON module directories.
+
+Built from `eon-root-dir', `eon-modules-dir', `eon-user-modules-dir'
+and `eon-contrib-dir', keeping only those that name existing
+directories."
+  (delq nil
+        (list (and (bound-and-true-p eon-root-dir)
+                   (file-directory-p eon-root-dir)
+                   eon-root-dir)
+              (and (bound-and-true-p eon-modules-dir)
+                   (file-directory-p eon-modules-dir)
+                   eon-modules-dir)
+              (and (bound-and-true-p eon-user-modules-dir)
+                   (file-directory-p eon-user-modules-dir)
+                   eon-user-modules-dir)
+              (and (bound-and-true-p eon-contrib-dir)
+                   (file-directory-p eon-contrib-dir)
+                   eon-contrib-dir))))
+
+(defun eon-load-module (&optional feature)
+  "Require FEATURE with error reporting.
+Interactively, prompt for a module name using completion over all
+.el/.elc files in the existing EON module directories."
+  (interactive
+   (let* ((paths (eon-module-load-path)))
+     (unless paths
+       (user-error "No EON module directories exist"))
+     (let* ((files (apply #'append
+                          (mapcar (lambda (dir)
+                                    (directory-files
+                                     dir nil "^[^.].*\\.elc?\\'"))
+                                  paths)))
+            (names (delete-dups
+                    (mapcar #'file-name-sans-extension files)))
+            (name  (completing-read "EON module: " names nil t)))
+       (list (intern name)))))
+  (unless feature
+    (error "FEATURE is required when called non-interactively"))
+  (condition-case err
+      (require feature)
+    (error
+     (message "Failed to load %S: %s"
+              feature (error-message-string err)))))
+
+;; Placeholder
+(defalias 'eon-unload-module #'unload-feature)
+
+;; Add module commands as leader keybindings
+(with-eval-after-load 'eon
+  (keymap-set ctl-z-x-map "m" #'eon-load-module)
+  (keymap-set ctl-z-x-map "M" #'eon-unload-module))
+
 ;; Load the file with the module selection `eon-setup-modules.el',
 ;; which in turn sets the initially empty custom variable `eon-modules'.
-(eon-require-module 'eon-setup-modules)
+(eon-load-module 'eon-setup-modules)
 
 ;; Require each module from the module selection
-(defun eon-init-with (modules-list)
+(defun eon-load-modules (modules-list)
   "Require each selected Eon module from MODULES-LIST.
 The modules then will install necessary 3rd-party Emacs packages."
   (dolist (module modules-list)
-    (eon-require-module module)))
+    (eon-load-module module)))
 
 ;; Load all default modules
-(eon-init-with eon-modules)
-
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - Helpers
-
-;; Placeholder, added for UX/consistency.
-(defalias 'eon-load-module #'load-library)
-(defalias 'eon-unload-module #'unload-feature)
+(eon-load-modules eon-modules)
 
 ;; _____________________________________________________________________________
 (provide 'eon-init)
