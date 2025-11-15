@@ -185,12 +185,32 @@ is loaded, use `featurep' instead."
 ;;; - Contrib modules
 ;; NOTE Not implemented yet
 
-;; Distinct from built-in modules and user-defined modules,
-;; in order to tell them apart.
+;; Distinct from built-in modules and user-defined modules.
 
 ;; Contrib modules will be:
-;; - Meta-Packages available on Melpa etc.
-;; - Meta-Packages as Git/VC repos
+;; - (Meta-)Packages available on Melpa etc.
+;; - (Meta-)Packages as VC/Git repos
+
+;; Contrib modules can be installed via Package.el, other package managers
+;; and manually by putting them into `eon-contrib-modules-dir'.
+
+(defcustom eon-contrib-modules-dir
+  (expand-file-name (concat eon-user-dir "contrib-modules/"))
+  "Path of the directory containing the EON contrib modules.
+
+Defaults to the directory 'eon/contrib-modules/' within your Emacs init
+directory; e.g. '~/.emacs.d/eon/contrib-modules/'.
+
+The default path may vary, depending on your system/config.
+If you don't like the default path, move the contrib modules directory
+to another location and adapt the the path.
+
+The path must end with a trailing slash."
+  :type '(directory)
+  :group 'eon)
+
+;; Add the contrib modules directory to the `load-path'
+(add-to-list 'load-path eon-contrib-modules-dir)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Bootstrap
@@ -198,9 +218,11 @@ is loaded, use `featurep' instead."
 (defun eon-module-load-path ()
   "Return list of existing EON module directories.
 Built from `eon-root-dir', `eon-modules-dir', `eon-user-modules-dir'
-and `eon-contrib-dir', keeping only those that name existing
+and `eon-contrib-modules-dir', keeping only those that name existing
 directories."
   (delq nil
+        ;; NOTE eon-root-dir will be removed from the `load-path'.
+        ;; Only explicitly specified files should be loaded from there.
         (list (and (bound-and-true-p eon-root-dir)
                    (file-directory-p eon-root-dir)
                    eon-root-dir)
@@ -210,14 +232,18 @@ directories."
               (and (bound-and-true-p eon-user-modules-dir)
                    (file-directory-p eon-user-modules-dir)
                    eon-user-modules-dir)
-              (and (bound-and-true-p eon-contrib-dir)
-                   (file-directory-p eon-contrib-dir)
-                   eon-contrib-dir))))
+              ;; NOTE Not implemented yet; can be packages/repos rather than
+              ;; "naked" modules.
+              (and (bound-and-true-p eon-contrib-modules-dir)
+                   (file-directory-p eon-contrib-modules-dir)
+                   eon-contrib-modules-dir))))
 
 (defun eon-load-module (&optional feature)
   "Require FEATURE, otherwise report error.
 Interactively, prompt for a module name using completion over all
 .el/.elc files in the existing EON module directories."
+  ;; Interactive branch concerning manual module loading.
+  ;; Presents a selection of ALL existing EON modules.
   (interactive
    (let* ((paths (eon-module-load-path)))
      (unless paths
@@ -231,6 +257,8 @@ Interactively, prompt for a module name using completion over all
                     (mapcar #'file-name-sans-extension files)))
             (name  (completing-read "EON module: " names nil t)))
        (list (intern name)))))
+  ;; Non-interactive branch concerning initialization;
+  ;; loads a single module.
   (unless feature
     (error "FEATURE is required when called non-interactively"))
   (condition-case err
@@ -245,16 +273,24 @@ Interactively, prompt for a module name using completion over all
 ;; Add module commands as leader keybindings
 (with-eval-after-load 'eon
   (keymap-set ctl-z-x-map "m" #'eon-load-module)
+  ;; NOTE Unloads only manually loaded modules right now,
+  ;; as it doesn't force unloading.
   (keymap-set ctl-z-x-map "M" #'eon-unload-module))
 
-;; Load the file with the module selection `eon-setup-modules.el',
+;; Load the module selection `eon-setup-modules.el',
 ;; which in turn sets the initially empty custom variable `eon-modules'.
-(eon-load-module 'eon-setup-modules)
+(eon-load-module
+ (if (file-exists-p (concat eon-user-dir "eon-setup-modules.el"))
+     ;; Feature from file in the user directory takes precedence
+     (require 'eon-setup-modules
+              (concat eon-user-dir "eon-setup-modules.el"))
+   ;; Otherwise require feature from file in root directory
+   (require 'eon-setup-modules
+            (concat eon-root-dir "eon-setup-modules.el"))))
 
-;; Require each module from the module selection
+;; Walk through a list of modules and load each module
 (defun eon-load-modules (modules-list)
-  "Require each selected Eon module from MODULES-LIST.
-The modules then will install necessary 3rd-party Emacs packages."
+  "Require each EON module from MODULES-LIST in order."
   (dolist (module modules-list)
     (eon-load-module module)))
 
