@@ -70,10 +70,10 @@
 
 ;; TODO Add command `eon-user-setup' that creates the directory structure
 ;; under `eon-user-dir' and copies `eon-setup-modules.el' there:
-;;  eon
-;; ├──  contrib-modules
-;; ├──  modules
-;; └──  eon-setup-modules.el
+;; eon
+;; ├── contrib
+;; ├── modules
+;; └── eon-setup-modules.el
 
 ;; TODO Change license to GPL v3 and greater.
 
