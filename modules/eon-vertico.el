@@ -29,6 +29,7 @@
 
   ;; Display certain listings in another form?
   (vertico-multiform-commands '((consult-imenu buffer)
+                                (consult-imenu-multi buffer)
                                 (consult-outline buffer)
                                 (consult-grep buffer)
                                 (consult-ripgrep buffer)))
