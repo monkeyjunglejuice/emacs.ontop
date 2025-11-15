@@ -199,14 +199,14 @@ is loaded, use `featurep' instead."
 ;; - (Meta-)Packages as VC/Git repos
 
 ;; Contrib modules can be installed via Package.el, other package managers
-;; and manually by putting them into `eon-contrib-modules-dir'.
+;; and manually by putting them into `eon-user-contrib-dir'.
 
-(defcustom eon-contrib-modules-dir
-  (expand-file-name (concat eon-user-dir "contrib-modules/"))
-  "Path of the directory containing the EON contrib modules.
+(defcustom eon-user-contrib-dir
+  (expand-file-name (concat eon-user-dir "contrib/"))
+  "Path of the directory containing manually installed EON contrib modules.
 
-Defaults to the directory 'eon/contrib-modules/' within your Emacs init
-directory; e.g. '~/.emacs.d/eon/contrib-modules/'.
+Defaults to the directory 'eon/contrib/' within your Emacs init
+directory; e.g. '~/.emacs.d/eon/contrib/'.
 
 The default path may vary, depending on your system/config.
 If you don't like the default path, move the contrib modules directory
@@ -217,7 +217,14 @@ The path must end with a trailing slash."
   :group 'eon)
 
 ;; Add the contrib modules directory to the `load-path'
-(add-to-list 'load-path eon-contrib-modules-dir)
+(add-to-list 'load-path eon-user-contrib-dir)
+
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - Create user directory structure
+
+;; TODO Create user directories according to the variables
+;; `eon-user-dir', `eon-user-modules-dir' and `eon-user-contrib-dir' and
+;; copy eon-setup-modules.el into `eon-user-dir'.
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Bootstrap
@@ -225,7 +232,7 @@ The path must end with a trailing slash."
 (defun eon-module-load-path ()
   "Return list of existing EON module directories.
 Built from `eon-root-dir', `eon-modules-dir', `eon-user-modules-dir'
-and `eon-contrib-modules-dir', keeping only those that name existing
+and `eon-user-contrib-dir', keeping only those that name existing
 directories."
   (delq nil
         ;; NOTE eon-root-dir will be removed from the `load-path'.
@@ -241,9 +248,9 @@ directories."
                    eon-user-modules-dir)
               ;; NOTE Not implemented yet; can be packages/repos rather than
               ;; "naked" modules.
-              (and (bound-and-true-p eon-contrib-modules-dir)
-                   (file-directory-p eon-contrib-modules-dir)
-                   eon-contrib-modules-dir))))
+              (and (bound-and-true-p eon-user-contrib-dir)
+                   (file-directory-p eon-user-contrib-dir)
+                   eon-user-contrib-dir))))
 
 (defun eon-load-module (&optional feature)
   "Require FEATURE, otherwise report error.
