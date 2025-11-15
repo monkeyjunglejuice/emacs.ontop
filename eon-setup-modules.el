@@ -26,6 +26,7 @@
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ;;; NECESSARY MODULES
+   ;; Other modules rely on these to be enabled:
 
    eon                           ; The Emacs ONBOARD starter-kit
    eon-base                      ; Shared packages and definitions
