@@ -32,30 +32,37 @@
                                 (consult-outline buffer)
                                 (consult-grep buffer)
                                 (consult-ripgrep buffer)))
+
   ;; In the minibuffer
   (vertico-count 12)
   (vertico-resize 'grow-only)
+
   ;; Enable cycling for `vertico-next' and `vertico-previous'?
   (vertico-cycle nil)
 
   :config
 
-  ;; Enable Vertico
-  (vertico-mode)
-  ;; How to display Vertico per default?
-  (vertico-multiform-mode)
+  ;; Enable indexed candidates, select via "M-<number> RET"
+  ;; (vertico-indexed-mode)
 
-  ;; :hook
+  ;; Save `vertico-repeat' history across Emacs sessions
+  (add-to-list 'savehist-additional-variables 'vertico-repeat-history)
+
+  :hook
 
   ;; Enable repeatable Vertico sessions
-  ;; (minibuffer-setup . vertico-repeat-save)
+  (minibuffer-setup . vertico-repeat-save)
 
-  ;; :bind
+  :bind
 
-  ;; (:map vertico-map
-  ;;       ("M-P" . vertico-repeat-previous)
-  ;;       ("M-N" . vertico-repeat-next))
-  )
+  (:map ctl-z-map
+        ("." . vertico-repeat))
+  (:map vertico-map
+        ("M-P" . vertico-repeat-previous)
+        ("M-N" . vertico-repeat-next)
+        ("M-g" . vertico-quick-jump)
+        ("M-i" . vertico-quick-insert)
+        ("M-j" . vertico-quick-exit)))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; EMACS (built-in)
