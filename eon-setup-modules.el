@@ -54,7 +54,7 @@
    eon-cape                      ; Completion-at-point extensions
    eon-consult                   ; Navigation and search
    ;; eon-corfu                     ; Code (auto-)completion
-   ;; eon-embark                    ; Minibuffer actions and context menu
+   eon-embark                    ; Minibuffer actions and context menu
    ;; eon-flycheck                  ; Syntax checker alternative
    ;; eon-fonts                     ; Curated font sets
    eon-git                       ; Magit user interface and friends
