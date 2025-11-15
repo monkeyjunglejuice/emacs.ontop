@@ -193,7 +193,6 @@ loaded, use `featurep' instead."
 
 (defun eon-module-load-path ()
   "Return list of existing EON module directories.
-
 Built from `eon-root-dir', `eon-modules-dir', `eon-user-modules-dir'
 and `eon-contrib-dir', keeping only those that name existing
 directories."
