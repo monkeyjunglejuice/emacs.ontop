@@ -211,7 +211,7 @@ directories."
                    eon-contrib-dir))))
 
 (defun eon-load-module (&optional feature)
-  "Require FEATURE with error reporting.
+  "Require FEATURE, otherwise report error.
 Interactively, prompt for a module name using completion over all
 .el/.elc files in the existing EON module directories."
   (interactive
