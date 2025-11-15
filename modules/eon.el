@@ -1501,8 +1501,8 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 ;; Define local leader keymap for `help-mode'
 (eon-localleader-defkeymap help-mode eon-localleader-help-map
-                           :doc "Local leader keymap for Help buffers."
-                           "s" #'help-find-source)
+  :doc "Local leader keymap for Help buffers."
+  "s" #'help-find-source)
 
 ;; Make commonly used help commands available under the leader key
 (keymap-set ctl-z-h-map "," `("..." . ,help-map))
@@ -1542,9 +1542,9 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 ;; Define local leader keymap for `Custom-mode'
 (eon-localleader-defkeymap Custom-mode eon-localleader-customzation-map
-                           :doc "Local leader keymap for Customization buffers."
-                           ;; Pop up a  buffer to edit the settings in '.dir-locals.el'
-                           "d" #'customize-dirlocals)
+  :doc "Local leader keymap for Customization buffers."
+  ;; Pop up a  buffer to edit the settings in '.dir-locals.el'
+  "d" #'customize-dirlocals)
 
 (defun eon-customize-group ()
   "Set preferences via GUI."
@@ -2143,7 +2143,7 @@ pretending to clear it."
 
 ;; Define localleader keymap for `dired-mode'
 (eon-localleader-defkeymap dired-mode eon-localleader-dired-map
-                           :doc "Local leader keymap for Dired buffers.")
+  :doc "Local leader keymap for Dired buffers.")
 
 ;; The `dired' keybinding is "C-x d". This new keybinding is in accordance
 ;; with "C-x C-f" for visiting files
@@ -2232,7 +2232,7 @@ pretending to clear it."
 
 ;; Create Eshell loacal leader keymap
 (eon-localleader-defkeymap eshell-mode eon-localleader-eshell-map
-                           :doc "Local leader keymap for `eshell-mode'.")
+  :doc "Local leader keymap for `eshell-mode'.")
 
 (setopt eshell-banner-message ""
         eshell-scroll-to-bottom-on-input 'this
@@ -2267,7 +2267,7 @@ pretending to clear it."
 
 ;; Create Shell local leader keymap
 (eon-localleader-defkeymap shell-mode eon-localleader-shell-map
-                           :doc "Local leader keymap for `shell-mode'.")
+  :doc "Local leader keymap for `shell-mode'.")
 
 ;; Set another shell than your default one?
 ;; (setopt shell-file-name "/usr/bin/bash")
@@ -2371,9 +2371,9 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 (keymap-set ctl-z-g-map "w" #'browse-web)
 
 (eon-localleader-defkeymap eww-mode eon-localleader-eww-map
-                           :doc "Local leader keymap for the Emacs Web Wowser"
-                           "e" #'eww-browse-with-external-browser
-                           "r" #'eww-readable)
+  :doc "Local leader keymap for the Emacs Web Wowser"
+  "e" #'eww-browse-with-external-browser
+  "r" #'eww-readable)
 
 ;; _____________________________________________________________________________
 ;;; EMAIL
@@ -2484,6 +2484,9 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 
 ;; Visual line wrapping in text mode
 (add-hook 'text-mode-hook #'visual-line-mode)
+
+;; Toggle `visual-line-mode'
+(keymap-set ctl-z-x-map "l" #'visual-line-mode)
 
 ;; _____________________________________________________________________________
 ;;; FOLDING
@@ -2909,7 +2912,7 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
 
 ;; Create the local leader keymap
 (eon-localleader-defkeymap org-mode eon-localleader-org-mode-map
-                           :doc "Localleader map for `org-mode'.")
+  :doc "Localleader map for `org-mode'.")
 
 ;; Set a default location to look for Org files; but you can have
 ;; that directory anywhere you like
@@ -3042,19 +3045,19 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
 
 ;; Define local leader keymap for `emacs-lisp-mode'
 (eon-localleader-defkeymap emacs-lisp-mode eon-localleader-elisp-map
-                           :doc "Local leader keymap for Emacs Lisp buffers."
-                           "d"   #'edebug-defun
-                           "e"   #'eval-last-sexp
-                           "E"   #'pp-eval-last-sexp
-                           "h"   #'describe-symbol
-                           "l"   #'load-file
-                           "m"   #'pp-macroexpand-last-sexp
-                           "M"   #'emacs-lisp-macroexpand
-                           "x"   #'eval-defun
-                           "C-b" #'elisp-byte-compile-buffer
-                           "C-e" #'elisp-eval-region-or-buffer
-                           "C-f" #'elisp-byte-compile-file
-                           "C-n" #'emacs-lisp-native-compile)
+  :doc "Local leader keymap for Emacs Lisp buffers."
+  "d"   #'edebug-defun
+  "e"   #'eval-last-sexp
+  "E"   #'pp-eval-last-sexp
+  "h"   #'describe-symbol
+  "l"   #'load-file
+  "m"   #'pp-macroexpand-last-sexp
+  "M"   #'emacs-lisp-macroexpand
+  "x"   #'eval-defun
+  "C-b" #'elisp-byte-compile-buffer
+  "C-e" #'elisp-eval-region-or-buffer
+  "C-f" #'elisp-byte-compile-file
+  "C-n" #'emacs-lisp-native-compile)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Lisp modes registry
