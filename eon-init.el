@@ -101,7 +101,7 @@
   (file-name-directory (or load-file-name buffer-file-name
                            (locate-library "eon-init")))
   "Detected absolute path of the directory containing 'eon-init.el'.
-The path ends with a trailing slash.")
+The path must end with a trailing slash.")
 
 ;; Add the root directory to the `load-path'
 (add-to-list 'load-path eon-root-dir)
@@ -113,7 +113,7 @@ The path ends with a trailing slash.")
 (defvar eon-modules-dir
   (concat eon-root-dir "modules/")
   "Path of the directory containing the EON modules.
-The path ends with a trailing slash.")
+The path must end with a trailing slash.")
 
 ;; Add the modules directory to the `load-path'
 (add-to-list 'load-path eon-modules-dir)
@@ -158,7 +158,7 @@ The path must end with a trailing slash."
 (defvar eon-user-modules-dir
   (concat eon-user-dir "modules/")
   "Path of the directory containing the EON user modules.
-The path ends with a trailing slash.")
+The path must end with a trailing slash.")
 
 ;; Add the user modules directory to the `load-path'
 (add-to-list 'load-path eon-user-modules-dir)
