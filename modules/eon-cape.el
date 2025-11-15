@@ -1,4 +1,3 @@
-
 ;;; eon-cape.el --- Completion-at-point extensions -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
@@ -17,8 +16,6 @@
 (use-package cape :ensure t
 
   :preface
-
-  (require 'cl-lib)
 
   (defvar-local eon-cape--super nil
     "Buffer-local super CAPF built by CAPE, or nil.")
@@ -61,7 +58,7 @@ buffer-locally in `completion-at-point-functions'."
   :init
 
   ;; Install for common editing modes
-  (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
+  (dolist (hook '(prog-mode-hook conf-mode-hook text-mode-hook))
     (add-hook hook #'eon-cape--install-super-capf))
 
   ;; Rebuild when Eglot (re)attaches so its CAPF gets merged
