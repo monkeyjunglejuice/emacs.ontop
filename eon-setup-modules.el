@@ -4,10 +4,12 @@
 
 ;;; Commentary:
 ;;
-;; --> Enable or disable modules below by uncommenting and commenting ...
-;;     ... then apply your changes via "M-x eon-require-modules".
-;;     You can also load single modules via "M-x eon-load-module RET eon-"
-;;     and unload manually loaded modules via "M-x eon-unload-module RET eon-"
+;; --> 1. Enable or disable modules below by uncommenting and commenting.
+;;     2. Save the file.
+;;     3. Restart Emacs to apply your changes or do "M-x eon-load-modules".
+;;
+;;     You can also load single modules via "<leader> x m"
+;;     and unload manually loaded modules via "<leader> x M"
 ;;
 ;; --> Documentation lives in the module files. To learn more, place the cursor
 ;;     on a module symbol below and do "<leader> f p" to visit the file.
@@ -93,7 +95,7 @@
    ;; eon-lang-scheme-guile         ; Guile Scheme
    ;; eon-lang-scheme-kawa          ; Kawa Scheme
    ;; eon-lang-scheme-mit           ; MIT Scheme
-   ;; eon-lang-scheme-racket        ; consider `eon-lang-racket' instead
+   ;; eon-lang-scheme-racket        ; Consider `eon-lang-racket' instead
    ;; eon-lang-scheme-stklos        ; Stklos Scheme
    eon-lang-web                  ; HTML/CSS editing
 
