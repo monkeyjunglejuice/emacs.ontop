@@ -279,14 +279,12 @@ Interactively, prompt for a module name using completion over all
 
 ;; Load the module selection `eon-setup-modules.el',
 ;; which in turn sets the initially empty custom variable `eon-modules'.
-(eon-load-module
- (if (file-exists-p (concat eon-user-dir "eon-setup-modules.el"))
-     ;; Feature from file in the user directory takes precedence
-     (require 'eon-setup-modules
-              (concat eon-user-dir "eon-setup-modules.el"))
-   ;; Otherwise require feature from file in root directory
-   (require 'eon-setup-modules
-            (concat eon-root-dir "eon-setup-modules.el"))))
+(require 'eon-setup-modules
+         (if (file-readable-p (concat eon-user-dir "eon-setup-modules.el"))
+             ;; Feature from file in the user directory takes precedence
+             (concat eon-user-dir "eon-setup-modules.el")
+           ;; Otherwise require feature from file in root directory
+           (concat eon-root-dir "eon-setup-modules.el")))
 
 ;; Walk through a list of modules and load each module
 (defun eon-load-modules (modules-list)
