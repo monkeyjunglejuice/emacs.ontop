@@ -59,7 +59,7 @@
 ;; required for packages turns out as not enough.
 
 ;; TODO Hooks should be automatically generated for all modules, since
-;; using `with-eval-after-load' is ok but doesn't cover all cases.
+;; using `with-eval-after-load' is ok but quite blunt.
 ;; As there are:
 ;; before-load-hook, after-load-hook, before-unload-hook, after-unload-hook.
 
@@ -68,12 +68,14 @@
 ;; TODO Deprecate 'eon-setup-personal.el' in favor of a directory for personal
 ;; modules and config files; e.g. '~/.emacs.d/eon/'.
 
+;; TODO Rename file eon-setup-modules.el to eon-setup.el
+
 ;; TODO Add command `eon-user-setup' that creates the directory structure
-;; under `eon-user-dir' and copies `eon-setup-modules.el' there:
+;; under eon-user-dir and copies eon-setup.el there:
 ;; eon
 ;; ├── contrib
 ;; ├── modules
-;; └── eon-setup-modules.el
+;; └── eon-setup.el
 
 ;; TODO Change license to GPL v3 and greater.
 
