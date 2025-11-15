@@ -257,7 +257,7 @@ directories."
 Interactively, prompt for a module name using completion over all
 .el/.elc files in the existing EON module directories."
   ;; Interactive branch concerning manual module loading.
-  ;; Presents a selection of ALL existing EON modules.
+  ;; Presents a selection of all existing EON modules.
   (interactive
    (let* ((paths (eon-module-load-path)))
      (unless paths
