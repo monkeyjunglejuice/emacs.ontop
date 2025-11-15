@@ -143,11 +143,15 @@ loaded, use `featurep' instead."
 
 ;; Define the path of the Emacs ONTOP user directory
 (defcustom eon-user-dir
-  (expand-file-name (concat user-emacs-directory "eon-user/"))
+  (expand-file-name (concat user-emacs-directory "eon/"))
   "Path of the EON user directory.
-Defaults to the directory 'eon-user/' within the Emacs init directory;
-e.g. '~/.emacs.d/eon-user/' or similar, depending on your system/config.
-The path must end with a trailing slash."
+
+Defaults to the directory 'eon/' within your Emacs init directory; e.g.
+'~/.emacs.d/eon/'. The default path may vary, depending on your
+system/config.
+
+If you don't like the default path, move your user direcory somewhere else
+and set the path here. The path must end with a trailing slash."
   :type '(directory)
   :group 'eon)
 
@@ -166,8 +170,8 @@ The path must end with a trailing slash.")
 ;; List of user-defined modules ready to load
 (defcustom eon-user-modules nil
   "List of user-defined modules (Emacs features) to load.
-Contains enabled modules residing in the in `eon-user-dir', e.g.
-'~/.emacs.d/eon-user/modules/'."
+Contains enabled modules residing in the in `eon-user-dir',
+e.g. '~/.emacs.d/eon/modules/'."
   :type '(repeat (symbol :tag "Feature"))
   :group 'eon)
 
