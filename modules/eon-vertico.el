@@ -12,15 +12,18 @@
 ;; <https://github.com/minad/vertico#key-bindings>
 
 (use-package vertico :ensure t
-  :after orderless
-
   :init
 
-  ;; Disable ONBOARD default completion
+  ;; Disable Emacs ONBOARD default completion UIs
   (fido-mode -1)
   (fido-vertical-mode -1)
   (icomplete-mode -1)
   (icomplete-vertical-mode -1)
+
+  ;; Enable Vertico
+  (vertico-mode)
+  ;; How to display Vertico per default?
+  (vertico-multiform-mode)
 
   :custom
 
