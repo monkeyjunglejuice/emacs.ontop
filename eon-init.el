@@ -177,8 +177,8 @@ e.g. '~/.emacs.d/eon/modules/'."
 
 (defun eon-user-modulep (module-name)
   "True if MODULE-NAME is in the list `eon-user-modules'.
-Doesn't indicate if MODULE-NAME is loaded; to find out if a module is
-loaded, use `featurep' instead."
+Doesn't indicate if MODULE-NAME is loaded; to find out if a module
+is loaded, use `featurep' instead."
   (memq module-name eon-user-modules))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
