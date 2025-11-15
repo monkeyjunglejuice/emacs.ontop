@@ -68,6 +68,13 @@
 ;; TODO Deprecate 'eon-setup-personal.el' in favor of a directory for personal
 ;; modules and config files; e.g. '~/.emacs.d/eon/'.
 
+;; TODO Add command `eon-user-setup' that creates the directory structure
+;; under `eon-user-dir' and copies `eon-setup-modules.el' there:
+;;  eon
+;; ├──  contrib-modules
+;; ├──  modules
+;; └──  eon-setup-modules.el
+
 ;; TODO Change license to GPL v3 and greater.
 
 ;; _____________________________________________________________________________
