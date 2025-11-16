@@ -494,6 +494,12 @@ When called interactively, also echo the result."
 ;; Alarms: turn off?
 (setopt ring-bell-function 'ignore)
 
+;; Window dividers - draw extra hairlines between windows
+(window-divider-mode 1)
+(setopt window-divider-default-bottom-width 1
+        window-divider-default-places t
+        window-divider-default-right-width 1)
+
 ;; _____________________________________________________________________________
 ;;; CURSOR
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Cursor-Display>
@@ -1353,7 +1359,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 ;; Horizontal scrolling
 (setopt auto-window-vscroll nil
-        hscroll-margin 1
+        hscroll-margin 2
         hscroll-step 1)
 
 ;; Enable pixel-based scrolling?
@@ -1430,6 +1436,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 ;; Make TAB try completion when appropriate
 (setopt tab-always-indent 'complete)
+(setopt tab-first-completion 'word-or-paren-or-punct)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Dabbrev
@@ -1600,6 +1607,10 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; _____________________________________________________________________________
 ;;; IMENU
 ;; Imenu provides navigation for buffer content, e.g. code, outlines and more
+
+(with-eval-after-load 'imenu
+  (setopt imenu-auto-rescan t
+          imenu-max-item-length 128))
 
 (keymap-set ctl-z-g-map "i" #'imenu)
 
@@ -2485,6 +2496,9 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 ;; visual line breaks, a.k.a soft wrapping
 ;; (add-hook 'prog-mode-hook (lambda () (visual-line-mode 1)))
 
+;; Wrap lines at whitespace, rather than in the middle of a word
+(setopt word-wrap t)
+
 ;; Visual line wrapping in text mode
 (add-hook 'text-mode-hook #'visual-line-mode)
 
@@ -2625,6 +2639,8 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
   (setopt eglot-confirm-server-initiated-edits nil)
   ;; Show code action indicators?
   (setopt eglot-code-action-indications nil)
+  ;; Activate Eglot in cross-referenced non-project files?
+  (setopt eglot-extend-to-xref t)
   ;; Common keybindings
   (keymap-set ctl-z-c-map "r"   #'eglot-rename)
   (keymap-set ctl-z-c-f-map "f" #'eglot-format)
