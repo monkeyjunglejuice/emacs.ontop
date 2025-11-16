@@ -82,25 +82,29 @@
 ;; _____________________________________________________________________________
 ;;; USE-PACKAGE
 
-;; Let `imenu' recognize `use-package' and `require' forms?
-(setopt use-package-enable-imenu-support t)
+;; Use-package is required for all modules except `eon'.
+;; Hence, delay loading until `eon' has been loaded, in order to shave off
+;; a few garbage collections.
+(with-eval-after-load 'eon
+  ;; Let `imenu' recognize `use-package' and `require' forms?
+  (setopt use-package-enable-imenu-support t)
 
-(require 'use-package)
+  (require 'use-package)
 
-;; Setup `use-package' options
-(setopt use-package-always-ensure nil
-        use-package-always-defer nil
-        use-package-expand-minimally nil)
+  ;; Setup `use-package' options
+  (setopt use-package-always-ensure nil
+          use-package-always-defer nil
+          use-package-expand-minimally t)
 
-;; Options when Emacs is started via "emacs --debug-init"
-(when init-file-debug
-  (setopt use-package-verbose t
-          use-package-expand-minimally nil
-          ;; "M-x use-package-report" to see the result for statistics
-          use-package-compute-statistics t))
+  ;; Options when Emacs is started via "emacs --debug-init"
+  (when init-file-debug
+    (setopt use-package-verbose t
+            use-package-expand-minimally nil
+            ;; "M-x use-package-report" to see the result for statistics
+            use-package-compute-statistics t))
 
-;; Enable the built-in `use-package' extension ":ensure-system-package"
-(use-package use-package-ensure-system-package)
+  ;; Enable the built-in `use-package' extension ":ensure-system-package"
+  (use-package use-package-ensure-system-package))
 
 ;; _____________________________________________________________________________
 ;;; LOADER
