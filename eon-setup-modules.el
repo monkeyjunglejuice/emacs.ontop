@@ -60,6 +60,7 @@
    eon-embark                    ; Minibuffer actions and context menu
    ;; eon-flycheck                  ; Syntax checker alternative
    ;; eon-fonts                     ; Curated font sets
+   ;; eon-eat                       ; Emulate a terminal
    eon-git                       ; Magit user interface and friends
    eon-helpful                   ; Extended help viewer
    ;; eon-icons                     ; Icons everywhere

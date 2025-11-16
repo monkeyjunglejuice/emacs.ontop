@@ -105,49 +105,9 @@ Adapted from Doom Emacs.")
   (eon-exec-path-from-shell-refresh))
 
 ;; _____________________________________________________________________________
-;;; SHELL / TERMINAL
-;; <https://codeberg.org/akib/emacs-eat>
-;; <https://elpa.nongnu.org/nongnu-devel/doc/eat.html>
+;;; SHELL
 
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - Faster terminal emulator than `term' or `ansi-term'
-
-;; To setup shell integration for GNU Bash, insert at the end of your .bashrc:
-;; [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
-;; source "$EAT_SHELL_INTEGRATION_DIR/bash"
-;;
-;; For Zsh, put the following in your .zshrc:
-;; [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
-;; source "$EAT_SHELL_INTEGRATION_DIR/zsh"
-
-(use-package eat :ensure t
-
-  :custom
-
-  (eat-enable-auto-line-mode t)
-  (eat-term-name "xterm-256color")
-  (eat-kill-buffer-on-exit t)
-
-  :hook
-
-  ;; Run Eshell always in Eat; this gives Eshell full terminal capabilities.
-  ;; `eshell-mode-hook' seems the most robust trigger.
-  (eshell-mode . eat-eshell-mode)
-  (eshell-mode . eat-eshell-visual-command-mode)
-
-  ;; Start Eat always in line mode, so it blends into Emacs like `shell'
-  (eat-exec . (lambda (_)
-                (eat-line-mode)
-                (eon-cursor-update)))
-
-  :bind
-
-  (:map ctl-z-e-map
-        ;; Set Eat as the default terminal emulator
-        ("t" . eat)))
-
-;;; - Fish
-
+;; Fish
 (when (executable-find "fish")
   ;; <https://github.com/LemonBreezes/emacs-fish-completion>
   (use-package fish-completion :ensure t
