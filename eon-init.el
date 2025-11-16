@@ -229,8 +229,30 @@ The path must end with a trailing slash."
 ;;; - Create user directory structure
 
 ;; TODO Create user directories according to the variables
-;; `eon-user-dir', `eon-user-modules-dir' and `eon-user-contrib-dir' and
-;; copy eon-setup-modules.el into `eon-user-dir'.
+;; `eon-user-dir', `eon-user-modules-dir' and `eon-user-contrib-dir',
+;; then copy eon-setup-modules.el into `eon-user-dir'.
+
+(defun eon-user-setup--dirs ()
+  (make-directory eon-user-dir)
+  (message "User directory created: %s" eon-user-dir)
+  (make-directory eon-user-modules-dir)
+  (message "User modules directory created: %s" eon-user-modules-dir)
+  (make-directory eon-user-contrib-dir)
+  (message "User contrib directory created: %s" eon-user-contrib-dir))
+
+(defun eon-user-setup--files ()
+  (copy-file (concat eon-root-dir "eon-setup-modules.el")
+             (concat eon-user-dir "eon-setup-modules.el")
+             nil nil)
+  (copy-file (concat eon-root-dir "eon-setup-personal.el")
+             (concat eon-user-dir "eon-setup-personal.el")
+             nil nil))
+
+(defun eon-user-setup ()
+  (interactive)
+  (eon-user-setup--dirs)
+  (eon-user-setup--files)
+  (message "Your user directory is ready: %s" eon-user-dir))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Bootstrap
