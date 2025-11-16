@@ -14,7 +14,7 @@
   :config
   (global-hl-todo-mode)
   :bind
-  (:map ctl-z-c-map
+  (:map ctl-z-i-map
         ("t" . #'hl-todo-insert)))
 
 (when (eon-modulep 'eon-consult)
