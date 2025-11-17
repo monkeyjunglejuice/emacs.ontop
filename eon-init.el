@@ -277,11 +277,11 @@ directories."
               (and (bound-and-true-p eon-modules-dir)
                    (file-directory-p eon-modules-dir)
                    eon-modules-dir)
+              ;; TODO Implement loading from there
               (and (bound-and-true-p eon-user-modules-dir)
                    (file-directory-p eon-user-modules-dir)
                    eon-user-modules-dir)
-              ;; NOTE Not implemented yet; can be packages/repos rather than
-              ;; "naked" modules.
+              ;; TODO Implement loading from there
               (and (bound-and-true-p eon-user-contrib-dir)
                    (file-directory-p eon-user-contrib-dir)
                    eon-user-contrib-dir))))
@@ -336,6 +336,7 @@ Interactively, prompt for a module name using completion over all
 
 ;; Walk through the list of modules and load each module
 ;; TODO Add branch for interactive use
+;; TODO Implement loading of user modules and contrib modules
 (defun eon-load-modules (modules-list)
   "Require each EON module from MODULES-LIST in order."
   (dolist (module modules-list)
