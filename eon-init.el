@@ -191,7 +191,7 @@ is loaded, use `featurep' instead."
 
 (defcustom eon-user-contrib-dir
   (expand-file-name (concat eon-user-dir "contrib/"))
-  "Path of the directory containing manually installed EON contrib modules.
+  "Path of the directory containing manually installed contrib modules.
 
 Defaults to the directory 'contrib/' within your `eon-user-dir',
 e.g. '~/.emacs.d/eon/contrib/'.
