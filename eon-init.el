@@ -62,46 +62,30 @@
 
 ;; MAYBE Explore how to further leverage `use-package' regarding modules.
 
-;; TODO Deprecate 'eon-setup-personal.el' in favor of a directory for personal
-;; modules and config files; e.g. '~/.emacs.d/eon/'.
-
-;; TODO Rename file eon-setup-modules.el to eon-setup.el
-
-;; TODO Add command `eon-user-setup' that creates the directory structure
-;; under eon-user-dir and copies eon-setup.el there:
-;; eon
-;; ├── contrib
-;; ├── modules
-;; └── eon-setup.el
-
 ;; TODO Change license to GPL v3 and greater.
 
 ;; _____________________________________________________________________________
 ;;; USE-PACKAGE
 
-;; Use-package is required for all modules except `eon'.
-;; Hence, delay loading until `eon' has been loaded, in order to shave off
-;; a few garbage collections.
-(with-eval-after-load 'eon
-  ;; Let `imenu' recognize `use-package' and `require' forms?
-  (setopt use-package-enable-imenu-support t)
+;; Let `imenu' recognize `use-package' and `require' forms?
+(setopt use-package-enable-imenu-support t)
 
-  (require 'use-package)
+(require 'use-package)
 
-  ;; Setup `use-package' options
-  (setopt use-package-always-ensure nil
-          use-package-always-defer nil
-          use-package-expand-minimally t)
+;; Setup `use-package' options
+(setopt use-package-always-ensure nil
+        use-package-always-defer nil
+        use-package-expand-minimally t)
 
-  ;; Options when Emacs is started via "emacs --debug-init"
-  (when init-file-debug
-    (setopt use-package-verbose t
-            use-package-expand-minimally nil
-            ;; "M-x use-package-report" to see the result for statistics
-            use-package-compute-statistics t))
+;; Options when Emacs is started via "emacs --debug-init"
+(when init-file-debug
+  (setopt use-package-verbose t
+          use-package-expand-minimally nil
+          ;; "M-x use-package-report" to see the result for statistics
+          use-package-compute-statistics t))
 
-  ;; Enable the built-in `use-package' extension ":ensure-system-package"
-  (use-package use-package-ensure-system-package))
+;; Enable the built-in `use-package' extension ":ensure-system-package"
+(use-package use-package-ensure-system-package)
 
 ;; _____________________________________________________________________________
 ;;; LOADER
