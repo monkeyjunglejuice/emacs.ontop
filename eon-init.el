@@ -207,9 +207,9 @@ The path must end with a trailing slash."
 (add-to-list 'load-path eon-user-contrib-dir)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - Create user directory structure
+;;; - User setup
 
-;; TODO Create user directories according to the variables
+;; Create user directories according to the variables
 ;; `eon-user-dir', `eon-user-modules-dir' and `eon-user-contrib-dir',
 ;; then copy eon-setup-modules.el into `eon-user-dir'.
 
@@ -304,18 +304,19 @@ Interactively, prompt for a module name using completion over all
 ;; which in turn sets the initially empty custom variable `eon-modules'.
 (require 'eon-setup-modules
          (if (file-readable-p (concat eon-user-dir "eon-setup-modules.el"))
-             ;; Feature from file in the user directory takes precedence
+             ;; Feature from file in user directory takes precedence
              (concat eon-user-dir "eon-setup-modules.el")
            ;; Otherwise require feature from file in root directory
            (concat eon-root-dir "eon-setup-modules.el")))
 
-;; Walk through a list of modules and load each module
+;; Walk through the list of modules and load each module
+;; TODO Add branch for interactive use
 (defun eon-load-modules (modules-list)
   "Require each EON module from MODULES-LIST in order."
   (dolist (module modules-list)
     (eon-load-module module)))
 
-;; Load all default modules
+;; Load all modules
 (eon-load-modules eon-modules)
 
 ;; _____________________________________________________________________________
