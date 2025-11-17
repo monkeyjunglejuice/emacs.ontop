@@ -55,14 +55,18 @@
 ;; MAYBE Define and add a metadata format for modules, if the metadata
 ;; required for packages turns out as not enough.
 
-;; TODO Hooks should be automatically generated for all modules, since
-;; using `with-eval-after-load' is ok but quite blunt.
+;; MAYBE Generate hooks for all modules automatically, since using
+;; `with-eval-after-load' alone is quite blunt.
 ;; As there are:
 ;; before-load-hook, after-load-hook, before-unload-hook, after-unload-hook.
 
 ;; MAYBE Explore how to further leverage `use-package' regarding modules.
 
 ;; TODO Change license to GPL v3 and greater.
+
+;; TODO Optimize for startup speed (reasonably), but don't lazy-load everything
+;; per default, as run-time snappiness is more important than immediate startup
+;; (use emacsclient for fast startup).
 
 ;; _____________________________________________________________________________
 ;;; USE-PACKAGE
@@ -211,6 +215,8 @@ The path must end with a trailing slash."
 ;; Create user directories according to the variables
 ;; `eon-user-dir', `eon-user-modules-dir' and `eon-user-contrib-dir',
 ;; then copy eon-setup-modules.el into `eon-user-dir'.
+;; TODO Currently errors and interrupts when `eon-user-directory' exists;
+;; shouldn't interrupt but create/copy remaining directories/files.
 
 (defun eon-user-setup--dirs ()
   (make-directory eon-user-dir)
@@ -310,7 +316,7 @@ Interactively, prompt for a module name using completion over all
 ;; Placeholder
 (defalias 'eon-unload-module #'unload-feature)
 
-;; Add module commands as leader keybindings
+;; Add module commands to leader keybindings
 (with-eval-after-load 'eon
   (keymap-set ctl-z-x-map "m" #'eon-load-module)
   ;; NOTE Unloads only manually loaded modules right now,
@@ -327,8 +333,10 @@ Interactively, prompt for a module name using completion over all
            (concat eon-root-dir "eon-setup-modules.el")))
 
 ;; Walk through the list of modules and load each module
+;; TODO Implement loading of user-defined modules and contrib modules
+;; TODO If user-defined module/feature exists, ignore built-in module/feature
+;; TODO If contrib module/feature exists, ignore built-in module/feature
 ;; TODO Add branch for interactive use
-;; TODO Implement loading of user modules and contrib modules
 (defun eon-load-modules (modules-list)
   "Require each EON module from MODULES-LIST in order."
   (dolist (module modules-list)
