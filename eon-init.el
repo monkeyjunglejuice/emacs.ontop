@@ -180,20 +180,20 @@ is loaded, use `featurep' instead."
 ;; NOTE Not implemented yet
 
 ;; Distinct from built-in modules and user-defined modules.
-
-;; Contrib modules will be:
+;; Contrib modules may be provided as:
 ;; - (Meta-)Packages available on Melpa etc.
 ;; - (Meta-)Packages as VC/Git repos
-
-;; Contrib modules can be installed via Package.el, other package managers
+;; - Single Elisp files
+;; - Directories with a bunch of files
+;; Contrib modules may be installed via Package.el, other package managers
 ;; and manually by putting them into `eon-user-contrib-dir'.
 
 (defcustom eon-user-contrib-dir
   (expand-file-name (concat eon-user-dir "contrib/"))
   "Path of the directory containing manually installed EON contrib modules.
 
-Defaults to the directory 'eon/contrib/' within your Emacs init
-directory; e.g. '~/.emacs.d/eon/contrib/'.
+Defaults to the directory 'contrib/' within your `eon-user-dir',
+e.g. '~/.emacs.d/eon/contrib/'.
 
 The default path may vary, depending on your system/config.
 If you don't like the default path, move the contrib modules directory
