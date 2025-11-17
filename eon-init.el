@@ -31,9 +31,6 @@
 ;; _____________________________________________________________________________
 ;;; PLANS AND IDEAS
 
-;; KLUDGE The loader is very primitive right now. It just `require's the
-;; features listed in `eon-modules' in order.
-
 ;; MAYBE The loader could be extended to provide additional value, for
 ;; instance clean unloading and undefining on the fly for vars, functions and
 ;; keybindings introduced by a module; meaning all of that may work without
