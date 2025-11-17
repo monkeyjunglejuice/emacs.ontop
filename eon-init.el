@@ -169,7 +169,7 @@ e.g. '~/.emacs.d/eon/modules/'."
   :type '(repeat (symbol :tag "Feature"))
   :group 'eon)
 
-(defun eon-user-modulep (module-name)
+(defun eon-user-module-p (module-name)
   "True if MODULE-NAME is in the list `eon-user-modules'.
 Doesn't indicate if MODULE-NAME is loaded; to find out if a module
 is loaded, use `featurep' instead."
