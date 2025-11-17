@@ -91,14 +91,15 @@
 ;;; LOADER
 
 ;; Detect and define the path of the EON root directory
+;; TODO Brittle, must be improved
+;; MAYBE Make it customizable for users, as detection may fail
 (defvar eon-root-dir
-  (file-name-directory (or load-file-name buffer-file-name
+  (file-name-directory (or load-file-name
+                           buffer-file-name
+                           ;; Works only if `eon-root-dir' is in `load-path'
                            (locate-library "eon-init")))
-  "Detected absolute path of the directory containing 'eon-init.el'.
-The path must end with a trailing slash.")
-
-;; Add the root directory to the `load-path'
-(add-to-list 'load-path eon-root-dir)
+  "Detected path of the directory containing 'eon-init.el'.
+The path ends with a trailing slash.")
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Built-in modules
