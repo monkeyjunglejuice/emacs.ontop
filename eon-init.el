@@ -95,8 +95,9 @@
 ;; MAYBE Make it customizable for users, as detection may fail
 (defvar eon-root-dir
   (file-name-directory (or load-file-name
+                           ;; Provide file name for `eval-buffer' and friends
                            buffer-file-name
-                           ;; Works only if `eon-root-dir' is in `load-path'
+                           ;; Only works if directory is in `load-path'
                            (locate-library "eon-init")))
   "Detected path of the directory containing 'eon-init.el'.
 The path ends with a trailing slash.")
