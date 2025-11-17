@@ -130,7 +130,7 @@ loaded, use `featurep' instead."
 ;;; - User-defined modules
 ;; NOTE Not implemented yet
 
-;; Modules in '[eon-user-dir]/modules/' should be collected separately,
+;; Modules in '[eon-user-dir]/modules/' should be handled separately,
 ;; or classified in another way so they can be told apart.
 ;; This might further enable specific logic, e.g. determining precedence,
 ;; managing dependencies, etc.
