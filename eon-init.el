@@ -225,8 +225,8 @@ The path must end with a trailing slash."
   (copy-file (concat eon-root-dir "eon-setup-modules.el")
              (concat eon-user-dir "eon-setup-modules.el")
              nil nil)
-  (copy-file (concat eon-root-dir "eon-setup-personal.el")
-             (concat eon-user-dir "eon-setup-personal.el")
+  (copy-file (concat eon-modules-dir "eon-user.el")
+             (concat eon-user-modules-dir "eon-user.el")
              nil nil))
 
 (defun eon-user-setup ()
@@ -234,6 +234,30 @@ The path must end with a trailing slash."
   (eon-user-setup--dirs)
   (eon-user-setup--files)
   (message "Your user directory is ready: %s" eon-user-dir))
+
+(defun eon-goto-user-dir ()
+  "Open your user directory in Dired."
+  (interactive)
+  (let ((dir eon-user-dir))
+    (if (file-exists-p dir)
+        (dired dir)
+      (user-error "Your user directory doesn't exist at %s, \
+you may run `eon-user-setup' first" dir)))
+  (dired dir))
+
+(defun eon-goto-user-module ()
+  "Open personal module file from your user directory."
+  (interactive)
+  (let ((file (concat eon-user-modules-dir "eon-user.el")))
+    (if (file-exists-p file)
+        (find-file file)
+      (user-error "Personal module doesn't exist at %s, \
+you may run `eon-user-setup' first" file))))
+
+;; Add keybindings for both commands to the leader
+(with-eval-after-load 'eon
+  (keymap-set ctl-z-x-map "U" #'eon-goto-user-dir)
+  (keymap-set ctl-z-x-map "u" #'eon-goto-user-module))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Bootstrap

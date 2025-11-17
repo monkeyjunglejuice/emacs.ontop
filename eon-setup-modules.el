@@ -24,6 +24,7 @@
  '(;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ;;; MODULES TO LOAD EARLY
 
+   eon-user                      ; Your personal Emacs Lisp code
    ;; eon-compileangel              ; Improved native compilation
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -108,14 +109,7 @@
    eon-lang-web                  ; HTML/CSS editing
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-   ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-   ;;; PERSONAL MODULE
-
-   ;; Below is an empty extra module that runs your personal Elisp code.
-   ;; Your code will load last, so that you can override or shadow
-   ;; any settings that have been defined within any of the files before.
-   ;; ---> edit the file `eon-setup-personal.el'
-   eon-setup-personal))
+   ))
 
 ;; _____________________________________________________________________________
 (provide 'eon-setup-modules)
