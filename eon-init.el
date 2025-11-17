@@ -150,9 +150,6 @@ and set the path here. The path must end with a trailing slash."
   :type '(directory)
   :group 'eon)
 
-;; Add the user directory to the `load-path'
-(add-to-list 'load-path eon-user-dir)
-
 ;; Define the path of the Emacs ONTOP user modules directory
 (defvar eon-user-modules-dir
   (concat eon-user-dir "modules/")
@@ -265,16 +262,10 @@ you may run `eon-user-setup' first" file))))
 
 (defun eon-module-load-path ()
   "Return list of existing EON module directories.
-Built from `eon-root-dir', `eon-modules-dir', `eon-user-modules-dir'
-and `eon-user-contrib-dir', keeping only those that name existing
-directories."
+Built from `eon-modules-dir', `eon-user-modules-dir'and `eon-user-contrib-dir',
+keeping only those that name existing directories."
   (delq nil
-        ;; NOTE eon-root-dir will be removed from the `load-path'.
-        ;; Only explicitly specified files should be loaded from there.
-        (list (and (bound-and-true-p eon-root-dir)
-                   (file-directory-p eon-root-dir)
-                   eon-root-dir)
-              (and (bound-and-true-p eon-modules-dir)
+        (list (and (bound-and-true-p eon-modules-dir)
                    (file-directory-p eon-modules-dir)
                    eon-modules-dir)
               ;; TODO Implement loading from there
