@@ -129,7 +129,7 @@ loaded, use `featurep' instead."
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - User-defined modules
-;; NOTE Not implemented yet
+;; TODO Implement loading of user-defined modules
 
 ;; Modules in '[eon-user-dir]/modules/' should be handled separately,
 ;; or classified in another way so they can be told apart.
@@ -175,7 +175,7 @@ is loaded, use `featurep' instead."
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Contrib modules
-;; NOTE Not implemented yet
+;; TODO Implement loading of contrib modules
 
 ;; Distinct from built-in modules and user-defined modules.
 ;; Contrib modules may be provided as:
