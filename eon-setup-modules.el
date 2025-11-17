@@ -74,6 +74,13 @@
    eon-vertico                   ; Vertical minibuffer completion UI
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+   ;;; AI / LLM
+
+   ;; eon-ai                        ; Shared functionality for AI integration
+   ;; eon-ollama                    ; Local and cloud LLMs
+   ;; eon-gptel                     ; Comprehensive AI chat client
+
+   ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ;;; PROGRAMMING LANGUAGES
 
    ;; eon-lang-clojure              ; Clojure and ClojureScript programming
@@ -101,11 +108,6 @@
    eon-lang-web                  ; HTML/CSS editing
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-   ;;; AI / LLM
-
-   ;; eon-ai                        ; Shared functionality for AI integration
-   ;; eon-gptel                     ; Comprehensive AI chat client
-
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ;;; PERSONAL MODULE
 

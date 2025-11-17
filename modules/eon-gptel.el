@@ -14,7 +14,10 @@
 
   :init
 
-  ;; Gptel requires built-in package `transient' version 0.7.4 or later
+  ;; Load shared functionality for AI integration
+  (require 'eon-ai)
+
+  ;; Gptel requires package `transient' version 0.7.4 or later
   (unless (package-installed-p 'transient '(0 7 4))
     (package-upgrade 'transient))
 
@@ -38,16 +41,19 @@
         ("s" . gptel-send)
         ("t" . gptel-tools)))
 
-;; Setup for local and cloud LLMs via Ollama - see also `./eon-ai'
-(when (executable-find "ollama")
+;; Setup Gptel for local/cloud LLMs via Ollama; see also `eon-ollama.el'
+(when (and (executable-find "ollama")
+           (eon-modulep 'eon-ollama))
   (use-package gptel-ollama :ensure nil
     :after gptel
 
     :init
 
-    (require 'eon-ai)
+    ;; Load support for local/cloud LLMs via Ollama
+    (require 'eon-ollama)
+
     :custom
-    ;; Register local Ollama models
+    ;; Register local/cloud Ollama models
     (gptel-backend (gptel-make-ollama "Ollama"
                      :host "localhost:11434"
                      :endpoint "/api/chat"
