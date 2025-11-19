@@ -17,9 +17,10 @@
   :diminish aggressive-indent-mode
   :init
   ;; Enable auto-indentation
-  (global-aggressive-indent-mode 1)
+  (global-aggressive-indent-mode)
   :custom
-  (aggressive-indent-dont-electric-modes t)
+  ;; Actually seems to work better when `electric-indent-mode' is enabled
+  (aggressive-indent-dont-electric-modes nil)
   (aggressive-indent-sit-for-time 0.05))
 
 ;; _____________________________________________________________________________
