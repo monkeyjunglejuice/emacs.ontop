@@ -228,24 +228,24 @@ The value always ends with a directory separator."
         (message "%s created: %s" label dir)))))
 
 (defun eon-user-setup--files ()
-  (let* ((src-setup (expand-file-name "eon-setup-modules.el"
-                                      eon-root-dir))
-         (dst-setup (expand-file-name "eon-setup-modules.el"
-                                      eon-user-dir))
-         (src-user  (expand-file-name "eon-user.el"
-                                      eon-modules-dir))
-         (dst-user  (expand-file-name "eon-user.el"
-                                      eon-user-modules-dir)))
-    (unless (file-exists-p src-setup)
-      (user-error "Missing template: %s" src-setup))
-    (unless (file-exists-p src-user)
-      (user-error "Missing template: %s" src-user))
-    (unless (file-exists-p dst-setup)
-      (copy-file src-setup dst-setup)
-      (message "Created user setup file: %s" dst-setup))
-    (unless (file-exists-p dst-user)
-      (copy-file src-user dst-user)
-      (message "Created personal module: %s" dst-user))))
+  (let* ((src-mod-setup (expand-file-name "eon-setup-modules.el"
+                                          eon-root-dir))
+         (dest-mod-setup (expand-file-name "eon-setup-modules.el"
+                                           eon-user-dir))
+         (src-user-mod  (expand-file-name "eon-user.el"
+                                          eon-modules-dir))
+         (dest-user-mod  (expand-file-name "eon-user.el"
+                                           eon-user-modules-dir)))
+    (unless (file-exists-p src-mod-setup)
+      (user-error "Missing template: %s" src-mod-setup))
+    (unless (file-exists-p src-user-mod)
+      (user-error "Missing template: %s" src-user-mod))
+    (unless (file-exists-p dest-mod-setup)
+      (copy-file src-mod-setup dest-mod-setup)
+      (message "Created module setup: %s" dest-mod-setup))
+    (unless (file-exists-p dest-user-mod)
+      (copy-file src-user-mod dest-user-mod)
+      (message "Created personal module: %s" dest-user-mod))))
 
 (defun eon-user-setup ()
   (interactive)
