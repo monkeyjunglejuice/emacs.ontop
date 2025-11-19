@@ -252,7 +252,7 @@ The value always ends with a directory separator."
 you may run `eon-user-setup' first" dir))))
 
 (defun eon-goto-user-module ()
-  "Open personal module file from your user directory."
+  "Open your personal module file from the user directory."
   (interactive)
   (let ((file (concat eon-user-modules-dir "eon-user.el")))
     (if (file-exists-p file)
