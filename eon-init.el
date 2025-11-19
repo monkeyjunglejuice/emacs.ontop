@@ -249,8 +249,7 @@ The value always ends with a directory separator."
     (if (file-exists-p dir)
         (dired dir)
       (user-error "Your user directory doesn't exist at %s, \
-you may run `eon-user-setup' first" dir)))
-  (dired dir))
+you may run `eon-user-setup' first" dir))))
 
 (defun eon-goto-user-module ()
   "Open personal module file from your user directory."
