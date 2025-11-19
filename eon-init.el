@@ -254,7 +254,7 @@ The value always ends with a directory separator."
   (message "Your user directory is ready: %s" eon-user-dir))
 
 (defun eon-goto-user-dir ()
-  "Open your user directory in Dired."
+  "Open your user directory in `dired'."
   (interactive)
   (let ((dir eon-user-dir))
     (if (file-exists-p dir)
