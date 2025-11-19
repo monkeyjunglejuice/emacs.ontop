@@ -271,10 +271,11 @@ you may run `eon-user-setup' first" dir))))
       (user-error "Personal module doesn't exist at %s, \
 you may run `eon-user-setup' first" file))))
 
-;; Add keybindings for both commands to the leader
+;; Add keybindings to the leader
 (with-eval-after-load 'eon
-  (keymap-set ctl-z-x-map "U" #'eon-goto-user-dir)
-  (keymap-set ctl-z-x-map "u" #'eon-goto-user-module))
+  (keymap-set ctl-z-x-map "C-u" #'eon-user-setup)
+  (keymap-set ctl-z-x-map "U"   #'eon-goto-user-dir)
+  (keymap-set ctl-z-x-map "u"   #'eon-goto-user-module))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Bootstrap
