@@ -347,11 +347,16 @@ Interactively, prompt for a module name using completion over all
 
 ;; Walk through the list of modules and load each module
 ;; TODO Implement loading of user-defined modules and contrib modules
-;; TODO If user-defined module/feature exists, ignore built-in module/feature
 ;; TODO If contrib module/feature exists, ignore built-in module/feature
-;; TODO Add branch for interactive use
+;;      of the same name.
+;; TODO If user-defined module/feature exists, ignore both built-in
+;;      module/feature and contrib module/feature of the same name.
+;; TODO Add branch for interactive use, MAYBE ask for selection which
+;;      set of modules to load, e.g. only built-in modules vs. all modules.
+;; MAYBE Add option for forced reload.
 (defun eon-load-modules (modules-list)
   "Require each EON module from MODULES-LIST in order."
+  (interactive)
   (dolist (module modules-list)
     (eon-load-module module)))
 
