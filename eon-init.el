@@ -95,41 +95,41 @@
 ;;; LOADER
 
 ;; Detect and define the path of the EON root directory
-;; TODO Brittle, must be improved
-;; MAYBE Make it customizable for users, as detection may fail
 (defvar eon-root-dir
-  (file-name-directory (or load-file-name
-                           ;; Provide file name for `eval-buffer' and friends
-                           buffer-file-name
-                           ;; Only works if directory is in `load-path'
-                           (locate-library "eon-init")))
-  "Detected path of the directory containing 'eon-init.el'.
-The path ends with a trailing slash.")
+  (file-name-as-directory
+   (file-name-directory (or load-file-name
+                            ;; Provide file name for `eval-buffer' and friends
+                            buffer-file-name
+                            ;; Only works if directory is in `load-path'
+                            (locate-library "eon-init"))))
+  "Directory containing 'eon-init.el'.
+The value always ends with a directory separator.")
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Built-in modules
 
-;; Define the directory for built-in modules
+;; Directory for built-in modules
 (defvar eon-modules-dir
-  (concat eon-root-dir "modules/")
-  "Path of the directory containing the EON modules.
-The path must end with a trailing slash.")
+  (file-name-as-directory
+   (expand-file-name "modules" eon-root-dir))
+  "Directory containing the built-in EON modules.
+The value always ends with a directory separator.")
 
 ;; Add the modules directory to the `load-path'
 (add-to-list 'load-path eon-modules-dir)
 
 ;; List of modules ready to load
 (defcustom eon-modules nil
-  "List of selected modules (Emacs features) to load.
-The variable will be set via `setopt' by requiring
-`eon-setup-modules.el'."
+  "List of EON modules (features) to load.
+Each element is a symbol naming an Emacs feature. This variable is
+typically set via `setopt' by requiring `eon-setup-modules'."
   :type '(repeat (symbol :tag "Feature"))
   :group 'eon)
 
 (defun eon-modulep (module-name)
-  "True if MODULE-NAME is in the list of available modules `eon-modules'.
-Doesn't indicate if MODULE-NAME is loaded; to find out if a module is
-loaded, use `featurep' instead."
+  "Return non-nil if MODULE-NAME is in `eon-modules'.
+This does not indicate whether MODULE-NAME is already loaded;
+for that, use `featurep'."
   (memq module-name eon-modules))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -143,39 +143,41 @@ loaded, use `featurep' instead."
 
 ;; Define the path of the Emacs ONTOP user directory
 (defcustom eon-user-dir
-  (expand-file-name (concat user-emacs-directory "eon/"))
-  "Path of the EON user directory.
+  (file-name-as-directory
+   (expand-file-name "eon" user-emacs-directory))
+  "EON user directory.
 
-Defaults to the directory 'eon/' within your Emacs init directory; e.g.
-'~/.emacs.d/eon/'. The default path may vary, depending on your
-system/config.
+Defaults to the `eon' subdirectory of `user-emacs-directory', e.g.
+`~/.emacs.d/eon/'. The value always ends with a directory
+separator.
 
-If you don't like the default path, move your user direcory somewhere else
-and set the path here. The path must end with a trailing slash."
+If you don't like the default path, move your user directory
+somewhere else and customize this variable."
   :type '(directory)
   :group 'eon)
 
 ;; Define the path of the Emacs ONTOP user modules directory
 (defvar eon-user-modules-dir
-  (concat eon-user-dir "modules/")
-  "Path of the directory containing the EON user modules.
-The path must end with a trailing slash.")
+  (file-name-as-directory
+   (expand-file-name "modules" eon-user-dir))
+  "Directory containing the EON user modules.
+The value always ends with a directory separator.")
 
 ;; Add the user modules directory to the `load-path'
 (add-to-list 'load-path eon-user-modules-dir)
 
 ;; List of user-defined modules ready to load
 (defcustom eon-user-modules nil
-  "List of user-defined modules (Emacs features) to load.
-Contains enabled modules residing in the in `eon-user-dir',
-e.g. '~/.emacs.d/eon/modules/'."
+  "List of user-defined modules (features) to load.
+Each element is a symbol naming an Emacs feature residing under
+`eon-user-modules-dir', e.g. `~/.emacs.d/eon/modules/'."
   :type '(repeat (symbol :tag "Feature"))
   :group 'eon)
 
 (defun eon-user-module-p (module-name)
-  "True if MODULE-NAME is in the list `eon-user-modules'.
-Doesn't indicate if MODULE-NAME is loaded; to find out if a module
-is loaded, use `featurep' instead."
+  "Return non-nil if MODULE-NAME is in `eon-user-modules'.
+This does not indicate whether MODULE-NAME is already loaded;
+for that, use `featurep'."
   (memq module-name eon-user-modules))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -192,17 +194,17 @@ is loaded, use `featurep' instead."
 ;; and manually by putting them into `eon-user-contrib-dir'.
 
 (defcustom eon-user-contrib-dir
-  (expand-file-name (concat eon-user-dir "contrib/"))
-  "Path of the directory containing manually installed contrib modules.
+  (file-name-as-directory
+   (expand-file-name "contrib" eon-user-dir))
+  "Directory containing manually installed contrib modules.
 
 Defaults to the directory 'contrib/' within your `eon-user-dir',
 e.g. '~/.emacs.d/eon/contrib/'.
 
-The default path may vary, depending on your system/config.
 If you don't like the default path, move the contrib modules directory
 to another location and adapt the the path.
 
-The path must end with a trailing slash."
+The value always ends with a directory separator."
   :type '(directory)
   :group 'eon)
 
