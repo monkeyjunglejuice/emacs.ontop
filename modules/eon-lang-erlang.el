@@ -12,7 +12,6 @@
 ;; <https://www.erlang.org/doc/apps/tools/erlang_mode_chapter.html>
 
 (use-package erlang-ts :ensure t
-  :defer t
   :init
   (eon-treesitter-ensure-grammar
    '(erlang "https://github.com/WhatsApp/tree-sitter-erlang"))
