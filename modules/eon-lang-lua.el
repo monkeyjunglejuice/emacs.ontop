@@ -42,12 +42,8 @@
 ;; Notebook-like literate programming in Emacs
 ;; Evaluate Lua code in Org source code blocks via "C-c C-c".
 
-;; <https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-lua.html>
-(use-package org :ensure nil
-  :config
-  (add-to-list 'org-babel-load-languages '(lua . t))
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               org-babel-load-languages))
+(use-package ob-lua :ensure nil
+  :after org)
 
 ;; _____________________________________________________________________________
 (provide 'eon-lang-lua)

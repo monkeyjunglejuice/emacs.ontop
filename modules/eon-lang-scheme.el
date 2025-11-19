@@ -44,14 +44,8 @@
 ;; Notebook-like literate programming in Emacs
 ;; Evaluate Scheme code in Org source code blocks via "C-c C-c"
 
-;; TODO This seems not to work; neither with Chicken nor Racket
-
-;; <https://www.orgmode.org/worg/org-contrib/babel/languages/ob-doc-scheme.html>
-;; (use-package org :ensure nil
-;;   :config
-;;   (add-to-list 'org-babel-load-languages '(scheme . t))
-;;   (org-babel-do-load-languages 'org-babel-load-languages
-;;                                org-babel-load-languages))
+(use-package ob-scheme :ensure nil
+  :after org)
 
 ;; _____________________________________________________________________________
 (provide 'eon-lang-scheme)

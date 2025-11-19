@@ -65,16 +65,11 @@
 ;;; ORG-MODE BABEL
 ;; <https://org-babel.readthedocs.io/en/latest/eval/>
 ;; Notebook-like literate programming in Emacs
-
-;; Starts a GHCi REPL in the background
-(use-package ob-haskell :ensure nil)
-
 ;; Evaluate Haskell code in Org source code blocks via "C-c C-c"
-(use-package org :ensure nil
-  :config
-  (add-to-list 'org-babel-load-languages '(haskell . t))
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               org-babel-load-languages))
+;; Starts a GHCi REPL in the background
+
+(use-package ob-haskell :ensure nil
+  :after org)
 
 ;; _____________________________________________________________________________
 (provide 'eon-lang-haskell)

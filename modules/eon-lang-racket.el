@@ -35,17 +35,5 @@
   ((racket-mode racket-hash-lang-mode) . racket-xp-mode))
 
 ;; _____________________________________________________________________________
-;;; ORG-MODE BABEL
-;; <https://www.orgmode.org/worg/org-contrib/babel/languages/ob-doc-scheme.html>
-
-;; Support literate programming in Emacs with Racket
-;; Evaluate Racket code in Org blocks via "C-c C-c"
-;; (use-package org :ensure nil
-;;   :config
-;;   (add-to-list 'org-babel-load-languages '(racket . t))
-;;   (org-babel-do-load-languages 'org-babel-load-languages
-;;                                org-babel-load-languages))
-
-;; _____________________________________________________________________________
 (provide 'eon-lang-racket)
 ;;; eon-lang-racket.el ends here

@@ -136,15 +136,10 @@ configuration or restarting applications."
 ;; Notebook-like literate programming in Emacs
 ;; Evaluate Elixir code in Org source code blocks via "C-c C-c"
 
-;; TODO -- not working, package might be outdated
+;; TODO Garbage output, package might be outdated
 ;; <https://github.com/zweifisch/ob-elixir>
-(use-package ob-elixir :ensure t)
-
-(use-package org :ensure nil
-  :config
-  (add-to-list 'org-babel-load-languages '(elixir . t))
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               org-babel-load-languages))
+(use-package ob-elixir :ensure t
+  :after org)
 
 ;; _____________________________________________________________________________
 (provide 'eon-lang-elixir)

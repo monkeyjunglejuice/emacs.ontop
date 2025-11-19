@@ -40,15 +40,10 @@
 ;; Notebook-like literate programming in Emacs
 ;; Evaluate LFE code in Org source code blocks via "C-c C-c"
 
-;; TODO Not working, package might be outdated
+;; TODO Doesn't work, package might be outdated
 ;; <https://github.com/zweifisch/ob-lfe>
-;; (use-package ob-lfe)
-
-;; (use-package org :ensure nil
-;;   :config
-;;   (add-to-list 'org-babel-load-languages '(lfe . t))
-;;   (org-babel-do-load-languages 'org-babel-load-languages
-;;                                org-babel-load-languages))
+(use-package ob-lfe :ensure t
+  :after org)
 
 ;; _____________________________________________________________________________
 (provide 'eon-lang-lfe)

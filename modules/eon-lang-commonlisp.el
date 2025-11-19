@@ -92,17 +92,12 @@
 ;; Support literate programming in Emacs with Common Lisp
 ;; Evaluate Common Lisp code in Org source code blocks via "C-c C-c"
 
-;; Make the function aware of Sly (defaults to Slime)
 ;; <https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-lisp.html>
 (use-package ob-lisp :ensure nil
+  :after org
   :custom
+  ;; Make the function aware of Sly (defaults to Slime)
   (org-babel-lisp-eval-fn #'sly-eval))
-
-(use-package org :ensure nil
-  :config
-  (add-to-list 'org-babel-load-languages '(lisp . t))
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               org-babel-load-languages))
 
 ;; _____________________________________________________________________________
 (provide 'eon-lang-commonlisp)

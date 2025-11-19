@@ -64,11 +64,8 @@
 
 ;; 2 Julia packages must be added for this to work: DataFrames and CSV.
 ;; <https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-julia.html>
-(use-package org :ensure nil
-  :config
-  (add-to-list 'org-babel-load-languages '(julia . t))
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               org-babel-load-languages))
+(use-package ob-julia :ensure nil
+  :after org)
 
 ;; _____________________________________________________________________________
 (provide 'eon-lang-julia)

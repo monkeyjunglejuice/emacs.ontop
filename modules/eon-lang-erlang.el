@@ -48,15 +48,12 @@
 ;; Notebook-like literate programming in Emacs
 ;; Evaluate Erlang code in Org source code blocks via "C-c C-c"
 
-;; Only available from Github, therefore not installed
+;; Only available from Github
 ;; <https://github.com/xfwduke/ob-erlang>
-;; (use-package ob-erlang :ensure t)
-
-;; (use-package org :ensure nil
-;;   :config
-;;   (add-to-list 'org-babel-load-languages '(erlang . t))
-;;   (org-babel-do-load-languages 'org-babel-load-languages
-;;                                org-babel-load-languages))
+(use-package ob-erlang
+  :vc (:url "https://github.com/xfwduke/ob-erlang.git"
+            :rev :newest)
+  :after org)
 
 ;; _____________________________________________________________________________
 (provide 'eon-lang-erlang)

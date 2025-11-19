@@ -32,12 +32,8 @@
 ;; Notebook-like literate programming in Emacs
 
 ;; Evaluate Clojure code in Org source code blocks via "C-c C-c"
-(use-package org :ensure nil
-  
-  :config
-  (add-to-list 'org-babel-load-languages '(clojure . t))
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               org-babel-load-languages))
+(use-package ob-clojure :ensure nil
+  :after org)
 
 ;; _____________________________________________________________________________
 (provide 'eon-lang-clojure)

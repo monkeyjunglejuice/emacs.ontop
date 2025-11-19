@@ -195,14 +195,9 @@
 ;; Evaluate OCaml code in Org source code blocks via "C-c C-c"
 
 (use-package ob-ocaml :ensure nil
+  :after org
   :custom
   (org-babel-ocaml-command "ocaml -nopromptcont"))
-
-(use-package org :ensure nil
-  :config
-  (add-to-list 'org-babel-load-languages '(ocaml . t))
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               org-babel-load-languages))
 
 ;; _____________________________________________________________________________
 (provide 'eon-lang-ocaml)
