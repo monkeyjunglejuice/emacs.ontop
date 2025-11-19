@@ -268,7 +268,7 @@ you may run `eon-user-setup' first" dir))))
   (let ((file (concat eon-user-modules-dir "eon-user.el")))
     (if (file-exists-p file)
         (find-file file)
-      (user-error "Personal module doesn't exist at %s, \
+      (user-error "Your personal module doesn't exist at %s, \
 you may run `eon-user-setup' first" file))))
 
 ;; Add keybindings to the leader
