@@ -494,10 +494,12 @@ When called interactively, also echo the result."
 ;; Alarms: turn off?
 (setopt ring-bell-function 'ignore)
 
-;; Window dividers - draw extra hairlines between windows
-(window-divider-mode 1)
-(setopt window-divider-default-bottom-width 1
-        window-divider-default-places t
+;; Draw extra space/lines between windows?
+;; Helps if a certain theme makes the window boundaries indistinguishable,
+;; or if you prefer to have some space between windows.
+(window-divider-mode -1)
+(setopt window-divider-default-places t
+        window-divider-default-bottom-width 1
         window-divider-default-right-width 1)
 
 ;; _____________________________________________________________________________
@@ -2075,18 +2077,17 @@ pretending to clear it."
 ;; _____________________________________________________________________________
 ;;; RECENT FILES
 
+(setopt recentf-max-menu-items 10
+        recentf-max-saved-items 256
+        recentf-auto-cleanup 'mode)
+
 ;; Turn on recent file mode to visit recently edited files
 (recentf-mode 1)
 
-(setopt recentf-max-menu-items 10
-        recentf-max-saved-items 128)
-
 ;; Ignore some recently visited files, eg. to prevent them from showing up
 ;; amongst recent files after package upgrades
-(add-to-list 'recentf-exclude
-             (expand-file-name (concat user-emacs-directory "elpa/")))
-(add-to-list 'recentf-exclude
-             "^/\\(?:ssh\\|su\\|sudo\\)?:")
+(with-eval-after-load 'recentf
+  (add-to-list 'recentf-exclude "^/\\(?:ssh\\|su\\|sudo\\)?:"))
 
 ;; Select from recently opened files via "<leader> f r"
 (keymap-set ctl-z-f-map "h" #'recentf-open)
