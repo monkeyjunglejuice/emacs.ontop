@@ -217,24 +217,35 @@ The value always ends with a directory separator."
 ;; Create user directories according to the variables
 ;; `eon-user-dir', `eon-user-modules-dir' and `eon-user-contrib-dir',
 ;; then copy eon-setup-modules.el into `eon-user-dir'.
-;; TODO Currently errors and interrupts when `eon-user-directory' exists;
-;; shouldn't interrupt but create/copy remaining directories/files.
 
 (defun eon-user-setup--dirs ()
-  (make-directory eon-user-dir)
-  (message "User directory created: %s" eon-user-dir)
-  (make-directory eon-user-modules-dir)
-  (message "User modules directory created: %s" eon-user-modules-dir)
-  (make-directory eon-user-contrib-dir)
-  (message "User contrib directory created: %s" eon-user-contrib-dir))
+  (dolist (entry `((,eon-user-dir "User directory")
+                   (,eon-user-modules-dir "User modules directory")
+                   (,eon-user-contrib-dir "User contrib directory")))
+    (pcase-let ((`(,dir ,label) entry))
+      (unless (file-directory-p dir)
+        (make-directory dir 'parents)
+        (message "%s created: %s" label dir)))))
 
 (defun eon-user-setup--files ()
-  (copy-file (concat eon-root-dir "eon-setup-modules.el")
-             (concat eon-user-dir "eon-setup-modules.el")
-             nil nil)
-  (copy-file (concat eon-modules-dir "eon-user.el")
-             (concat eon-user-modules-dir "eon-user.el")
-             nil nil))
+  (let* ((src-setup (expand-file-name "eon-setup-modules.el"
+                                      eon-root-dir))
+         (dst-setup (expand-file-name "eon-setup-modules.el"
+                                      eon-user-dir))
+         (src-user  (expand-file-name "eon-user.el"
+                                      eon-modules-dir))
+         (dst-user  (expand-file-name "eon-user.el"
+                                      eon-user-modules-dir)))
+    (unless (file-exists-p src-setup)
+      (user-error "Missing template: %s" src-setup))
+    (unless (file-exists-p src-user)
+      (user-error "Missing template: %s" src-user))
+    (unless (file-exists-p dst-setup)
+      (copy-file src-setup dst-setup)
+      (message "Created user setup file: %s" dst-setup))
+    (unless (file-exists-p dst-user)
+      (copy-file src-user dst-user)
+      (message "Created personal module: %s" dst-user))))
 
 (defun eon-user-setup ()
   (interactive)
