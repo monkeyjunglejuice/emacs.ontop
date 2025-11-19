@@ -13,6 +13,7 @@
 
 ;; Dired
 (use-package nerd-icons-dired :ensure t
+  :diminish
   :hook
   (dired-mode . nerd-icons-dired-mode))
 
