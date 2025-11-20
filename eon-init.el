@@ -219,6 +219,7 @@ The value always ends with a directory separator."
 ;; then copy eon-setup-modules.el into `eon-user-dir'.
 
 (defun eon-user-setup--dirs ()
+  "Create user directory and sub-directories if they don't exist."
   (dolist (entry `((,eon-user-dir "User directory")
                    (,eon-user-modules-dir "User modules directory")
                    (,eon-user-contrib-dir "User contrib directory")))
@@ -228,6 +229,7 @@ The value always ends with a directory separator."
         (message "%s created: %s" label dir)))))
 
 (defun eon-user-setup--files ()
+  "Create user files if they don't exist."
   (let* ((src-mod-setup (expand-file-name "eon-setup-modules.el"
                                           eon-root-dir))
          (dest-mod-setup (expand-file-name "eon-setup-modules.el"
@@ -248,6 +250,7 @@ The value always ends with a directory separator."
       (message "Created personal module: %s" dest-user-mod))))
 
 (defun eon-user-setup ()
+  "Create user directory and files, if they don't exist yet."
   (interactive)
   (eon-user-setup--dirs)
   (eon-user-setup--files)
