@@ -35,13 +35,13 @@
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ;;; NECESSARY MODULES
-   ;; Other modules rely on these to be enabled:
+   ;; Other modules rely on these modules to be enabled:
 
-   eon                           ; The Emacs ONBOARD starter-kit
+   eon                           ; Configures built-in Emacs packages
    eon-base                      ; Shared packages and definitions
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-   ;;; MODAL EDITING - if none selected, fall back to Emacs keybindings
+   ;;; MODAL EDITING - if none enabled, stay with Emacs keybindings
 
    ;; eon-evil                      ; Modal editing: Vim keybindings
    ;; eon-god                       ; Modal editing: Emacs keybindings
@@ -61,7 +61,7 @@
    ;;; OPTIONAL MODULES
 
    eon-activities                ; Suspend/resume windows, buffers, etc.
-   ;; eon-autoupdate                ; Update packages automatically
+   eon-autoupdate                ; Update packages automatically
    eon-cape                      ; Completion-at-point extensions
    eon-consult                   ; Navigation and search
    ;; eon-corfu                     ; Code (auto-)completion
@@ -76,7 +76,7 @@
    eon-marginalia                ; Rich annotations
    ;; eon-pdftools                  ; Sophisticated PDF tool suite
    ;; eon-smartparens               ; Edit parenthesis structurally
-   ;; eon-snippets                  ; Code snippets
+   eon-snippets                  ; Code snippets
    eon-switchwindow              ; Navigate windows
    eon-todo                      ; Highlight todo keywords in comments
    eon-vertico                   ; Vertical minibuffer completion UI
