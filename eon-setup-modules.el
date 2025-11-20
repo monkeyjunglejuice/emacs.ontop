@@ -47,8 +47,9 @@
 
    ;; eon-theme-catppuccin         ; Soothing pastel themes
    ;; eon-theme-doom               ; Doom Emacs theme pack
+   ;; eon-theme-ef                 ; Colorful and legible themes
+   ;; eon-theme-matrix             ; Inspired by "The Matrix" movie
    ;; eon-theme-spacemacs          ; Spacemacs themes
-   ;; eon-theme-matrix             ; Theme inspired by "The Matrix" movie
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ;;; OPTIONAL MODULES
