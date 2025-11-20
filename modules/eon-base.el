@@ -420,7 +420,7 @@ Adapted from Doom Emacs.")
   (org-mode . eon-org--sticky-header-maybe))
 
 ;; _____________________________________________________________________________
-;;; MARKUP- / SERIALIZATION FORMATS
+;;; MARKUP, CONFIG AND SERIALIZATION FORMATS
 
 ;; <https://github.com/emacsorphanage/adoc-mode>
 (use-package adoc-mode :ensure t
