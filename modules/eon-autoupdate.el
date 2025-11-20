@@ -11,8 +11,9 @@
 ;; <https://github.com/rranelli/auto-package-update.el>
 
 ;; This package works with Emacs' built-in package manager. It must not be used
-;; with other package managers such as Straight or Elpaca. Therefore it is
-;; installed/activated only when `package-enable-at-startup' is non-nil.
+;; with other package managers such as Straight or Elpaca. Therefore it will be
+;; installed/activated only when `package-enable-at-startup' is non-nil,
+;; no matter if the module is enabled or not.
 
 (when package-enable-at-startup
   (use-package auto-package-update :ensure t
