@@ -58,26 +58,30 @@
 ;; _____________________________________________________________________________
 ;;; ELISP
 
+;;; - User info
 ;; (setopt user-full-name "My Name"
 ;;         user-mail-address "my-email@example.com")
 
 ;;; - Theme
-;; `eon-theme-spacemacs' should be enabled in `eon-setup-modules'. Toggle
-;; between light/dark theme via "<leader> x t". Set the themes after the `eon'
-;; module has been loaded, otherwise the `eon.el' overrides this by setting the
-;; built-in Modus themes.
-;; TODO The `eon' module itself should check if another theme is already
-;; enabled, and skip if that's the case.
+;; Set the themes after the `eon' module has been loaded, otherwise the module
+;; 'eon.el' overrides this by setting the built-in Modus themes.
+;; Toggle between light/dark theme via "<leader> x t".
+;; `eon-theme-spacemacs' should be enabled in `eon-setup-modules'.
 ;; (with-eval-after-load 'eon
 ;;   (setopt eon-theme-light 'spacemacs-light
 ;;           eon-theme-dark 'spacemacs-dark
 ;;           eon-theme-variant-default 'light)
 ;;   (eon-theme-load-default))
 
-
-
-
-
+;;; - Fonts
+;; Use a font installed on your computer.
+;; (setopt eon-font-default "Iosevka"
+;;         eon-font-default-size 140
+;;         eon-font-fixed "Iosevka"
+;;         eon-font-fixed-alt "Iosevka Slab"
+;;         eon-font-proportional "Alegreya Sans"
+;;         eon-font-proportional-size 160
+;;         eon-font-marginal-size 0.85)
 
 ;; _____________________________________________________________________________
 (provide 'eon-user)
