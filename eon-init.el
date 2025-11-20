@@ -36,9 +36,9 @@
 ;; keybindings introduced by a module; meaning all of that may work without
 ;; restarting Emacs.
 
-;; TODO Enabling/disabling modules maybe shouldn't be done by uncommenting and
+;; MAYBE Enabling/disabling modules shouldn't be done by uncommenting and
 ;; commenting. There might be more elegant and sensible ways; must work from
-;; Lisp code, the `customize' UI and maybe `completing-read'.
+;; Lisp code and the `customize' UI.
 
 ;; TODO Modules are currently implemented as Emacs "features". Therefore they
 ;; are basically Emacs packages, if the required metadata has been added to
