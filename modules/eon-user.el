@@ -33,7 +33,7 @@
 ;;           (lambda ()
 ;;             (load-file (expand-file-name "~/path/to/another-file.el"))))
 ;;
-;;; - Examples `with-eval-after-load'
+;;; - Examples using `with-eval-after-load'
 ;;
 ;; Running some code after loading a specific module/package:
 ;; (with-eval-after-load 'eon
@@ -46,12 +46,12 @@
 ;; (with-eval-after-load 'eon-user
 ;;   (load-file (expand-file-name "~/path/to/another-file.el")))
 ;;
-;;; - Examples using `use-package' TODO
+;;; - Examples using `use-package'
 ;; `use-package' is a unifying interface that wraps the previous two facilities
 ;; and several other mechanisms, in order to make configuring Emacs packages
 ;; easier.
 ;;
-;;
+;; TODO Provide more examples
 ;;
 ;;; Code:
 
@@ -64,8 +64,8 @@
 ;;; - Theme
 ;; `eon-theme-spacemacs' should be enabled in `eon-setup-modules'. Toggle
 ;; between light/dark theme via "<leader> x t". Set the themes after the `eon'
-;; module has been loaded, otherwise `eon' overrides this by setting the
-;; built-in modus themes.
+;; module has been loaded, otherwise the `eon.el' overrides this by setting the
+;; built-in Modus themes.
 ;; TODO The `eon' module itself should check if another theme is already
 ;; enabled, and skip if that's the case.
 ;; (with-eval-after-load 'eon
