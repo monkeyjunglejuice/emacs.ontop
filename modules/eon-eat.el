@@ -25,7 +25,6 @@
   :custom
 
   (eat-enable-auto-line-mode t)
-  (eat-term-name "xterm-256color")
   (eat-kill-buffer-on-exit t)
 
   :hook
