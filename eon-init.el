@@ -356,7 +356,7 @@ Interactively, prompt for a module name using completion over all
 ;;      module/feature and contrib module/feature of the same name.
 ;; TODO Add branch for interactive use, MAYBE ask for selection which
 ;;      set of modules to load, e.g. only built-in modules vs. all modules.
-;; MAYBE Add option for forced reload.
+;; TODO Add option for forced reload.
 (defun eon-load-modules (modules-list)
   "Require each EON module from MODULES-LIST in order."
   (interactive)
