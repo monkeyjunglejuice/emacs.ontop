@@ -6,23 +6,25 @@
 ;; point for your convenience. Alternatively, simply write your Emaacs Lisp
 ;; code in your init.el or other Lisp files. That being said ...
 ;;
-;; --> Create your user directory first via "M-x eon-user-setup".
-;; The location of your user directory is specified by `eon-user-dir'.
+;; --> If you haven't done yet, create your user directory first
+;; via "M-x eon-user-setup". The location of your user directory is specified by
+;; `eon-user-dir'. It can be chosen freely. If not specified otherwise, it will
+;; be created within your Emacs init directory, e.g. '~/.emacs.d/'.
 ;;
-;; This file (`eon-user.el') and `eon-setup-modules.el' will be copied
-;; into your user directory.
+;; This file - `eon-user.el' - as well as `eon-setup-modules.el' will be
+;; copied into your user directory.
 ;;
-;; When `eon-user.el' and `eon-setup-modules.el' exist in your user directory,
+;; Once `eon-user.el' or `eon-setup-modules.el' exist in your user directory,
 ;; they will take precedence. Both files initially present in `eon-modules-dir'
-;; and `eon-root-dir' will be ignored.
+;; and `eon-root-dir' will be ignored from there on.
 ;;
 ;;; - How to use this file
 ;;
 ;; Per default, the code within this file will run before the other modules, so
-;; that you are in full control. It also means: if you want to override any
-;; setting that will be defined by a certain module, the override should usually
+;; you are in full control. It also means: if you want to override any setting
+;; that will be defined by a certain module, the override should usually
 ;; happen after that specific module or package has been loaded. You can either
-;; use `add-hook', `with-eval-after-load', or `use-package' forms.
+;; use `add-hook', `with-eval-after-load' or `use-package' forms to do that.
 ;;
 ;;; - Example using hooks
 ;;
