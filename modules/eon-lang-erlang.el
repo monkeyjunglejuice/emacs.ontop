@@ -27,7 +27,7 @@
 
 (use-package eglot :ensure nil
   :custom
-  ;; A longer timeout seems required for the first run in a new project
+  ;; A longer timeout may be required for the first run in a new project
   (eglot-connect-timeout 60)  ; default: 30
   :config
   ;; Make sure to adapt the path and use the .bat script for Windows
