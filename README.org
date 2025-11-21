@@ -34,7 +34,7 @@ It is supposed to be fully modular with strictly separated concerns. There are 4
 ** Emacs for Elixir ★★★★☆
 *eon-lang-elixir*: Elixir setup comes with the language server pre-configured (Elixir-ls), Tree-sitter, Mix integration and a REPL. [[https://github.com/J3RN/inf-elixir/issues/20][Autocompletion doesn't work in the REPL]] yet, unfortunately. "Jump-to-definition" doesn't work either, but that limitation seems to come from the language servers themselves.
 
-** Emacs for Erlang ★★★☆☆
+** Emacs for Erlang ★★☆☆☆
 *eon-lang-erlang*: Comprehensive Erlang setup with Erlang shell, Tree-sitter and Org-mode babel for notebook-style literate programming.
 
 ** Emacs for LFE (Lisp Flavoured Erlang) ★★★☆☆
