@@ -306,6 +306,10 @@ Interactively, prompt for a module name using completion over all
 .el/.elc files in the existing EON module directories."
   ;; Interactive branch concerning manual module loading.
   ;; Presents a selection of all existing EON modules.
+  ;; TODO Use `read-library-name' as in `load-library' for interactive use,
+  ;; so that it can be easily shown if a module is already loaded, and restrict
+  ;; the `load-path' locally to `eon-module-load-path' to display only Eon
+  ;; modules in the selection.
   (interactive
    (let* ((paths (eon-module-load-path)))
      (unless paths
