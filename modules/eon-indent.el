@@ -20,7 +20,7 @@
   (aggressive-indent-dont-electric-modes nil)
   (aggressive-indent-sit-for-time 0.01)
   :hook
-  ;; Don't use `aggressive-indent-global-mode'; it causes to weird problems
+  ;; Don't use `aggressive-indent-global-mode'; it causes problems
   (prog-mode . aggressive-indent-mode))
 
 ;; _____________________________________________________________________________
