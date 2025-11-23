@@ -8,11 +8,11 @@ Emacs ONTOP is a new Emacs distribution in the making, built on top of the [[htt
 
 It is supposed to be fully modular with strictly separated concerns. There are 4 stages:
 
-0. If you disable them all, you have bare bones, stock Emacs.
+0. If you disable all modules, you have bare bones, stock Emacs.
 
 1. With just the =eon= module enabled but nothing else, only built-in Emacs packages are set up and configured, without any 3rd-party packages.
 
-2. With =eon= and =eon-base= modules enabled, you'll get extended comfort.
+2. With =eon= and =eon-base= modules enabled, you'll get extended comfort provided by some 3rd-pard packages.
 
 3. Everything else builds on top of the stages 0, 1 and 2: AI/LLM integration, programming languages, etc (have a look at =eon-setup-modules= for the full list).
 
@@ -67,7 +67,9 @@ git clone https://github.com/monkeyjunglejuice/emacs.ontop.git ~/.emacs.ontop
 (load-file "~/.emacs.ontop/eon-init.el")
 #+end_src
 
-- *3.* Uncomment your desired modules in =~/.emacs.ontop/eon-setup-modules.el=, then restart Emacs.
+- *3.* Do =M-x eon-user-setup= or =<leader> x C-u=
+
+- *3.* Visit your user directory via =<leader> x u= and uncomment your desired modules in =eon-setup-modules.el=, then restart Emacs.
 
   The installation process begins: Emacs will download and install the required Emacs packages from Melpa, GNU/non-GNU Elpa and download/build Treesitter grammars according to your programming language selection.
 
@@ -76,12 +78,12 @@ git clone https://github.com/monkeyjunglejuice/emacs.ontop.git ~/.emacs.ontop
   If the process gets interupted, that's no problem -- just restart Emacs, and it will continue. There might be some warnings, which can be ignored -- these are mostly related to the compilation of the downloaded Emacs packages.
 
 * Get comfortable
-Look into the module files in order to learn about the commands and key bindings -- all documentation lives there. If you want to change settings, re-define these settings within your =init.el= (recommended) or =eon-setup-personal.el=.
+Look into the module files in order to learn about the commands and key bindings -- all documentation lives there. If you want to change settings, re-define these settings within your =init.el= or =eon-user.el=.
 
 ** For new Emacs users:
-"M-x" — Press <Alt>+<x> to show all commands
+"M-x" -- Press <Alt>+<x> to show all commands
 "M-x eon-" shows all commands coming with Emacs ONTOP and Emacs ONboard
-"C-g" — Get out! Press <Ctrl>+<g> to cancel whatever happens (or hit 3x <ESC> in utter panic)
+"C-g" -- Get out! Press <Ctrl>+<g> to cancel whatever happens (or hit 3x <ESC> in utter panic)
 
 * Principles and Goals
 
@@ -99,7 +101,7 @@ Look into the module files in order to learn about the commands and key bindings
 
 - Rely only on Emacs features enabled by the GNU Emacs distribution's default build options (smallest common denominator).
 
-* Comparison to Doom Emacs
+* Comparison: Doom Emacs vs. EON
 I've used Doom Emacs for roughly 2 years, because I was seeking a way out of the yak-shaving treadmill. However, I realized that my Doom Emacs config was mostly fighting opinions, and I would be more satisfied with a clean slate and bending everything to MY opinions (har har). So I went back to my own Emacs config and made it publicly accessible.
 | Doom Emacs                                                   | Eon                                                  |
 |--------------------------------------------------------------+------------------------------------------------------|
@@ -109,14 +111,14 @@ I've used Doom Emacs for roughly 2 years, because I was seeking a way out of the
 | - Throw away your own Emacs config                           | - Eon is provided as a library                       |
 | - "Fast" startup (masked), lags often at runtime             | - Slower startup, snappy at runtime                  |
 | - Strongly opinionated                                       | - Provides options, bend it your way                 |
-| - Focus on VIM-keybindings (Evil), otherwise under-developed | - Agnostic: God-mode, Evil, stock Emacs, Helix, Meow |
+| - Focus on VIM-keybindings (Evil), otherwise under-developed | - Agnostic: God-mode, Evil, stock Emacs, Meow, Helix |
 | - Deeply configured for Evil mode, many extra packages       | - Basically stock Evil mode, less packages           |
 | - Covers hundreds of edge cases and tweaks                   | - Less edge cases (dis)covered, less tweaks          |
 | - Many bugfixes, legacy code                                 | - Less bugs discovered, fresh start, no legacy code  |
-| - Backwards-compatible to Emacs 26                           | - Minimum required Emacs version 30.1                |
+| - Backwards-compatible to Emacs 28.1                         | - Minimum required Emacs version 30.1                |
 | - Uses Straigth.el package manager                           | - Uses built-in Package.el, others planned           |
 | - Despises Customization UI                                  | - Embraces Customization UI                          |
-| - Many Doomishms!                                            | - Try hard to re-use built-in facilities             |
+| - Many Doomishms!                                            | - Tries hard to re-use built-in facilities           |
 | - Contrib modules not realized                               | - Contrib modules as Emacs packages (WIP)            |
 | - Modules don't follow Emacs conventions                     | - Modules are Emacs Features/Packages                |
 | - Relies on shell script helpers & command line              | - Pure Emacs Lisp                                    |
@@ -124,19 +126,19 @@ I've used Doom Emacs for roughly 2 years, because I was seeking a way out of the
 | - Provides user directory for personal config                | - Provides user directory for personal config        |
 | - BDFL: experienced Elisp hacker                             | - BDFL: novice Elisp wannabe hacker                  |
 
-* Comparison to Spacemacs
+* Comparison: Spacemacs vs. EON
 I don't know Spacemacs very well, as I've been using Doom Emacs mostly. However, I'll give it a (probably unfair) try, reflecting my superficial impression.
-| Spacemacs                                | Eon                                    |
-|------------------------------------------+----------------------------------------|
-| Community-driven, many users             | Single-person project, no users        |
-| Throw away your own Emacs config         | Make it your own                       |
-| Seems messy                              | Clean, bottom-up design                |
-| Even more tangled than Doom Emacs        | Everything is a module                 |
-| Very legacy code                         | Fresh start                            |
-| Old and established packages (Helm, ...) | Newer packages (Consult, Vertico, ...) |
-| Stock Emacs keybindings and Evil         | Editor model agnostic                  |
-| Leader key paradigm exhausted            | Much less, but less functionality also |
-| Best Emacs theme                         | Piggy-back                             |
+| Spacemacs                                            | Eon                                                |
+|------------------------------------------------------+----------------------------------------------------|
+| Community-driven, many users                         | Single-person project, no users                    |
+| Throw away your own Emacs config                     | Make it your own                                   |
+| Seems messy                                          | Clean, bottom-up design                            |
+| Even more tangled than Doom Emacs                    | Everything is a module                             |
+| Very legacy code                                     | Fresh start                                        |
+| Defaults to old and established packages (Helm, ...) | Defaults to newer packages (Consult, Vertico, ...) |
+| Stock Emacs keybindings and Evil                     | Editor model agnostic                              |
+| Leader key paradigm exhausted                        | Much less, but less functionality also             |
+| Best Emacs theme                                     | Piggy-back                                         |
 
 * Credits and Acknowledgements
 
