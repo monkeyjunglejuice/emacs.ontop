@@ -31,7 +31,7 @@
 
   ;; Run Eshell always in Eat; this gives Eshell full terminal capabilities.
   ;; `eshell-mode-hook' seems the most robust trigger.
-  (eshell-mode . eat-eshell-mode)
+  ;; (eshell-mode . eat-eshell-mode)
   (eshell-mode . eat-eshell-visual-command-mode)
 
   ;; Start Eat always in line mode, so it blends into Emacs like `shell'
