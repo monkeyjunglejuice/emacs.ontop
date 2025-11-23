@@ -10,7 +10,7 @@ It is supposed to be fully modular with strictly separated concerns. There are 4
 
 0. If you disable them all, you have bare bones, stock Emacs.
 
-1. With just the =eon= module enabled but nothing else, the experience is exactly that of Emacs ONBOARD -- only built-in Emacs packages are set up and configured, without any 3rd-party packages.
+1. With just the =eon= module enabled but nothing else, only built-in Emacs packages are set up and configured, without any 3rd-party packages.
 
 2. With =eon= and =eon-base= modules enabled, you'll get extended comfort.
 
@@ -85,19 +85,58 @@ Look into the module files in order to learn about the commands and key bindings
 
 * Principles and Goals
 
-- Don't be invasive: provide add-ons rather than replacements. In the large: Emacs ONTOP tries to integrate into your existing Emacs config rather than aiming to replace it. And in the small: global variables are often used across packages. Be careful not to `setq' these variables, but do `add-to-list' insted (this negligence appears very often in instructions for how to setup packages).
+- Don't be invasive: provide add-ons rather than replacements. In the large: Emacs ONTOP tries to integrate into your existing Emacs config rather than aiming to replace it. And in the small: global variables are often used across packages. Be careful not to `setq' these variables, but do `add-to-list' instead (this negligence appears very often in instructions for how to setup packages).
 
 - Consistency: Adhering to Emacs conventions and doing common actions in the same way is crucial for the user experience (e.g. same Eglot keybindings across all languages; consistant keybindings for "evaluate expression", "compile", etc.). If in doubt, follow Emacs conventions, `eon-commonlisp.el' or `eon-ocaml.el'.
 
-- Beginner-friendly: No complex "Emacs-framework". Novice Emacs users willing to touch Elisp code should be able to follow, adapt code and and immediately celebrate their achievements. Code should be decoupled and modificable, separately usable and stealable -- if that leads to some redundancy, it's fine.
+- Beginner-friendly: No opinionated "Emacs-framework". Novice Emacs users willing to touch Elisp code should be able to follow, adapt code and and immediately celebrate their achievements. Code should be decoupled and modificable, separately usable and stealable -- if that leads to some redundancy, it's fine.
 
 - Reading the documentation in the Elisp files shall be a reward in itself. Include tipps, tricks, alternatives.
 
 - Carefully pre-configured: the goal is not to pack as much features as possible for each language, but to identify the subtleties, refine iteratively, and work out best practices.
 
-- Portable: Emacs ONTOP Should work on recent Linux/Unix, Windows and MacOS systems; Compatibility with Emacs versions from what's in Debian stable upwards (Debian is the measure of all things)
+- Portable: Emacs ONTOP Should work on recent Linux/Unix, Windows and MacOS systems; Compatibility with Emacs versions from what's in Debian stable upwards (Debian -- as a fairly conservative GNU/Linux distro -- seems a good measure of things).
 
 - Rely only on Emacs features enabled by the GNU Emacs distribution's default build options (smallest common denominator).
+
+* Comparison to Doom Emacs
+I've used Doom Emacs for roughly 2 years, because I was seeking a way out of the yak-shaving treadmill. However, I realized that my Doom Emacs config was mostly fighting opinions, and I would be more satisfied with a clean slate and bending everything to MY opinions (har har). So I went back to my own Emacs config and made it publicly accessible.
+| Doom Emacs                                                   | Eon                                                  |
+|--------------------------------------------------------------+------------------------------------------------------|
+| - Thousands of users                                         | - No users                                           |
+| - Superficially modular, but tightly coupled                 | - Fully modular, decoupled                           |
+| - Mature and covers a plethora of use-cases                  | - Unstable and narrow focus, untested                |
+| - Throw away your own Emacs config                           | - Eon is provided as a library                       |
+| - "Fast" startup (masked), lags often at runtime             | - Slower startup, snappy at runtime                  |
+| - Strongly opinionated                                       | - Provides options, bend it your way                 |
+| - Focus on VIM-keybindings (Evil), otherwise under-developed | - Agnostic: God-mode, Evil, stock Emacs, Helix, Meow |
+| - Deeply configured for Evil mode, many extra packages       | - Basically stock Evil mode, less packages           |
+| - Covers hundreds of edge cases and tweaks                   | - Less edge cases (dis)covered, less tweaks          |
+| - Many bugfixes, legacy code                                 | - Less bugs discovered, fresh start, no legacy code  |
+| - Backwards-compatible to Emacs 26                           | - Minimum required Emacs version 30.1                |
+| - Uses Straigth.el package manager                           | - Uses built-in Package.el, others planned           |
+| - Despises Customization UI                                  | - Embraces Customization UI                          |
+| - Many Doomishms!                                            | - Try hard to re-use built-in facilities             |
+| - Contrib modules not realized                               | - Contrib modules as Emacs packages (WIP)            |
+| - Modules don't follow Emacs conventions                     | - Modules are Emacs Features/Packages                |
+| - Relies on shell script helpers & command line              | - Pure Emacs Lisp                                    |
+| - Many directories and files                                 | - Simple architecture                                |
+| - Provides user directory for personal config                | - Provides user directory for personal config        |
+| - BDFL: experienced Elisp hacker                             | - BDFL: novice Elisp wannabe hacker                  |
+
+* Comparison to Spacemacs
+I don't know Spacemacs very well, as I've been using Doom Emacs mostly. However, I'll give it a (probably unfair) try, reflecting my superficial impression.
+| Spacemacs                                | Eon                                    |
+|------------------------------------------+----------------------------------------|
+| Community-driven, many users             | Single-person project, no users        |
+| Throw away your own Emacs config         | Make it your own                       |
+| Seems messy                              | Clean, bottom-up design                |
+| Even more tangled than Doom Emacs        | Everything is a module                 |
+| Very legacy code                         | Fresh start                            |
+| Old and established packages (Helm, ...) | Newer packages (Consult, Vertico, ...) |
+| Stock Emacs keybindings and Evil         | Editor model agnostic                  |
+| Leader key paradigm exhausted            | Much less, but less functionality also |
+| Best Emacs theme                         | Piggy-back                             |
 
 * Credits and Acknowledgements
 
