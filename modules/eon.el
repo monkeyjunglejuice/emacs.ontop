@@ -2233,15 +2233,25 @@ pretending to clear it."
 ;; _____________________________________________________________________________
 ;;; ESHELL
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/eshell.html>
+;; <https://www.masteringemacs.org/article/complete-guide-mastering-eshell>
 
 ;; Eshell is not a terminal emulator, but a shell equivalent to Bash or Fish
 ;; that runs within Emacs. It is independent from the OS. Eshell looks like
-;; a POSIX shell superficially, but is also a REPL for Emacs Lisp expressions.
-
-;; Eshell scripts can run in batch mode.
+;; a POSIX shell superficially, but is also a REPL for Emacs Lisp expressions
+;; - meaning you get the full Emacs power.
+;;
+;; Eshell scripts can also run in batch mode:
 ;; By adding the following interpreter directive to an Eshell script, you
 ;; can make it executable like other shell scripts:
 ;; #!/usr/bin/env -S emacs --batch -f eshell-batch-file
+;;
+;; Subshells that evaluate Emacs list are created with $( ... ) or ( ... ).
+;; You can use $( ... ) to in-line an elisp form and use its output in much
+;; the same way as you would in bash, e.g. echo $(+ 1 2 3).
+;;
+;; There's another one, which is more like an actual subshell: ${ ... }
+;; but this is not as versatile as a regular subshell you may know from
+;; bash and others.
 
 ;; Create Eshell loacal leader keymap
 (eon-localleader-defkeymap eshell-mode eon-localleader-eshell-map
@@ -3030,9 +3040,10 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Org publish
 
-;; Select a project to publish a project via "<localleader> p";
+;; Select a project to publish a project via "<leader> o p";
 ;; This can be used to generate and publish a static blog, ebooks, etc.
-(keymap-set eon-localleader-org-mode-map "p" #'org-publish)
+(keymap-set ctl-z-o-map "p" #'org-publish)
+(keymap-set eon-localleader-org-mode-map "p" #'org-publish-current-project)
 
 ;; Speed up publishing by skipping files that haven't been changed
 (setopt org-publish-list-skipped-files nil)
@@ -3041,7 +3052,7 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
 (setopt org-publish-timestamp-directory
         (concat user-emacs-directory "org-timestamps/"))
 
-(defun org-publish-unchanged-files-toggle ()
+(defun eon-org-publish-unchanged-files-toggle ()
   "Toggle whether to re-export Org files that haven't been changed."
   (interactive)
   (if org-publish-use-timestamps-flag
@@ -3049,6 +3060,7 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
              (message "Re-export unchanged files"))
     (progn (setopt org-publish-use-timestamps-flag t)
            (message "Don't re-export unchanged files (default)"))))
+(keymap-set ctl-z-o-map "C-p" #'eon-org-publish-unchanged-files-toggle)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Org export
