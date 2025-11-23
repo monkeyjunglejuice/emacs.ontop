@@ -256,29 +256,19 @@ The value always ends with a directory separator."
   (eon-user-setup--files)
   (message "Your user directory is ready: %s" eon-user-dir))
 
-(defun eon-goto-user-dir ()
-  "Open your user directory in `dired'."
+(defun eon-user-find-file ()
+  "Run `find-file' in `eon-user-dir'."
   (interactive)
-  (let ((dir eon-user-dir))
-    (if (file-exists-p dir)
-        (dired dir)
-      (user-error "Your user directory doesn't exist at %s, \
-you may run `eon-user-setup' first" dir))))
-
-(defun eon-goto-user-module ()
-  "Open your personal module file from the user directory."
-  (interactive)
-  (let ((file (concat eon-user-modules-dir "eon-user.el")))
-    (if (file-exists-p file)
-        (find-file file)
-      (user-error "Your personal module doesn't exist at %s, \
-you may run `eon-user-setup' first" file))))
+  (unless (file-directory-p eon-user-dir)
+    (user-error "User directory doesn't exist at %s; \
+run `eon-user-setup' first" eon-user-dir))
+  (let ((default-directory eon-user-dir))
+    (call-interactively #'find-file)))
 
 ;; Add keybindings to the leader
 (with-eval-after-load 'eon
   (keymap-set ctl-z-x-map "C-u" #'eon-user-setup)
-  (keymap-set ctl-z-x-map "U"   #'eon-goto-user-dir)
-  (keymap-set ctl-z-x-map "u"   #'eon-goto-user-module))
+  (keymap-set ctl-z-x-map "u"   #'eon-user-find-file))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Bootstrap
