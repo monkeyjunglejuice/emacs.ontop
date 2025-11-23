@@ -27,7 +27,7 @@
 ;; <https://smartparens.readthedocs.io/en/latest/>
 
 (when (eon-modulep 'eon-smartparens)
-  (use-package smartparens
+  (use-package smartparens :ensure t
     :config
     ;; As of version 20240713.1002, smartparens doesn't recognize LFE as a Lisp,
     ;; so let's add it manually
