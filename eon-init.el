@@ -67,7 +67,7 @@
 ;; TODO Optimize for startup speed (reasonably), but don't lazy-load everything
 ;; per default, as run-time snappiness is more important than immediate startup
 ;; (use emacsclient for fast startup). However, a test has shown that through
-;; deffering, startup-time could almost be cut in half.
+;; deffered loading, startup-time almost could be cut in half.
 
 ;; _____________________________________________________________________________
 ;;; USE-PACKAGE
