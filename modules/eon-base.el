@@ -107,14 +107,24 @@ Adapted from Doom Emacs.")
 ;; _____________________________________________________________________________
 ;;; SHELL
 
-;; Fish
+;;; - Fish
 (when (executable-find "fish")
+
   ;; <https://github.com/LemonBreezes/emacs-fish-completion>
   (use-package fish-completion :ensure t
     :config
     (global-fish-completion-mode))
+
   ;; <https://github.com/wwwjfy/emacs-fish>
   (use-package fish-mode :ensure t))
+
+;;; - Bash
+;; <https://github.com/szermatt/emacs-bash-completion>
+(when (executable-find "bash")
+
+  (use-package bash-completion :ensure t
+    :config
+    (bash-completion-setup)))
 
 ;; _____________________________________________________________________________
 ;;; OS INTEGRATION
