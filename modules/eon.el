@@ -1580,9 +1580,6 @@ Some themes may come as functions -- wrap these ones in lambdas."
         eldoc-echo-area-display-truncation-message nil
         eldoc-echo-area-prefer-doc-buffer nil)
 
-;; Open the documentation buffer via "<leader> c d"
-(keymap-set ctl-z-c-map "d" #'eldoc)
-
 ;; _____________________________________________________________________________
 ;;; SEARCH
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Search>
@@ -2504,7 +2501,7 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 ;; Visual line wrapping in text mode
 (add-hook 'text-mode-hook #'visual-line-mode)
 
-;; Toggle `visual-line-mode'
+;; Toggle `visual-line-mode' via "<leader> x l"
 (keymap-set ctl-z-x-map "l" #'visual-line-mode)
 
 ;; _____________________________________________________________________________
@@ -2631,6 +2628,14 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 (keymap-set ctl-z-v-map "," `("..." . ,vc-prefix-map))
 
 ;; _____________________________________________________________________________
+;;; CODE NAVIGATION AND LOOKUP
+
+(keymap-set ctl-z-c-map "d" #'xref-find-definitions)
+(keymap-set ctl-z-c-map "a" #'xref-find-apropos)
+(keymap-set ctl-z-c-map "r" #'xref-find-references)
+(keymap-set ctl-z-c-map "R" #'xref-find-references-and-replace)
+
+;; _____________________________________________________________________________
 ;;; EGLOT LANGUAGE SERVER CLIENT (LSP)
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md/>
 
@@ -2644,10 +2649,12 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
   ;; Activate Eglot in cross-referenced non-project files?
   (setopt eglot-extend-to-xref t)
   ;; Common keybindings
-  (keymap-set ctl-z-c-map "r"   #'eglot-rename)
+  ;; TODO Don't set keybindings after load, but buffer-locally where Eglot is
+  ;; active. If it works, maybe generalize that behavior for other modes.
+  (keymap-set ctl-z-c-map   "R" #'eglot-rename)
   (keymap-set ctl-z-c-f-map "f" #'eglot-format)
-  (keymap-set ctl-z-c-f-map "b" #'eglot-format-buffer)
-  (keymap-set ctl-z-c-map "a"   #'eglot-code-actions))
+  (keymap-set ctl-z-c-f-map "F" #'eglot-format-buffer)
+  (keymap-set ctl-z-c-map   "c" #'eglot-code-actions))
 
 ;; Eglot comes with a fairly complete set of associations of major-modes
 ;; to popular language servers predefined. If you need to add server
@@ -2933,7 +2940,7 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
 
 ;; Create the local leader keymap
 (eon-localleader-defkeymap org-mode eon-localleader-org-mode-map
-  :doc "Localleader map for `org-mode'.")
+  :doc "Local leader map for `org-mode'.")
 
 ;; Set a default location to look for Org files; but you can have
 ;; that directory anywhere you like
@@ -2943,7 +2950,7 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
   "Show the Org directory in Dired."
   (interactive)
   (dired org-directory))
-;; Visit the `org-directory' in Dired via `C-z o d'
+;; Visit the `org-directory' in Dired via "<leader> o d"
 (keymap-set ctl-z-o-map "d" #'eon-goto-org-dir)
 
 ;; Turn on visual word wrapping
@@ -2968,7 +2975,7 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
 ;;; - Org capture
 ;; <https://orgmode.org/org.html#Capture>
 
-;; Capture a note via `C-z o c'
+;; Capture a note via "<leader> o c"
 (keymap-set ctl-z-o-map "c" #'org-capture)
 ;; Put newer notes on top of the file
 (setopt org-reverse-note-order t)
@@ -2980,7 +2987,7 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
   "Visit the Org notes file."
   (interactive)
   (find-file org-default-notes-file))
-;; Visit the default notes file via `C-z o o'
+;; Visit the default notes file via "<leader> o o"
 (keymap-set ctl-z-o-map "o" #'eon-goto-org-notes)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -2999,7 +3006,7 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
 
 (setopt org-agenda-files (list org-directory))
 
-;; Visit your Org agenda via `C-z o a'
+;; Visit your Org agenda via "<leader> o a"
 (keymap-set ctl-z-o-map "a" #'org-agenda)
 
 (add-hook 'org-agenda-mode-hook
@@ -3062,11 +3069,21 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
 ;;; LISP
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Executing-Lisp>
 
+;; Make local leader binding behave like "C-x C-e" when Edebug is active
+(defun eon-eval-last-sexp (&optional arg)
+  "Eval last sexp; use Edebug variant when active.
+With prefix ARG, pass it through to the underlying command."
+  (interactive "P")
+  (if (and (bound-and-true-p edebug-active)
+           (fboundp 'edebug-eval-last-sexp))
+      (call-interactively #'edebug-eval-last-sexp)
+    (call-interactively #'eval-last-sexp)))
+
 ;; Define local leader keymap for `emacs-lisp-mode'
 (eon-localleader-defkeymap emacs-lisp-mode eon-localleader-elisp-map
   :doc "Local leader keymap for Emacs Lisp buffers."
   "d"   #'edebug-defun
-  "e"   #'eval-last-sexp
+  "e"   #'eon-eval-last-sexp
   "E"   #'pp-eval-last-sexp
   "h"   #'describe-symbol
   "l"   #'load-file
@@ -3162,26 +3179,35 @@ With SWITCH = \='hook, return ...-hook variables."
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Check-parens mode
 
-;; Minor mode that prevents from accidently saving files with mismatched
-;; parenthesis and quotes
+;; Minor mode that prevents accidentally saving files with mismatched
+;; parentheses and quotes.
 
 (defun eon-check-parens--ask ()
   "Check parens; prompt to proceed on mismatch."
-  (if (condition-case nil (progn (check-parens) t) (error nil))
+  (if (condition-case nil
+          (progn (check-parens) t)
+        (error nil))
       nil
     (if (y-or-n-p
-         "Didn't save file: unmatched paren or quote. Save anyway? ")
+         "Buffer contains unmatched parens or quotes. Save anyway? ")
         nil
-      (user-error "OK, the file hasn't been saved"))))
+      (user-error "OK, the file has not been saved"))))
 
 (define-minor-mode eon-check-parens-mode
-  "Ask before saving with mismatching parens or quotes."
+  "Ask before saving with mismatching parens or quotes.
+
+When enabled, `check-parens' is run before saving. If mismatches
+are found, ask whether to save anyway; answering no aborts the
+save with a `user-error'."
   :group 'eon-misc
-  :global t
   :init-value t
   (if eon-check-parens-mode
-      (add-hook 'write-contents-functions #'eon-check-parens--ask nil t)
-    (remove-hook 'write-contents-functions #'eon-check-parens--ask t)))
+      (add-hook 'write-contents-functions
+                #'eon-check-parens--ask
+                nil t)
+    (remove-hook 'write-contents-functions
+                 #'eon-check-parens--ask
+                 t)))
 
 ;; Enable minor mode per default; toggle via "M-x eon-check-parens-mode".
 ;; How to remove the hook permanently from a specific lisp major mode:
