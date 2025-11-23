@@ -333,6 +333,7 @@ Adapted from Doom Emacs.")
 (use-package git-gutter-fringe :ensure t
   :after git-gutter
   :custom
+  ;; Display the indicators on which side?
   (git-gutter-fr:side 'left-fringe))
 
 ;; _____________________________________________________________________________
