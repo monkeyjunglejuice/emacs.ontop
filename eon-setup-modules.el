@@ -5,7 +5,7 @@
 ;;; Commentary:
 ;;
 ;; --> Setup your user directory first via "M-x eon-user-setup"
-;;     or "<leader> x C-u". Visit your user directory via "<leader> x U"
+;;     or "<leader> x C-u". Visit your user directory via "<leader> x u"
 ;;     and edit this file there.
 ;;
 ;; --> 1. Enable or disable modules below by uncommenting and commenting.
@@ -18,7 +18,7 @@
 ;; --> Documentation lives in the module files. To learn more, place the cursor
 ;;     on a module name below and do "<leader> f p" to visit a module file.
 ;;
-;; The modules will be loaded one after another as listed below.
+;; The modules will be loaded one after another, as listed below.
 ;;
 ;;; Code:
 
@@ -116,7 +116,6 @@
    ;; eon-lang-scheme-stklos        ; Stklos Scheme
    eon-lang-web                  ; HTML/CSS editing
 
-   ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ))
 
 ;; _____________________________________________________________________________
