@@ -53,7 +53,7 @@ It is supposed to be fully modular with strictly separated concerns. There are 4
 *eon-lang-lua*: Basic Lua setup with REPL and lua-language-server. Rudimentary setup suitable for editing Lua code -- the available features don't come close to the Lua IDE [[https://studio.zerobrane.com/][ZeroBrane Studio]], TextAdept or Neovim.
 
 ** Emacs for Web Development ★☆☆☆☆
-*eon-lang-webdev*: Just basic HTML, CSS and JavaScript editing and linting (linters have to be installed separately); includes web-mode. Highly under-developed, since I don't do web stuff usually.
+*eon-lang-webdev*: Just basic HTML, CSS and JavaScript editing and linting (linters have to be installed separately). Highly under-developed, since I don't do web stuff usually.
 
 * Full Installation -- Get Emacs ONTOP:
 
@@ -69,7 +69,7 @@ git clone https://github.com/monkeyjunglejuice/emacs.ontop.git ~/.emacs.ontop
 
 - *3.* Do =M-x eon-user-setup= or =<leader> x C-u=
 
-- *3.* Visit your user directory via =<leader> x u= and uncomment your desired modules in =eon-setup-modules.el=, then restart Emacs.
+- *4.* Visit your user directory via =<leader> x u= and uncomment your desired modules in =eon-setup-modules.el=, then restart Emacs.
 
   The installation process begins: Emacs will download and install the required Emacs packages from Melpa, GNU/non-GNU Elpa and download/build Treesitter grammars according to your programming language selection.
 
