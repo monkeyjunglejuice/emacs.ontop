@@ -13,12 +13,14 @@
 
 ;; Dired
 (use-package nerd-icons-dired :ensure t
+  :after dired
   :diminish
   :hook
   (dired-mode . nerd-icons-dired-mode))
 
 ;; Ibuffer
 (use-package nerd-icons-ibuffer :ensure t
+  :after ibuffer
   :hook
   (ibuffer-mode . nerd-icons-ibuffer-mode))
 
