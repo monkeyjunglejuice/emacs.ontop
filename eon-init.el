@@ -269,7 +269,8 @@ run `eon-user-setup' first" eon-user-dir))
 ;; Add keybindings to the leader
 (with-eval-after-load 'eon
   (keymap-set ctl-z-x-map "C-u" #'eon-user-setup)
-  (keymap-set ctl-z-x-map "u"   #'eon-user-find-file))
+  (keymap-set ctl-z-x-map "u"   #'eon-user-find-file)
+  (keymap-set ctl-z-f-map "u"   #'eon-user-find-file))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Bootstrap
