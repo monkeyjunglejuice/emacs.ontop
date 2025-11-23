@@ -21,12 +21,18 @@
 ;;; REPL
 
 (use-package inf-elixir :ensure t
+
   :init
+
   (eon-localleader-defkeymap elixir-ts-mode eon-localleader-elixir-map
     :doc "Local leader keymap for the Elixir major mode.")
+
   :custom
+
   (inf-elixir-switch-to-repl-on-send nil)
+
   :config
+
   (defun inf-elixir-recompile ()
     "Send `IEx.Helpers.recompile/1' to recompile the current Mix project.
 Note this function simply recompiles Elixir modules, without reloading
@@ -35,13 +41,18 @@ configuration or restarting applications."
     (inf-elixir--send (format "recompile()"))
     (if inf-elixir-switch-to-repl-on-send
         (goto-char (point-max))))
+
   (defun inf-elixir-observer ()
     "Start the Erlang Observer in IEx."
     (interactive)
     (inf-elixir--send (format ":observer.start()")))
+
   :hook
+
   ((elixir-ts-mode heex-ts-mode) . inf-elixir-minor-mode)
+
   :bind
+
   (:map elixir-ts-mode-map
         ("C-c C-z" . inf-elixir-project)
         ("C-c C-l" . inf-elixir-send-line)
@@ -50,6 +61,7 @@ configuration or restarting applications."
         ("C-c C-c" . inf-elixir-recompile)
         ("C-c c"   . inf-elixir-reload-module)
         ("C-c C-o" . inf-elixir-observer))
+
   (:map eon-localleader-elixir-map
         ("r" . inf-elixir-project)
         ("l" . inf-elixir-send-line)
@@ -73,16 +85,23 @@ configuration or restarting applications."
 ;; <https://github.com/elixir-lsp/elixir-ls>
 
 (use-package eglot :ensure nil
+
   :custom
+
   ;; A longer timeout seems required for the first run in a new project
   (eglot-connect-timeout 60)            ; default: 30
+
   :config
+
   ;; Make sure to adapt the path and use the .bat script for Windows
   (add-to-list 'eglot-server-programs
                '((elixir-ts-mode heex-ts-mode) . ("elixir-ls")))
+
   :hook
+
   ;; Start language server automatically
   ((elixir-ts-mode heex-ts-mode) . eglot-ensure)
+
   ;; Tell the language server to format the buffer before saving
   ((elixir-ts-mode heex-ts-mode)
    . (lambda ()

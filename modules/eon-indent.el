@@ -15,11 +15,15 @@
 
 (use-package aggressive-indent :ensure t
   :diminish aggressive-indent-mode
+
   :custom
+
   ;; Actually seems to work better when `electric-indent-mode' is enabled
   (aggressive-indent-dont-electric-modes nil)
   (aggressive-indent-sit-for-time 0.01)
+
   :hook
+
   ;; Don't use `aggressive-indent-global-mode'; it causes problems
   (prog-mode . aggressive-indent-mode))
 
