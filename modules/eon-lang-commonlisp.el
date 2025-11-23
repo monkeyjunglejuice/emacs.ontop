@@ -85,13 +85,16 @@
    (concat common-lisp-hyperspec-root "Data/Map_IssX.txt")))
 
 ;; <https://github.com/mmgeorge/sly-asdf>
-(use-package sly-asdf :ensure t)
+(use-package sly-asdf :ensure t
+  :after sly)
 
 ;; <https://github.com/joaotavora/sly-macrostep>
-(use-package sly-macrostep :ensure t)
+(use-package sly-macrostep :ensure t
+  :after sly)
 
 ;; <https://github.com/joaotavora/sly-named-readtables>
-(use-package sly-named-readtables :ensure t)
+(use-package sly-named-readtables :ensure t
+  :after sly)
 
 ;; <https://github.com/joaotavora/sly-quicklisp>
 (use-package sly-quicklisp :ensure t
