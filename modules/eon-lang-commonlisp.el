@@ -21,14 +21,18 @@
 ;; <https://github.com/joaotavora/sly>
 
 (use-package sly :ensure t
+
   :init
+
   ;; Create local leader maps
   (eon-localleader-defkeymap
       sly-editing-mode eon-localleader-sly-editing-map
     :doc "Local leader keymap for `sly-editing-mode'.")
+
   (eon-localleader-defkeymap
       sly-mrepl-mode eon-localleader-sly-mrepl-map
     :doc "Local leader keymap for `sly-mrepl-mode'.")
+
   ;; Set Sly Lisp implementations
   (setq sly-lisp-implementations
         '((sbcl ("sbcl"
@@ -37,24 +41,33 @@
                  "--binding-stack-size" "512"
                  "--dynamic-space-size" "8192")
                 :coding-system utf-8-unix)))
+
   :custom
+
   ;; Select Sly default Lisp implementation
   (sly-default-lisp 'sbcl)
   ;; General configuration
   (sly-net-coding-system 'utf-8-unix)
+
   :config
+
   ;; Prevent these buffers from cluttering certain buffer listings:
   (eon-boring-buffers-add '("\\`\\*sly-inferior-lisp"
                             "\\`\\*sly-compilation"
                             "\\`\\*sly-description"
                             "\\`\\*sly-events"))
+
   ;; :hook
+
   ;; Automatically start a Lisp REPL when opening a Lisp buffer
   ;; (sly-editing-mode . (lambda ()
   ;;                       (unless (sly-connected-p) (save-excursion (sly)))))
+
   :bind
+
   (:map ctl-z-e-map
         ("l" . sly))
+
   (:map eon-localleader-sly-editing-map
         ;; TODO Add ergonomic keybindings
         ("c" . sly-compile-defun)))
