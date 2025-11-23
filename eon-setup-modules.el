@@ -7,7 +7,7 @@
 ;; --> Setup your user directory first via "M-x eon-user-setup"
 ;;     or "<leader> x C-u". Visit your user directory via "<leader> x U"
 ;;     and edit this file there.
-
+;;
 ;; --> 1. Enable or disable modules below by uncommenting and commenting.
 ;;     2. Save the file.
 ;;     3. Restart Emacs to apply your changes or do "M-x eon-load-modules".
