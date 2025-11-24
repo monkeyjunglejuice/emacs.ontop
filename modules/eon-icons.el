@@ -17,6 +17,7 @@
   :diminish
   :hook
   (dired-mode . nerd-icons-dired-mode)
+  ;; Display icons for subtrees
   (dired-subtree-after-insert . nerd-icons-dired--refresh))
 
 ;; Ibuffer
