@@ -4,16 +4,17 @@
 
 ;;; Commentary:
 ;;
+;; This module works with Emacs' built-in package manager. It must not be used
+;; with other package managers such as Straight or Elpaca. Therefore the
+;; packages therein will be installed/activated only when
+;; `package-enable-at-startup' is non-nil, no matter if the module is enabled or
+;; not.
+;;
 ;;; Code:
 
 ;; _____________________________________________________________________________
 ;;; AUTO-UPDATE PACKAGES
 ;; <https://github.com/rranelli/auto-package-update.el>
-
-;; This package works with Emacs' built-in package manager. It must not be used
-;; with other package managers such as Straight or Elpaca. Therefore it will be
-;; installed/activated only when `package-enable-at-startup' is non-nil,
-;; no matter if the module is enabled or not.
 
 (when package-enable-at-startup
   (use-package auto-package-update :ensure t
@@ -24,6 +25,7 @@
     (auto-package-update-show-preview nil)
     (auto-package-update-hide-results t)
     (auto-package-update-prompt-before-update t)
+    ;; Keep old packages around to roll back if necessary
     (auto-package-update-delete-old-versions nil)
     (auto-package-update-excluded-packages '())))
 
