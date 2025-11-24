@@ -16,7 +16,8 @@
   :after dired
   :diminish
   :hook
-  (dired-mode . nerd-icons-dired-mode))
+  (dired-mode . nerd-icons-dired-mode)
+  (dired-subtree-after-insert . nerd-icons-dired--refresh))
 
 ;; Ibuffer
 (use-package nerd-icons-ibuffer :ensure t
