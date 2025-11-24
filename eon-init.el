@@ -93,7 +93,7 @@
 (use-package use-package-ensure-system-package)
 
 ;; _____________________________________________________________________________
-;;; LOADER
+;;; ROOT DIRECTORY
 
 ;; Detect and define the path of the EON root directory
 (defvar eon-root-dir
@@ -106,8 +106,8 @@
   "Directory containing 'eon-init.el'.
 The value always ends with a directory separator.")
 
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - Built-in modules
+;; _____________________________________________________________________________
+;;; BUILT-IN MODULES
 
 ;; Directory for built-in modules
 (defvar eon-modules-dir
@@ -133,8 +133,8 @@ This does not indicate whether MODULE-NAME is already loaded;
 for that, use `featurep'."
   (memq module-name eon-modules))
 
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - User-defined modules
+;; _____________________________________________________________________________
+;;; USER-DEFINED MODULES
 ;; TODO Implement loading of user-defined modules
 
 ;; Modules in '[eon-user-dir]/modules/' should be handled separately,
@@ -181,8 +181,8 @@ This does not indicate whether MODULE-NAME is already loaded;
 for that, use `featurep'."
   (memq module-name eon-user-modules))
 
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - Contrib modules
+;; _____________________________________________________________________________
+;;; CONTRIB MODULES
 ;; TODO Implement loading of contrib modules
 
 ;; Distinct from built-in modules and user-defined modules.
@@ -212,8 +212,8 @@ The value always ends with a directory separator."
 ;; Add the contrib modules directory to the `load-path'
 (add-to-list 'load-path eon-user-contrib-dir)
 
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - User setup
+;; _____________________________________________________________________________
+;;; USER SETUP
 
 ;; Create user directories according to the variables
 ;; `eon-user-dir', `eon-user-modules-dir' and `eon-user-contrib-dir',
@@ -272,8 +272,8 @@ run `eon-user-setup' first" eon-user-dir))
   (keymap-set ctl-z-x-map "u"   #'eon-user-find-file)
   (keymap-set ctl-z-f-map "u"   #'eon-user-find-file))
 
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - Bootstrap
+;; _____________________________________________________________________________
+;;; LOADER
 
 (defun eon-module-load-path ()
   "Return list of existing EON module directories.
