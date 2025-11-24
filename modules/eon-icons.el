@@ -41,7 +41,7 @@
   (use-package nerd-icons-corfu :ensure t
     :config
     (eon-add-to-list* 'corfu-margin-formatters
-                            #'nerd-icons-corfu-formatter)))
+                      #'nerd-icons-corfu-formatter)))
 
 ;; _____________________________________________________________________________
 (provide 'eon-icons)
