@@ -107,20 +107,20 @@ I've used Doom Emacs for roughly 2 years, because I was seeking a way out of the
 |---------------------------------------------------------------------------------+------------------------------------------------------|
 | - Thousands of users                                                            | - No users                                           |
 | - Superficially modular, but tightly coupled                                    | - Fully modular, decoupled                           |
-| - Throw away your own Emacs config                                              | - Eon is provided as a library                       |
+| - Throw away your own Emacs config                                              | - Eon integrates as a library                        |
 | - Mature and covers a plethora of use-cases                                     | - Unstable and narrow focus, untested                |
 | - "Fast" startup (masked), lags often at runtime due to lazy-loading everything | - Slower startup, snappy at runtime                  |
-| - Strongly opinionated                                                          | - Provides options, bend it your way                 |
-| - Focus on VIM-keybindings (Evil), otherwise under-developed                    | - Agnostic: God-mode, Evil, stock Emacs, Meow, Helix |
+| - Strongly opinionated                                                          | - Bend it your way                                   |
+| - Focus on VIM-keybindings (Evil), other editing models are second-class        | - Agnostic: God-mode, Evil, stock Emacs, Meow, Helix |
 | - Deeply configured for Evil mode, many extra packages                          | - Basically stock Evil mode, less packages           |
 | - Covers hundreds of edge cases and tweaks                                      | - Less edge cases (dis)covered, less tweaks          |
 | - Many bugfixes, legacy code                                                    | - Less bugs discovered, fresh start, no legacy code  |
 | - Backwards-compatible to Emacs 28.1                                            | - Minimum required Emacs version 30.1                |
-| - Uses Straigth.el package manager                                              | - Uses built-in Package.el, others planned           |
+| - Uses Straigth.el package manager                                              | - Uses built-in Package.el, others possible          |
 | - Despises Customization UI                                                     | - Embraces Customization UI                          |
 | - Many Doomishms!                                                               | - Tries hard to re-use built-in facilities           |
-| - Contrib modules not realized                                                  | - Contrib modules as Emacs packages (WIP)            |
 | - Modules don't follow Emacs conventions                                        | - Modules are Emacs Features/Packages                |
+| - Contrib modules not realized                                                  | - Contrib modules as Emacs packages (WIP)            |
 | - Relies on shell script helpers & command line                                 | - Pure Emacs Lisp                                    |
 | - Many directories and files                                                    | - Simple architecture                                |
 | - Provides user directory for personal config                                   | - Provides user directory for personal config        |
@@ -131,7 +131,7 @@ I don't know Spacemacs very well, as I've been using Doom Emacs mostly. However,
 | Spacemacs                                            | Eon                                                |
 |------------------------------------------------------+----------------------------------------------------|
 | Community-driven, many users                         | Single-person project, no users                    |
-| Throw away your own Emacs config                     | Make it your own                                   |
+| Replaces your own Emacs config                       | Make it your own                                   |
 | Seems messy                                          | Clean, bottom-up design                            |
 | Even more tangled than Doom Emacs                    | Everything is a module                             |
 | Very legacy code                                     | Fresh start                                        |
