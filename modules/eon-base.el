@@ -136,6 +136,13 @@ Adapted from Doom Emacs.")
     :config
     (osx-trash-setup)))
 
+;; Adapt title bar to macOS theme
+;; <https://github.com/purcell/ns-auto-titlebar>
+(when (eon-macp)
+  (use-package ns-auto-titlebar :ensure t
+    :config
+    (ns-auto-titlebar-mode)))
+
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Manage OS packages from Emacs
 ;; <https://gitlab.com/jabranham/system-packages>
