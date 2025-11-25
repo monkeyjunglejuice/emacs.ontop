@@ -175,8 +175,8 @@ Adapted from Doom Emacs.")
   (when (null system-packages-package-manager)
     ;; Re-evaluate the original initform the package used
     (setopt system-packages-package-manager
-          (eval (car (get 'system-packages-package-manager
-                          'standard-value)))))
+            (eval (car (get 'system-packages-package-manager
+                            'standard-value)))))
 
   (when (null system-packages-use-sudo)
     (let* ((entry (assoc system-packages-package-manager
