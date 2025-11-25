@@ -38,10 +38,10 @@
    ;; Other modules rely on these modules to be enabled:
 
    eon                           ; Configures built-in Emacs packages
-   eon-base                      ; Shared packages and definitions
+   ;; eon-base                      ; Shared packages and definitions
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-   ;;; MODAL EDITING - if none enabled, stay with Emacs keybindings
+   ;;; MODAL EDITING - choose one. If none enabled, stay with Emacs keybindings
 
    ;; eon-evil                      ; Modal editing: Vim keybindings
    ;; eon-god                       ; Modal editing: Emacs keybindings
@@ -50,6 +50,7 @@
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ;;; THEMES
+   ;; Installs a theme, but it won't be enabled. Do that in your `eon-user.el'.
 
    ;; eon-theme-catppuccin         ; Soothing pastel themes
    ;; eon-theme-doom               ; Doom Emacs theme pack
@@ -60,27 +61,27 @@
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ;;; OPTIONAL MODULES
 
-   eon-activities                ; Suspend/resume windows, buffers, etc.
-   eon-autoupdate                ; Update packages automatically
-   eon-cape                      ; Completion-at-point extensions
-   eon-consult                   ; Navigation and search
+   ;; eon-activities                ; Suspend/resume windows, buffers, etc.
+   ;; eon-autoupdate                ; Update packages automatically
+   ;; eon-cape                      ; Completion-at-point extensions
+   ;; eon-consult                   ; Navigation and search
    ;; eon-corfu                     ; Code (auto-)completion
-   eon-embark                    ; Minibuffer actions and context menu
-   eon-everywhere                ; Use Emacs for text input in other apps
+   ;; eon-embark                    ; Minibuffer actions and context menu
+   ;; eon-everywhere                ; Use Emacs for text input in other apps
    ;; eon-flycheck                  ; Syntax checker alternative
    ;; eon-fonts                     ; Curated font sets
    ;; eon-eat                       ; Emulate a terminal
-   eon-git                       ; Magit user interface and friends
-   eon-helpful                   ; Extended help viewer
+   ;; eon-git                       ; Magit user interface and friends
+   ;; eon-helpful                   ; Extended help viewer
    ;; eon-icons                     ; Icons everywhere
    ;; eon-indent                    ; Indent code immediately
-   eon-marginalia                ; Rich annotations
+   ;; eon-marginalia                ; Rich annotations
    ;; eon-pdftools                  ; Sophisticated PDF tool suite
    ;; eon-smartparens               ; Edit parenthesis structurally
-   eon-snippets                  ; Code snippets
-   eon-switchwindow              ; Navigate windows
-   eon-todo                      ; Highlight todo keywords in comments
-   eon-vertico                   ; Vertical minibuffer completion UI
+   ;; eon-snippets                  ; Code snippets
+   ;; eon-switchwindow              ; Navigate windows
+   ;; eon-todo                      ; Highlight todo keywords in comments
+   ;; eon-vertico                   ; Vertical minibuffer completion UI
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ;;; AI / LLM
@@ -114,7 +115,7 @@
    ;; eon-lang-scheme-mit           ; MIT Scheme
    ;; eon-lang-scheme-racket        ; Consider `eon-lang-racket' instead
    ;; eon-lang-scheme-stklos        ; Stklos Scheme
-   eon-lang-web                  ; HTML/CSS editing
+   ;; eon-lang-web                  ; HTML/CSS editing
 
    ))
 
