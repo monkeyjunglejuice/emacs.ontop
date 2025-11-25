@@ -11,8 +11,7 @@
 ;; font.
 ;;
 ;; If the Nerd Font you installed does not display correctly (e.g. appear
-;; cut off), it is recommended to use Symbols Nerd Font Mono (Symbols Nerd
-;; Font).
+;; cut off), it is recommended to use Symbols Nerd Font Mono.
 ;;
 ;; You can use "M-x nerd-icons-install-fonts" to install Symbols Nerd Font
 ;; Mono for you. Note that for Windows you’ll need to manually install the font
