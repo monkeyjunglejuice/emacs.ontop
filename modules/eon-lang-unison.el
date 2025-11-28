@@ -8,7 +8,8 @@
 
 ;; _____________________________________________________________________________
 ;;; UNISON TS MODE
-;;  <https://github.com/fmguerreiro/unison-ts-mode>
+;; <https://github.com/fmguerreiro/unison-ts-mode>
+;; <https://github.com/fmguerreiro/tree-sitter-unison>
 
 (use-package unison-ts-mode
   :vc (:url "https://github.com/fmguerreiro/unison-ts-mode.git"
