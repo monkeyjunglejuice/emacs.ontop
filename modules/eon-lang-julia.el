@@ -26,7 +26,7 @@
 (use-package julia-snail :ensure t
   :custom
   ;; Julia Snail requires a terminal emulator within Emacs for the REPL
-  (julia-snail-terminal-type :eat)
+  (julia-snail-terminal-type :vterm)
   ;; Print the result of evaluating code to the REPL
   (julia-snail-repl-display-eval-results t)  ; nil to disable
   ;; Show result of evaluating code in the source buffer

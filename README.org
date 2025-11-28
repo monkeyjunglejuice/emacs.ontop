@@ -39,7 +39,7 @@ Programming language support is rather limited at that time; it covers merely la
 *eon-lang-haskell*: Interactive Haskell setup based on Haskell language server. The GHCi provides a much better experience within Emacs than in a terminal. This configuration works well with both Cabal and Stack projects, both on Linux and MacOS.
 
 ** Emacs for Julia ★★★★☆
-*eon-lang-julia*: The Julia setup is based on the Julia language server, [[https://github.com/gcv/julia-snail][Snail]] and Tree-sitter. The REPL runs within [[Eat][Eat]], the embedded terminal emulator. Enjoy notebook-style literate programming in Org-mode.
+*eon-lang-julia*: The Julia setup is based on the Julia language server, [[https://github.com/gcv/julia-snail][Snail]] and Tree-sitter. The Snail REPL runs within Vterm, the fastest terminal emulator available for Emacs. Enjoy notebook-style literate programming in Org-mode.
 
 ** Emacs for LFE (Lisp Flavoured Erlang) ★★★☆☆
 *eon-lang-lfe*: Basic LFE setup with REPL. The LFE REPL Emacs frontend (inferior-lfe) could benefit from some polishing and refactoring, maybe I'll tackle this when I find a bit time.

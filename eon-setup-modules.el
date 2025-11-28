@@ -70,7 +70,6 @@
    ;; eon-everywhere                ; Use Emacs for text input in other apps
    ;; eon-flycheck                  ; Syntax checker alternative
    ;; eon-fonts                     ; Curated font sets
-   ;; eon-eat                       ; Emulate a terminal
    ;; eon-git                       ; Magit user interface and friends
    ;; eon-helpful                   ; Extended help viewer
    ;; eon-icons                     ; Icons everywhere
@@ -82,6 +81,7 @@
    ;; eon-switchwindow              ; Navigate windows
    ;; eon-todo                      ; Highlight todo keywords in comments
    ;; eon-vertico                   ; Vertical minibuffer completion UI
+   ;; eon-vterm                     ; Faster terminal emulator in Emacs
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ;;; AI / LLM
