@@ -13,18 +13,10 @@
 (use-package unison-ts-mode
   :vc (:url "https://github.com/fmguerreiro/unison-ts-mode.git"
             :rev :newest)
-
   :mode
-
   ("\\.u\\'" "\\.unison\\'")
-
   :custom
-
-  (unison-ts-grammar-install 'auto)
-
-  :hook
-
-  (unison-ts-mode . which-function-mode))
+  (unison-ts-grammar-install 'auto))
 
 ;; _____________________________________________________________________________
 ;;; LANGUAGE SERVER
@@ -32,17 +24,12 @@
 ;; Common keybindings are configured in './eon-core.el'
 
 (use-package eglot :ensure nil
-
   :custom
-
   ;; A longer timeout may be required for the first run in a new project
   (eglot-connect-timeout 30)  ; default: 30
-
   :hook
-
-  ;; Start language server automatically
+  ;; Start language server automatically (starts UCM in headless mode)
   (unison-ts-mode . eglot-ensure)
-
   ;; Tell the language server to format the buffer before saving
   (unison-ts-mode . (lambda ()
                       (add-hook 'before-save-hook
