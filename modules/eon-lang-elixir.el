@@ -74,7 +74,7 @@ configuration or restarting applications."
 ;; _____________________________________________________________________________
 ;;; LANGUAGE SERVER
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
-;; Common keybindings are configured in `./eon-core.el'
+;; Common keybindings are configured in './eon-core.el'
 
 ;; Elixir-ls language server is used per default in this setup.
 ;; Here's an Elixir language server comparison:
