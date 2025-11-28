@@ -32,5 +32,15 @@
         ("t" . vterm)))
 
 ;; _____________________________________________________________________________
+;;; ESHELL VTERM
+;; <https://github.com/iostapyshyn/eshell-vterm>
+;; Allows Eshell to use `vterm' for visual commands
+
+(use-package eshell-vterm :ensure t
+  :after eshell
+  :config
+  (eshell-vterm-mode))
+
+;; _____________________________________________________________________________
 (provide 'eon-vterm)
 ;;; eon-vterm.el ends here
