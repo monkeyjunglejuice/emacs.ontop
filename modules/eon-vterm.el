@@ -26,6 +26,7 @@
 ;; Faster terminal emulator than `term' or `ansi-term'
 
 (use-package vterm :ensure t
+  :bind
   (:map ctl-z-e-map
         ;; Set Vterm as the default terminal emulator
         ("t" . vterm)))
