@@ -31,7 +31,7 @@
   ;; A longer timeout may be required for the first run in a new project
   (eglot-connect-timeout 30)  ; default: 30
   :hook
-  ;; Start language server automatically (starts UCM in headless mode)
+  ;; Start language server automatically (UCM in headless mode)
   (unison-ts-mode . eglot-ensure)
   ;; Tell the language server to format the buffer before saving
   (unison-ts-mode . (lambda ()
