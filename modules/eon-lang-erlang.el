@@ -29,17 +29,24 @@
   :custom
   ;; A longer timeout may be required for the first run in a new project
   (eglot-connect-timeout 60)  ; default: 30
+
   :config
+
   ;; Make sure to adapt the path and use the .bat script for Windows
   (add-to-list 'eglot-server-programs
                '((erlang-mode) . ("elp" "server")))
+
   :hook
+
   ;; Start language server automatically
-  (erlang-mode . eglot-ensure)
+  ((erlang-mode erlang-ts-mode) . eglot-ensure)
+
   ;; Tell the language server to format the buffer before saving
-  (erlang-mode . (lambda ()
-                   (add-hook 'before-save-hook
-                             #'eglot-format-buffer nil 'local))))
+  ((erlang-mode erlang-ts-mode)
+   . (lambda ()
+       (add-hook 'before-save-hook
+                 #'eglot-format-buffer nil 'local))))
+
 ;; _____________________________________________________________________________
 ;;; AUTO-INDENTATION
 

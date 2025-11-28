@@ -34,17 +34,21 @@
   :custom
   ;; A longer timeout seems required for the first run in a new project
   (eglot-connect-timeout 60)  ; default: 30
+
   :config
+
   (add-to-list 'eglot-server-programs
-               '((gleam-ts-mode) . ("gleam" "lsp")))
+               '(gleam-ts-mode . ("gleam" "lsp")))
+
   :hook
+
   ;; Start language server automatically
-  ((gleam-ts-mode) . eglot-ensure)
+  (gleam-ts-mode . eglot-ensure)
+
   ;; Tell the language server to format the buffer before saving
-  ((gleam-ts-mode) .
-   (lambda ()
-     (add-hook 'before-save-hook
-               #'eglot-format-buffer nil 'local))))
+  (gleam-ts-mode . (lambda ()
+                     (add-hook 'before-save-hook
+                               #'eglot-format-buffer nil 'local))))
 
 ;; _____________________________________________________________________________
 ;;; MIX GLEAM
@@ -53,7 +57,7 @@
 ;; (use-package mix :ensure t
 ;;   :diminish mix-minor-mode
 ;;   :hook
-;;   ((gleam-ts-mode) . mix-minor-mode))
+;;   (gleam-ts-mode . mix-minor-mode))
 
 ;; _____________________________________________________________________________
 ;;; AUTO-INDENTATION

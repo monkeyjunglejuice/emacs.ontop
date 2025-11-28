@@ -31,10 +31,11 @@
   (with-eval-after-load 'eglot
     (add-to-list 'eglot-server-programs
                  ;; <https://github.com/LuaLS/lua-language-server/wiki>
-                 `((lua-ts-mode) . ,(eglot-alternatives
-                                     '(("lua-language-server"))))))
+                 `(lua-ts-mode . ,(eglot-alternatives
+                                   '(("lua-language-server"))))))
   :hook
-  ((lua-ts-mode) . eglot-ensure))
+  (lua-ts-mode . eglot-ensure))
+
 ;; _____________________________________________________________________________
 ;;; AUTO-INDENTATION
 
