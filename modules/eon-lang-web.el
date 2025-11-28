@@ -63,7 +63,7 @@
                 "master" "src")))
 
 ;; _____________________________________________________________________________
-;;; SYNTAX-CHECKER / LINTER
+;;; FLYMAKE SYNTAX-CHECKER / LINTER
 
 (unless (eon-modulep 'eon-flycheck)
   ;; <https://www.gnu.org/software/emacs/manual/html_mono/flymake.html>
