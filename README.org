@@ -20,20 +20,11 @@ EON is supposed to be fully modular with strictly separated concerns. There are 
 
 Programming language support is rather limited at that time; it covers merely languages I personally like & use -- Lisp, functional, interactive. So there's no support for Python, Rust, JS or Go right now. However, if you'd like to use any of the languages in Emacs that are listed below, give it a go -- and you can integrate your language config easily as a user module.
 
-** Emacs for Common Lisp ★★★★★
-*eon-lang-commonlisp*: Complete Common Lisp setup with [[https://github.com/joaotavora/sly][Sly]]. Just install SBCL with your package manager and then [[https://www.quicklisp.org/beta/][Quicklisp]]. The setup covers most needs, but is pre-configured for SBCL right now.
-
 ** Emacs for Clojure ★★★★☆
 *eon-lang-clojure*: The Clojure setup is a basic setup with Cider, but usable out-of-the-box. Further tweaks might provide an even better experience.
 
-** Emacs for Julia ★★★★☆
-*eon-lang-julia*: The Julia setup is based on the Julia language server, [[https://github.com/gcv/julia-snail][Snail]] and Tree-sitter. The REPL runs within [[Eat][Eat]], the embedded terminal emulator. Enjoy notebook-style literate programming in Org-mode.
-
-** Emacs for OCaml ★★★★☆
-*eon-lang-ocaml*: OCaml setup in Emacs based on Tuareg and Merlin. Not LSP based right now, as using pure Merlin provides more features. Completion in Utop works, with completion candidates provided by Merlin.
-
-** Emacs for Haskell ★★★★☆
-*eon-lang-haskell*: Interactive Haskell setup based on Haskell language server. The GHCi provides a much better experience within Emacs than in a terminal. This configuration works well with both Cabal and Stack projects, both on Linux and MacOS.
+** Emacs for Common Lisp ★★★★★
+*eon-lang-commonlisp*: Complete Common Lisp setup with [[https://github.com/joaotavora/sly][Sly]]. Just install SBCL with your package manager and then [[https://www.quicklisp.org/beta/][Quicklisp]]. The setup covers most needs, but is pre-configured for SBCL right now.
 
 ** Emacs for Elixir ★★★★☆
 *eon-lang-elixir*: Elixir setup comes with the language server pre-configured (currently Elixir-ls, until the new one is available); Tree-sitter, Mix integration and a REPL. [[https://github.com/J3RN/inf-elixir/issues/20][Autocompletion doesn't work in the REPL]] yet, unfortunately. "Jump-to-definition" doesn't work either, but that limitation comes from the language server.
@@ -41,20 +32,32 @@ Programming language support is rather limited at that time; it covers merely la
 ** Emacs for Erlang ★★☆☆☆
 *eon-lang-erlang*: Basic Erlang setup with ELP (Whatsapp's language server), Erlang shell, Tree-sitter and Org-mode babel for notebook-style literate programming. 2 stars only because docs lookup doesn't work yet; I guess that requires some wrangling with man pages. Doesn't include things like Edts or Distel, as they rely on dependencies at the UI level. Packages come from Melpa right now, not using the Emacs packages distributed with the Erlang/OTP installation. In the future, there may be a choice which package source to use.
 
-** Emacs for LFE (Lisp Flavoured Erlang) ★★★☆☆
-*eon-lang-lfe*: Basic LFE setup with REPL. The LFE REPL Emacs frontend (inferior-lfe) could benefit from some polishing and refactoring, maybe I'll tackle this when I find a bit time.
-
 ** Emacs for Gleam ★★☆☆☆
 *eon-lang-gleam*: Basic setup for the Gleam language with LSP and Treesitter support. 2 stars only because there's no interactive programming -- Gleam doesn't come with a REPL unfortunately.
 
-** Emacs for Scheme ★★★★☆
-*eon-lang-scheme*: The Emacs Scheme setup supports eight major Scheme implementations via Geiser and comes with SRFI-browser and structural editing. The Scheme implementations have either more or less comprehensive tooling, hence the user experience varies. Tested on Debian Linux and macOS with GNU Guile (most interactive experience) and Chicken scheme (rather bare-bones).
+** Emacs for Haskell ★★★★☆
+*eon-lang-haskell*: Interactive Haskell setup based on Haskell language server. The GHCi provides a much better experience within Emacs than in a terminal. This configuration works well with both Cabal and Stack projects, both on Linux and MacOS.
+
+** Emacs for Julia ★★★★☆
+*eon-lang-julia*: The Julia setup is based on the Julia language server, [[https://github.com/gcv/julia-snail][Snail]] and Tree-sitter. The REPL runs within [[Eat][Eat]], the embedded terminal emulator. Enjoy notebook-style literate programming in Org-mode.
+
+** Emacs for LFE (Lisp Flavoured Erlang) ★★★☆☆
+*eon-lang-lfe*: Basic LFE setup with REPL. The LFE REPL Emacs frontend (inferior-lfe) could benefit from some polishing and refactoring, maybe I'll tackle this when I find a bit time.
+
+** Emacs for Lua ★★☆☆☆
+*eon-lang-lua*: Basic Lua setup with REPL and lua-language-server. Rudimentary setup that suits my needs of editing existing Lua code -- the available features don't come near the Lua IDE [[https://studio.zerobrane.com/][ZeroBrane Studio]], [[https://github.com/orbitalquark/textadept][TextAdept]] or Neovim. If you are serious about Lua hacking on a reguar basis, check out [[https://github.com/orbitalquark/textadept][TextAdept]] though -- it's enormously underrated.
+
+** Emacs for OCaml ★★★★☆
+*eon-lang-ocaml*: OCaml setup in Emacs based on Tuareg and Merlin. Not LSP based right now, as using pure Merlin provides more features. Completion in Utop works, with completion candidates provided by Merlin.
 
 ** Emacs for Racket ★★★★☆
 *eon-lang-racket*: The Racket setup based on [[https://github.com/greghendershott/racket-mode][Racket-mode]] provides more interactivity than DrRacket, and the new "racket-hash-lang-mode" supports arbitrary syntax for DSLs in Emacs. However, the syntax highlighting could be configured more in-depth. As I strongly prefer Guile over Racket, this won't change in the forseeable future though.
 
-** Emacs for Lua ★★☆☆☆
-*eon-lang-lua*: Basic Lua setup with REPL and lua-language-server. Rudimentary setup that suits my needs of editing existing Lua code -- the available features don't come near the Lua IDE [[https://studio.zerobrane.com/][ZeroBrane Studio]], [[https://github.com/orbitalquark/textadept][TextAdept]] or Neovim. If you are serious about Lua hacking on a reguar basis, check out [[https://github.com/orbitalquark/textadept][TextAdept]] though -- it's enormously underrated.
+** Emacs for Scheme ★★★★☆
+*eon-lang-scheme*: The Emacs Scheme setup supports eight major Scheme implementations via Geiser and comes with SRFI-browser and structural editing. The Scheme implementations have either more or less comprehensive tooling, hence the user experience varies. Tested on Debian Linux and macOS with GNU Guile (most interactive experience) and Chicken scheme (rather bare-bones).
+
+** Emacs for Unison ★★☆☆☆
+*eon-lang-unison*: Includes the treesitter-enabled Unison mode and LSP config for Eglot.
 
 ** Emacs for Web Development ★☆☆☆☆
 *eon-lang-webdev*: Just basic HTML, CSS and JavaScript editing and linting (linters have to be installed separately). Quite under-developed, since I don't do web stuff usually except some CSS styling.

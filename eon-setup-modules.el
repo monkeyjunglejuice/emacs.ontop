@@ -115,6 +115,7 @@
    ;; eon-lang-scheme-mit           ; MIT Scheme
    ;; eon-lang-scheme-racket        ; Consider `eon-lang-racket' instead
    ;; eon-lang-scheme-stklos        ; Stklos Scheme
+   ;; eon-lang-unison               ; Unison programming
    ;; eon-lang-web                  ; HTML/CSS editing
 
    ))
