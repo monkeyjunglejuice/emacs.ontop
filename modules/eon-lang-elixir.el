@@ -88,8 +88,8 @@ configuration or restarting applications."
 
   :custom
 
-  ;; A longer timeout seems required for the first run in a new project
-  (eglot-connect-timeout 60)            ; default: 30
+  ;; A longer timeout may be required for the first run in a new project
+  (eglot-connect-timeout 30)  ; default: 30
 
   :config
 
