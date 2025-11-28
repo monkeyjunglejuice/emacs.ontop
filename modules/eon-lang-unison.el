@@ -17,7 +17,9 @@
   :mode
   ("\\.u\\'" "\\.unison\\'")
   :custom
-  (unison-ts-grammar-install 'auto))
+  (unison-ts-grammar-install 'auto)
+  (unison-ts-grammar-repository
+   "https://github.com/fmguerreiro/tree-sitter-unison" ))
 
 ;; _____________________________________________________________________________
 ;;; LANGUAGE SERVER
