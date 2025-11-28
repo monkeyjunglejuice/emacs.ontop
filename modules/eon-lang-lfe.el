@@ -35,6 +35,15 @@
     (eon-add-to-list* 'sp-lisp-modes 'inferior-lfe-mode)))
 
 ;; _____________________________________________________________________________
+;;; AUTO-INDENTATION
+
+;; Enable `aggressive-indent-mode' per major mode
+(when (eon-modulep 'eon-indent)
+  (use-package aggressive-indent :ensure t
+    :hook
+    (lfe-mode . aggressive-indent-mode)))
+
+;; _____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://orgmode.org/worg/org-contrib/babel/index.html>
 ;; Notebook-like literate programming in Emacs

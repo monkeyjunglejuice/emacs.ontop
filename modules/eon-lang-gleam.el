@@ -56,5 +56,14 @@
 ;;   ((gleam-ts-mode) . mix-minor-mode))
 
 ;; _____________________________________________________________________________
+;;; AUTO-INDENTATION
+
+;; Enable `aggressive-indent-mode' per major mode
+(when (eon-modulep 'eon-indent)
+  (use-package aggressive-indent :ensure t
+    :hook
+    (gleam-ts-mode . aggressive-indent-mode)))
+
+;; _____________________________________________________________________________
 (provide 'eon-lang-gleam)
 ;;; eon-lang-gleam.el ends here

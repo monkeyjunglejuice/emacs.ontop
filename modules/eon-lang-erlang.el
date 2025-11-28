@@ -40,6 +40,14 @@
   (erlang-mode . (lambda ()
                    (add-hook 'before-save-hook
                              #'eglot-format-buffer nil 'local))))
+;; _____________________________________________________________________________
+;;; AUTO-INDENTATION
+
+;; Enable `aggressive-indent-mode' per major mode
+(when (eon-modulep 'eon-indent)
+  (use-package aggressive-indent :ensure t
+    :hook
+    ((erlang-mode erlang-ts-mode) . aggressive-indent-mode)))
 
 ;; _____________________________________________________________________________
 ;;; ORG-MODE BABEL

@@ -91,5 +91,14 @@
     ((js-mode js-ts-mode) . flymake-eslint-enable)))
 
 ;; _____________________________________________________________________________
+;;; AUTO-INDENTATION
+
+;; Enable `aggressive-indent-mode' per major mode
+(when (eon-modulep 'eon-indent)
+  (use-package aggressive-indent :ensure t
+    :hook
+    ((css-ts-mode js-ts-mode) . aggressive-indent-mode)))
+
+;; _____________________________________________________________________________
 (provide 'eon-lang-web)
 ;;; eon-lang-web.el ends here

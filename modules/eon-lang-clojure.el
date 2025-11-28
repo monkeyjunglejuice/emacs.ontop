@@ -27,6 +27,15 @@
   (clojure-ts-mode . cider-mode))
 
 ;; _____________________________________________________________________________
+;;; AUTO-INDENTATION
+
+;; Enable `aggressive-indent-mode' per major mode
+(when (eon-modulep 'eon-indent)
+  (use-package aggressive-indent :ensure t
+    :hook
+    (clojure-ts-mode . aggressive-indent-mode)))
+
+;; _____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://org-babel.readthedocs.io/en/latest/eval/>
 ;; Notebook-like literate programming in Emacs

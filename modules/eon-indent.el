@@ -13,19 +13,16 @@
 ;; TODO Aggressive-indent causes weird issues, either fix them or switch
 ;; to another package, e.g. <https://github.com/jeffvalk/snap-indent>
 
+;; Aggressive indent shouldn't be enabled globally via
+;; `aggressive-indent-global-mode' or via hook for `prog-mode', but individually
+;; per major mode.
+
 (use-package aggressive-indent :ensure t
   :diminish aggressive-indent-mode
-
   :custom
-
   ;; Actually seems to work better when `electric-indent-mode' is enabled
   (aggressive-indent-dont-electric-modes nil)
-  (aggressive-indent-sit-for-time 0.01)
-
-  :hook
-
-  ;; Don't use `aggressive-indent-global-mode'; it causes problems
-  (prog-mode . aggressive-indent-mode))
+  (aggressive-indent-sit-for-time 0.01))
 
 ;; _____________________________________________________________________________
 (provide 'eon-indent)

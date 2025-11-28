@@ -150,6 +150,15 @@ configuration or restarting applications."
   (elixir-ts-mode . exunit-mode))
 
 ;; _____________________________________________________________________________
+;;; AUTO-INDENTATION
+
+;; Enable `aggressive-indent-mode' per major mode
+(when (eon-modulep 'eon-indent)
+  (use-package aggressive-indent :ensure t
+    :hook
+    (elixir-ts-mode . aggressive-indent-mode)))
+
+;; _____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://orgmode.org/worg/org-contrib/babel/index.html>
 ;; Notebook-like literate programming in Emacs

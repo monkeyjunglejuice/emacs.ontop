@@ -42,5 +42,16 @@
   ((racket-mode racket-hash-lang-mode) . racket-xp-mode))
 
 ;; _____________________________________________________________________________
+;;; AUTO-INDENTATION
+
+;; Enable `aggressive-indent-mode' per major mode.
+;; Not enabled in `racket-hash-lang-mode' per default,
+;; as this is a source code buffer mode for arbitrary languages/syntaxes.
+(when (eon-modulep 'eon-indent)
+  (use-package aggressive-indent :ensure t
+    :hook
+    (racket-mode . aggressive-indent-mode)))
+
+;; _____________________________________________________________________________
 (provide 'eon-lang-racket)
 ;;; eon-lang-racket.el ends here

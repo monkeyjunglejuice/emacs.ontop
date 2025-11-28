@@ -103,6 +103,15 @@
   (add-to-list 'sly-mrepl-shortcut-alist '("quickload" . sly-quickload)))
 
 ;; _____________________________________________________________________________
+;;; AUTO-INDENTATION
+
+;; Enable `aggressive-indent-mode' per major mode
+(when (eon-modulep 'eon-indent)
+  (use-package aggressive-indent :ensure t
+    :hook
+    (lisp-mode . aggressive-indent-mode)))
+
+;; _____________________________________________________________________________
 ;;; ORG-MODE BABEL
 ;; <https://orgmode.org/worg/org-contrib/babel/intro.html>
 ;; Support literate programming in Emacs with Common Lisp

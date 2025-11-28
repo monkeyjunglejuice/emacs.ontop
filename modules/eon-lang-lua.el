@@ -35,6 +35,14 @@
                                      '(("lua-language-server"))))))
   :hook
   ((lua-ts-mode) . eglot-ensure))
+;; _____________________________________________________________________________
+;;; AUTO-INDENTATION
+
+;; Enable `aggressive-indent-mode' per major mode
+(when (eon-modulep 'eon-indent)
+  (use-package aggressive-indent :ensure t
+    :hook
+    (lua-ts-mode . aggressive-indent-mode)))
 
 ;; _____________________________________________________________________________
 ;;; ORG-MODE BABEL
