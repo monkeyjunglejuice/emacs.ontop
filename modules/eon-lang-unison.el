@@ -29,7 +29,7 @@
 (use-package eglot :ensure nil
   :custom
   ;; A longer timeout may be required for the first run in a new project
-  (eglot-connect-timeout 30)  ; default: 30
+  (eglot-connect-timeout 60)  ; default: 30
   :hook
   ;; Start language server automatically (UCM in headless mode)
   (unison-ts-mode . eglot-ensure)
