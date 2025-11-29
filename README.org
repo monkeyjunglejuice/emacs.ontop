@@ -16,7 +16,7 @@ EON is supposed to be completely modular with strictly separated concerns. There
 
 4. Everything else builds on top of the stages 1, 2 and 3: AI/LLM integration, programming languages, etc. (have a look at [[https://github.com/monkeyjunglejuice/emacs.ontop/blob/main/eon-setup-modules.el][eon-setup-modules]] for the full list).
 
-* Use Case: Programming -- conventional, interactive and notebook-style
+* Use Case: Programming -- Conventional, Interactive and Notebook-style
 
 Programming language support is rather limited at that time; it covers merely languages I personally like, use, or tinker with -- mostly Lisp, functional, interactive. So there's no support for Python, Rust, JS and Go right now. However, you can integrate your language config easily as a user module. And if you'd like to use any of the languages that are listed below, give it a go.
 
@@ -30,7 +30,7 @@ Programming language support is rather limited at that time; it covers merely la
 *eon-lang-elixir*: Elixir setup comes with the language server pre-configured (currently Elixir-ls, until the new one is available); Tree-sitter, Mix integration and a REPL. [[https://github.com/J3RN/inf-elixir/issues/20][Autocompletion in the REPL doesn't work]] yet, as it hasn't been implemented upstream. "Jump-to-definition" doesn't work either, but that limitation comes from the language server and may change.
 
 ** Emacs for Erlang ★★☆☆☆
-*eon-lang-erlang*: Basic Erlang setup with ELP (Whatsapp's language server), Erlang shell, Tree-sitter and Org-mode babel for notebook-style literate programming. 2 stars only because docs lookup doesn't work yet; I guess that requires some wrangling with man pages. The module doesn't integrate Edts or Distel, as they rely on dependencies at the UI level. Packages come from Melpa right now, not using the Emacs packages distributed with the Erlang/OTP installation. In the future, there may be a choice which package source to use.
+*eon-lang-erlang*: Basic Erlang setup with ELP (Whatsapp's language server), Erlang shell and Org-mode babel for notebook-style literate programming. 2 stars only because docs lookup doesn't work yet; I guess that requires some wrangling with man pages. The module doesn't integrate Edts or Distel, as they rely on dependencies at the UI level. Packages come from Melpa right now, not using the Emacs packages distributed with the Erlang/OTP installation. In the future, there may be a choice which package source to use.
 
 ** Emacs for Gleam ★★☆☆☆
 *eon-lang-gleam*: Basic setup for the Gleam language with LSP and Treesitter support. 2 stars only because there's no interactive programming -- [[https://github.com/gleam-lang/gleam/issues/25][Gleam doesn't come with a REPL]] unfortunately.
@@ -39,7 +39,7 @@ Programming language support is rather limited at that time; it covers merely la
 *eon-lang-haskell*: Interactive Haskell setup based on Haskell language server. The GHCi provides a much better experience within Emacs than in a terminal. This configuration works well with both Cabal and Stack projects, both on Linux and MacOS.
 
 ** Emacs for Julia ★★★★☆
-*eon-lang-julia*: The Julia setup is based on the Julia language server, [[https://github.com/gcv/julia-snail][Snail]] and Tree-sitter. The Snail REPL runs within Vterm, the fastest terminal emulator available for Emacs. Enjoy notebook-style literate programming in Org-mode.
+*eon-lang-julia*: The Julia setup is based on the Julia language server and [[https://github.com/gcv/julia-snail][Snail]]. The Snail REPL runs within Vterm, the fastest terminal emulator available for Emacs. Enjoy notebook-style literate programming in Org-mode.
 
 ** Emacs for LFE (Lisp Flavoured Erlang) ★★★☆☆
 *eon-lang-lfe*: Basic LFE setup with REPL. The LFE REPL Emacs frontend (inferior-lfe) could benefit from some polishing and refactoring, maybe I'll tackle this when I find a bit time.
@@ -48,7 +48,7 @@ Programming language support is rather limited at that time; it covers merely la
 *eon-lang-lua*: Basic Lua setup with REPL and lua-language-server. Rudimentary setup that suits my needs of editing existing Lua code -- the available features don't come near the Lua IDE [[https://studio.zerobrane.com/][ZeroBrane Studio]], [[https://github.com/orbitalquark/textadept][TextAdept]] or Neovim. If you are serious about Lua hacking on a reguar basis, check out [[https://github.com/orbitalquark/textadept][TextAdept]] though -- it's enormously underrated.
 
 ** Emacs for OCaml ★★★★☆
-*eon-lang-ocaml*: OCaml setup in Emacs based on Tuareg and Merlin. Not LSP based right now, as using pure Merlin provides more features. Completion in Utop works, with completion candidates provided by Merlin.
+*eon-lang-ocaml*: OCaml setup in Emacs based on Tuareg and Merlin. Not LSP based right now, as using pure Merlin feels better integrated. Completion in Utop works, with completion candidates provided by Merlin.
 
 ** Emacs for Racket ★★★★☆
 *eon-lang-racket*: The Racket setup based on [[https://github.com/greghendershott/racket-mode][Racket-mode]] provides better interactivity than DrRacket, and the new "racket-hash-lang-mode" supports arbitrary syntax for DSLs in Emacs. However, the syntax highlighting for racket-hash-lang-mode could be configured more in-depth. As I prefer Guile over Racket, this has a lower priority right now.
