@@ -8,31 +8,32 @@
 
 ;; _____________________________________________________________________________
 ;;; JULIA MODE
+;; <https://github.com/JuliaEditorSupport/julia-emacs>
+;; There's also a tree-sitter enabled Julia mode, but it seems less maintained.
 ;; <https://github.com/ronisbr/julia-ts-mode>
+;; That's why we're using the original Julia mode.
 
-(use-package julia-ts-mode :ensure t
-  :init
-  (eon-treesitter-ensure-grammar
-   '(julia "https://github.com/tree-sitter/tree-sitter-julia"))
-  :mode "\\.jl$")
+(use-package julia-mode :ensure t)
 
 ;; _____________________________________________________________________________
-;;; JULIA SNAIL
-;; <https://github.com/gcv/julia-snail/>
-;; Interactive Julia with REPL
+;;; JULIA REPL
 
-(use-package julia-snail :ensure t
-  :custom
-  ;; Julia Snail requires a terminal emulator within Emacs for the REPL
-  (julia-snail-terminal-type :vterm)
-  ;; Print the result of evaluating code to the REPL
-  (julia-snail-repl-display-eval-results t)  ; nil to disable
-  ;; Show result of evaluating code in the source buffer
-  (julia-snail-popup-display-eval-results nil)  ; :command, :change or nil
-  ;; The default works with Consult and Helm
-  (julia-snail-imenu-style :module-tree)  ; :module-tree, :flat or nil
-  :hook
-  (julia-ts-mode . julia-snail-mode))
+;; Julia Snail requires a terminal emulator within Emacs for the REPL, both
+;; `vterm' and `eat' are supported. In order to use Snail, the module
+;; `eon-vterm' must be enabled.
+;; <https://github.com/gcv/julia-snail/>
+(when (eon-modulep 'eon-vterm)
+  (use-package julia-snail :ensure t
+    :custom
+    (julia-snail-terminal-type :vterm)
+    ;; Print the result of evaluating code to the REPL
+    (julia-snail-repl-display-eval-results t)  ; nil to disable
+    ;; Show result of evaluating code in the source buffer
+    (julia-snail-popup-display-eval-results nil)  ; :command, :change or nil
+    ;; The default works with Consult and Helm
+    (julia-snail-imenu-style :module-tree)  ; :module-tree, :flat or nil
+    :hook
+    ((julia-mode julia-ts-mode) . julia-snail-mode)))
 
 ;; _____________________________________________________________________________
 ;;; EGLOT LANGUAGE SERVER
@@ -48,9 +49,9 @@
 (use-package eglot :ensure nil
   :hook
   ;; Start language server automatically
-  (julia-ts-mode . eglot-ensure)
+  ((julia-mode julia-ts-mode) . eglot-ensure)
   ;; Tell the language server to format the buffer before saving
-  (julia-ts-mode . (lambda ()
+  ((julia-mode julia-ts-mode) . (lambda ()
                      (add-hook 'before-save-hook
                                #'eglot-format-buffer nil 'local))))
 
@@ -61,7 +62,7 @@
 (when (eon-modulep 'eon-indent)
   (use-package aggressive-indent :ensure t
     :hook
-    (julia-ts-mode . aggressive-indent-mode)))
+    ((julia-mode julia-ts-mode) . aggressive-indent-mode)))
 
 ;; _____________________________________________________________________________
 ;;; ORG-MODE BABEL
