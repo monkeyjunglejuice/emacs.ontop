@@ -18,6 +18,33 @@
 ;; emacs-libvterm will be downloaded and compiled. In this case, libtool is
 ;; needed.
 ;;
+;;; Shell configuration
+;;
+;; Emacs-libvterm needs you to configure your shell, in order to make full
+;; use of it. You can insert one of these snippets at the end of your .zshrc,
+;; .bashrc or config.fish:
+;;
+;;; For ZSH:
+;; if [[ "$INSIDE_EMACS" = 'vterm' ]] \
+;;     && [[ -n ${EMACS_VTERM_PATH} ]] \
+;;     && [[ -f ${EMACS_VTERM_PATH}/etc/emacs-vterm-zsh.sh ]]; then
+;;  source ${EMACS_VTERM_PATH}/etc/emacs-vterm-zsh.sh
+;; fi
+;;
+;;; For BASH:
+;; if [[ "$INSIDE_EMACS" = 'vterm' ]] \
+;;     && [[ -n ${EMACS_VTERM_PATH} ]] \
+;;     && [[ -f ${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh ]]; then
+;;  source ${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh
+;; fi
+;;
+;;; For FISH:
+;; if test "$INSIDE_EMACS" = vterm \
+;;     and test -n "$EMACS_VTERM_PATH" \
+;;     and test -f "$EMACS_VTERM_PATH/etc/emacs-vterm.fish"
+;;     source "$EMACS_VTERM_PATH/etc/emacs-vterm.fish"
+;; end
+;;
 ;;; Code:
 
 ;; _____________________________________________________________________________
@@ -26,6 +53,8 @@
 ;; Faster terminal emulator than `term' or `ansi-term'
 
 (use-package vterm :ensure t
+  :custom
+  (vterm-max-scrollback 65536)
   :bind
   (:map ctl-z-e-map
         ;; Set Vterm as the default terminal emulator
