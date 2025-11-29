@@ -20,9 +20,9 @@
 ;;
 ;;; Shell configuration
 ;;
-;; Emacs-libvterm needs you to configure your shell, in order to make full
-;; use of it. You can insert one of these snippets at the end of your .zshrc,
-;; .bashrc or config.fish:
+;; You'll need to configure your shell in order to make full use of Vterm.
+;; You can insert one of these snippets at the end of your .zshrc, .bashrc
+;; or config.fish:
 ;;
 ;;; For ZSH:
 ;; if [[ "$INSIDE_EMACS" = 'vterm' ]] \
@@ -50,7 +50,6 @@
 ;; _____________________________________________________________________________
 ;;; VTERM
 ;; <https://github.com/akermu/emacs-libvterm>
-;; Faster terminal emulator than `term' or `ansi-term'
 
 (use-package vterm :ensure t
   :custom
