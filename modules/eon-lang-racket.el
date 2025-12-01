@@ -53,5 +53,19 @@
     (racket-mode . aggressive-indent-mode)))
 
 ;; _____________________________________________________________________________
+;;; ORG-MODE BABEL
+;; <https://org-babel.readthedocs.io/en/latest/eval/>
+;; Notebook-like literate programming in Emacs
+
+;; Evaluate Racket code in Org source code blocks via "C-c C-c"
+;; <https://github.com/hasu/emacs-ob-racket>
+(use-package ob-racket
+  :vc (:url "https://github.com/hasu/emacs-ob-racket.git"
+            :rev :newest)
+  :after org
+  :hook
+  (ob-racket-pre-runtime-library-load . ob-racket-raco-make-runtime-library))
+
+;; _____________________________________________________________________________
 (provide 'eon-lang-racket)
 ;;; eon-lang-racket.el ends here
