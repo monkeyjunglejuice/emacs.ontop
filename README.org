@@ -38,6 +38,10 @@ Programming language support is rather limited at that time; it covers merely la
 ** Emacs for Haskell ★★★★☆
 *eon-lang-haskell*: Interactive Haskell setup based on Haskell language server. The GHCi provides a much better experience within Emacs than in a terminal. This configuration works well with both Cabal and Stack projects, both on Linux and MacOS.
 
+** Emacs for Janet  ★★★☆☆
+*eon-lang-janet*: Almost complete Janet config for Emacs with Treesitter, REPL, LSP support and Org mode integration. The tooling itself is not that mature yet, as Janet is a pretty young language. The required packages are installed
+from Github repos.
+
 ** Emacs for Julia ★★★★☆
 *eon-lang-julia*: The Julia setup is based on the Julia language server and [[https://github.com/gcv/julia-snail][Snail]]. The Snail REPL runs within Vterm, the fastest terminal emulator available for Emacs. Enjoy notebook-style literate programming in Org-mode.
 

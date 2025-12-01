@@ -99,6 +99,7 @@
    ;; eon-lang-erlang               ; Erlang programming
    ;; eon-lang-gleam                ; Gleam programming
    ;; eon-lang-haskell              ; Haskell programming
+   ;; eon-lang-janet                ; Janet programming
    ;; eon-lang-julia                ; Julia programming
    ;; eon-lang-lfe                  ; Lisp Flavoured Erlang programming
    ;; eon-lang-lua                  ; Lua programming
