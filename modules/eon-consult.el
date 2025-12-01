@@ -69,27 +69,11 @@
   ;; Both < and C-+ work reasonably well.
   (setq consult-narrow-key "<")
 
-  ;; Optionally make narrowing help available in the minibuffer.
-  ;; You may want to use `embark-prefix-help-command' or which-key instead.
-  ;; (keymap-set consult-narrow-map (concat consult-narrow-key " ?") #'consult-narrow-help)
-
-  ;; Which Consult commands should be narrowed initially?
-  (defvar eon-consult--initial-narrow-config
-    '((consult-mode-command . ?m)))
-
-  ;; Hook for initial narrowing for configured Consult commands
-  (defun eon-consult--initial-narrow ()
-    (when-let (key (alist-get this-command eon-consult--initial-narrow-config))
-      (setq unread-command-events (append unread-command-events (list key 32)))))
-
   :hook
 
   ;; Enable automatic preview at point in the *Completions* buffer.
   ;; This is relevant when you use the default completion UI.
   (completion-list-mode . consult-preview-at-point-mode)
-
-  ;; Enable initial narrowing
-  (minibuffer-setup-hook . eon-consult--initial-narrow)
 
   :bind
 
