@@ -13,7 +13,9 @@
 (require 'eon-lang-scheme)
 
 ;; <https://gitlab.com/emacs-geiser/chez>
-(use-package geiser-chez :ensure t)
+(use-package geiser-chez :ensure t
+  :config
+  (add-to-list 'geiser-active-implementations 'chez))
 
 ;; _____________________________________________________________________________
 (provide 'eon-lang-scheme-chez)

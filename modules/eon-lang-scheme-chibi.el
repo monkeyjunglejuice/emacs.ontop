@@ -13,7 +13,9 @@
 (require 'eon-lang-scheme)
 
 ;; <https://gitlab.com/emacs-geiser/chibi>
-(use-package geiser-chibi :ensure t)
+(use-package geiser-chibi :ensure t
+  :config
+  (add-to-list 'geiser-active-implementations 'chibi))
 
 ;; _____________________________________________________________________________
 (provide 'eon-lang-scheme-chibi)

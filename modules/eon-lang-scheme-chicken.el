@@ -13,7 +13,9 @@
 (require 'eon-lang-scheme)
 
 ;; <https://gitlab.com/emacs-geiser/chicken>
-(use-package geiser-chicken :ensure t)
+(use-package geiser-chicken :ensure t
+  :config
+  (add-to-list 'geiser-active-implementations 'chicken))
 
 ;; _____________________________________________________________________________
 (provide 'eon-lang-scheme-chicken)

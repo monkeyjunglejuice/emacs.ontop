@@ -13,7 +13,9 @@
 (require 'eon-lang-scheme)
 
 ;; <https://gitlab.com/emacs-geiser/stklos>
-(use-package geiser-stklos :ensure t)
+(use-package geiser-stklos :ensure t
+  :config
+  (add-to-list 'geiser-active-implementations 'stklos))
 
 ;; _____________________________________________________________________________
 (provide 'eon-lang-scheme-stklos)

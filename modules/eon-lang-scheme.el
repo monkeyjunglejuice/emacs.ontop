@@ -6,19 +6,47 @@
 ;;
 ;; Common definitions and functionality for all Scheme implementation modules.
 ;; This module will be loaded automatically by the implementation-specific
-;; Scheme modules, even if commented out in `eon-setup-modules'.
+;; Scheme modules, even if commented out in your 'eon-setup-modules.el'.
 ;; 
 ;;; Code:
+
+;; _____________________________________________________________________________
+;;; SCHEME
+
+(use-package scheme :ensure nil
+  :custom
+  ;; Don't enable functionality for all Schemes; will be set by the module
+  ;; 'eon-lang-scheme-mit.el'.
+  (scheme-mit-dialect nil))
 
 ;; _____________________________________________________________________________
 ;;; GEISER
 ;; <https://www.nongnu.org/geiser/>
 
 (use-package geiser :ensure t
+
   :custom
+
   (geiser-repl-send-on-return-p t)
   (geiser-repl-use-other-window t)
-  (scheme-mit-dialect nil))
+  ;; Normally Geiser sets this according to what implementation packages are
+  ;; installed. We set it to nil, so that it will be set according to what
+  ;; modules are actually enabled.
+  (geiser-active-implementations nil)
+
+  :config
+
+  (defun eon-geiser-set-default-scheme ()
+  "Select and set `geiser-default-implementation' interactively.
+The list of candidates comes from `geiser-active-implementations'."
+  (interactive)
+  (let* ((impls geiser-active-implementations)
+         (name  (completing-read "Default Scheme implementation: "
+                                 (mapcar #'symbol-name impls)
+                                 nil t))
+         (impl  (intern name)))
+    (setopt geiser-default-implementation impl)
+    (message "Default Scheme set to: %s" impl))))
 
 ;; _____________________________________________________________________________
 ;;; MACRO STEPPER
@@ -53,6 +81,10 @@
 ;; Notebook-like literate programming in Emacs
 ;; Evaluate Scheme code in Org source code blocks via "C-c C-c"
 
+;; `ob-scheme' uses the `geiser-default-implementation' to execute src blocks.
+;; In case your src blocks don't work, make sure that this variable is set
+;; to your desired Scheme implementation - either permanently or temporarily
+;; via "M-x eon-geiser-set-default-scheme".
 (use-package ob-scheme :ensure nil
   :after org)
 

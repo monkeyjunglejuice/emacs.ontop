@@ -13,7 +13,9 @@
 (require 'eon-lang-scheme)
 
 ;; <https://gitlab.com/emacs-geiser/gambit>
-(use-package geiser-gambit :ensure t)
+(use-package geiser-gambit :ensure t
+  :config
+  (add-to-list 'geiser-active-implementations 'gambit))
 
 ;; _____________________________________________________________________________
 (provide 'eon-lang-scheme-gambit)

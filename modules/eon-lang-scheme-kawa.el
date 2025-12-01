@@ -13,7 +13,9 @@
 (require 'eon-lang-scheme)
 
 ;; <https://gitlab.com/emacs-geiser/kawa>
-(use-package geiser-kawa :ensure t)
+(use-package geiser-kawa :ensure t
+  :config
+  (add-to-list 'geiser-active-implementations 'kawa))
 
 ;; _____________________________________________________________________________
 (provide 'eon-lang-scheme-kawa)

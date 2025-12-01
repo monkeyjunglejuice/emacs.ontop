@@ -13,7 +13,9 @@
 (require 'eon-lang-scheme)
 
 ;; <https://gitlab.com/emacs-geiser/gauche>
-(use-package geiser-gauche :ensure t)
+(use-package geiser-gauche :ensure t
+  :config
+  (add-to-list 'geiser-active-implementations 'gauche))
 
 ;; _____________________________________________________________________________
 (provide 'eon-lang-scheme-gauche)

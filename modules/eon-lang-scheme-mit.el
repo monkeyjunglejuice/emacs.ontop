@@ -13,7 +13,9 @@
 (require 'eon-lang-scheme)
 
 ;; <https://gitlab.com/emacs-geiser/mit>
-(use-package geiser-mit :ensure t)
+(use-package geiser-mit :ensure t
+  :config
+  (add-to-list 'geiser-active-implementations 'mit))
 
 ;; Built-in Emacs Scheme package
 (use-package scheme :ensure nil

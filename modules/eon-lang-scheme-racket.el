@@ -13,7 +13,9 @@
 (require 'eon-lang-scheme)
 
 ;; <https://gitlab.com/emacs-geiser/racket>
-(use-package geiser-racket :ensure t)
+(use-package geiser-racket :ensure t
+  :config
+  (add-to-list 'geiser-active-implementations 'racket))
 
 ;; _____________________________________________________________________________
 (provide 'eon-lang-scheme-racket)
