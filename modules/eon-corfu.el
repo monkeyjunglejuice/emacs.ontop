@@ -13,9 +13,12 @@
 
 (use-package corfu :ensure t
   :init
+
   ;; Prevent *Completions* buffer from popping up
   (setopt completion-auto-help nil)
+
   :custom
+
   (corfu-auto t)
   (corfu-auto-delay 0.2)
   (corfu-auto-prefix 2)
@@ -26,13 +29,17 @@
   (corfu-popupinfo-max-height 10)
   (corfu-preselect 'valid)
   (corfu-preview-current nil)
-  (corfu-quit-at-boundary nil)
+  (corfu-quit-at-boundary 'separator)
   (corfu-quit-no-match 'separator)
   (global-corfu-minibuffer t)
+
   :config
+
   (global-corfu-mode)
   (corfu-echo-mode)
+
   :bind
+
   (:map corfu-map
         ;; ("TAB" . corfu-next)
         ;; ([tab] . corfu-next)
