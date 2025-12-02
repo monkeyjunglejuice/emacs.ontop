@@ -269,6 +269,14 @@ For finer granularity, use the variables `system-type'
 or `system-configuration' directly."
   (memq system-type '(gnu/linux berkeley-unix gnu gnu/kfreebsd)))
 
+(defun eon-wslp ()
+  "True if `system-type' is GNU/Linux or compatible, running within WSL.
+For finer granularity, use the variables `system-type'
+or `system-configuration' directly."
+  (and (memq system-type '(gnu/linux berkeley-unix gnu gnu/kfreebsd))
+       (or (getenv "WSLENV")
+           (getenv "WSL_DISTRO_NAME"))))
+
 (defun eon-winp ()
   "True if `system-type' is Microsoft Windows or something compatible.
 For finer granularity, use the variables `system-type'
@@ -1579,12 +1587,20 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; _____________________________________________________________________________
 ;;; SEARCH
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Search>
+;; <https://emacsredux.com/blog/2025/03/18/you-have-no-idea-how-powerful-isearch-is>
+
+;;; - Isearch: "C-s" and "C-r"
+
+;; When isearching, enable M-<, M->, C-v and M-v to skip between matches
+;; in an intuitive fashion.
+(setopt isearch-allow-motion t
+        isearch-motion-changes-direction t)
 
 ;; Swap search functions to make regexp-search the default
-(keymap-global-set "C-s"   #'isearch-forward-regexp)
-(keymap-global-set "C-r"   #'isearch-backward-regexp)
-(keymap-global-set "C-S-s" #'isearch-forward)
-(keymap-global-set "C-S-r" #'isearch-backward)
+;; (keymap-global-set "C-s"   #'isearch-forward-regexp)
+;; (keymap-global-set "C-r"   #'isearch-backward-regexp)
+;; (keymap-global-set "C-S-s" #'isearch-forward)
+;; (keymap-global-set "C-S-r" #'isearch-backward)
 
 ;;; - Search and replace
 ;; If text is selected, then the commands act on that region only
@@ -1864,7 +1880,7 @@ Called without argument just syncs `eon-boring-buffers' to other places."
 ;; (Windows Subsystem for Linux)
 
 ;; Copy "kill" text from an Emacs buffer for pasting it into a Windows app
-(when (and (eon-linp)
+(when (and (eon-wslp)
            (file-exists-p "/mnt/c/Windows/System32/clip.exe"))
   (defun eon-wsl-copy (start end)
     "Copy selected text into the Windows clipboard."
@@ -1874,7 +1890,7 @@ Called without argument just syncs `eon-boring-buffers' to other places."
   (keymap-set ctl-z-map "C-w" #'eon-wsl-copy))
 
 ;; Paste "yank" text into Emacs buffer that has been copied from a Windows app
-(when (and (eon-linp)
+(when (and (eon-wslp)
            (file-exists-p "/mnt/c/Windows/System32/clip.exe"))
   (defun eon-wsl-paste ()
     "Paste contents from the Windows clipboard into the Emacs buffer."
@@ -2209,6 +2225,11 @@ pretending to clear it."
 ;; Hide details in file listings? Toggle via "(" or "<localleader> d"
 (add-hook 'dired-mode-hook #'dired-hide-details-mode)
 (keymap-set eon-localleader-dired-map "d" #'dired-hide-details-mode)
+
+;; Also omit dotfiles in listings? Toggle via "<localleader> o"
+(with-eval-after-load 'dired-x
+  (setopt dired-omit-files (concat dired-omit-files "\\|\\`\\.[^.].*")))
+(keymap-set eon-localleader-dired-map "o" #'dired-omit-mode)
 
 ;; Highlight current line in Dired?
 (add-hook 'dired-mode-hook #'hl-line-mode)
@@ -3154,6 +3175,7 @@ With prefix ARG, pass it through to the underlying command."
     dune-mode
     fennel-mode
     gerbil-mode
+    janet-ts-mode
     lfe-mode
     racket-mode
     stumpwm-mode)
@@ -3166,6 +3188,7 @@ With prefix ARG, pass it through to the underlying command."
     inferior-lisp-mode
     inferior-scheme-mode
     ;; 3rd-party packages
+    ajrepl-mode
     cider-repl-mode
     fennel-repl-mode
     geiser-repl-mode
