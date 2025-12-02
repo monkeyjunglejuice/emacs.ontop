@@ -131,7 +131,7 @@
    ("M-s" . consult-history)            ; orig. next-matching-history-element
    ("M-r" . consult-history)            ; orig. previous-matching-history-element
 
-;;; Leader and localleader keymaps
+;;; - Leader and localleader keymaps
 
    ;; Leader
    :map ctl-z-map
