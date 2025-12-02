@@ -35,9 +35,10 @@
   (setq sly-lisp-implementations
         '((sbcl ("sbcl"
                  "--noinform"
-                 "--control-stack-size" "4096"
-                 "--binding-stack-size" "512"
-                 "--dynamic-space-size" "8192")
+                 ;; Size of control stack reserved for each thread - default 2
+                 "--control-stack-size" "8" ; Megabytes
+                 ;; Size of dynamic space reserved on startup - default 1024
+                 "--dynamic-space-size" "4096")  ; Megabytes
                 :coding-system utf-8-unix)))
 
   :custom
