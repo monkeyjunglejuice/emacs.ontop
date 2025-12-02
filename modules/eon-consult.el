@@ -110,19 +110,19 @@
    ("M-g I" . consult-imenu-multi)
 
    ;; M-s bindings in `search-map'
-   ("M-s f" . eon-consult-find)
+   ;; ("M-s f" . eon-consult-find)
    ;; ("M-s c" . consult-locate)
    ;; ("M-s G" . consult-git-grep)
-   ("M-s s" . consult-line)
-   ("M-s S" . consult-line-multi)
+   ;; ("M-s s" . consult-line)
+   ;; ("M-s S" . consult-line-multi)
    ;; ("M-s k" . consult-keep-lines)
    ;; ("M-s u" . consult-focus-lines)
 
    ;; Isearch integration
    ;; ("M-s e" . consult-isearch-history)
    :map isearch-mode-map
-   ("M-e"   . consult-isearch-history)  ; orig. isearch-edit-string
-   ("M-s e" . consult-isearch-history)  ; orig. isearch-edit-string
+   ;; ("M-e"   . consult-isearch-history)  ; orig. isearch-edit-string
+   ;; ("M-s e" . consult-isearch-history)  ; orig. isearch-edit-string
    ("M-s l" . consult-line)             ; needed by consult-line to detect isearch
    ("M-s L" . consult-line-multi)       ; needed by consult-line to detect isearch
 
