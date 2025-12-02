@@ -36,8 +36,10 @@
         '((sbcl ("sbcl"
                  "--noinform"
                  ;; Size of control stack reserved for each thread - default 2
+                 ;; "The Stack" for function calls etc.
                  "--control-stack-size" "16"  ; MiB
                  ;; Size of dynamic space reserved on startup - default 1024
+                 ;; "The Heap", global main memory area for Lisp objects
                  "--dynamic-space-size" "4096")  ; MiB
                 :coding-system utf-8-unix)))
 
