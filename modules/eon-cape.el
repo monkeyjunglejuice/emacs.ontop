@@ -61,6 +61,10 @@ buffer-locally in `completion-at-point-functions'."
   (dolist (hook '(prog-mode-hook conf-mode-hook text-mode-hook))
     (add-hook hook #'eon-cape--install-super-capf))
 
+  ;; Install for shells
+  (dolist (hook '(eshell-mode-hook shell-mode-hook))
+    (add-hook hook #'eon-cape--install-super-capf))
+
   ;; Rebuild when Eglot (re)attaches so its CAPF gets merged
   (with-eval-after-load 'eglot
     (add-hook 'eglot-managed-mode-hook #'eon-cape--install-super-capf))
