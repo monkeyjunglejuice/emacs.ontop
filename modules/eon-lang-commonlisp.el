@@ -25,12 +25,10 @@
   :init
 
   ;; Create local leader maps
-  (eon-localleader-defkeymap
-      sly-editing-mode eon-localleader-sly-editing-map
+  (eon-localleader-defkeymap sly-editing-mode eon-localleader-sly-editing-map
     :doc "Local leader keymap for `sly-editing-mode'.")
 
-  (eon-localleader-defkeymap
-      sly-mrepl-mode eon-localleader-sly-mrepl-map
+  (eon-localleader-defkeymap sly-mrepl-mode eon-localleader-sly-mrepl-map
     :doc "Local leader keymap for `sly-mrepl-mode'.")
 
   ;; Set Sly Lisp implementations
