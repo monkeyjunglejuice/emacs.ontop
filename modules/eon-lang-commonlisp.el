@@ -40,7 +40,7 @@
                  "--control-stack-size" "16"  ; MiB
                  ;; Size of dynamic space reserved on startup - default 1024
                  ;; "The Heap", global main memory area for Lisp objects
-                 "--dynamic-space-size" "4096")  ; MiB
+                 "--dynamic-space-size" "8192")  ; MiB
                 :coding-system utf-8-unix)))
 
   :custom
