@@ -36,9 +36,9 @@
         '((sbcl ("sbcl"
                  "--noinform"
                  ;; Size of control stack reserved for each thread - default 2
-                 "--control-stack-size" "8"  ; Megabytes
+                 "--control-stack-size" "16"  ; MiB
                  ;; Size of dynamic space reserved on startup - default 1024
-                 "--dynamic-space-size" "4096")  ; Megabytes
+                 "--dynamic-space-size" "4096")  ; MiB
                 :coding-system utf-8-unix)))
 
   :custom
