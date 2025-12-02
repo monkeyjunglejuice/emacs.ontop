@@ -28,11 +28,10 @@
 
 (use-package eglot :ensure nil
   :config
-  (with-eval-after-load 'eglot
-    (add-to-list 'eglot-server-programs
-                 ;; <https://github.com/LuaLS/lua-language-server/wiki>
-                 `(lua-ts-mode . ,(eglot-alternatives
-                                   '(("lua-language-server"))))))
+  (add-to-list 'eglot-server-programs
+               ;; <https://github.com/LuaLS/lua-language-server/wiki>
+               `(lua-ts-mode . ,(eglot-alternatives
+                                 '(("lua-language-server")))))
   :hook
   (lua-ts-mode . eglot-ensure))
 
