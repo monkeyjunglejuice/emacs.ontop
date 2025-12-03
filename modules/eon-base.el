@@ -464,11 +464,7 @@ Adapted from Doom Emacs.")
 (use-package macrostep :ensure t
   :bind
   (:map eon-localleader-elisp-map
-        ("m" . #'macrostep-expand)
-        ("c" . #'macrostep-collapse)
-        ("C" . #'macrostep-collapse-all)
-        ("[" . #'macrostep-prev-macro)
-        ("]" . #'macrostep-next-macro)))
+        ("m" . #'macrostep-expand)))
 
 ;; _____________________________________________________________________________
 (provide 'eon-base)
