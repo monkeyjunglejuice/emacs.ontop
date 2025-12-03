@@ -30,23 +30,23 @@
   (eon-localleader-defkeymap geiser-mode eon-localleader-geiser-map
     :doc "Local leader keymap for the Geiser minor mode in Scheme src buffers.")
 
-  (eon-localleader-defkeymap geiser-repl-mode eon-localleader-geiser-repl-map
-    :doc "Local leader keymap for the Geiser REPL.")
-
   :custom
 
-  (geiser-repl-send-on-return-p t)
-  (geiser-repl-use-other-window t)
-  (geiser-repl-history-size 1024)
+  ;; Launch a REPL whenever a Scheme file is visited? Highly recommended, as
+  ;; most functionality provided by Geiser is only available when REPL runs.
+  (geiser-mode-start-repl-p t)
+  ;; Complete or indent by hitting "TAB" depending on the cursor position?
   (geiser-mode-smart-tab-p t)
-  (geiser-mode-smart-repl-p t)
   ;; Normally Geiser sets this according to what implementation packages are
-  ;; installed. We set it to nil, so that it can be set according to what
-  ;; modules are actually enabled.
+  ;; installed. We set it to nil, so that it can be set by the Eon Scheme
+  ;; modules that are actually enabled.
   (geiser-active-implementations nil)
 
   :config
+
   ;; Interactive helper to set the default scheme implementation.
+  ;; Helpful & quick workaround when something isn't working as expected,
+  ;; and a local `geiser-set-scheme' doesn't resolve the issue.
   (defun eon-geiser-set-default-scheme ()
   "Select and set `geiser-default-implementation' interactively.
 The list of candidates comes from `geiser-active-implementations'."
@@ -57,25 +57,88 @@ The list of candidates comes from `geiser-active-implementations'."
                                  nil t))
          (impl  (intern name)))
     (setopt geiser-default-implementation impl)
-    (message "Default Scheme set to: %s" impl))))
+    (message "Default Scheme set to: %s" impl)))
+
+  :bind
+
+  (:map eon-localleader-geiser-map
+        ("e"   . geiser-eval-last-sexp)
+        ("E"   . geiser-eval-region)
+        ("C-e" . geiser-eval-buffer)
+        ("C-l" . geiser-add-to-load-path)
+        ("f"   . geiser-load-file)
+        ("h"   . geiser-doc-symbol-at-point)
+        ("H"   . geiser-doc-look-up-manual)
+        ("C-h" . geiser-doc-module)
+        ("b"   . geiser-load-current-buffer)
+        ("C-r" . geiser-restart-repl)
+        ("x"   . geiser-eval-definition)
+        ("<"   . geiser-xref-callers)
+        (">"   . geiser-xref-callees)))
+
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; GEISER REPL
+
+(use-package geiser-repl :ensure nil
+
+  :init
+
+  (eon-localleader-defkeymap geiser-repl-mode eon-localleader-geiser-repl-map
+    :doc "Local leader keymap for Geiser REPLs.")
+
+  :custom
+
+  ;; Evaluate Scheme form via "RET" regardless where the cursor currently is?
+  ;; Use "C-j" to just open a new line in the REPL without evaluation.
+  (geiser-repl-send-on-return-p t)
+  ;; Open the REPL in a separate window?
+  (geiser-repl-use-other-window t)
+  ;; Whether to spawn a separate REPL per project
+  (geiser-repl-per-project-p t)
+  ;; Roughly double the REPL history; defaults to 500 entries.
+  ;; History is saved in the file `geievser-repl-history-filename'.
+  (geiser-repl-history-size 1024)
+
+  :bind
+
+  (:map eon-localleader-geiser-repl-map
+        ("h"   . geiser-doc-symbol-at-point)
+        ("C-r" . geiser-repl-restart-repl)))
 
 ;; _____________________________________________________________________________
 ;;; MACRO STEPPER
 ;; <https://github.com/nbfalcon/macrostep-geiser>
 
+;; Macro stepper in Scheme src buffers
 (use-package macrostep-geiser :ensure t
   :after geiser-mode
-  :config (add-hook 'geiser-mode-hook #'macrostep-geiser-setup))
+  :config (add-hook 'geiser-mode-hook #'macrostep-geiser-setup)
+  :bind
+  (:map eon-localleader-geiser-map
+        ("m" . macrostep-expand)
+        ("M" . macrostep-geiser-expand-all)))
 
+;; Macro stepper in Scheme REPLs
 (use-package macrostep-geiser :ensure t
   :after geiser-repl
-  :config (add-hook 'geiser-repl-mode-hook #'macrostep-geiser-setup))
+  :config (add-hook 'geiser-repl-mode-hook #'macrostep-geiser-setup)
+  :bind
+  (:map eon-localleader-geiser-repl-map
+        ("m" . macrostep-expand)
+        ("M" . macrostep-geiser-expand-all)))
 
 ;; _____________________________________________________________________________
 ;;; SRFI BROWSER
 ;; <https://github.com/srfi-explorations/emacs-srfi>
 
-(use-package srfi :ensure t)
+(use-package srfi :ensure t
+  :bind
+  (:map eon-localleader-geiser-map
+        ;; SRFI search interface
+        ("C-s" . srfi))
+  (:map eon-localleader-geiser-repl-map
+        ;; SRFI search interface
+        ("C-s" . srfi)))
 
 ;; _____________________________________________________________________________
 ;;; AUTO-INDENTATION
