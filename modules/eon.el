@@ -1027,6 +1027,22 @@ Example: (setopt eon-leader-map-name 'eon-leader-user-map)
 ;; Restart Emacs
 (keymap-set ctl-z-q-map "r" #'restart-emacs)
 
+;; Smarter `keyboard-quit' that gets you out of recursive minibuffers via "C-g"
+(defun eon-keyboard-quit ()
+  "Smarter version of the built-in `keyboard-quit'.
+
+The generic `keyboard-quit' does not do the expected thing when
+the minibuffer is open. Whereas we want it to close the
+minibuffer, even without explicitly focusing it."
+  (interactive)
+  (if (active-minibuffer-window)
+      (if (minibufferp)
+          (minibuffer-keyboard-quit)
+        (abort-recursive-edit))
+    (keyboard-quit)))
+;; Remap all referencing keybindings to the new command
+(global-set-key [remap keyboard-quit] #'eon-keyboard-quit)
+
 ;; _____________________________________________________________________________
 ;;; VI KEYBINDINGS (VIPER-MODE)
 
@@ -3130,14 +3146,14 @@ With prefix ARG, pass it through to the underlying command."
   :doc "Local leader keymap for Emacs Lisp buffers."
   "d"   #'edebug-defun
   "e"   #'eon-eval-last-sexp
-  "E"   #'pp-eval-last-sexp
+  "E"   #'elisp-eval-region-or-buffer
   "h"   #'describe-symbol
-  "l"   #'load-file
+  "f"   #'load-file
   "m"   #'pp-macroexpand-last-sexp
   "M"   #'emacs-lisp-macroexpand
   "x"   #'eval-defun
   "C-b" #'elisp-byte-compile-buffer
-  "C-e" #'elisp-eval-region-or-buffer
+  "C-e" #'pp-eval-last-sexp
   "C-f" #'elisp-byte-compile-file
   "C-n" #'emacs-lisp-native-compile)
 
