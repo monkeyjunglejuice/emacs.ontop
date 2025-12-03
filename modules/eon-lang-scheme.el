@@ -7,7 +7,7 @@
 ;; Common definitions and functionality for all Scheme implementation modules.
 ;; This module will be loaded automatically by the implementation-specific
 ;; Scheme modules, even if commented out in your 'eon-setup-modules.el'.
-;; 
+;;
 ;;; Code:
 
 ;; _____________________________________________________________________________
@@ -25,17 +25,28 @@
 
 (use-package geiser :ensure t
 
+  :init
+
+  (eon-localleader-defkeymap geiser-mode eon-localleader-geiser-map
+    :doc "Local leader keymap for the Geiser minor mode in Scheme src buffers.")
+
+  (eon-localleader-defkeymap geiser-repl-mode eon-localleader-geiser-repl-map
+    :doc "Local leader keymap for the Geiser REPL.")
+
   :custom
 
   (geiser-repl-send-on-return-p t)
   (geiser-repl-use-other-window t)
+  (geiser-repl-history-size 1024)
+  (geiser-mode-smart-tab-p t)
+  (geiser-mode-smart-repl-p t)
   ;; Normally Geiser sets this according to what implementation packages are
-  ;; installed. We set it to nil, so that it will be set according to what
+  ;; installed. We set it to nil, so that it can be set according to what
   ;; modules are actually enabled.
   (geiser-active-implementations nil)
 
   :config
-
+  ;; Interactive helper to set the default scheme implementation.
   (defun eon-geiser-set-default-scheme ()
   "Select and set `geiser-default-implementation' interactively.
 The list of candidates comes from `geiser-active-implementations'."
