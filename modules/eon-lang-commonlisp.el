@@ -71,7 +71,8 @@
         ("c" . sly-compile-defun)))
 
 ;; Common Lisp documentation
-;; The hyperspec must be installed on your computer. Adapt the path below:
+;; The hyperspec must be installed on your computer.
+;; To adapt the path, set the variable `common-lisp-hyperspec-root'.
 (use-package hyperspec :ensure nil
   :after sly
   :custom
@@ -81,6 +82,9 @@
    (concat common-lisp-hyperspec-root "Data/Map_Sym.txt"))
   (common-lisp-hyperspec-issuex-table
    (concat common-lisp-hyperspec-root "Data/Map_IssX.txt")))
+
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; SLY EXTENSIONS
 
 ;; <https://github.com/mmgeorge/sly-asdf>
 (use-package sly-asdf :ensure t
