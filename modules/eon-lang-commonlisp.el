@@ -66,9 +66,6 @@
 
   :bind
 
-  (:map ctl-z-e-map
-        ("l" . sly))
-
   (:map eon-localleader-sly-editing-map
         ;; TODO Add ergonomic keybindings
         ("c" . sly-compile-defun)))
