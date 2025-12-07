@@ -15,7 +15,7 @@
 ;; <https://gitlab.com/emacs-geiser/guile>
 (use-package geiser-guile :ensure t
   :custom
-  (geiser-guile-binary '("guile" "--no-auto-compile"))
+  (geiser-guile-binary "guile")
   :config
   (add-to-list 'geiser-active-implementations 'guile))
 
