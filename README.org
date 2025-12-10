@@ -58,7 +58,7 @@ from Github repos.
 *eon-lang-racket*: The Racket setup based on [[https://github.com/greghendershott/racket-mode][Racket-mode]] provides better interactivity than DrRacket, and the new "racket-hash-lang-mode" supports arbitrary syntax for DSLs in Emacs. However, the syntax highlighting for racket-hash-lang-mode could be configured more in-depth. As I prefer Guile over Racket, this has a lower priority right now.
 
 ** Emacs for Scheme ★★★★☆
-*eon-lang-scheme*: The Emacs Scheme setup supports eight major Scheme implementations via Geiser and comes with SRFI-browser and structural editing. The Scheme implementations have either more or less comprehensive tooling, hence the user experience varies. Tested on Debian Linux and macOS with GNU Guile (most interactive experience) and Chicken scheme (rather bare-bones).
+*eon-lang-scheme*: The Emacs Scheme setup supports 10 major Scheme implementations via Geiser and comes with SRFI-browser and structural editing. The Scheme implementations have either more or less comprehensive tooling, hence the user experience varies. Tested on Debian Linux and macOS with GNU Guile (most interactive experience) and Chicken scheme (rather bare-bones).
 
 ** Emacs for Unison ★★☆☆☆
 *eon-lang-unison*: Includes the treesitter-enabled Unison mode and LSP config for Eglot that uses UCM headless. Treesitter grammar for Unison will be installed automatically.
