@@ -52,9 +52,54 @@
 ;; <https://github.com/akermu/emacs-libvterm>
 
 (use-package vterm :ensure t
+
   :custom
+
   (vterm-max-scrollback 65536)
+
+  :config
+
+  (defvar eon-vterm-escape-command nil
+    "Command to run when ESC is handled by Emacs in `vterm-mode'.
+If nil, ESC is always sent directly to the Vterm process.")
+
+  ;; Ensure ESC is not sent raw by vterm when we intercept it
+  (add-to-list 'vterm-keymap-exceptions
+               (key-description (kbd "<escape>")))
+
+  (defvar-local eon-vterm-send-escape-to-vterm t
+    "Non-nil means ESC goes to the vterm process.
+When nil, ESC runs `eon-vterm-escape-command'.")
+
+  (defun eon-vterm-update-escape ()
+    "Install ESC behavior for `vterm-mode'."
+    (when eon-vterm-escape-command
+      (keymap-set vterm-mode-map "<escape>"
+                  (if eon-vterm-send-escape-to-vterm
+                      #'vterm--self-insert
+                    eon-vterm-escape-command))))
+
+  (defun eon-vterm-toggle-escape ()
+    "Toggle whether ESC in vterm goes to vterm or Emacs."
+    (interactive)
+    (unless eon-vterm-escape-command
+      (user-error "Set `eon-vterm-escape-command' first"))
+    (setq eon-vterm-send-escape-to-vterm
+          (not eon-vterm-send-escape-to-vterm))
+    (eon-vterm-update-escape)
+    (message "ESC in vterm → %s"
+             (if eon-vterm-send-escape-to-vterm
+                 "vterm process"
+               (symbol-name eon-vterm-escape-command))))
+
+  ;; Toggle where ESC goes in vterm
+  (keymap-set vterm-mode-map "C-c C-q" #'eon-vterm-toggle-escape)
+
   :bind
+
+  (:map vterm-mode-map
+        ;; Send next key directly to the terminal, regardless Emacs keybindings
+        ("C-q" . vterm-send-next-key))
   (:map ctl-z-e-map
         ;; Set Vterm as the default terminal emulator
         ("t" . vterm)))
