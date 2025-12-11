@@ -57,20 +57,25 @@ The list of candidates comes from `geiser-active-implementations'."
                                  nil t))
          (impl  (intern name)))
     (setopt geiser-default-implementation impl)
+    ;; Set Emacs' default scheme implementation too; for `run-scheme' command.
+    (setopt scheme-program-name impl)
     (message "Default Scheme set to: %s" impl)))
 
   :bind
 
   (:map eon-localleader-geiser-map
+        ("c"   . geiser-compile-definition)
+        ("C"   . geiser-compile-current-buffer)
+        ("C-c" . geiser-compile-file)
         ("e"   . geiser-eval-last-sexp)
-        ("E"   . geiser-eval-region)
-        ("C-e" . geiser-eval-buffer)
+        ("E"   . geiser-eval-buffer)
+        ("r"   . geiser-eval-region)
+        ("l"   . geiser-load-file)
+        ("L"   . geiser-load-current-buffer)
         ("C-l" . geiser-add-to-load-path)
-        ("f"   . geiser-load-file)
         ("h"   . geiser-doc-symbol-at-point)
         ("H"   . geiser-doc-look-up-manual)
         ("C-h" . geiser-doc-module)
-        ("b"   . geiser-load-current-buffer)
         ("C-r" . geiser-restart-repl)
         ("x"   . geiser-eval-definition)
         ("<"   . geiser-xref-callers)
