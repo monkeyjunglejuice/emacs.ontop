@@ -67,10 +67,14 @@ Used by custom variables `eon-god-leader-key' and `eon-god-localleader-key'."
   :config
 
   (defun eon-god-local-mode-activate ()
+    "Turn God mode on.
+Bound to \"<escape>\" per default."
     (interactive)
     (god-local-mode 1))
 
   (defun eon-god-local-mode-disable ()
+    "Turn God mode off.
+Bound to \"i\" per default."
     (interactive)
     (god-local-mode -1))
 
@@ -108,8 +112,17 @@ Once removed, they will start with `god-local-mode' enabled."
     (setopt god-exempt-predicates
             (seq-difference god-exempt-predicates predicates #'eq)))
 
-  ;; Don't start with God-mode enabled
+  ;; Don't start `vterm' with God-mode enabled
   (eon-add-to-list* 'god-exempt-major-modes 'vterm-mode)
+
+  ;; Intercept the ESC key and let Emacs handle it when in `vterm' buffer;
+  ;; toggle via "C-c C-q" between interception and passing through to `vterm'.
+  (with-eval-after-load 'vterm
+      (add-hook 'vterm-mode-hook
+            (lambda ()
+              (setq eon-vterm-escape-command #'eon-god-local-mode-activate
+                    eon-vterm-send-escape-to-vterm nil)
+              (eon-vterm-update-escape))))
 
   :bind
 
