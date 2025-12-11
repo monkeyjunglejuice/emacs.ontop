@@ -353,53 +353,21 @@ Adapted from Doom Emacs.")
   ;; Display the indicators on which side?
   (git-gutter-fr:side 'left-fringe))
 
-;; _____________________________________________________________________________
-;;; DIRED
-;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Dired>
-
-;; Show/hide dotfiles
-;; <https://github.com/mattiasb/dired-hide-dotfiles>
-(use-package dired-hide-dotfiles :ensure t
-  :after dired
-  :diminish
+;; <https://github.com/dgutov/diff-hl>
+;; TODO Consider as an alternative
+(use-package diff-hl :ensure t
+  :init
+  (global-diff-hl-mode)
   :custom
-  (dired-hide-dotfiles-verbose nil)
+  ;; Consider disabling on slow or high-latency connections
+  (diff-hl-disable-on-remote nil)
+  ;; Don't block the main Emacs thread
+  (diff-hl-update-async t)
+  ;; Reduce visual noise
+  (diff-hl-draw-borders nil)
+  ;; Display the indicators on which side?
+  (diff-hl-side 'right)
   :hook
-  (dired-mode . dired-hide-dotfiles-mode)
-  :bind
-  (:map eon-localleader-dired-map
-        ("h" . dired-hide-dotfiles-mode)))
-
-;; Filter Dired listings
-(use-package dired-narrow :ensure t
-  :after dired
-  :init
-  (require 'dired-narrow)
-  :bind
-  (:map eon-localleader-dired-map
-        ("/" . dired-narrow-regexp)))
-
-;; Ranger-like features
-(use-package dired-ranger :ensure t
-  :after dired
-  :init
-  (require 'dired-ranger)
-  :bind
-  (:map dired-mode-map
-        ("w" . dired-ranger-copy)  ; was dired-copy-filename-as-kill
-        ("y" . dired-ranger-paste)  ; was dired-show-file-type
-        ("Y" . dired-ranger-move)))
-
-(use-package dired-subtree :ensure t
-  :after dired
-  :init
-  (require 'dired-subtree)
-  :bind
-  (:map dired-mode-map
-        ("i" . dired-subtree-insert)
-        ("I" . dired-subtree-remove)
-        ("<tab>" . dired-subtree-toggle)
-        ("<backtab>" . dired-subtree-cycle)))
 
 ;; _____________________________________________________________________________
 ;;; GREP / RIPGREP

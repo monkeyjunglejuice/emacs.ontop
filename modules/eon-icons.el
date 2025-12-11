@@ -32,13 +32,14 @@
 
 ;; Dired
 ;; <https://github.com/rainstormstudio/nerd-icons-dired>
-(use-package nerd-icons-dired :ensure t
-  :after dired
-  :diminish
-  :hook
-  (dired-mode . nerd-icons-dired-mode)
-  ;; Display icons for subtrees
-  (dired-subtree-after-insert . nerd-icons-dired--refresh))
+(when (eon-modulep 'eon-dired)
+  (use-package nerd-icons-dired :ensure t
+    :after dired
+    :diminish
+    :hook
+    (dired-mode . nerd-icons-dired-mode)
+    ;; Display icons for subtrees
+    (dired-subtree-after-insert . nerd-icons-dired--refresh)))
 
 ;; Ibuffer
 ;; <https://github.com/seagle0128/nerd-icons-ibuffer>
