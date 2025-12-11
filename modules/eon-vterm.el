@@ -87,7 +87,7 @@ When nil, ESC runs `eon-vterm-escape-command'.")
     (setq eon-vterm-send-escape-to-vterm
           (not eon-vterm-send-escape-to-vterm))
     (eon-vterm-update-escape)
-    (message "ESC goes to %s"
+    (message "ESC → %s"
              (if eon-vterm-send-escape-to-vterm
                  "vterm process"
                (symbol-name eon-vterm-escape-command))))
