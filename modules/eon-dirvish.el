@@ -27,12 +27,12 @@
 
   :custom
 
-  (dirvish-quick-access-entries ; It's a custom option, `setq' won't work
+  (dirvish-quick-access-entries
    '(("h" "~/"                          "Home")
      ("d" "~/Downloads/"                "Downloads")
      ("m" "/mnt/"                       "Drives")
-     ("s" "/ssh:my-remote-server")      "SSH server"
-     ("e" "/sudo:root@localhost:/etc")  "Modify program settings"
+     ("s" "/ssh:my-remote-server"       "SSH server")
+     ("e" "/sudo:root@localhost:/etc"   "Modify program settings")
      ("t" "~/.local/share/Trash/files/" "TrashCan")))
 
   (dirvish-mode-line-format '(:left (sort symlink) :right (omit yank index)))
