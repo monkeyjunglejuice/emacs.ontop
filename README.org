@@ -104,28 +104,28 @@ Check out the module files in order to learn about the commands and key bindings
 
 * Comparison: Doom Emacs vs. EON
 I've used Doom Emacs for roughly 2 years, because I was seeking a way out of the yak-shaving treadmill. However, I realized that my Doom Emacs config was mostly about fighting opinions, and I would be more satisfied with a clean slate and bending everything to MY opinions (har har). So I went back to my own Emacs config and made it publicly available.
-| Doom Emacs                                                                      | EON                                                  |
-|---------------------------------------------------------------------------------+------------------------------------------------------|
-| - Thousands of users                                                            | - No users                                           |
-| - Throw away your own Emacs config                                              | - Non-invasive; Eon integrates as a library          |
-| - Superficially modular, but tightly coupled                                    | - Fully modular, decoupled                           |
-| - Modules don't follow Emacs conventions                                        | - Modules are Emacs features/packages                |
-| - Many Doomishms!                                                               | - Tries hard to re-use built-in facilities           |
-| - Contrib modules not realized                                                  | - Contrib modules as Emacs packages (WIP)            |
-| - Mature and covers a plethora of use-cases                                     | - Unstable and narrow focus, untested                |
-| - "Fast" startup (masked), often lags at runtime due to lazy-loading everything | - Slower startup, snappy at runtime                  |
-| - Strongly opinionated                                                          | - Bend it your way                                   |
-| - Focus on VIM-keybindings (Evil), other editing models are second-class        | - Agnostic: God-mode, Evil, stock Emacs, Meow, Helix |
-| - Deeply configured for Evil mode, many extra packages                          | - Basically stock Evil mode, less packages           |
-| - Covers hundreds of edge cases and tweaks                                      | - Less edge cases (dis)covered, less tweaks          |
-| - Many bugfixes, legacy code                                                    | - Less bugs discovered, fresh start, no legacy code  |
-| - Backwards-compatible to Emacs 28.1                                            | - Minimum required Emacs version 30.1                |
-| - Uses Straigth.el package manager                                              | - Uses built-in Package.el, others possible          |
-| - Despises Customization UI                                                     | - Embraces Customization UI                          |
-| - Relies on shell script helpers & command line                                 | - Pure Emacs Lisp, self-contained                    |
-| - Many directories and files                                                    | - Simple architecture                                |
-| - Provides user directory for personal config                                   | - Provides user directory for personal config        |
-| - BDFL: experienced Elisp hacker                                                | - BDFL: novice Elisp wannabe hacker                  |
+| Doom Emacs                                             | EON                                                        |
+|--------------------------------------------------------+------------------------------------------------------------|
+| - Thousands of users                                   | - No users                                                 |
+| - Throw away your own Emacs config                     | - Non-invasive; Eon integrates as a library                |
+| - "Fast" startup (masked), lags at runtime             | - Slower startup (not optimized yet), snappy at runtime    |
+| - Focus on VIM-keybindings (Evil)                      | - Agnostic: God-mode, Evil, stock Emacs, Meow, Helix (WIP) |
+| - Superficially modular, but tightly coupled           | - Fully modular, decoupled                                 |
+| - Modules don't follow Emacs conventions               | - Modules are Emacs features/packages                      |
+| - Many Doomishms!                                      | - Tries hard to re-use built-in facilities                 |
+| - User directory for personal config                   | - User directory for personal config                       |
+| - User-defined modules                                 | - User defined modules (WIP)                               |
+| - Contrib modules not realized (?)                     | - Contrib modules as Emacs packages (WIP)                  |
+| - Mature and covers a plethora of use-cases            | - Unstable and narrow focus, untested                      |
+| - Strongly opinionated                                 | - Bend it your way                                         |
+| - Deeply configured for Evil mode, many extra packages | - Basically stock Evil mode, less packages                 |
+| - Covers hundreds of edge cases and tweaks             | - Less edge cases (dis)covered, less tweaks                |
+| - Many bugfixes, legacy code                           | - Less bugs discovered, fresh start, no legacy code        |
+| - Backwards-compatible to Emacs 28.1                   | - Minimum required Emacs version 30.1                      |
+| - Uses Straigth.el package manager                     | - Uses built-in Package.el, others possible (WIP)          |
+| - Despises Customization UI                            | - Embraces Customization UI                                |
+| - Relies on shell script helpers & command line        | - Pure Emacs Lisp, self-contained                          |
+| - Many directories and files                           | - Simple architecture                                      |
 
 * Comparison: Spacemacs vs. EON
 I don't know Spacemacs very well, as I've been using Doom Emacs mostly. However, I'll give it a (probably unfair) try, reflecting my superficial impression.
