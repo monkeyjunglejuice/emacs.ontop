@@ -677,7 +677,7 @@ a `cursor-type' or nil. The first non-nil return wins.")
 
 (setopt which-key-lighter ""
         which-key-separator " "
-        which-key-idle-delay 0.4
+        which-key-idle-delay 0.3
         which-key-idle-secondary-delay 0.0
         which-key-sort-uppercase-first nil
         which-key-sort-order 'which-key-key-order-alpha
@@ -790,7 +790,7 @@ local leader is shown."
                 (eon-localleader--sync-local-prefix-parent))))
 
 (defcustom eon-localleader-key
-  (if (display-graphic-p) "C-," "C-z")
+  (if (eon-terminalp) "C-z" "C-,")
   "Local leader key, pressed after the leader.
 
 - GUI default: \"C-,\" -> reach local leader via \"C-, C-,\"
@@ -853,13 +853,16 @@ Customize `eon-localleader-key' explicitly to override this default."
     (when (and old (stringp old) (> (length old) 0))
       (keymap-global-unset old t))
     (set-default sym value)
+    ;; (when (boundp 'ctl-z-map)
+    ;;   (keymap-global-set value ctl-z-map))
     (when (boundp 'ctl-z-map)
-      (keymap-global-set value ctl-z-map))
+      (eon-leader--sync-prefix-parent)
+      (keymap-global-set value eon-leader-map))
     (when (and old (string= eon-localleader-key old))
       (eon-localleader--set-key 'eon-localleader-key value))))
 
 (defcustom eon-leader-key
-  (if (display-graphic-p) "C-," "C-z")
+  (if (eon-terminalp) "C-z" "C-,")
   "Leader prefix key. GUI default: \"C-,\" - TTY default: \"C-z\".
 Use `eon-customize-group' to change, or `setopt' from Lisp."
   :group 'eon-leader
@@ -938,7 +941,15 @@ customize `eon-leader-map-name'."
   ;; Add dynamic localleader keymap
   eon-localleader-key `("Local" . ,eon-localleader-map))
 
-(defvar eon-leader-map nil
+(defvar-keymap eon-leader-map
+  :doc "Frontend leader keymap. Its parent is `eon-leader--map'."
+  :name "Leader")
+
+(defun eon-leader--sync-prefix-parent ()
+  "Make `eon-leader-map' inherit the resolved leader keymap."
+  (set-keymap-parent eon-leader-map eon-leader--map))
+
+(defvar eon-leader--map nil
   "Resolved leader keymap from `eon-leader-map-name'.
 This variable always holds the actual keymap object currently selected
 as the leader keymap.
@@ -958,17 +969,19 @@ Warns if VALUE is bound but not a keymap; allows unbound symbols."
    ;; Bound, but not a keymap
    ((and (symbolp value) (boundp value)
          (not (keymapp (symbol-value value))))
-    (setq eon-leader-map nil)
+    (setq eon-leader--map nil)
     (message "Warning: %S is bound, but not to a keymap." value))
    ;; Bound and a keymap: resolve + rebind
    ((and (symbolp value) (boundp value)
          (keymapp (symbol-value value)))
-    (setq eon-leader-map (symbol-value value))
-    (when (boundp 'eon-leader-key)
-      (keymap-global-set eon-leader-key eon-leader-map)))
+    ;; (setq eon-leader--map (symbol-value value))
+    ;; (when (boundp 'eon-leader-key)
+    ;;   (keymap-global-set eon-leader-key eon-leader--map))
+    (setq eon-leader--map (symbol-value value))
+    (eon-leader--sync-prefix-parent))
    ;; Unbound symbol allowed, but nothing to bind yet
    (t
-    (setq eon-leader-map nil))))
+    (setq eon-leader--map nil))))
 
 (defcustom eon-leader-map-name 'ctl-z-map
   "Name of the keymap that will act as the top-level leader keymap.
@@ -994,12 +1007,16 @@ Example: (setopt eon-leader-map-name 'eon-leader-user-map)
   :set #'eon-leader-map--set)
 
 ;; Initial binding of the leader prefix to the enabled top-level leader keymap
+;; (keymap-global-set eon-leader-key eon-leader--map)
+(eon-leader--sync-prefix-parent)
 (keymap-global-set eon-leader-key eon-leader-map)
 
 ;; Make the leader key available in the minibuffer too
 (add-hook 'minibuffer-setup-hook
           (lambda ()
             (when (keymapp (current-local-map))
+              ;; (keymap-set (current-local-map)
+              ;;             eon-leader-key eon-leader--map)
               (keymap-set (current-local-map)
                           eon-leader-key eon-leader-map))))
 
@@ -1451,10 +1468,9 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; There are many matching styles available, see `completion-styles-alist'
 ;; <https://www.gnu.org/software/emacs/manual/html_node/emacs/Completion-Styles.html>
 ;; The order within the list determines their priority.
-(setopt completion-styles '(basic partial-completion flex))
-(setopt completion-category-defaults nil)
+(setopt completion-styles '(flex basic))
 (setopt completion-category-overrides
-        '((file (styles . (partial-completion basic)))))
+        '((file (styles . (partial-completion)))))
 
 ;; Make TAB try completion when appropriate
 (setopt tab-always-indent 'complete)
@@ -2226,7 +2242,7 @@ pretending to clear it."
    dired-kill-when-opening-new-dired-buffer t
    ;; Listing columns; Switch arguments with "C-u s" e.g. hide backups with -B
    dired-listing-switches
-   "-l --almost-all --classify=auto --human-readable --group-directories-first --no-group"
+   "-l --almost-all --classify=always --human-readable --group-directories-first --no-group"
    ;; Copy files/directories with sub-directories?
    dired-recursive-copies 'always
    ;; Create directories if they don't exist?
