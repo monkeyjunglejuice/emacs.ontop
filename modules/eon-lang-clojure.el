@@ -11,12 +11,12 @@
 ;; <https://github.com/clojure-emacs/clojure-ts-mode>
 
 (use-package clojure-ts-mode :ensure t
-  :init (eon-treesitter-ensure-grammar
-         '(clojure "https://github.com/sogaiu/tree-sitter-clojure"))
   :custom
   (clojure-ts-indent-style 'fixed)
   (clojure-ts-comment-macro-font-lock-body t)
-  (clojure-ts-ensure-grammars t))
+  (clojure-ts-ensure-grammars t)
+  :hook
+  (clojure-ts-mode . subword-mode))
 
 ;; _____________________________________________________________________________
 ;;; CIDER
@@ -24,7 +24,8 @@
 
 (use-package cider :ensure t
   :hook
-  (clojure-ts-mode . cider-mode))
+  (clojure-ts-mode . cider-mode)
+  (cider-mode . subword-mode))
 
 ;; _____________________________________________________________________________
 ;;; AUTO-INDENTATION
