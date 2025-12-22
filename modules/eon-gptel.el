@@ -41,7 +41,7 @@
         ("s" . gptel-send)
         ("t" . gptel-tools)))
 
-;; Setup Gptel for local/cloud LLMs via Ollama; see also `eon-ollama.el'
+;; Setup Gptel for local/cloud LLMs via Ollama; see also 'eon-ollama.el'
 (when (and (executable-find "ollama")
            (eon-modulep 'eon-ollama))
   (use-package gptel-ollama :ensure nil
