@@ -10,7 +10,7 @@
 ;;; WEB-MODE
 ;; <https://web-mode.org>
 
-(use-package web-mode
+(use-package web-mode :ensure t
   :defer t
   :custom
   (web-mode-attr-indent-offset 2)
