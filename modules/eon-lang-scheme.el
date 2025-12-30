@@ -56,37 +56,38 @@ The list of candidates comes from `geiser-active-implementations'."
                                    nil t))
            (impl  (intern name)))
       (setopt geiser-default-implementation impl)
-      ;; Set Emacs' default scheme implementation too; for `run-scheme' command.
+      ;; Also set Emacs' default scheme implementation for `run-scheme' command
       (setopt scheme-program-name impl)
-      (message "Default Scheme set to: %s" impl)))
+      (message "Default Scheme implementation set to: %s" impl)))
 
   :bind
 
   (:map eon-localleader-geiser-map
+        ;; REPL
         ("RET" . geiser-repl-switch-to-module)
         ("g"   . geiser-mode-switch-to-repl)
         ("i"   . geiser-repl-import-module)
         ("k"   . geiser-repl-interrupt)
         ("C-r" . geiser-restart-repl)
-
+        ;; Compilation
         ("c"   . geiser-compile-definition)
         ("C-b" . geiser-compile-current-buffer)
         ("C-f" . geiser-compile-file)
-
+        ;; Evaluation
         ("e"   . geiser-eval-last-sexp)
         ("b"   . geiser-eval-buffer)
         ("r"   . geiser-eval-region)
         ("x"   . geiser-eval-definition)
         ("K"   . geiser-eval-interrupt)
-
+        ;; Documentation
         ("h"   . geiser-doc-symbol-at-point)
         ("H"   . geiser-doc-look-up-manual)
         ("C-h" . geiser-doc-module)
-
+        ;; Loading
         ("l"   . geiser-load-current-buffer)
         ("L"   . geiser-load-file)
         ("C-l" . geiser-add-to-load-path)
-
+        ;; References
         ("<"   . geiser-xref-callers)
         (">"   . geiser-xref-callees)))
 
@@ -110,7 +111,7 @@ The list of candidates comes from `geiser-active-implementations'."
   ;; Whether to spawn a separate REPL per project
   (geiser-repl-per-project-p t)
   ;; Roughly double the REPL history; defaults to 500 entries.
-  ;; History is saved in the file `geievser-repl-history-filename'.
+  ;; History is saved in the file `geiser-repl-history-filename'.
   (geiser-repl-history-size 1024)
 
   :bind
