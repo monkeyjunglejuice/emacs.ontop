@@ -29,9 +29,6 @@
 
   :custom
 
-  ;; Hoogle binary name
-  (haskell-hoogle-command "hoogle")
-
   ;; Use `completing-read' instead of `ido-mode'
   (haskell-completing-read-function 'completing-read)
   ;; Enable process log buffer, useful for debugging
@@ -59,6 +56,9 @@
   (haskell-doc-show-reserved nil)
   (haskell-doc-show-strategy nil)
   (haskell-doc-show-user-defined nil)
+
+  ;; Hoogle binary name
+  (haskell-hoogle-command "hoogle")
 
   :hook
 
