@@ -19,7 +19,7 @@
 
   :custom
 
-  (corfu-auto t)
+  (corfu-auto nil)
   (corfu-auto-delay 0.2)
   (corfu-auto-prefix 2)
   (corfu-cycle t)
