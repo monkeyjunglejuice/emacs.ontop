@@ -47,36 +47,46 @@
   ;; Helpful & quick workaround when something isn't working as expected,
   ;; and a local `geiser-set-scheme' doesn't resolve the issue.
   (defun eon-geiser-set-default-scheme ()
-  "Select and set `geiser-default-implementation' interactively.
+    "Select and set `geiser-default-implementation' interactively.
 The list of candidates comes from `geiser-active-implementations'."
-  (interactive)
-  (let* ((impls geiser-active-implementations)
-         (name  (completing-read "Default Scheme implementation: "
-                                 (mapcar #'symbol-name impls)
-                                 nil t))
-         (impl  (intern name)))
-    (setopt geiser-default-implementation impl)
-    ;; Set Emacs' default scheme implementation too; for `run-scheme' command.
-    (setopt scheme-program-name impl)
-    (message "Default Scheme set to: %s" impl)))
+    (interactive)
+    (let* ((impls geiser-active-implementations)
+           (name  (completing-read "Default Scheme implementation: "
+                                   (mapcar #'symbol-name impls)
+                                   nil t))
+           (impl  (intern name)))
+      (setopt geiser-default-implementation impl)
+      ;; Set Emacs' default scheme implementation too; for `run-scheme' command.
+      (setopt scheme-program-name impl)
+      (message "Default Scheme set to: %s" impl)))
 
   :bind
 
   (:map eon-localleader-geiser-map
+        ("RET" . geiser-repl-switch-to-module)
+        ("g"   . geiser-mode-switch-to-repl)
+        ("i"   . geiser-repl-import-module)
+        ("k"   . geiser-repl-interrupt)
+        ("C-r" . geiser-restart-repl)
+
         ("c"   . geiser-compile-definition)
-        ("C"   . geiser-compile-current-buffer)
-        ("C-c" . geiser-compile-file)
+        ("C-b" . geiser-compile-current-buffer)
+        ("C-f" . geiser-compile-file)
+
         ("e"   . geiser-eval-last-sexp)
-        ("E"   . geiser-eval-buffer)
+        ("b"   . geiser-eval-buffer)
         ("r"   . geiser-eval-region)
-        ("l"   . geiser-load-file)
-        ("L"   . geiser-load-current-buffer)
-        ("C-l" . geiser-add-to-load-path)
+        ("x"   . geiser-eval-definition)
+        ("K"   . geiser-eval-interrupt)
+
         ("h"   . geiser-doc-symbol-at-point)
         ("H"   . geiser-doc-look-up-manual)
         ("C-h" . geiser-doc-module)
-        ("C-r" . geiser-restart-repl)
-        ("x"   . geiser-eval-definition)
+
+        ("l"   . geiser-load-current-buffer)
+        ("L"   . geiser-load-file)
+        ("C-l" . geiser-add-to-load-path)
+
         ("<"   . geiser-xref-callers)
         (">"   . geiser-xref-callees)))
 
@@ -106,8 +116,46 @@ The list of candidates comes from `geiser-active-implementations'."
   :bind
 
   (:map eon-localleader-geiser-repl-map
+        ("RET" . geiser-repl-switch-to-module)
+        ("C-r" . geiser-repl-restart-repl)
+        ("g"   . geiser-repl-switch)
         ("h"   . geiser-doc-symbol-at-point)
-        ("C-r" . geiser-repl-restart-repl)))
+        ("i"   . geiser-repl-import-module)
+        ("k"   . geiser-repl-interrupt)
+        ("l"   . geiser-load-file)
+        ("C-l" . geiser-add-to-load-path)))
+
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; GEISER DOC
+
+(use-package geiser-doc :ensure nil
+
+  :init
+
+  (eon-localleader-defkeymap geiser-doc-mode eon-localleader-geiser-doc-map
+    :doc "Local leader keymap for Geiser docs.")
+
+  :bind
+
+  (:map eon-localleader-geiser-doc-map
+        ("m" . geiser-doc-goto-manual)
+        ("s" . geiser-doc-goto-source)
+        ("g" . geiser-doc-switch-to-repl)))
+
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; GEISER DEBUG
+
+(use-package geiser-debug :ensure nil
+
+  :init
+
+  (eon-localleader-defkeymap geiser-debug-mode eon-localleader-geiser-debug-map
+    :doc "Local leader keymap for Geiser debugger.")
+
+  :bind
+
+  (:map eon-localleader-geiser-debug-map
+        ("g" . geiser-debug-switch-to-buffer)))
 
 ;; _____________________________________________________________________________
 ;;; MACRO STEPPER
