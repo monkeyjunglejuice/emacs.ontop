@@ -32,9 +32,8 @@
 
   :custom
 
-  ;; Launch a REPL whenever a Scheme file is visited? Highly recommended, as
-  ;; most functionality provided by Geiser is only available when REPL runs.
-  (geiser-mode-start-repl-p t)
+  ;; Launch a REPL whenever a Scheme file is visited?
+  (geiser-mode-start-repl-p nil)
   ;; Complete or indent by hitting "TAB" depending on the cursor position?
   (geiser-mode-smart-tab-p t)
   ;; Normally Geiser sets this according to what implementation packages are
