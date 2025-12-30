@@ -246,5 +246,31 @@
         ("T" . consult-todo-all)))
 
 ;; _____________________________________________________________________________
+;; CONSULT-DIR
+
+(use-package consult-dir :ensure t
+  :config
+  (defun eon-eshell-d--consult-dir (orig-fun &optional regexp)
+    "Use `consult-dir' instead of raw `completing-read' for `eshell/d'."
+    (if (and (null regexp) (featurep 'consult-dir))
+        (let* ((eshell-dirs
+                (seq-uniq
+                 (mapcar #'abbreviate-file-name
+                         (ring-elements eshell-last-dir-ring))
+                 #'string=))
+               (source `(:name "Eshell"
+                               :narrow ?e
+                               :category file
+                               :face consult-file
+                               :items ,eshell-dirs))
+               (consult-dir-sources (cons source consult-dir-sources)))
+          (eshell/cd
+           (substring-no-properties
+            (consult-dir--pick "Change directory: "))))
+      (funcall orig-fun regexp)))
+
+  (advice-add 'eshell/d :around #'eon-eshell-d--consult-dir))
+
+;; _____________________________________________________________________________
 (provide 'eon-consult)
 ;;; eon-consult.el ends here
