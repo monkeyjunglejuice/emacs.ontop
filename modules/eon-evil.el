@@ -146,75 +146,31 @@ and `eon-evil-localleader-key'."
 
   :init
 
+  ;; Use Evil editing-behavior in the minibuffer too
   (setopt evil-collection-setup-minibuffer t)
 
-  ;; :custom
+  :custom
 
-  ;; (evil-collection-key-blacklist '(eon-evil-leader-key
-  ;;                                  eon-leader-key))
+  ;; Prevent the leader key from getting shadowed by evil-collection
+  (evil-collection-key-blacklist `(,eon-evil-leader-key
+                                   ,eon-leader-key
+                                   ,eon-localleader-key))
 
   :config
 
   (evil-collection-init)
 
-  ;; Prevent the current leader from getting shadowed by evil-collection
-  ;; (e.g. as it does with "SPC" in `customize-mode').
-  ;; NOTE Functionality seems partly implemented as
-  ;; `evil-collection-key-blacklist'. TODO Feature parity needs to be checked,
-  ;; as the following implementation works in real-time via setter.
-
-  (defun eon-evil--unshadow-leader-in-maps (maps)
-    (let ((lk eon-evil-leader-key))
-      (when (and (stringp lk) (> (length lk) 0))
-        (let ((key (kbd lk)))
-          (dolist (ms maps)
-            (let ((km (cond ((keymapp ms) ms)
-                            ((and (symbolp ms) (boundp ms))
-                             (symbol-value ms))
-                            (t nil))))
-              (when (keymapp km)
-                (dolist (st '(normal visual motion))
-                  (let ((aux (evil-get-auxiliary-keymap km st nil)))
-                    (when aux
-                      (define-key aux key nil)))))))))))
-
-  (defun eon-evil--unshadow-leader-in-ec-feature (feat)
-    (let* ((name (symbol-name feat))
-           (pref "evil-collection-")
-           (mod  (and (string-prefix-p pref name)
-                      (substring name (length pref))))
-           (maps (and mod
-                      (intern (format "evil-collection-%s-maps" mod)))))
-      (when (and maps (boundp maps))
-        (eon-evil--unshadow-leader-in-maps (symbol-value maps)))))
-
-  (defun eon-evil--unshadow-leader-ec-sweep ()
-    (mapc #'eon-evil--unshadow-leader-in-ec-feature features))
-
-  (defun eon-evil--unshadow-leader-ec-after-load (file)
-    (let ((base (file-name-base file)))
-      (when (string-prefix-p "evil-collection-" base)
-        (eon-evil--unshadow-leader-in-ec-feature (intern base)))))
-
-  ;; Run now, for future loads, and on leader changes
-  (eon-evil--unshadow-leader-ec-sweep)
-  (add-hook 'after-load-functions
-            #'eon-evil--unshadow-leader-ec-after-load)
-
-  ;; Re-unshadow when the leader changes via setopt/Customize
-  (when (fboundp 'eon-evil--set-leaders)
-    (advice-add 'eon-evil--set-leaders :after
-                (lambda (sym _val)
-                  (when (eq sym 'eon-evil-leader-key)
-                    (eon-evil--unshadow-leader-ec-sweep)))))
-
-  ;; Add Ranger-like movements to Dired
+  ;; Add VIM-like movements to Dired
   (evil-collection-define-key 'normal 'dired-mode-map
     "l" #'dired-find-file
-    "h" #'dired-up-directory
-    "y" #'dired-ranger-copy
-    "p" #'dired-ranger-paste
-    "P" #'dired-ranger-move))
+    "h" #'dired-up-directory)
+
+  ;; Add VIM-like copy/paste to Dired
+  (when (eon-modulep 'eon-dired)
+    (evil-collection-define-key 'normal 'dired-mode-map
+      "y" #'dired-ranger-copy
+      "p" #'dired-ranger-paste
+      "P" #'dired-ranger-move)))
 
 ;; _____________________________________________________________________________
 ;;; WHICH-KEY
