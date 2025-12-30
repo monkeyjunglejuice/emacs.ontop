@@ -116,17 +116,16 @@ The list of candidates comes from `geiser-active-implementations'."
 ;; Macro stepper in Scheme src buffers
 (use-package macrostep-geiser :ensure t
   :after geiser-mode
-  :config (add-hook 'geiser-mode-hook #'macrostep-geiser-setup)
+
+  :hook
+
+  ((geiser-mode geiser-repl-mode) . macrostep-geiser-setup)
+
   :bind
+
   (:map eon-localleader-geiser-map
         ("m" . macrostep-expand)
-        ("M" . macrostep-geiser-expand-all)))
-
-;; Macro stepper in Scheme REPLs
-(use-package macrostep-geiser :ensure t
-  :after geiser-repl
-  :config (add-hook 'geiser-repl-mode-hook #'macrostep-geiser-setup)
-  :bind
+        ("M" . macrostep-geiser-expand-all))
   (:map eon-localleader-geiser-repl-map
         ("m" . macrostep-expand)
         ("M" . macrostep-geiser-expand-all)))
