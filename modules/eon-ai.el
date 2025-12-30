@@ -13,8 +13,8 @@
   "AI integration."
   :group 'eon)
 
-(defvar-keymap ctl-z-l-map :doc "AI / Large Language Models")
-(keymap-set ctl-z-map "l" `("AI/LLM" . ,ctl-z-l-map))
+(defvar-keymap ctl-z-l-map :doc "Large Language Models / AI")
+(keymap-set ctl-z-map "l" `("LLM/AI" . ,ctl-z-l-map))
 
 ;; _____________________________________________________________________________
 (provide 'eon-ai)
