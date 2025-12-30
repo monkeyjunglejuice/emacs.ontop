@@ -52,7 +52,7 @@
 
   ;; Don't use hasktags; the language server provides this functionality
   (haskell-tags-on-save nil)
-  
+
   ;; Don't use haskell-mode to show docs; the language server will do that
   (haskell-doc-show-global-types nil)
   (haskell-doc-show-prelude nil)
@@ -73,6 +73,7 @@
         ("C"   . haskell-process-cabal)
         ("C-c" . haskell-cabal-visit-file)
         ("g"   . haskell-interactive-switch)
+        ("h"   . eldoc)
         ("i"   . haskell-navigate-imports)
         ("k"   . haskell-process-interrupt)
         ("l"   . haskell-process-load-file)
@@ -88,8 +89,8 @@
         ("C"   . haskell-process-cabal)
         ("C-c" . haskell-cabal-visit-file)
         ("g"   . haskell-interactive-switch-back)
+        ("h"   . eldoc)
         ("k"   . haskell-process-interrupt)
-        ("l"   . haskell-process-load-file)
         ("s"   . haskell-session-change)
         ("S"   . haskell-session-change-target)
         ("t"   . haskell-doc-show-type)
@@ -136,13 +137,13 @@
 
     ;; SRC buffer
     (:map eon-localleader-interactive-haskell-mode-map
-          ("h" . consult-hoogle)
-          ("H" . consult-hoogle-project))
+          ("H"   . consult-hoogle)
+          ("C-h" . consult-hoogle-project))
 
     ;; REPL buffer
     (:map eon-localleader-haskell-interactive-mode-map
-          ("h" . consult-hoogle)
-          ("H" . consult-hoogle-project))))
+          ("H"   . consult-hoogle)
+          ("C-h" . consult-hoogle-project))))
 
 ;; _____________________________________________________________________________
 ;;; ORG-MODE BABEL
