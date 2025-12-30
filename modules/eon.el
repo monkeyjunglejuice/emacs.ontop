@@ -1469,12 +1469,12 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; <https://www.gnu.org/software/emacs/manual/html_node/emacs/Completion-Styles.html>
 ;; The order within the list determines their priority.
 (setopt completion-styles '(flex basic))
+(setopt completion-category-defaults nil)
 (setopt completion-category-overrides
         '((file (styles . (partial-completion)))))
 
 ;; Make TAB try completion when appropriate
 (setopt tab-always-indent 'complete)
-(setopt tab-first-completion 'word-or-paren-or-punct)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Dabbrev
@@ -1647,6 +1647,49 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (keymap-global-set      "C-M-%" #'replace-regexp-as-diff)
 (keymap-set ctl-z-s-map "C-r"   #'replace-regexp-as-diff)
 
+;;; - Web search
+
+;; Bind `webjump' under the leader key "<leader> s w"
+(keymap-set ctl-z-s-map "w" #'webjump)
+
+(with-eval-after-load 'webjump
+  (setopt webjump-sites
+          '(("DuckDuckGo"
+             . [simple-query
+                "https://duckduckgo.com/?q="
+                "https://duckduckgo.com/?q=" ""])
+            ("GitHub"
+             . [simple-query
+                "https://github.com/search?ref=simplesearch&q="
+                "https://github.com/search?ref=simplesearch&q=" ""])
+            ("Codeberg"
+             . [simple-query
+                "https://codeberg.org/explore/repos?sort=moststars&q="
+                "https://codeberg.org/explore/repos?sort=moststars&q="
+                ""])
+            ("Stack Overflow"
+             . [simple-query
+                "https://stackoverflow.com/search?q="
+                "https://stackoverflow.com/search?q=" ""])
+            ("Wikipedia (en)"
+             . [simple-query
+                "https://www.wikipedia.org/search-redirect.php?language=en&go=Go&search="
+                "https://www.wikipedia.org/search-redirect.php?language=en&go=Go&search="
+                ""])
+            ("Wolfram Alpha"
+             . [simple-query
+                "https://www.wolframalpha.com/input/?i="
+                "https://www.wolframalpha.com/input/?i=" ""])
+            ("Google Maps"
+             . [simple-query
+                "https://maps.google.com/maps?q="
+                "https://maps.google.com/maps?q=" ""])
+            ("OpenStreetMap"
+             . [simple-query
+                "https://www.openstreetmap.org/search?query="
+                "https://www.openstreetmap.org/search?query="
+                ""]))))
+
 ;; _____________________________________________________________________________
 ;;; IMENU
 ;; Imenu provides navigation for buffer content, e.g. code, outlines and more
@@ -1695,8 +1738,8 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (keymap-set ctl-z-w-map "o" #'other-window-prefix)
 (keymap-set ctl-z-w-map "q" #'quit-window)
 (keymap-set ctl-z-w-map "s" #'split-window-below)
-(keymap-set ctl-z-w-map "t" #'window-toggle-side-windows)
-(keymap-set ctl-z-w-map "T" #'toggle-window-dedicated)
+(keymap-set ctl-z-w-map "t" #'toggle-window-dedicated)
+(keymap-set ctl-z-w-map "T" #'window-toggle-side-windows)
 (keymap-set ctl-z-w-map "v" #'split-window-right)
 (keymap-set ctl-z-w-map "w" #'other-window)
 
@@ -2242,7 +2285,7 @@ pretending to clear it."
    dired-kill-when-opening-new-dired-buffer t
    ;; Listing columns; Switch arguments with "C-u s" e.g. hide backups with -B
    dired-listing-switches
-   "-l --almost-all --classify=always --human-readable --group-directories-first --no-group"
+   "-l --almost-all --classify=always --human-readable --group-directories-first"
    ;; Copy files/directories with sub-directories?
    dired-recursive-copies 'always
    ;; Create directories if they don't exist?
@@ -2320,6 +2363,10 @@ pretending to clear it."
 ;; but this is not as versatile as a regular subshell you may know from
 ;; bash and others.
 
+(defgroup eon-eshell nil
+  "Eshell configuration."
+  :group 'eon)
+
 ;; Create Eshell loacal leader keymap
 (eon-localleader-defkeymap eshell-mode eon-localleader-eshell-map
   :doc "Local leader keymap for `eshell-mode'.")
@@ -2347,6 +2394,100 @@ pretending to clear it."
   (interactive)
   (eshell 't))
 (keymap-set ctl-z-e-map "E" #'eon-eshell-new)
+
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; Faster Eshell cd command; similar to Zoxide
+
+(defun eshell/d (&optional regexp)
+  "Navigate to a previously visited directory in Eshell.
+
+If REGEXP is non-nil, jump to the most recent previous directory matching
+REGEXP. Otherwise, prompt with `completing-read' over `eshell-last-dir-ring'."
+  (let* ((eshell-dirs
+          (seq-uniq
+           (mapcar #'abbreviate-file-name
+                   (ring-elements eshell-last-dir-ring))
+           #'string=))
+         (target
+          (if regexp
+              (or (eshell-find-previous-directory regexp)
+                  (user-error "No previous directory matching %S" regexp))
+            (completing-read "Change directory: " eshell-dirs nil nil))))
+    (eshell/cd (substring-no-properties target))))
+
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; Eshell aliases
+
+;; Define Eshell aliases directly in your init file without external
+;; `/.emacs.d/eshell/alias' file.
+
+(defun eon-eshell--name (key)
+  "Return KEY as an Eshell alias name string.
+
+K may be a symbol (e.g. `ll`) or a string (e.g. \"ll\").
+Signal an error for any other type."
+  (cond ((symbolp key) (symbol-name key))
+        ((stringp key) key)
+        (t (error "Alias key must be symbol or string: %S" key))))
+
+(defun eon-eshell--install-aliases (aliases)
+  "Install ALIASES into Eshell without persisting them to disk.
+
+ALIASES must be an alist of (NAME . DEF) pairs, where NAME is a symbol
+or string and DEF is an Eshell alias expansion string.
+
+If an alias NAME already exists, it is deleted first and then redefined.
+Alias persistence is disabled by binding `eshell-aliases-file'
+to `null-device'."
+  (require 'em-alias)
+  (let ((eshell-aliases-file null-device))
+    (mapc
+     (lambda (cell)
+       (let* ((key (car cell))
+              (val (cdr cell))
+              (name (if (symbolp key) (symbol-name key) key)))
+         (when (eshell-lookup-alias name)
+           (eshell/alias name))   ; delete existing alias
+         (eshell/alias name val)))  ; define alias
+     aliases)))
+
+(defun eon-eshell-apply-aliases ()
+  "Apply `eon-eshell-aliases' to Eshell now."
+  (interactive)
+  (eon-eshell--install-aliases eon-eshell-aliases))
+
+(defun eon-eshell--set-aliases (sym value)
+  "Setter for the user option `eon-eshell-aliases'.
+
+Set SYM's default value to VALUE. If the Eshell alias module
+`em-alias' is already loaded, also install VALUE immediately."
+  (set-default sym value)
+  (when (featurep 'em-alias)
+    (eon-eshell--install-aliases value)))
+
+(defcustom eon-eshell-aliases
+  '(("e"     . "find-file $@*")
+    ("f"     . "find-file $@*")
+    ("l"     . "ls $@*")
+    ("ll"    . "ls -l -h $@*")
+    ("la"    . "ls -lA -h $@*")
+    ("targ"  . "tar cfvz $@*")
+    ("targx" . "tar xfvz $@*")
+    ("tarb"  . "tar cfvj $@*")
+    ("tarbx" . "tar xfvj $@*")
+    ("q"     . "exit"))
+  "Alist of Eshell aliases: ((NAME . DEF) ...).
+
+Add/override an alias with `add-to-list', or add/override multiple aliases
+via `eon-add-to-list'."
+  :type '(alist :key-type (choice string symbol)
+                :value-type string)
+  :set #'eon-eshell--set-aliases)
+
+(with-eval-after-load 'em-alias
+  ;; Ensure they exist when Eshell initializes/loads aliases
+  (add-hook 'eshell-first-time-mode-hook #'eon-eshell-apply-aliases)
+  (add-hook 'eshell-alias-load-hook #'eon-eshell-apply-aliases))
 
 ;; _____________________________________________________________________________
 ;;; SHELL
@@ -2450,7 +2591,7 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
              "Mozilla/5.0 (iPhone; CPU iPhone OS 18_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.2 Mobile/15E148 Safari/604.1"))
     ('w3m
      (setopt url-user-agent
-             "w3m/0.5.3+git2020050"))
+             "w3m/0.5.3+git20230121"))
     (_
      (setopt url-user-agent 'default))))
 
@@ -3163,6 +3304,7 @@ With prefix ARG, pass it through to the underlying command."
   :doc "Local leader keymap for Emacs Lisp buffers."
   "d"   #'edebug-defun
   "e"   #'eon-eval-last-sexp
+  "b"   #'eval-buffer
   "r"   #'elisp-eval-region-or-buffer
   "h"   #'describe-symbol
   "l"   #'load-file
