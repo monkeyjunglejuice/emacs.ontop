@@ -107,7 +107,9 @@ Adapted from Doom Emacs.")
 ;; _____________________________________________________________________________
 ;;; SHELL
 
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Fish
+
 (when (executable-find "fish")
 
   ;; <https://github.com/LemonBreezes/emacs-fish-completion>
@@ -118,7 +120,9 @@ Adapted from Doom Emacs.")
   ;; <https://github.com/wwwjfy/emacs-fish>
   (use-package fish-mode :ensure t))
 
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Bash
+
 ;; <https://github.com/szermatt/emacs-bash-completion>
 (when (executable-find "bash")
 
