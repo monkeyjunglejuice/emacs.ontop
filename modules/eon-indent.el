@@ -19,10 +19,16 @@
 
 (use-package aggressive-indent :ensure t
   :diminish aggressive-indent-mode
+
   :custom
+
   ;; Actually seems to work better when `electric-indent-mode' is enabled
   (aggressive-indent-dont-electric-modes nil)
-  (aggressive-indent-sit-for-time 0.01))
+  (aggressive-indent-sit-for-time 0.01)
+
+  :hook
+
+  (emacs-lisp-mode . aggressive-indent-mode))
 
 ;; _____________________________________________________________________________
 (provide 'eon-indent)
