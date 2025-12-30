@@ -47,6 +47,9 @@
     (which-key-add-keymap-based-replacements
       eon-localleader-global-map "," "..."))
 
+  ;; Consult history as Eshell alias
+  (eon-add-to-list 'eon-eshell-aliases '((h . "consult-history")))
+
   :config
 
   ;; Optionally configure preview. The default value
