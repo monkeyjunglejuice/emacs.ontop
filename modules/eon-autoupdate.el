@@ -18,16 +18,25 @@
 
 (when package-enable-at-startup
   (use-package auto-package-update :ensure t
+
     :init
+
     (auto-package-update-maybe)
+
     :custom
+
     (auto-package-update-interval 7)
     (auto-package-update-show-preview nil)
     (auto-package-update-hide-results t)
     (auto-package-update-prompt-before-update t)
     ;; Keep old packages around to roll back if necessary
     (auto-package-update-delete-old-versions nil)
-    (auto-package-update-excluded-packages '())))
+    (auto-package-update-excluded-packages '())
+
+    :bind
+
+    (:map ctl-z-x-map
+          ("P" . auto-package-update-now))))
 
 ;; _____________________________________________________________________________
 (provide 'eon-autoupdate)
