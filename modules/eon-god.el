@@ -49,13 +49,13 @@ Used by custom variables `eon-god-leader-key' and `eon-god-localleader-key'."
     :initialize 'custom-initialize-set)
 
   (defcustom eon-god-localleader-key ","
-    "Local leader key for God mode."
+    "Local leader key for God mode, pressed after the leader key."
     :group 'eon-leader
     :type 'string
     :set #'eon-god--set-leaders
     :initialize 'custom-initialize-set)
 
-  ;; Enable almost everywhere;
+  ;; Enable God mode almost everywhere;
   ;; see `god-exempt-major-modes' and `god-exempt-preticates' where not.
   (god-mode-all 1)
 
