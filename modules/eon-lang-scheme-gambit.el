@@ -14,7 +14,8 @@
 
 ;; <https://gitlab.com/emacs-geiser/gambit>
 (use-package geiser-gambit :ensure t
-  :config
+  :defer t
+  :init
   (add-to-list 'geiser-active-implementations 'gambit))
 
 ;; _____________________________________________________________________________

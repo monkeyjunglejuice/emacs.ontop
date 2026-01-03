@@ -14,7 +14,8 @@
 
 ;; <https://gitlab.com/emacs-geiser/kawa>
 (use-package geiser-kawa :ensure t
-  :config
+  :defer t
+  :init
   (add-to-list 'geiser-active-implementations 'kawa))
 
 ;; _____________________________________________________________________________

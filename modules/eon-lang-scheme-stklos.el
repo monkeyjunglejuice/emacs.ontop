@@ -14,7 +14,8 @@
 
 ;; <https://gitlab.com/emacs-geiser/stklos>
 (use-package geiser-stklos :ensure t
-  :config
+  :defer t
+  :init
   (add-to-list 'geiser-active-implementations 'stklos))
 
 ;; _____________________________________________________________________________

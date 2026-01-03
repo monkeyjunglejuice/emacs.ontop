@@ -14,7 +14,8 @@
 
 ;; <https://gitlab.com/emacs-geiser/gauche>
 (use-package geiser-gauche :ensure t
-  :config
+  :defer t
+  :init
   (add-to-list 'geiser-active-implementations 'gauche))
 
 ;; _____________________________________________________________________________

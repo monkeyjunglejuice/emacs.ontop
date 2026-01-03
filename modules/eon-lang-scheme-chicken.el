@@ -14,7 +14,8 @@
 
 ;; <https://gitlab.com/emacs-geiser/chicken>
 (use-package geiser-chicken :ensure t
-  :config
+  :defer t
+  :init
   (add-to-list 'geiser-active-implementations 'chicken))
 
 ;; _____________________________________________________________________________

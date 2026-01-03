@@ -14,7 +14,8 @@
 
 ;; <https://gitlab.com/emacs-geiser/racket>
 (use-package geiser-racket :ensure t
-  :config
+  :defer t
+  :init
   (add-to-list 'geiser-active-implementations 'racket))
 
 ;; _____________________________________________________________________________

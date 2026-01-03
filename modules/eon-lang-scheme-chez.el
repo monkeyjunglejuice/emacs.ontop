@@ -14,7 +14,8 @@
 
 ;; <https://gitlab.com/emacs-geiser/chez>
 (use-package geiser-chez :ensure t
-  :config
+  :defer t
+  :init
   (add-to-list 'geiser-active-implementations 'chez))
 
 ;; _____________________________________________________________________________

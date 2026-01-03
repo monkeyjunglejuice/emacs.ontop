@@ -5,8 +5,8 @@
 ;;; Commentary:
 ;;
 ;; Common definitions and functionality for all Scheme implementation modules.
-;; This module will be loaded automatically by the implementation-specific
-;; Scheme modules, even if commented out in your 'eon-setup-modules.el'.
+;; This module will be loaded automatically if an implementation-specific
+;; module is enabled, even if commented out in your 'eon-setup-modules.el'.
 ;;
 ;;; Code:
 
@@ -24,14 +24,25 @@
 ;; <https://www.nongnu.org/geiser/>
 
 (use-package geiser :ensure t
+  :defer t
 
   :init
 
   (eon-localleader-defkeymap geiser-mode eon-localleader-geiser-map
     :doc "Local leader keymap for the Geiser minor mode in Scheme src buffers.")
 
+  (eon-localleader-defkeymap geiser-repl-mode eon-localleader-geiser-repl-map
+    :doc "Local leader keymap for Geiser REPLs.")
+
+  (eon-localleader-defkeymap geiser-doc-mode eon-localleader-geiser-doc-map
+    :doc "Local leader keymap for Geiser docs.")
+
+  (eon-localleader-defkeymap geiser-debug-mode eon-localleader-geiser-debug-map
+    :doc "Local leader keymap for Geiser debugger.")
+
   :custom
 
+  ;;; - Source code buffers
   ;; Launch a REPL whenever a Scheme file is visited?
   (geiser-mode-start-repl-p nil)
   ;; Complete or indent by hitting "TAB" depending on the cursor position?
@@ -40,6 +51,18 @@
   ;; installed. We set it to nil, so that it can be set by the Eon Scheme
   ;; modules that are actually enabled.
   (geiser-active-implementations nil)
+
+  ;;; - REPL
+  ;; Evaluate Scheme form via "RET" regardless where the cursor currently is?
+  ;; Use "C-j" to just open a new line in the REPL without evaluation.
+  (geiser-repl-send-on-return-p t)
+  ;; Open the REPL in a separate window?
+  (geiser-repl-use-other-window t)
+  ;; Whether to spawn a separate REPL per project
+  (geiser-repl-per-project-p t)
+  ;; Roughly double the REPL history; defaults to 500 entries.
+  ;; History is saved in the file `geiser-repl-history-filename'.
+  (geiser-repl-history-size 1024)
 
   :config
 
@@ -89,32 +112,10 @@ The list of candidates comes from `geiser-active-implementations'."
         ("C-l" . geiser-add-to-load-path)
         ;; References
         ("<"   . geiser-xref-callers)
-        (">"   . geiser-xref-callees)))
-
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; GEISER REPL
-
-(use-package geiser-repl :ensure nil
-
-  :init
-
-  (eon-localleader-defkeymap geiser-repl-mode eon-localleader-geiser-repl-map
-    :doc "Local leader keymap for Geiser REPLs.")
-
-  :custom
-
-  ;; Evaluate Scheme form via "RET" regardless where the cursor currently is?
-  ;; Use "C-j" to just open a new line in the REPL without evaluation.
-  (geiser-repl-send-on-return-p t)
-  ;; Open the REPL in a separate window?
-  (geiser-repl-use-other-window t)
-  ;; Whether to spawn a separate REPL per project
-  (geiser-repl-per-project-p t)
-  ;; Roughly double the REPL history; defaults to 500 entries.
-  ;; History is saved in the file `geiser-repl-history-filename'.
-  (geiser-repl-history-size 1024)
-
-  :bind
+        (">"   . geiser-xref-callees)
+        ;; Implementation
+        ("C-s" . geiser-set-scheme)
+        ("M-s" . eon-geiser-set-default-scheme))
 
   (:map eon-localleader-geiser-repl-map
         ("RET" . geiser-repl-switch-to-module)
@@ -124,36 +125,12 @@ The list of candidates comes from `geiser-active-implementations'."
         ("i"   . geiser-repl-import-module)
         ("k"   . geiser-repl-interrupt)
         ("l"   . geiser-load-file)
-        ("C-l" . geiser-add-to-load-path)))
-
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; GEISER DOC
-
-(use-package geiser-doc :ensure nil
-
-  :init
-
-  (eon-localleader-defkeymap geiser-doc-mode eon-localleader-geiser-doc-map
-    :doc "Local leader keymap for Geiser docs.")
-
-  :bind
+        ("C-l" . geiser-add-to-load-path))
 
   (:map eon-localleader-geiser-doc-map
         ("m" . geiser-doc-goto-manual)
         ("s" . geiser-doc-goto-source)
-        ("g" . geiser-doc-switch-to-repl)))
-
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; GEISER DEBUG
-
-(use-package geiser-debug :ensure nil
-
-  :init
-
-  (eon-localleader-defkeymap geiser-debug-mode eon-localleader-geiser-debug-map
-    :doc "Local leader keymap for Geiser debugger.")
-
-  :bind
+        ("g" . geiser-doc-switch-to-repl))
 
   (:map eon-localleader-geiser-debug-map
         ("g" . geiser-debug-switch-to-buffer)))
@@ -184,13 +161,15 @@ The list of candidates comes from `geiser-active-implementations'."
 ;; <https://github.com/srfi-explorations/emacs-srfi>
 
 (use-package srfi :ensure t
+
   :bind
+
   (:map eon-localleader-geiser-map
         ;; SRFI search interface
-        ("C-s" . srfi))
+        ("s" . srfi))
   (:map eon-localleader-geiser-repl-map
         ;; SRFI search interface
-        ("C-s" . srfi)))
+        ("s" . srfi)))
 
 ;; _____________________________________________________________________________
 ;;; AUTO-INDENTATION

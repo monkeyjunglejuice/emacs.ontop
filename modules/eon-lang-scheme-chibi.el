@@ -14,7 +14,8 @@
 
 ;; <https://gitlab.com/emacs-geiser/chibi>
 (use-package geiser-chibi :ensure t
-  :config
+  :defer t
+  :init
   (add-to-list 'geiser-active-implementations 'chibi))
 
 ;; _____________________________________________________________________________

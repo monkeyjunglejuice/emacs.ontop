@@ -14,10 +14,11 @@
 
 ;; <https://gitlab.com/emacs-geiser/guile>
 (use-package geiser-guile :ensure t
+  :defer t
+  :init
+  (add-to-list 'geiser-active-implementations 'guile)
   :custom
-  (geiser-guile-binary "guile")
-  :config
-  (add-to-list 'geiser-active-implementations 'guile))
+  (geiser-guile-binary "guile"))
 
 ;; _____________________________________________________________________________
 (provide 'eon-lang-scheme-guile)

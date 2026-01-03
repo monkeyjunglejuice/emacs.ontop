@@ -14,12 +14,14 @@
 
 ;; <https://gitlab.com/emacs-geiser/mit>
 (use-package geiser-mit :ensure t
-  :config
+  :defer t
+  :init
   (add-to-list 'geiser-active-implementations 'mit))
 
 ;; Built-in Emacs Scheme package
 (use-package scheme :ensure nil
   :custom
+  ;; MIT Scheme specific indentation
   (scheme-mit-dialect t))
 
 ;; _____________________________________________________________________________
