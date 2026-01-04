@@ -75,16 +75,15 @@ configuration or restarting applications."
 ;;; LANGUAGE SERVER
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
 ;; Common keybindings are configured in './eon-core.el'
-
-;; Elixir-ls language server is used per default in this setup.
-;; Here's an Elixir language server comparison:
-;; <https://gist.github.com/Nezteb/dc63f1d5ad9d88907dd103da2ca000b1>
-
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; ELIXIR-LS
 ;; <https://github.com/elixir-lsp/elixir-ls>
 
 (use-package eglot :ensure nil
+
+  :init
+
+  ;; Elixir-ls needs a snippet engine to provide most of its completions.
+  ;; Therefore, the module `eon-yasnippet' will be enabled.
+  (require 'eon-yasnippet)
 
   :custom
 
