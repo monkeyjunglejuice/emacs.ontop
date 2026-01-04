@@ -78,7 +78,7 @@
 (require 'use-package)
 
 ;; Setup `use-package' options
-(setopt use-package-always-ensure nil
+(setopt use-package-always-ensure (if package-enable-at-startup t nil)
         use-package-always-defer nil
         use-package-expand-minimally t)
 
