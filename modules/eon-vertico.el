@@ -9,6 +9,7 @@
 ;; _____________________________________________________________________________
 ;;; VERTICO
 ;; <https://github.com/minad/vertico>
+;; <https://github.com/minad/vertico/wiki>
 ;; <https://github.com/minad/vertico#key-bindings>
 
 (use-package vertico :ensure t

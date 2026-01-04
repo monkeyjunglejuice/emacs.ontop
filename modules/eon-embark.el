@@ -7,6 +7,7 @@
 ;; _____________________________________________________________________________
 ;;; EMBARK
 ;; <https://github.com/oantolin/embark>
+;; <https://github.com/oantolin/embark/wiki>
 
 (use-package embark :ensure t
   :init
