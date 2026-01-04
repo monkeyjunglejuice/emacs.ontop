@@ -64,6 +64,7 @@
 
   ;; Start minor mode in source buffers to interact with a REPL
   (haskell-mode . interactive-haskell-mode)
+  (haskell-mode . haskell-doc-mode)
 
   :bind
 
