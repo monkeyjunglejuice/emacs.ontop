@@ -346,13 +346,13 @@ Adapted from Doom Emacs.")
 ;;; GIT-GUTTER
 
 ;; <https://github.com/emacsorphanage/git-gutter>
-(use-package git-gutter :ensure t
+(use-package git-gutter :ensure t :disabled t
   :diminish
   :config
   (global-git-gutter-mode))
 
 ;; <https://github.com/emacsorphanage/git-gutter-fringe>
-(use-package git-gutter-fringe :ensure t
+(use-package git-gutter-fringe :ensure t :disabled t
   :after git-gutter
   :custom
   ;; Display the indicators on which side?
@@ -373,6 +373,14 @@ Adapted from Doom Emacs.")
   ;; Display the indicators on which side?
   (diff-hl-side 'right)
   :hook
+  ;; Display changes immediately
+  (diff-hl-mode . diff-hl-flydiff-mode)
+  ;; Display the indicators in an extra margin, so the fringe remains untouched
+  (diff-hl-mode . diff-hl-margin-mode)
+  ;; Indicate changed files in Dired
+  (dired-mode . diff-hl-dired-mode)
+  ;; React to Magit
+  (magit-post-refresh . diff-hl-magit-post-refresh))
 
 ;; _____________________________________________________________________________
 ;;; GREP / RIPGREP
