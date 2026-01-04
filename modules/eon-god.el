@@ -19,26 +19,32 @@
 
   :init
 
-  (defun eon-god--bind-leader-in-states (old new)
-    "Explicitly bind the leader key to prevent hijacking."
+  (defvar eon-god--emulation-map (make-sparse-keymap)
+    "Emulation map used to protect the God leader key.")
+
+  (defun eon-god--install-emulation ()
+    "Install `eon-god--emulation-map' for `god-local-mode'."
+    (add-to-list 'emulation-mode-map-alists
+                 `((god-local-mode . ,eon-god--emulation-map))))
+
+  (defun eon-god--bind-leader (old new)
+    "Bind NEW as God leader in the emulation map and unset OLD."
+    (when (and (stringp old) (> (length old) 0))
+      (keymap-unset eon-god--emulation-map old t))
     (when (and (stringp new) (> (length new) 0))
-      (dolist (m (list god-local-mode-map))
-        (when (and (stringp old) (> (length old) 0))
-          (define-key m (kbd old) nil))
-        (define-key m (kbd new) eon-leader-map))))
+      ;; Bind to the stable frontend, not the resolved map
+      (keymap-set eon-god--emulation-map new eon-leader-map)))
 
   (defun eon-god--set-leaders (sym val)
-    "Setter for leader and local leader keys.
-Used by custom variables `eon-god-leader-key' and `eon-god-localleader-key'."
     (let ((old (and (boundp sym) (default-value sym))))
       (set-default sym val)
       (with-eval-after-load 'god-mode
         (pcase sym
           ('eon-god-leader-key
-           (eon-god--bind-leader-in-states old val))
+           (eon-god--bind-leader old val))
           ('eon-god-localleader-key
-           (when old (define-key eon-leader-map (kbd old) nil))
-           (define-key eon-leader-map (kbd val)
+           (when old (keymap-unset eon-leader--map old t))
+           (keymap-set eon-leader--map val
                        (cons "Local" eon-localleader-map)))))))
 
   (defcustom eon-god-leader-key ","
@@ -78,8 +84,9 @@ Bound to \"i\" per default."
     (interactive)
     (god-local-mode -1))
 
-  ;; Explicitly bind the leader key
-  (eon-god--bind-leader-in-states nil eon-god-leader-key)
+  ;; Bind the leader key
+  (eon-god--install-emulation)
+  (eon-god--bind-leader nil eon-god-leader-key)
 
   ;; Show special cursor while `god-local-mode' is active in a buffer
   (defun eon-god--cursor-compute ()
