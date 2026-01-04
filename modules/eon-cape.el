@@ -4,14 +4,14 @@
 
 ;;; Commentary:
 ;;
+;; Cape extends the capabilities of in-buffer completion. It integrates with
+;; Corfu or the default completion UI by providing additional backends through
+;; completion-at-point-functions.
+;;
 ;;; Code:
 
 ;; _____________________________________________________________________________
 ;;; CAPE
-
-;; Cape extends the capabilities of in-buffer completion. It integrates with
-;; Corfu or the default completion UI by providing additional backends through
-;; completion-at-point-functions.
 
 (use-package cape :ensure t
 

@@ -67,7 +67,7 @@
   :bind
 
   (:map eon-localleader-sly-editing-map
-        ;; TODO Add ergonomic keybindings
+        ;; TODO Add ergonomic keybindings to the local leader map
         ("c" . sly-compile-defun)))
 
 ;; Common Lisp documentation
