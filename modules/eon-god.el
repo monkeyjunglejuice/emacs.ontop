@@ -118,11 +118,11 @@ Once removed, they will start with `god-local-mode' enabled."
   ;; Intercept the ESC key and let Emacs handle it when in `vterm' buffer;
   ;; toggle via "C-c C-q" between interception and passing through to `vterm'.
   (with-eval-after-load 'vterm
-      (add-hook 'vterm-mode-hook
-            (lambda ()
-              (setq eon-vterm-escape-command #'eon-god-local-mode-activate
-                    eon-vterm-send-escape-to-vterm nil)
-              (eon-vterm-update-escape))))
+    (add-hook 'vterm-mode-hook
+              (lambda ()
+                (setq eon-vterm-escape-command #'eon-god-local-mode-activate
+                      eon-vterm-send-escape-to-vterm nil)
+                (eon-vterm-update-escape))))
 
   :bind
 
