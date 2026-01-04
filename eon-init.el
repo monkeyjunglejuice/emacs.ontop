@@ -90,7 +90,7 @@
           use-package-compute-statistics t))
 
 ;; Enable the built-in `use-package' extension ":ensure-system-package"
-(use-package use-package-ensure-system-package)
+(use-package use-package-ensure-system-package :ensure nil)
 
 ;; _____________________________________________________________________________
 ;;; ROOT DIRECTORY
