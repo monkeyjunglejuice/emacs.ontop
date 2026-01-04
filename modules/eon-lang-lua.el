@@ -11,13 +11,17 @@
 
 (use-package lua-ts-mode :ensure nil
   :defer t
+  :mode "\\.lua\\'"
+  :interpreter "lua"
+
   :init
+
   (eon-treesitter-ensure-grammar
    '(lua "https://github.com/tree-sitter-grammars/tree-sitter-lua"))
   (add-to-list 'major-mode-remap-alist '(lua-mode . lua-ts-mode))
-  :mode "\\.lua\\'"
-  :interpreter "lua"
+
   :bind
+
   (:map lua-ts-mode-map
         ("C-c C-z" . lua-ts-inferior-lua)))
 
@@ -26,13 +30,19 @@
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
 ;; Common keybindings are configured in `./eon.el'
 
+;; <https://github.com/LuaLS/lua-language-server>
+;; <https://github.com/LuaLS/lua-language-server/wiki>
+
 (use-package eglot :ensure nil
+
   :config
+
   (add-to-list 'eglot-server-programs
-               ;; <https://github.com/LuaLS/lua-language-server/wiki>
                `(lua-ts-mode . ,(eglot-alternatives
                                  '(("lua-language-server")))))
+
   :hook
+
   (lua-ts-mode . eglot-ensure))
 
 ;; _____________________________________________________________________________
