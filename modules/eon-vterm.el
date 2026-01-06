@@ -112,7 +112,8 @@ When nil, ESC runs `eon-vterm-escape-command'.")
 (use-package eshell-vterm :ensure t
   :after eshell
   :config
-  (eshell-vterm-mode))
+  (eshell-vterm-mode)
+  (defalias 'eshell/v #'eshell-exec-visual))
 
 ;; _____________________________________________________________________________
 (provide 'eon-vterm)
