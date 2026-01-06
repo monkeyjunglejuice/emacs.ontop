@@ -19,7 +19,7 @@
   :custom
   (unison-ts-grammar-install 'auto)
   (unison-ts-grammar-repository
-   "https://github.com/fmguerreiro/tree-sitter-unison" ))
+   "https://github.com/fmguerreiro/tree-sitter-unison"))
 
 ;; _____________________________________________________________________________
 ;;; LANGUAGE SERVER
