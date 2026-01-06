@@ -109,7 +109,10 @@
 
   (setq-default eglot-workspace-configuration
                 '((haskell
-                   (formatting-provider . "ormolu"))))
+                   ;; Increase completion candidates; default = 40
+                   (max-completions . 128)
+                   ;; Ormolu and Fourmolu are already packaged with HLS
+                   (formatting-provider . "fourmolu"))))
 
   :custom
 
