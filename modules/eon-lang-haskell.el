@@ -108,11 +108,14 @@
   :config
 
   (setq-default eglot-workspace-configuration
-                '((haskell
-                   ;; Increase completion candidates; default = 40
-                   (max-completions . 128)
-                   ;; Ormolu and Fourmolu are already packaged with HLS
-                   (formatting-provider . "fourmolu"))))
+                '(:haskell
+                  ( :maxCompletions 128  ; default = 40
+                    ;; Ormolu and Fourmolu are already packaged with HLS
+                    ;; <https://fourmolu.github.io/config/>
+                    :formattingProvider "fourmolu"
+                    :plugin (:fourmolu
+                             (:config
+                              (:external "true"))) )))
 
   :custom
 
@@ -128,7 +131,7 @@
   ;; Format the buffer before saving?
   (haskell-mode . (lambda ()
                     (add-hook 'before-save-hook
-                              #'eglot-format-buffer t 'local))))
+                              #'eglot-format-buffer nil 'local))))
 
 ;; _____________________________________________________________________________
 ;;; HOOGLE FRONTEND
