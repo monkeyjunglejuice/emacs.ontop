@@ -438,6 +438,9 @@ Adapted from Doom Emacs.")
   ;; Turn on visual word wrapping
   (markdown-mode . visual-line-mode))
 
+(use-package yaml-ts-mode :ensure nil
+  :mode (("\\.yaml\\'" . yaml-ts-mode)))
+
 ;; _____________________________________________________________________________
 ;;; LISP
 
