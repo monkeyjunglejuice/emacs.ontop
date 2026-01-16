@@ -11,15 +11,43 @@
 ;; <https://github.com/fmguerreiro/unison-ts-mode>
 ;; <https://github.com/fmguerreiro/tree-sitter-unison>
 
-(use-package unison-ts-mode
-  :vc (:url "https://github.com/fmguerreiro/unison-ts-mode.git"
-            :rev :newest)
+(use-package unison-ts-mode :ensure t
+
+  :init
+
+  (eon-localleader-defkeymap unison-ts-mode eon-localleader-unison-scratch-map
+    :doc "Local leader keymap for Unison scratch buffer.")
+
+  (eon-localleader-defkeymap unison-ts-mode eon-localleader-unison-repl-map
+    :doc "Local leader keymap for Unison codebase manager.")
+
   :mode
+
   ("\\.u\\'" "\\.unison\\'")
+
   :custom
+
   (unison-ts-grammar-install 'auto)
   (unison-ts-grammar-repository
-   "https://github.com/fmguerreiro/tree-sitter-unison"))
+   "https://github.com/fmguerreiro/tree-sitter-unison")
+
+  :hook
+
+  ;; Start a headless UCM process to provide the LSP server
+  (unison-ts-mode . unison-ts-mode-setup-eglot)
+
+  :bind
+
+  (:map eon-localleader-unison-scratch-map
+        ("a" . unison-ts-add)
+        ("g" . unison-ts-repl)
+        ("r" . unison-ts-run)
+        ("l" . unison-ts-load)
+        ("t" . unison-ts-test)
+        ("w" . unison-ts-watch)
+        ("u" . unison-ts-update)
+        ("e" . unison-ts-send-region)
+        ("d" . unison-ts-send-definition)))
 
 ;; _____________________________________________________________________________
 ;;; LANGUAGE SERVER
@@ -27,12 +55,22 @@
 ;; Common keybindings are configured in './eon-core.el'
 
 (use-package eglot :ensure nil
+
   :custom
+
   ;; A longer timeout may be required for the first run in a new project
   (eglot-connect-timeout 60)  ; default: 30
+
+  :config
+
+  ;; Connection to the headless UCM process
+  (add-to-list 'eglot-server-programs '(unison-ts-mode . ("127.0.0.1" 5757)))
+
   :hook
-  ;; Start language server automatically (UCM in headless mode)
+
+  ;; Start language server automatically
   (unison-ts-mode . eglot-ensure)
+
   ;; Tell the language server to format the buffer before saving
   (unison-ts-mode . (lambda ()
                       (add-hook 'before-save-hook
