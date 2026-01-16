@@ -18,9 +18,6 @@
   (eon-localleader-defkeymap unison-ts-mode eon-localleader-unison-scratch-map
     :doc "Local leader keymap for Unison scratch buffer.")
 
-  (eon-localleader-defkeymap unison-ts-mode eon-localleader-unison-repl-map
-    :doc "Local leader keymap for Unison codebase manager.")
-
   :mode
 
   ("\\.u\\'" "\\.unison\\'")
