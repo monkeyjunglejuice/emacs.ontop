@@ -30,8 +30,8 @@
   :config
   (defun +embark-live-vertico ()
     "Shrink Vertico minibuffer when `embark-live' is active."
-    (when-let (win (and (string-prefix-p "*Embark Live" (buffer-name))
-                        (active-minibuffer-window)))
+    (and-let* ((win (active-minibuffer-window))
+               (_   (string-prefix-p "*Embark Live" (buffer-name))))
       (with-selected-window win
         (when (and (bound-and-true-p vertico--input)
                    (fboundp 'vertico-multiform-unobtrusive))
