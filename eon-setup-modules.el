@@ -102,6 +102,7 @@
    ;; eon-lang-haskell              ; Haskell programming
    ;; eon-lang-janet                ; Janet programming
    ;; eon-lang-julia                ; Julia programming
+   ;; eon-lang-lean                 ; Lean programming
    ;; eon-lang-lfe                  ; Lisp Flavoured Erlang programming
    ;; eon-lang-lua                  ; Lua programming
    ;; eon-lang-ocaml                ; Ocaml programming
