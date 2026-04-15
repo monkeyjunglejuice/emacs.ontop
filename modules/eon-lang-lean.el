@@ -10,10 +10,7 @@
 ;;; LEAN MODE
 ;; <https://codeberg.org/mekeor/nael>
 
-(use-package nael :ensure t
-  :init
-  (eon-treesitter-ensure-grammar
-   '(lean "https://github.com/predictable-machines/lean4-tree-sitter")))
+(use-package nael :ensure t)
 
 ;; _____________________________________________________________________________
 ;;; LANGUAGE SERVER
