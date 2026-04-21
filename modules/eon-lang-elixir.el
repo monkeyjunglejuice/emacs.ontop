@@ -14,18 +14,35 @@
 ;; OS package manager
 
 (use-package elixir-ts-mode :ensure nil
+
   :init
-  (eon-treesitter-ensure-grammar '(elixir heex)))
+
+  (eon-treesitter-ensure-grammar '(elixir heex))
+
+  (eon-localleader-defkeymap elixir-ts-mode eon-localleader-elixir-map
+    :doc "Local leader keymap for the Elixir major mode."))
 
 ;; _____________________________________________________________________________
 ;;; REPL
 
-(use-package inf-elixir :ensure t
+(use-package inf-elixir :load-path "~/code/inf-elixir"
 
   :init
 
-  (eon-localleader-defkeymap elixir-ts-mode eon-localleader-elixir-map
-    :doc "Local leader keymap for the Elixir major mode.")
+  (eon-localleader-defkeymap inf-elixir-mode eon-localleader-inf-elixir-map
+    :doc "Local leader keymap for the Elixir REPL.")
+
+  (defun eon-inf-elixir-run ()
+    "Starts IEx in the project context when a Mix project is detected.
+The commands are `inf-elixir-project-command' (defaults to \"iex -S mix\") and
+`inf-elixir-base-command' (defaults to \"iex\")."
+    (interactive)
+    ;; Return the project root directory if a mix.exs file is found
+    (if (inf-elixir--find-project-root)
+        (progn (message "inf-elixir: IEx running in project context...")
+               (inf-elixir-project))
+      (progn (message "inf-elixir: IEx running standalone...")
+             (inf-elixir))))
 
   :custom
 
@@ -33,7 +50,13 @@
 
   :config
 
-  (defun inf-elixir-recompile ()
+  (defun eon-inf-elixir-switch-to-repl ()
+    "Switch to IEx buffer."
+    (interactive)
+    (when-let* ((buf (inf-elixir--determine-repl-buf)))
+      (pop-to-buffer buf)))
+
+  (defun eon-inf-elixir-recompile ()
     "Send `IEx.Helpers.recompile/1' to recompile the current Mix project.
 Note this function simply recompiles Elixir modules, without reloading
 configuration or restarting applications."
@@ -42,10 +65,20 @@ configuration or restarting applications."
     (if inf-elixir-switch-to-repl-on-send
         (goto-char (point-max))))
 
-  (defun inf-elixir-observer ()
+  (defun eon-inf-elixir-observer ()
     "Start the Erlang Observer in IEx."
     (interactive)
     (inf-elixir--send (format ":observer.start()")))
+
+  (defun eon-inf-elixir-self ()
+    "Return the PID of the IEx process."
+    (interactive)
+    (inf-elixir--send (format "self()")))
+
+  (defun eon-inf-elixir-flush ()
+    "Flush the IEx mailbox."
+    (interactive)
+    (inf-elixir--send (format "flush()")))
 
   :hook
 
@@ -53,23 +86,25 @@ configuration or restarting applications."
 
   :bind
 
-  (:map elixir-ts-mode-map
-        ("C-c C-z" . inf-elixir-project)
-        ("C-c C-l" . inf-elixir-send-line)
-        ("C-c C-r" . inf-elixir-send-region)
-        ("C-c C-b" . inf-elixir-send-buffer)
-        ("C-c C-c" . inf-elixir-recompile)
-        ("C-c c"   . inf-elixir-reload-module)
-        ("C-c C-o" . inf-elixir-observer))
-
   (:map eon-localleader-elixir-map
-        ("r" . inf-elixir-project)
-        ("l" . inf-elixir-send-line)
-        ("r" . inf-elixir-send-region)
         ("b" . inf-elixir-send-buffer)
-        ("c" . inf-elixir-recompile)
-        ("C" . inf-elixir-reload-module)
-        ("o" . inf-elixir-observer)))
+        ("c" . inf-elixir-reload-module)
+        ("C" . eon-inf-elixir-recompile)
+        ("f" . eon-inf-elixir-flush)
+        ("g" . eon-inf-elixir-switch-to-repl)
+        ("l" . inf-elixir-send-line)
+        ("o" . eon-inf-elixir-observer)
+        ("p" . eon-inf-elixir-self)
+        ("r" . inf-elixir-send-region)
+        ("s" . inf-elixir-set-repl))
+
+  (:map eon-localleader-inf-elixir-map
+        ("c" . inf-elixir-reload-module)
+        ("C" . eon-inf-elixir-recompile)
+        ("f" . eon-inf-elixir-flush)
+        ("g" . eon-inf-elixir-switch-to-repl)
+        ("o" . eon-inf-elixir-observer)
+        ("p" . eon-inf-elixir-self)))
 
 ;; _____________________________________________________________________________
 ;;; LANGUAGE SERVER
