@@ -28,11 +28,6 @@
   (unison-ts-grammar-repository
    "https://github.com/fmguerreiro/tree-sitter-unison")
 
-  :hook
-
-  ;; Start a headless UCM process to provide the LSP server
-  (unison-ts-mode . unison-ts-mode-setup-eglot)
-
   :bind
 
   (:map eon-localleader-unison-scratch-map
@@ -58,10 +53,13 @@
   ;; A longer timeout may be required for the first run in a new project
   (eglot-connect-timeout 60)  ; default: 30
 
+  ;; Unison LSP currently does not handle semantic token requests
+  (eglot-ignored-server-capabilities '(:semanticTokensProvider))
+
   :config
 
-  ;; Connection to the headless UCM process
-  (add-to-list 'eglot-server-programs '(unison-ts-mode . ("127.0.0.1" 5757)))
+  ;; Set up the Unison-specific eglot integration once
+  (unison-ts-mode-setup-eglot)
 
   :hook
 
