@@ -40,6 +40,7 @@
 
     :custom
 
+    ;; Supported are :vterm and :eat
     (julia-snail-terminal-type :vterm)
     ;; Print the result of evaluating code to the REPL
     (julia-snail-repl-display-eval-results t)  ; nil to disable
@@ -56,7 +57,7 @@
 
     (:map eon-localleader-julia-snail-map
           ("x" . julia-snail-send-top-level-form)
-          ("a" . julia-snail-package-activate)
+          ("p" . julia-snail-package-activate)
           ("c" . julia-snail-send-top-level-form)
           ("d" . julia-snail-doc-lookup)
           ("e" . julia-snail-send-dwim)
