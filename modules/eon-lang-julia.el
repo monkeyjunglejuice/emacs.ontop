@@ -21,10 +21,25 @@
 ;; Julia Snail requires a terminal emulator within Emacs for the REPL, both
 ;; `vterm' and `eat' are supported. In order to use Snail, the module
 ;; `eon-vterm' must be enabled.
-;; <https://github.com/gcv/julia-snail/>
+;; <https://github.com/gcv/julia-snail>
+
 (when (eon-modulep 'eon-vterm)
   (use-package julia-snail :ensure t
+
+    :init
+
+    (eon-localleader-defkeymap
+        julia-snail-mode
+        eon-localleader-julia-snail-map
+      :doc "Local leader keymap for Julia Snail src buffers.")
+
+    (eon-localleader-defkeymap
+        julia-snail-repl-mode
+        eon-localleader-julia-snail-repl-map
+      :doc "Local leader keymap for Julia Snail REPL.")
+
     :custom
+
     (julia-snail-terminal-type :vterm)
     ;; Print the result of evaluating code to the REPL
     (julia-snail-repl-display-eval-results t)  ; nil to disable
@@ -32,8 +47,30 @@
     (julia-snail-popup-display-eval-results nil)  ; :command, :change or nil
     ;; The default works with Consult and Helm
     (julia-snail-imenu-style :module-tree)  ; :module-tree, :flat or nil
+
     :hook
-    ((julia-mode julia-ts-mode) . julia-snail-mode)))
+
+    ((julia-mode julia-ts-mode) . julia-snail-mode)
+
+    :bind
+
+    (:map eon-localleader-julia-snail-map
+          ("x" . julia-snail-send-top-level-form)
+          ("a" . julia-snail-package-activate)
+          ("c" . julia-snail-send-top-level-form)
+          ("d" . julia-snail-doc-lookup)
+          ("e" . julia-snail-send-dwim)
+          ("b" . julia-snail-send-buffer-file)
+          ("l" . julia-snail-send-line)
+          ("r" . julia-snail-send-region)
+          ("w" . julia-snail-copy-last-eval-result)
+          ("g" . julia-snail)
+          ("u" . julia-snail-update-module-cache))
+
+    (:map eon-localleader-julia-snail-repl-map
+          ("g" . julia-snail-repl-go-back)
+          ("i" . julia-snail-interrupt-task)
+          ("k" . julia-snail-repl-terminal-kill-line))))
 
 ;; _____________________________________________________________________________
 ;;; EGLOT LANGUAGE SERVER
@@ -47,16 +84,20 @@
   (eglot-jl-init))
 
 (use-package eglot :ensure nil
+
   :custom
+
   ;; A longer timeout may be required for the first run in a new project
   (eglot-connect-timeout 60)  ; default: 30
+
   :hook
+
   ;; Start language server automatically
   ((julia-mode julia-ts-mode) . eglot-ensure)
   ;; Tell the language server to format the buffer before saving
   ((julia-mode julia-ts-mode) . (lambda ()
-                     (add-hook 'before-save-hook
-                               #'eglot-format-buffer nil 'local))))
+                                  (add-hook 'before-save-hook
+                                            #'eglot-format-buffer nil 'local))))
 
 ;; _____________________________________________________________________________
 ;;; AUTO-INDENTATION
