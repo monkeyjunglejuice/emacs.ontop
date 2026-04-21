@@ -146,6 +146,7 @@
    ;; Leader -> Buffer
    :map ctl-z-b-map
    ("b" . consult-buffer)
+   ("SPC" . consult-project-buffer)
 
    ;; Leader -> Code
    :map ctl-z-c-map
