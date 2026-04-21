@@ -56,6 +56,8 @@
   :custom
 
   (vterm-max-scrollback 65536)
+  ;; Don't ask before compiling the module
+  (vterm-always-compile-module t)
 
   :config
 
