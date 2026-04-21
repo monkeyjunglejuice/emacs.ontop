@@ -110,13 +110,13 @@ configuration or restarting applications."
 ;;; LANGUAGE SERVER
 ;; <https://github.com/joaotavora/eglot/blob/master/MANUAL.md>
 ;; Common keybindings are configured in './eon-core.el'
-;; <https://github.com/elixir-lsp/elixir-ls>
+;; <https://github.com/elixir-lang/expert>
 
 (use-package eglot :ensure nil
 
   :init
 
-  ;; Elixir-ls needs a snippet engine to provide most of its completions.
+  ;; The language server needs a snippet engine to provide most completions.
   ;; Therefore, the module `eon-yasnippet' will be enabled.
   (require 'eon-yasnippet)
 
@@ -127,9 +127,10 @@ configuration or restarting applications."
 
   :config
 
-  ;; Make sure to adapt the path and use the .bat script for Windows
+  ;; Make sure to adapt the path and use the appropriate executable names for
+  ;; Linux, macOS or Windows
   (add-to-list 'eglot-server-programs
-               '((elixir-ts-mode heex-ts-mode) . ("elixir-ls")))
+               '((elixir-ts-mode heex-ts-mode) . ("expert" "--stdio")))
 
   :hook
 
