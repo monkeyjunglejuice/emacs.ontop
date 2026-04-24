@@ -18,7 +18,7 @@
 ;; emacs-libvterm will be downloaded and compiled. In this case, libtool is
 ;; needed.
 ;;
-;;; Shell configuration
+;;; Shell configuration:
 ;;
 ;; You'll need to configure your shell in order to make full use of Vterm.
 ;; You can insert one of these snippets at the end of your .zshrc, .bashrc
@@ -45,11 +45,13 @@
 ;;     source "$EMACS_VTERM_PATH/etc/emacs-vterm.fish"
 ;; end
 ;;
+;;; Website:
+;; <https://github.com/akermu/emacs-libvterm>
+;;
 ;;; Code:
 
 ;; _____________________________________________________________________________
 ;;; VTERM
-;; <https://github.com/akermu/emacs-libvterm>
 
 (use-package vterm :ensure t
 
@@ -112,7 +114,7 @@ When nil, ESC runs `eon-vterm-escape-command'.")
 ;; Allows Eshell to use `vterm' for visual commands
 
 (use-package eshell-vterm :ensure t
-  :after eshell
+  :after vterm
   :config
   (eshell-vterm-mode)
   (defalias 'eshell/v #'eshell-exec-visual))
