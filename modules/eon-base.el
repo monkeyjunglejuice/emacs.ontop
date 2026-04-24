@@ -294,7 +294,7 @@ Adapted from Doom Emacs.")
 ;; <https://github.com/Fanael/rainbow-delimiters>
 (use-package rainbow-delimiters :ensure t
   :hook
-  ((prog-mode conf-mode comint-mode eshell-mode shell-mode)
+  ((prog-mode conf-mode comint-mode)
    . rainbow-delimiters-mode))
 
 ;; Make parens styleable, e.g. more or less prominent
