@@ -17,63 +17,63 @@
 
 ;; _____________________________________________________________________________
 ;;; JULIA REPL
-
-;; Julia Snail requires a terminal emulator within Emacs for the REPL, both
-;; `vterm' and `eat' are supported. In order to use Snail, the module
-;; `eon-vterm' must be enabled.
 ;; <https://github.com/gcv/julia-snail>
 
-(when (eon-modulep 'eon-vterm)
-  (use-package julia-snail :ensure t
+(use-package julia-snail :ensure t
 
-    :init
+  :init
 
-    (eon-localleader-defkeymap
-        julia-snail-mode
-        eon-localleader-julia-snail-map
-      :doc "Local leader keymap for Julia Snail src buffers.")
   ;; In order to use Snail, the module `eon-vterm' is required
   (eon-load-module 'eon-vterm)
 
-    (eon-localleader-defkeymap
-        julia-snail-repl-mode
-        eon-localleader-julia-snail-repl-map
-      :doc "Local leader keymap for Julia Snail REPL.")
+  (eon-localleader-defkeymap
+      julia-snail-mode
+      eon-localleader-julia-snail-map
+    :doc "Local leader keymap for Julia Snail src buffers.")
 
-    :custom
+  (eon-localleader-defkeymap
+      julia-snail-repl-mode
+      eon-localleader-julia-snail-repl-map
+    :doc "Local leader keymap for Julia Snail REPL.")
 
-    ;; Supported are :vterm and :eat
-    (julia-snail-terminal-type :vterm)
-    ;; Print the result of evaluating code to the REPL
-    (julia-snail-repl-display-eval-results t)  ; nil to disable
-    ;; Show result of evaluating code in the source buffer
-    (julia-snail-popup-display-eval-results nil)  ; :command, :change or nil
-    ;; The default works with Consult and Helm
-    (julia-snail-imenu-style :module-tree)  ; :module-tree, :flat or nil
+  :custom
 
-    :hook
+  ;; Print the result of evaluating code to the REPL
+  (julia-snail-repl-display-eval-results t)  ; nil to disable
+  ;; Show result of evaluating code in the source buffer
+  (julia-snail-popup-display-eval-results nil)  ; :command, :change or nil
+  ;; The default works with Consult and Helm
+  (julia-snail-imenu-style :module-tree)  ; :module-tree, :flat or nil
 
-    ((julia-mode julia-ts-mode) . julia-snail-mode)
+  :config
+  
+  ;; Set the terminal Vterm
+  (setopt julia-snail-terminal-type :vterm)
 
-    :bind
+  :hook
 
-    (:map eon-localleader-julia-snail-map
-          ("x" . julia-snail-send-top-level-form)
-          ("p" . julia-snail-package-activate)
-          ("c" . julia-snail-send-top-level-form)
-          ("d" . julia-snail-doc-lookup)
-          ("e" . julia-snail-send-dwim)
-          ("b" . julia-snail-send-buffer-file)
-          ("l" . julia-snail-send-line)
-          ("r" . julia-snail-send-region)
-          ("w" . julia-snail-copy-last-eval-result)
-          ("g" . julia-snail)
-          ("u" . julia-snail-update-module-cache))
+  ;; Enable the minor mode
+  ((julia-mode julia-ts-mode) . julia-snail-mode)
 
-    (:map eon-localleader-julia-snail-repl-map
-          ("g" . julia-snail-repl-go-back)
-          ("i" . julia-snail-interrupt-task)
-          ("k" . julia-snail-repl-terminal-kill-line))))
+  :bind
+
+  (:map eon-localleader-julia-snail-map
+        ("x" . julia-snail-send-top-level-form)
+        ("p" . julia-snail-package-activate)
+        ("c" . julia-snail-send-top-level-form)
+        ("d" . julia-snail-doc-lookup)
+        ("e" . julia-snail-send-dwim)
+        ("b" . julia-snail-send-buffer-file)
+        ("l" . julia-snail-send-line)
+        ("r" . julia-snail-send-region)
+        ("w" . julia-snail-copy-last-eval-result)
+        ("g" . julia-snail)
+        ("u" . julia-snail-update-module-cache))
+
+  (:map eon-localleader-julia-snail-repl-map
+        ("g" . julia-snail-repl-go-back)
+        ("i" . julia-snail-interrupt-task)
+        ("k" . julia-snail-repl-terminal-kill-line)))
 
 ;; _____________________________________________________________________________
 ;;; EGLOT LANGUAGE SERVER
