@@ -127,6 +127,8 @@ Adapted from Doom Emacs.")
 (when (executable-find "bash")
 
   (use-package bash-completion :ensure t
+    :custom
+    (bash-completion-nospace t)
     :config
     (bash-completion-setup)))
 
