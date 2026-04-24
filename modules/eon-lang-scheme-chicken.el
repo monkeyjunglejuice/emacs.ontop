@@ -10,7 +10,8 @@
 ;;; GEISER
 ;; <https://www.nongnu.org/geiser/>
 
-(require 'eon-lang-scheme)
+;; Module with common definitions and functionality is required
+(eon-load-module 'eon-lang-scheme)
 
 ;; <https://gitlab.com/emacs-geiser/chicken>
 (use-package geiser-chicken :ensure t

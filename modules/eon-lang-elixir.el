@@ -117,8 +117,8 @@ configuration or restarting applications."
   :init
 
   ;; The language server needs a snippet engine to provide most completions.
-  ;; Therefore, the module `eon-yasnippet' will be enabled.
-  (require 'eon-yasnippet)
+  ;; Therefore, the module `eon-yasnippet' is required.
+  (eon-load-module 'eon-yasnippet)
 
   :custom
 

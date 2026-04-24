@@ -32,6 +32,8 @@
         julia-snail-mode
         eon-localleader-julia-snail-map
       :doc "Local leader keymap for Julia Snail src buffers.")
+  ;; In order to use Snail, the module `eon-vterm' is required
+  (eon-load-module 'eon-vterm)
 
     (eon-localleader-defkeymap
         julia-snail-repl-mode

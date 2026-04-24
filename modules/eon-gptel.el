@@ -14,8 +14,8 @@
 
   :init
 
-  ;; Load shared functionality for AI integration
-  (require 'eon-ai)
+  ;; Module with common definitions and functionality is required
+  (eon-load-module 'eon-ai)
 
   ;; Gptel requires package `transient' version 0.7.4 or later
   (unless (package-installed-p 'transient '(0 7 4))
@@ -49,8 +49,8 @@
 
     :init
 
-    ;; Load support for local/cloud LLMs via Ollama
-    (require 'eon-ollama)
+    ;; Module with common definitions and functionality is required
+    (eon-load-module 'eon-ollama)
 
     :custom
     ;; Register local/cloud Ollama models
