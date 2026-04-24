@@ -93,7 +93,8 @@
    ;;; PROGRAMMING LANGUAGES
 
    ;; eon-lang-clojure              ; Clojure and ClojureScript programming
-   ;; eon-lang-commonlisp           ; Common Lisp programming with Sly
+   ;; eon-lang-commonlisp-slime     ; Common Lisp programming with Slime
+   ;; eon-lang-commonlisp-sly       ; Common Lisp programming with Sly
    ;; eon-lang-elixir               ; Elixir programming
    ;; eon-lang-erlang               ; Erlang programming
    ;; eon-lang-gleam                ; Gleam programming

@@ -1,4 +1,4 @@
-;;; eon-lang-commonlisp.el --- Common Lisp / Sly  -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-lang-commonlisp-sly.el --- Common Lisp / Sly  -*- lexical-binding: t; no-byte-compile: t; -*-
 ;; This file is part of Emacs ONTOP
 ;; https://github.com/monkeyjunglejuice/emacs.ontop
 
@@ -41,7 +41,8 @@
                  ;; Size of dynamic space reserved on startup - default 1024
                  ;; "The Heap", global main memory area for Lisp objects
                  "--dynamic-space-size" "8192")  ; MiB
-                :coding-system utf-8-unix)))
+                :coding-system utf-8-unix)
+          ))
 
   :custom
 
@@ -49,8 +50,13 @@
   (sly-default-lisp 'sbcl)
   ;; General configuration
   (sly-net-coding-system 'utf-8-unix)
+  ;; Default formatting style
+  (common-lisp-style-default 'modern)
 
   :config
+
+  ;; Setup Emacs so that lisp-mode buffers always use Slime
+  (sly-setup sly-contribs)
 
   ;; Prevent these buffers from cluttering certain buffer listings:
   (eon-boring-buffers-add '("\\`\\*sly-inferior-lisp"
@@ -70,7 +76,9 @@
         ;; TODO Add ergonomic keybindings to the local leader map
         ("c" . sly-compile-defun)))
 
-;; Common Lisp documentation
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; Common Lisp documentation
+
 ;; The hyperspec must be installed on your computer.
 ;; To adapt the path, set the variable `common-lisp-hyperspec-root'.
 (use-package hyperspec :ensure nil
@@ -127,5 +135,5 @@
   (org-babel-lisp-eval-fn #'sly-eval))
 
 ;; _____________________________________________________________________________
-(provide 'eon-lang-commonlisp)
-;;; eon-lang-commonlisp.el ends here
+(provide 'eon-lang-commonlisp-sly)
+;;; eon-lang-commonlisp-sly.el ends here
