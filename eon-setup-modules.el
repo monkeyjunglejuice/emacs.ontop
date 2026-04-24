@@ -66,7 +66,6 @@
    ;; eon-consult                   ; Navigation and search
    ;; eon-corfu                     ; Code (auto-)completion
    ;; eon-dired                     ; Classic Dired with improvements
-   ;; eon-dirvish                   ; Completely different Dired experience
    ;; eon-embark                    ; Minibuffer actions and context menu
    ;; eon-everywhere                ; Use Emacs for text input in other apps
    ;; eon-flycheck                  ; Syntax checker alternative
