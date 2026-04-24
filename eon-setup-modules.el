@@ -80,7 +80,7 @@
    ;; eon-todo                      ; Highlight todo keywords in comments
    ;; eon-vertico                   ; Vertical minibuffer completion UI
    ;; eon-vterm                     ; Faster terminal emulator in Emacs
-   ;; eon-yasnippet                 ; Code snippets
+   ;; eon-yasnippet                 ; Code snippets and language server support
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ;;; AI / LLM
