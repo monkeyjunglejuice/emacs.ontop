@@ -20,6 +20,15 @@
 ;; <https://github.com/slime/slime>
 ;; <https://slime.common-lisp.dev>
 
+;; Slime and Sly IDEs are in conflict; warn if both modules are enabled
+(when (and (eon-modulep 'eon-lang-commonlisp-slime)
+           (eon-modulep 'eon-lang-commonlisp-sly))
+  (let ((msg "The Slime module is enabled together with the Sly module; neither will be configured. Enable only one of `eon-lang-commonlisp-slime' or `eon-lang-commonlisp-sly' in your `eon-setup-modules.el'."))
+    (message "[EON] %s" msg)
+    (add-hook 'emacs-startup-hook
+              (lambda ()
+                (display-warning 'eon msg :warning "*Warnings*")))))
+
 (use-package slime :ensure t
 
   :init
