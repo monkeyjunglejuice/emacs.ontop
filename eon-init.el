@@ -293,19 +293,13 @@ keeping only those that name existing directories."
                    eon-user-contrib-dir))))
 
 (defun eon-load-module (&optional feature)
-  "Require FEATURE, otherwise report error.
+  "Require FEATURE.
 Interactively, prompt for a module name using completion over all
 .el/.elc files in the existing EON module directories."
-  ;; Interactive branch concerning manual module loading.
-  ;; Presents a selection of all existing EON modules.
-  ;; TODO Use `read-library-name' as in `load-library' for interactive use,
-  ;; so that it can be easily shown if a module is already loaded, and restrict
-  ;; the `load-path' locally to `eon-module-load-path' to display only Eon
-  ;; modules in the selection.
   (interactive
    (let* ((paths (eon-module-load-path)))
      (unless paths
-       (user-error "No EON module directories exist"))
+       (user-error "[EON] No module directories exist"))
      (let* ((files (apply #'append
                           (mapcar (lambda (dir)
                                     (directory-files
@@ -315,15 +309,11 @@ Interactively, prompt for a module name using completion over all
                     (mapcar #'file-name-sans-extension files)))
             (name  (completing-read "EON module: " names nil t)))
        (list (intern name)))))
-  ;; Non-interactive branch concerning initialization;
-  ;; loads a single module.
+
   (unless feature
-    (error "FEATURE is required when called non-interactively"))
-  (condition-case err
-      (require feature)
-    (error
-     (message "Failed to load %S: %s"
-              feature (error-message-string err)))))
+    (error "FEATURE is required"))
+
+  (require feature))
 
 ;; Placeholder
 (defalias 'eon-unload-module #'unload-feature)
@@ -353,11 +343,24 @@ Interactively, prompt for a module name using completion over all
 ;; TODO Add branch for interactive use, MAYBE ask for selection which
 ;;      set of modules to load, e.g. only built-in modules vs. all modules.
 ;; TODO Add option for forced reload.
-(defun eon-load-modules (modules-list)
-  "Require each EON module from MODULES-LIST in order."
+(defun eon-load-modules (&optional modules-list)
+  "Require each EON module from MODULES-LIST.
+If one module fails, report the error and continue loading the rest.
+When called interactively, use `eon-modules'."
   (interactive)
-  (dolist (module modules-list)
-    (eon-load-module module)))
+  (let ((modules (or modules-list eon-modules)))
+    (dolist (module modules)
+      (condition-case err
+          (eon-load-module module)
+        (error
+         (let ((msg (format "Failed to load %S: %s"
+                            module
+                            (error-message-string err))))
+           (message "[EON] %s" msg)
+           (add-hook
+            'emacs-startup-hook
+            (lambda ()
+              (display-warning 'eon msg :error "*Warnings*")))))))))
 
 ;; Load all modules
 (eon-load-modules eon-modules)
