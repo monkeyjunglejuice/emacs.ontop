@@ -31,7 +31,7 @@
 ;; Maintainer: Dan Dee <monkeyjunglejuice@pm.me>
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Created: 28 Apr 2021
-;; Version: 2.4.7
+;; Version: 2.4.8
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
 ;; Keywords: config dotemacs convenience
@@ -221,8 +221,6 @@ Cancel the previous one if present."
 ;; This options are not set if Emacs is started via "emacs --debug-init"
 (unless init-file-debug
   (setopt
-   ;; When to bring the buffer to the foreground? Defaults to :warning
-   warning-minimum-level :error
    ;; Allow bytecode compilation to be verbose?
    byte-compile-verbose nil
    ;; Allow native compilation to be verbose?
