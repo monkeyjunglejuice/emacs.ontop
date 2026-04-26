@@ -15,6 +15,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '(eon-lang-commonlisp-slime)
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; COMMON LISP
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Executing-Lisp>
@@ -90,6 +94,7 @@
 
 ;; The hyperspec must be installed on your computer.
 ;; To adapt the path, set the variable `common-lisp-hyperspec-root'.
+
 (use-package hyperspec :ensure nil
   :after sly
   :custom
