@@ -1,6 +1,6 @@
 ;;; eon-evil.el --- Modal editing: Vim keybindings -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 1.3.3
+;; Version: 2.0.0
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))

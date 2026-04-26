@@ -1,6 +1,6 @@
 ;;; eon-base.el --- Shared packages and definitions -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 1.3.3
+;; Version: 2.0.0
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -361,13 +361,13 @@ Adapted from Doom Emacs.")
 ;;; GIT-GUTTER
 
 ;; <https://github.com/emacsorphanage/git-gutter>
-(use-package git-gutter :ensure t :disabled t
+(use-package git-gutter :ensure t
   :diminish
   :config
   (global-git-gutter-mode))
 
 ;; <https://github.com/emacsorphanage/git-gutter-fringe>
-(use-package git-gutter-fringe :ensure t :disabled t
+(use-package git-gutter-fringe :ensure t
   :after git-gutter
   :custom
   ;; Display the indicators on which side?
@@ -375,7 +375,7 @@ Adapted from Doom Emacs.")
 
 ;; <https://github.com/dgutov/diff-hl>
 ;; TODO Consider as an alternative
-(use-package diff-hl :ensure t
+(use-package diff-hl :ensure t :disabled t
   :init
   (global-diff-hl-mode)
   :custom
