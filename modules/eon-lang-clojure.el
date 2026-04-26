@@ -15,6 +15,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; CLOJURE MODE
 ;; <https://github.com/clojure-emacs/clojure-ts-mode>

@@ -15,6 +15,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; MARGINALIA
 ;; <https://github.com/minad/marginalia>

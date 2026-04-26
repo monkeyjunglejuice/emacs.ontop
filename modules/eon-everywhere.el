@@ -21,6 +21,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; EMACS EVERYWHERE
 ;; <https://github.com/tecosaur/emacs-everywhere>

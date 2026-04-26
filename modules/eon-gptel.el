@@ -15,6 +15,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon eon-ai))
+
 ;; _____________________________________________________________________________
 ;;; GPTEL
 ;; <https://github.com/karthink/gptel>
@@ -22,9 +26,6 @@
 (use-package gptel :ensure t
 
   :init
-
-  ;; Module with common definitions and functionality is required
-  (eon-load-module 'eon-ai)
 
   ;; Gptel requires package `transient' version 0.7.4 or later
   (unless (package-installed-p 'transient '(0 7 4))

@@ -15,6 +15,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; JANET MODE
 ;; <https://github.com/sogaiu/janet-ts-mode>

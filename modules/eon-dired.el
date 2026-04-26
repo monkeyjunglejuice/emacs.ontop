@@ -15,6 +15,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; DIRED
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Dired>

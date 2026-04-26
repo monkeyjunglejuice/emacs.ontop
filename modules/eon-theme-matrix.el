@@ -21,6 +21,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; THE MATRIX THEME
 ;; <https://github.com/monkeyjunglejuice/matrix-emacs-theme>

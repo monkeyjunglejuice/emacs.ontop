@@ -18,6 +18,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; ACTIVITIES
 ;; <https://github.com/alphapapa/activities.el>

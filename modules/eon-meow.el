@@ -15,6 +15,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '(eon-evil eon-god eon-helix)
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; MEOW
 ;; <https://github.com/meow-edit/meow>

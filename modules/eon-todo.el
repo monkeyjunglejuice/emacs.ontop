@@ -15,6 +15,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; HIGHLIGHT KEYWORDS IN COMMENTS
 ;; <https://github.com/tarsius/hl-todo>

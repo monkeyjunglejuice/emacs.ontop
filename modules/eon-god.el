@@ -20,6 +20,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '(eon-evil eon-helix eon-meow)
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; GOD MODE
 ;; <https://github.com/emacsorphanage/god-mode>

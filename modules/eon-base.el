@@ -15,6 +15,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; EXEC PATH FROM SHELL
 ;; <https://github.com/purcell/exec-path-from-shell>

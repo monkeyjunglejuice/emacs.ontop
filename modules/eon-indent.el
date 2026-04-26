@@ -15,6 +15,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;; AGGRESSIVE INDENT
 ;; <https://github.com/Malabarba/aggressive-indent-mode>

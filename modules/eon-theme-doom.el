@@ -22,6 +22,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; DOOM THEMES
 ;; <https://github.com/doomemacs/themes>

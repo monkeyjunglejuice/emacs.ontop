@@ -15,12 +15,13 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '(eon-lang-racket)
+ :requires  '(eon eon-lang-scheme))
+
 ;; _____________________________________________________________________________
 ;;; GEISER
 ;; <https://www.nongnu.org/geiser/>
-
-;; Module with common definitions and functionality is required
-(eon-load-module 'eon-lang-scheme)
 
 ;; <https://gitlab.com/emacs-geiser/racket>
 (use-package geiser-racket :ensure t

@@ -33,6 +33,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; CATPPUCCIN THEMES
 ;; <https://github.com/catppuccin/emacs>

@@ -15,6 +15,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; UNISON TS MODE
 ;; <https://github.com/fmguerreiro/unison-ts-mode>

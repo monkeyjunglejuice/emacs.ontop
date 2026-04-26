@@ -15,6 +15,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '(eon-lang-commonlisp-sly)
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; COMMON LISP
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Executing-Lisp>

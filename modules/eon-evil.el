@@ -15,6 +15,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '(eon-god eon-helix eon-meow)
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; EVIL
 ;; <https://evil.readthedocs.io/en/latest/settings.html>

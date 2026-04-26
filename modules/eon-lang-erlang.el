@@ -15,6 +15,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; ERLANG MODE
 ;; <https://github.com/erlang/otp/tree/master/lib/tools/emacs>

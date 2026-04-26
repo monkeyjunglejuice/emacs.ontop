@@ -15,11 +15,12 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon eon-ai))
+
 ;; _____________________________________________________________________________
 ;;; OLLAMA
-
-;; Module with common definitions and functionality is required
-(eon-load-module 'eon-ai)
 
 (defun eon-ollama-models (type &optional prefix)
   "Return a list of installed Ollama models.

@@ -22,6 +22,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; SPACEMACS THEME
 ;; <https://github.com/nashamri/spacemacs-theme>

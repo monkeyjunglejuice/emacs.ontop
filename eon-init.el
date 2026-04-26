@@ -277,10 +277,26 @@ run `eon-user-setup' first" eon-user-dir))
 ;; _____________________________________________________________________________
 ;;; LOADER
 
+(require 'cl-lib)
+
+(defmacro eon-module-metadata (&rest plist)
+  "Declare PLIST as metadata for an EON module.
+
+The EON loader reads this form from module source files before the
+module is loaded. At normal evaluation time, it expands to nil.
+
+Supported keywords:
+
+  :requires   List of EON modules that must be loaded before this module.
+  :conflicts  List of EON modules that must not be loaded together with this
+              module."
+  (ignore plist)
+  nil)
+
 (defun eon-module-load-path ()
   "Return list of existing EON module directories.
-Built from `eon-modules-dir', `eon-user-modules-dir'and `eon-user-contrib-dir',
-keeping only those that name existing directories."
+Built from `eon-modules-dir', `eon-user-modules-dir' and
+`eon-user-contrib-dir', keeping only those that name existing directories."
   (delq nil
         (list (and (bound-and-true-p eon-modules-dir)
                    (file-directory-p eon-modules-dir)
@@ -294,8 +310,233 @@ keeping only those that name existing directories."
                    (file-directory-p eon-user-contrib-dir)
                    eon-user-contrib-dir))))
 
+(defun eon--warning (message &optional level)
+  "Report MESSAGE as an EON warning with optional LEVEL.
+
+When Emacs is still starting up, delay warning display until
+`emacs-startup-hook', because early startup warnings can be delayed
+or otherwise not displayed reliably in `*Warnings*'."
+  (message "[EON] %s" message)
+  (if after-init-time
+      (display-warning 'eon message (or level :error) "*Warnings*")
+    (add-hook
+     'emacs-startup-hook
+     (lambda ()
+       (display-warning 'eon message (or level :error) "*Warnings*")))))
+
+(defun eon-module-file (module &optional source-only)
+  "Return the EON module file for MODULE.
+
+When SOURCE-ONLY is non-nil, only return a readable .el source file.
+Search only EON module directories, not the whole `load-path'."
+  (catch 'found
+    (dolist (directory (eon-module-load-path))
+      (let* ((name (symbol-name module))
+             (source-file (expand-file-name (concat name ".el") directory))
+             (compiled-file (expand-file-name (concat name ".elc")
+                                              directory)))
+        (cond
+         ((file-readable-p source-file)
+          (throw 'found source-file))
+         ((and (not source-only)
+               (file-readable-p compiled-file))
+          (throw 'found compiled-file)))))))
+
+(defun eon-module-known-p (module)
+  "Return non-nil if MODULE names an existing EON module."
+  (and (symbolp module)
+       (eon-module-file module)))
+
+(defvar eon-module-metadata-cache nil
+  "Alist mapping EON module symbols to metadata plists.")
+
+(defun eon-module-metadata--read-form (module)
+  "Return the raw `eon-module-metadata' form from MODULE, or nil."
+  (when-let* ((file (eon-module-file module 'source-only)))
+    (with-temp-buffer
+      (insert-file-contents file)
+      (goto-char (point-min))
+      (catch 'metadata
+        (condition-case nil
+            (while t
+              (let ((form (read (current-buffer))))
+                (when (and (consp form)
+                           (eq (car form) 'eon-module-metadata))
+                  (throw 'metadata form))))
+          (end-of-file nil))))))
+
+(defun eon-module-metadata--symbol-list (value key module)
+  "Normalize VALUE from metadata KEY in MODULE into a list of symbols."
+  (when (and (consp value)
+             (eq (car value) 'quote))
+    (setq value (cadr value)))
+  (unless (or (null value)
+              (listp value))
+    (error "Invalid %S metadata in %S: expected a list, got %S"
+           key module value))
+  (dolist (entry value)
+    (unless (symbolp entry)
+      (error "Invalid %S metadata in %S: %S is not a symbol"
+             key module entry)))
+  value)
+
+(defun eon-module-metadata-read (module)
+  "Read and validate metadata for MODULE."
+  (unless (eon-module-known-p module)
+    (error "Unknown EON module: %S" module))
+  (let* ((form (eon-module-metadata--read-form module))
+         (metadata (cdr-safe form))
+         (requires (eon-module-metadata--symbol-list
+                    (plist-get metadata :requires) :requires module))
+         (conflicts (eon-module-metadata--symbol-list
+                     (plist-get metadata :conflicts) :conflicts module)))
+    (dolist (required requires)
+      (unless (eon-module-known-p required)
+        (error "Module %S requires unknown EON module %S"
+               module required)))
+    (dolist (conflict conflicts)
+      (unless (eon-module-known-p conflict)
+        (error "Module %S conflicts with unknown EON module %S"
+               module conflict)))
+    (list :module module
+          :requires requires
+          :conflicts conflicts)))
+
+(defun eon-module-metadata-get (module)
+  "Return cached metadata for MODULE."
+  (or (alist-get module eon-module-metadata-cache)
+      (let ((metadata (eon-module-metadata-read module)))
+        (push (cons module metadata) eon-module-metadata-cache)
+        metadata)))
+
+(defun eon-module-requires (module)
+  "Return modules required by MODULE."
+  (plist-get (eon-module-metadata-get module) :requires))
+
+(defun eon-module-conflicts (module)
+  "Return modules conflicting with MODULE."
+  (plist-get (eon-module-metadata-get module) :conflicts))
+
+(defun eon-module-conflict-p (module other-module)
+  "Return non-nil if MODULE conflicts with OTHER-MODULE."
+  (or (memq other-module (eon-module-conflicts module))
+      (memq module (eon-module-conflicts other-module))))
+
+(defun eon-module-resolve (modules)
+  "Resolve MODULES into a dependency-ordered, conflict-free load list.
+
+Return a plist with these keys:
+
+  :load     List of modules to load.
+  :skipped  Alist of skipped modules and reasons.
+
+Resolution rules:
+
+  - :requires modules are added to the load graph and loaded before modules
+    that require them.
+  - If two modules conflict, both are skipped. There is no winner.
+  - If a module requires a skipped module, it is skipped as well.
+  - Dependencies that are only needed by skipped modules are not loaded."
+  (let ((roots (copy-sequence modules))
+        ordered
+        seen
+        visiting
+        skipped)
+
+    (cl-labels
+        ((skip
+          (module reason)
+          (unless (assq module skipped)
+            (push (cons module reason) skipped)))
+
+         (skipped-p
+          (module)
+          (assq module skipped))
+
+         (visit
+          (module)
+          (cond
+           ((memq module seen)
+            nil)
+           ((memq module visiting)
+            (skip module "circular dependency"))
+           ((not (eon-module-known-p module))
+            (skip module "unknown EON module"))
+           (t
+            (condition-case err
+                (let ((requires (eon-module-requires module)))
+                  (push module visiting)
+                  (dolist (required requires)
+                    (visit required))
+                  (setq visiting (delq module visiting))
+                  (push module seen)
+                  (push module ordered))
+              (error
+               (setq visiting (delq module visiting))
+               (skip module (error-message-string err)))))))
+
+         (mark-needed
+          (module needed)
+          (if (or (assq module skipped)
+                  (memq module needed))
+              needed
+            (let ((next (cons module needed)))
+              (dolist (required (eon-module-requires module))
+                (setq next (mark-needed required next)))
+              next))))
+
+      ;; Build dependency closure
+      (dolist (module roots)
+        (visit module))
+
+      (setq ordered (nreverse ordered))
+
+      ;; Detect conflicts. Conflict policy: no winner, skip all involved.
+      (dolist (module ordered)
+        (condition-case err
+            (dolist (conflict (eon-module-conflicts module))
+              (when (and (memq conflict ordered)
+                         (not (eq module conflict)))
+                (skip module
+                      (format "conflicts with enabled module %S" conflict))
+                (skip conflict
+                      (format "conflicts with enabled module %S" module))))
+          (error
+           (skip module (error-message-string err)))))
+
+      ;; Propagate skipped requirements.
+      ;; If A requires B and B is skipped, A must be skipped too.
+      (let ((changed t))
+        (while changed
+          (setq changed nil)
+          (dolist (module ordered)
+            (unless (skipped-p module)
+              (condition-case err
+                  (dolist (required (eon-module-requires module))
+                    (when (skipped-p required)
+                      (skip module
+                            (format "requires skipped module %S" required))
+                      (setq changed t)))
+                (error
+                 (skip module (error-message-string err))
+                 (setq changed t)))))))
+
+      ;; Keep only non-skipped roots and the dependencies still needed by them.
+      ;; This prevents loading dependencies that were pulled in only by modules
+      ;; later skipped because of conflicts or invalid metadata.
+      (let (needed)
+        (dolist (root roots)
+          (setq needed (mark-needed root needed)))
+        (list :load
+              (cl-remove-if-not (lambda (module)
+                                  (memq module needed))
+                                ordered)
+              :skipped
+              (nreverse skipped))))))
+
 (defun eon-load-module (&optional feature)
   "Require FEATURE.
+
 Interactively, prompt for a module name using completion over all
 .el/.elc files in the existing EON module directories."
   (interactive
@@ -303,19 +544,51 @@ Interactively, prompt for a module name using completion over all
      (unless paths
        (user-error "[EON] No module directories exist"))
      (let* ((files (apply #'append
-                          (mapcar (lambda (dir)
+                          (mapcar (lambda (directory)
                                     (directory-files
-                                     dir nil "^[^.].*\\.elc?\\'"))
+                                     directory nil "^[^.].*\\.elc?\\'"))
                                   paths)))
             (names (delete-dups
                     (mapcar #'file-name-sans-extension files)))
-            (name  (completing-read "EON module: " names nil t)))
+            (name (completing-read "EON module: " names nil t)))
        (list (intern name)))))
 
   (unless feature
     (error "FEATURE is required"))
 
-  (require feature))
+  (unless (eon-module-known-p feature)
+    (error "Unknown EON module: %S" feature))
+
+  ;; Single-module loading must also honor conflicts against enabled modules
+  ;; and already loaded EON modules
+  (let* ((loaded-eon-modules
+          (cl-remove-if-not #'eon-module-known-p features))
+         (context
+          (delete-dups
+           (append (list feature) eon-modules loaded-eon-modules)))
+         (context-resolution
+          (eon-module-resolve context))
+         (context-skipped
+          (plist-get context-resolution :skipped))
+         (feature-skipped
+          (assq feature context-skipped)))
+    (when feature-skipped
+      (error "Cannot load %S: %s"
+             (car feature-skipped)
+             (cdr feature-skipped))))
+
+  ;; Load the requested module's requirements before the module itself
+  (let* ((resolution (eon-module-resolve (list feature)))
+         (modules (plist-get resolution :load))
+         (skipped (plist-get resolution :skipped)))
+    (when skipped
+      (let ((entry (or (assq feature skipped)
+                       (car skipped))))
+        (error "Cannot load %S: %s"
+               (car entry)
+               (cdr entry))))
+    (dolist (module modules)
+      (require module))))
 
 ;; Placeholder
 (defalias 'eon-unload-module #'unload-feature)
@@ -347,24 +620,35 @@ Interactively, prompt for a module name using completion over all
 ;; TODO Add option for forced reload.
 (defun eon-load-modules (&optional modules-list)
   "Require each EON module from MODULES-LIST.
+
+Dependencies are loaded first, conflicting modules are skipped.
 If one module fails, report the error and continue loading the rest.
 When called interactively, use `eon-modules'."
   (interactive)
-  (let ((modules (or modules-list eon-modules)))
+  (let* ((resolution (eon-module-resolve (or modules-list eon-modules)))
+         (modules (plist-get resolution :load))
+         (skipped (plist-get resolution :skipped)))
+
+    ;; Report modules skipped by dependency/conflict resolution.
+    (dolist (entry skipped)
+      (eon--warning
+       (format "Skipped module %S: %s"
+               (car entry)
+               (cdr entry))
+       :error))
+
+    ;; Load unaffected modules
     (dolist (module modules)
       (condition-case err
-          (eon-load-module module)
+          (require module)
         (error
-         (let ((msg (format "Failed to load %S: %s"
-                            module
-                            (error-message-string err))))
-           (message "[EON] %s" msg)
-           (add-hook
-            'emacs-startup-hook
-            (lambda ()
-              (display-warning 'eon msg :error "*Warnings*")))))))))
+         (eon--warning
+          (format "Failed to load %S: %s"
+                  module
+                  (error-message-string err))
+          :error))))))
 
-;; Load all modules
+;; Trigger loading of modules
 (eon-load-modules eon-modules)
 
 ;; _____________________________________________________________________________

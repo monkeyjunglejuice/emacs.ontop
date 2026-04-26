@@ -17,6 +17,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; SYNTAX CHECKER / LINTER
 ;; <https://www.flycheck.org/en/latest/>

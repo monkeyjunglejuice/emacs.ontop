@@ -15,6 +15,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon))
+
 ;;  ___________________________________________________________________________
 ;;; SWITCH-WINDOW
 ;; <https://github.com/dimitri/switch-window>

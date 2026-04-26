@@ -15,6 +15,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '(eon-lang-scheme-racket)
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; RACKET-MODE
 ;; <https://www.racket-mode.com/>

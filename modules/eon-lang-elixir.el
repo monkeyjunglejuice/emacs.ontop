@@ -15,6 +15,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; ELIXIR TS MODE
 ;; <https://github.com/wkirschbaum/elixir-ts-mode>

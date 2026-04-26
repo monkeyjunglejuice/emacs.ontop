@@ -30,6 +30,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '(eon-evil eon-god eon-meow)
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; HELIX
 ;; <https://github.com/mgmarlow/helix-mode>

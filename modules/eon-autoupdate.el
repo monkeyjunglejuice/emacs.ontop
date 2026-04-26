@@ -21,6 +21,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; AUTO-UPDATE PACKAGES
 ;; <https://github.com/rranelli/auto-package-update.el>
