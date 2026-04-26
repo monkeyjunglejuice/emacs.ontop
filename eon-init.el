@@ -1,15 +1,4 @@
 ;;; eon-init.el --- Emacs ONTOP extension layers -*- lexical-binding: t; no-byte-compile: t; -*-
-
-;; Version: 1.3.3
-;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
-;; Package-Requires: ((emacs "30.1")
-;;                    (use-package "2.4.6"))
-;; Keywords: eon convenience
-;; Author: Dan Dee <monkeyjunglejuice@pm.me>
-;; Maintainer: Dan Dee <monkeyjunglejuice@pm.me>
-;; SPDX-License-Identifier: GPL-3.0-or-later
-;; Copyright (C) 2022-2026 Dan Dee
-;; This file is not part of GNU Emacs.
 ;;
 ;;
 ;;    ▒░▒░▒░   ▒░     ▒░ ▒░▒░▒░▒░▒░  ▒░▒░▒░   ▒░▒░▒░▒░
@@ -20,10 +9,34 @@
 ;;   ▒░    ▒░  ▒░     ▒░     ▒░     ▒░    ▒░  ▒░
 ;;    ▒░▒░▒░  ▒░      ▒░     ▒░      ▒░▒░▒░   ▒░
 ;;
+;;
+;; Version: 1.3.3
+;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
+;; Package-Requires: ((emacs "30.1")
+;;                    (use-package "2.4.6"))
+;; Keywords: eon config convenience
+;; Author: Dan Dee <monkeyjunglejuice@pm.me>
+;; Maintainer: Dan Dee <monkeyjunglejuice@pm.me>
+;; This file is not part of GNU Emacs.
+;; SPDX-License-Identifier: GPL-3.0-or-later
+;; Copyright (C) 2021-2026 Dan Dee
+;;
+;; EON "Emacs ONTOP" is free software: you can redistribute it and/or modify it
+;; under the terms of the GNU General Public License as published by the Free
+;; Software Foundation, either version 3 of the License, or (at your option) any
+;; later version.
+;;
+;; EON "Emacs ONTOP" is distributed in the hope that it will be useful, but
+;; WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+;; FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+;; details.
+;;
+;; You should have received a copy of the GNU General Public License along with
+;; this program. If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
 ;;
-;; EON is an Emacs distribution built on top of the Emacs ONBOARD starter-kit
+;; EON is an Emacs distribution built on top of the Emacs ONBOARD starter-kit.
 ;;
 ;;  --> LOAD THIS FILE from your init file `~/.emacs.d/init.el' or `~/.emacs'
 ;;      via (load-file (expand-file-name "~/.emacs.ontop/eon-init.el"))

@@ -4,12 +4,12 @@
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
-;; Keywords: eon convenience languages gleam
+;; Keywords: eon config convenience languages gleam
 ;; Author: Dan Dee <monkeyjunglejuice@pm.me>
 ;; Maintainer: Dan Dee <monkeyjunglejuice@pm.me>
-;; SPDX-License-Identifier: GPL-3.0-or-later
-;; Copyright (C) 2022-2026 Dan Dee
 ;; This file is not part of GNU Emacs.
+;; SPDX-License-Identifier: GPL-3.0-or-later
+;; Copyright (C) 2021-2026 Dan Dee
 
 ;;; Commentary:
 ;;
