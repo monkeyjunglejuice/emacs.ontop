@@ -77,7 +77,7 @@
   
   ;; Setup Emacs so that lisp-mode buffers always use Slime
   (slime-setup slime-contribs)
-  
+
   ;; Prevent these buffers from cluttering certain buffer listings:
   (eon-boring-buffers-add '("\\`\\*inferior-lisp"
                             "\\`\\*slime-compilation"
