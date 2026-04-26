@@ -1,4 +1,16 @@
 ;;; eon-init.el --- Emacs ONTOP extension layers -*- lexical-binding: t; no-byte-compile: t; -*-
+
+;; Version: 1.3.3
+;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
+;; Package-Requires: ((emacs "30.1")
+;;                    (use-package "2.4.6"))
+;; Keywords: eon convenience
+;; Author: Dan Dee <monkeyjunglejuice@pm.me>
+;; Maintainer: Dan Dee <monkeyjunglejuice@pm.me>
+;; SPDX-License-Identifier: GPL-3.0-or-later
+;; Copyright (C) 2022-2026 Dan Dee
+;; This file is not part of GNU Emacs.
+;;
 ;;
 ;;    ▒░▒░▒░   ▒░     ▒░ ▒░▒░▒░▒░▒░  ▒░▒░▒░   ▒░▒░▒░▒░
 ;;   ▒░    ▒░  ▒░▒░   ▒░ ▒░  ▒░  ▒░ ▒░    ▒░  ▒░     ▒░
@@ -8,23 +20,13 @@
 ;;   ▒░    ▒░  ▒░     ▒░     ▒░     ▒░    ▒░  ▒░
 ;;    ▒░▒░▒░  ▒░      ▒░     ▒░      ▒░▒░▒░   ▒░
 ;;
-;;  Emacs ONTOP is an extension on top of the Emacs ONBOARD starter-kit
+
+;;; Commentary:
 ;;
+;; EON is an Emacs distribution built on top of the Emacs ONBOARD starter-kit
 ;;
 ;;  --> LOAD THIS FILE from your init file `~/.emacs.d/init.el' or `~/.emacs'
 ;;      via (load-file (expand-file-name "~/.emacs.ontop/eon-init.el"))
-;;
-;;
-;; Copyright (C) 2022-2025 Dan Dee
-;; Author: Dan Dee <monkeyjunglejuice@pm.me>
-;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
-;; Version: 1.3.3
-;; Package-Requires: ((emacs "30.1"))
-;; Keywords: convenience
-;; SPDX-License-Identifier: MIT
-;; This file is not part of GNU Emacs.
-
-;;; Commentary:
 ;;
 ;;; Code:
 

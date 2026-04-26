@@ -1,6 +1,4 @@
 ;;; eon-setup-modules.el --- Module selection -*- lexical-binding: t; no-byte-compile: t; -*-
-;; This file is part of Emacs ONTOP
-;; https://github.com/monkeyjunglejuice/emacs.ontop
 
 ;;; Commentary:
 ;;
