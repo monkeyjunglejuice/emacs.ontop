@@ -19,26 +19,26 @@
 ;;; WEB-MODE
 ;; <https://web-mode.org>
 
-(use-package web-mode :ensure t
-  :defer t
-  :custom
-  (web-mode-attr-indent-offset 2)
-  (web-mode-attr-value-indent-offset 2)
-  (web-mode-code-indent-offset 2)
-  (web-mode-css-indent-offset 2)
-  (web-mode-markup-indent-offset 2)
-  (web-mode-enable-auto-expanding t)
-  (web-mode-enable-block-face t)
-  ;; TODO styling required for web-mode-current-element-highlight-face
-  (web-mode-enable-current-element-highlight t)
-  ':mode
-  ;; Associate Web-mode with the following file types?
-  '("\\.[sx]?html?\\(\\.[a-zA-Z_]+\\)?\\'" . web-mode)
-  '("\\.css\\'" . web-mode)
-  :bind
-  (:map web-mode-map
-        ("C-M-f" . web-mode-forward-sexp)
-        ("C-M-b" . web-mode-backward-sexp)))
+;; (use-package web-mode :ensure t
+;;   :defer t
+;;   :custom
+;;   (web-mode-attr-indent-offset 2)
+;;   (web-mode-attr-value-indent-offset 2)
+;;   (web-mode-code-indent-offset 2)
+;;   (web-mode-css-indent-offset 2)
+;;   (web-mode-markup-indent-offset 2)
+;;   (web-mode-enable-auto-expanding t)
+;;   (web-mode-enable-block-face t)
+;;   ;; TODO styling required for web-mode-current-element-highlight-face
+;;   (web-mode-enable-current-element-highlight t)
+;;   ':mode
+;;   ;; Associate Web-mode with the following file types?
+;;   '("\\.[sx]?html?\\(\\.[a-zA-Z_]+\\)?\\'" . web-mode)
+;;   '("\\.css\\'" . web-mode)
+;;   :bind
+;;   (:map web-mode-map
+;;         ("C-M-f" . web-mode-forward-sexp)
+;;         ("C-M-b" . web-mode-backward-sexp)))
 
 ;; _____________________________________________________________________________
 ;;; HTML
