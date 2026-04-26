@@ -117,11 +117,11 @@ and `eon-evil-localleader-key'."
 
   ;; Comment/uncomment by pressing "gcc" in normal mode and "gc" in visual mode
   (evil-define-operator eon-evil-comment-or-uncomment (beg end)
-    "Toggle comment for the region between BEG and END."
-    (interactive "<r>")
-    (comment-or-uncomment-region beg end))
+                        "Toggle comment for the region between BEG and END."
+                        (interactive "<r>")
+                        (comment-or-uncomment-region beg end))
   (evil-define-key 'normal 'global
-    (kbd "gc") #'eon-evil-comment-or-uncomment))
+                   (kbd "gc") #'eon-evil-comment-or-uncomment))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
