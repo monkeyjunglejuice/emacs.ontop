@@ -1,6 +1,6 @@
 ;;; eon-lang-commonlisp-sly.el --- Common Lisp / Sly  -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.0
+;; Version: 2.0.1
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -63,13 +63,18 @@
   (sly-default-lisp 'sbcl)
   ;; General configuration
   (sly-net-coding-system 'utf-8-unix)
+  ;; Select description window on display
+  (sly-description-autofocus t)
   ;; Default formatting style
-  (common-lisp-style-default 'modern)
+  (sly-common-lisp-style-default 'modern)
 
   :config
 
   ;; Setup Emacs so that lisp-mode buffers always use Slime
   (sly-setup sly-contribs)
+
+  ;; Remove clutter from Sly completion buffer
+  (setq sly--completion-explanation "")
 
   ;; Prevent these buffers from cluttering certain buffer listings:
   (eon-boring-buffers-add '("\\`\\*sly-inferior-lisp"
@@ -110,21 +115,26 @@
 
 ;; <https://github.com/mmgeorge/sly-asdf>
 (use-package sly-asdf :ensure t
-  :after sly)
-
-;; <https://github.com/joaotavora/sly-macrostep>
-(use-package sly-macrostep :ensure t
-  :after sly)
-
-;; <https://github.com/joaotavora/sly-named-readtables>
-(use-package sly-named-readtables :ensure t
-  :after sly)
+  :init
+  (add-to-list 'sly-contribs 'sly-asdf))
 
 ;; <https://github.com/joaotavora/sly-quicklisp>
 (use-package sly-quicklisp :ensure t
-  :after sly-mrepl
+  :init
+  (add-to-list 'sly-contribs 'sly-quicklisp)
   :config
   (add-to-list 'sly-mrepl-shortcut-alist '("quickload" . sly-quickload)))
+
+;; <https://github.com/joaotavora/sly-macrostep>
+(use-package sly-macrostep :ensure t
+  :init
+  (add-to-list 'sly-contribs 'sly-macrostep))
+
+(use-package sly-stepper
+  :vc (:url "https://github.com/joaotavora/sly-stepper.git"
+            :rev :newest)
+  :init
+  (add-to-list 'sly-contribs 'sly-stepper))
 
 ;; _____________________________________________________________________________
 ;;; AUTO-INDENTATION
