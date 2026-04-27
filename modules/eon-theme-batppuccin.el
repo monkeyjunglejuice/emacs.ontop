@@ -1,6 +1,6 @@
 ;;; eon-theme-batppuccin.el --- Soothing pastel themes -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.1
+;; Version: 2.0.2
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -18,10 +18,10 @@
 ;; for Emacs.
 ;;
 ;; Batppuccin comes in 4 flavors:
-;; 'batppuccin-latte (light)
-;; 'batppuccin-frappe (medium dark)
+;; 'batppuccin-latte     (light)
+;; 'batppuccin-frappe    (medium dark)
 ;; 'batppuccin-macchiato (dark)
-;; 'batppuccin-mocha (very dark)
+;; 'batppuccin-mocha     (very dark)
 ;;
 ;; Example how to set the theme flavors in your init.el:
 ;;
