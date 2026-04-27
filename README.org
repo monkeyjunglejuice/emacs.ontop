@@ -1,32 +1,31 @@
 * 🚀 EON -- Emacs ONtop
 
-Emacs ONtop is a new Emacs distribution in the making, built on top of my zero-deps [[https://github.com/monkeyjunglejuice/emacs.onboard][Emacs ONboard starter kit]].
+EON is a new Emacs distribution in the making, built on top of the zero-deps [[https://github.com/monkeyjunglejuice/emacs.onboard][Emacs ONboard starter kit]].
 
-- /Under heavy development right now, breaking changes ahead in main./
 - /Compilers, language servers and build systems must be installed separately./
 - /If Tree Sitter is installed on your machine, EON will handle downloading, building and installing necessary grammars. But it's fully under your control./
 
 EON is supposed to be completely modular with strictly separated concerns. There are 4 stages:
 
-1. If you disable all modules in your =eon-setup-modules=, you'll get bare bones, stock Emacs.
+1. If you disable all modules in your [[https://github.com/monkeyjunglejuice/emacs.ontop/blob/main/eon-setup-modules.el][eon-setup-modules]], you'll get bare bones, stock Emacs.
 
-2. With just the =eon= module enabled but nothing else, only built-in Emacs packages are configured -- without any 3rd-party dependencies. This is also how your fresh installation starts out.
+2. With just the =eon= module enabled but nothing else, only built-in Emacs packages are configured -- without any 3rd-party dependencies.
 
-3. With both =eon= and =eon-base= modules enabled, you'll get extended comfort provided by some 3rd-party packages.
+3. With both =eon= and =eon-base= modules enabled, you'll get extended comfort provided by some 3rd-party packages. This is how your fresh installation starts out.
 
 4. Everything else builds on top of the stages 1, 2 and 3: AI/LLM integration, programming languages, etc. (have a look at [[https://github.com/monkeyjunglejuice/emacs.ontop/blob/main/eon-setup-modules.el][eon-setup-modules]] for the full list).
 
-* Use Case: Programming -- Conventional, Interactive and Notebook-style
+* Use Case 1: Programming -- Conventional, Interactive and Notebook-style
 
 Programming language support is rather limited at that time; it covers merely languages I personally like, use, or tinker with -- mostly Lisp, functional, interactive. So there's no support for Python, Rust, JS and Go right now. However, you can integrate your language config easily as a user module. And if you'd like to use any of the languages that are listed below, give it a go.
 
 ** Emacs for Common Lisp ★★★★★
-*eon-lang-commonlisp-sly*: Complete Common Lisp setup with [[https://github.com/joaotavora/sly][Sly]]. Just install SBCL with your package manager and then [[https://www.quicklisp.org/beta/][Quicklisp]]. The setup covers most needs, but is pre-configured for SBCL right now.
+*eon-lang-commonlisp-slime*: Complete Common Lisp setup with [[https://github.com/slime/slime][Slime]]. Just install SBCL with your package manager and then [[https://www.quicklisp.org/beta/][Quicklisp]]. The setup covers most needs, but is pre-configured for SBCL right now.
 
-*eon-lang-commonlisp-slime*: Alternative Common Lisp setup with [[https://github.com/slime/slime][Slime]] that Mirrors the Sly setup.
+*eon-lang-commonlisp-sly*: Alternative Common Lisp setup with [[https://github.com/joaotavora/sly][Sly]] that Mirrors the Slime setup.
 
 ** Emacs for Elixir ★★★★☆
-*eon-lang-elixir*: Elixir setup comes with the language server pre-configured (currently Elixir-ls, until the new one is available); Tree-sitter, Mix integration and a REPL. [[https://github.com/J3RN/inf-elixir/issues/20][Autocompletion in the REPL doesn't work]] yet, as it hasn't been implemented upstream. "Jump-to-definition" doesn't work either, but that limitation comes from the language server and may change.
+*eon-lang-elixir*: Elixir setup comes with the new "Expert" language server pre-configured; Tree-sitter, Mix integration and a REPL. [[https://github.com/J3RN/inf-elixir/issues/20][Autocompletion in the REPL doesn't work]] yet, as it hasn't been implemented upstream.
 
 ** Emacs for Clojure ★★★★☆
 *eon-lang-clojure*: The Clojure setup is a basic setup with Cider, but usable out-of-the-box. Further tweaks might provide an even better experience.
@@ -35,9 +34,9 @@ Programming language support is rather limited at that time; it covers merely la
 *eon-lang-julia*: The Julia setup is based on the Julia language server and [[https://github.com/gcv/julia-snail][Snail]]. The Snail REPL runs within Vterm, the fastest terminal emulator available for Emacs. Enjoy notebook-style literate programming in Org-mode.
 
 ** Emacs for OCaml ★★★★☆
-*eon-lang-ocaml-tuareg*: OCaml setup in Emacs based on Tuareg and Merlin. Not LSP based right now, as using pure Merlin feels better integrated. Completion in Utop works, with completion candidates provided by Merlin.
+*eon-lang-ocaml-tuareg*: OCaml setup in Emacs based on Tuareg and Merlin. Not LSP based, as using Merlin pure feels better integrated. Completion in Utop works, with completion candidates provided by Merlin.
 
-*eon-lang-ocaml-neocaml*: Alternative OCaml setup based on NeoCaml (WIP).
+*eon-lang-ocaml-neocaml*: (WIP) Alternative OCaml setup based on NeoCaml.
 
 ** Emacs for Racket ★★★★☆
 *eon-lang-racket*: The Racket setup based on [[https://github.com/greghendershott/racket-mode][Racket-mode]] provides better interactivity than DrRacket, and the new "racket-hash-lang-mode" supports arbitrary syntax for DSLs in Emacs. However, the syntax highlighting for racket-hash-lang-mode could be configured more in-depth. As I prefer Guile over Racket, this has a lower priority right now.
@@ -49,8 +48,7 @@ Programming language support is rather limited at that time; it covers merely la
 *eon-lang-haskell*: Interactive Haskell setup based on Haskell language server. The GHCi provides a much better experience within Emacs than in a terminal. This configuration works well with both Cabal and Stack projects, both on Linux and MacOS.
 
 ** Emacs for Janet  ★★★☆☆
-*eon-lang-janet*: Almost complete Janet config for Emacs with Treesitter, REPL, LSP support and Org mode integration. The tooling itself is not that mature yet, as Janet is a pretty young language. The required packages are installed
-from Github repos.
+*eon-lang-janet*: Almost complete Janet config for Emacs with Treesitter, REPL, LSP support and Org mode integration. The tooling itself is not that mature yet, as Janet is a pretty young language. The required packages are installed from Github repos.
 
 ** Emacs for LFE (Lisp Flavoured Erlang) ★★★☆☆
 *eon-lang-lfe*: Basic LFE setup with REPL. The LFE REPL Emacs frontend (inferior-lfe) could benefit from some polishing and refactoring, maybe I'll tackle in case I'll do something with LFE.
@@ -65,12 +63,12 @@ from Github repos.
 *eon-lang-lua*: Basic Lua setup with REPL and lua-language-server. Rudimentary setup that suits my needs of editing existing Lua code -- the available features don't come near the Lua IDE [[https://studio.zerobrane.com/][ZeroBrane Studio]], [[https://github.com/orbitalquark/textadept][TextAdept]] or Neovim. If you are serious about Lua hacking on a reguar basis, check out [[https://github.com/orbitalquark/textadept][TextAdept]] though -- it's enormously underrated.
 
 ** Emacs for Unison ★★☆☆☆
-*eon-lang-unison*: Includes the treesitter-enabled Unison mode and LSP config for Eglot that uses UCM headless. Treesitter grammar for Unison will be installed automatically.
+*eon-lang-unison*: Includes the treesitter-enabled Unison mode and LSP config for Eglot that uses UCM headless.
 
 ** Emacs for Web Development ★☆☆☆☆
 *eon-lang-webdev*: Just basic HTML, CSS and JavaScript editing and linting (linters have to be installed separately). Quite under-developed, since I don't do web stuff usually except some CSS styling.
 
-* Use Case: Prose & Publishing
+* Use Case 2: Writig Prose & Publishing
 
 Writing code is just one area where Emacs shines. Therefore, in the future EON may include further modules for writing, typesetting and publishing -- e.g. papers, books/ebooks or a (static) blog. But Org Mode already covers much of this out-of-the-box or with minimal additional configuration.
 
@@ -86,7 +84,7 @@ git clone https://github.com/monkeyjunglejuice/emacs.ontop.git ~/.emacs.ontop
 (load-file "~/.emacs.ontop/eon-init.el")
 #+end_src
 
-- *3.* Restart Emacs. Nothing will be installed at this point, only built-in Emacs packages are configured.
+- *3.* Restart Emacs. Built-in Emacs packages are configured and a few basic 3rd-party packages installed, defined in =eon-base.el=.
 
 - *4.* Do =M-x eon-user-setup= or =<leader> x C-u=. This step will create your user directory in your Emacs init directory.
 
@@ -110,7 +108,7 @@ Check out the module files in order to learn about the commands and key bindings
 I've used Doom Emacs for roughly 2 years, because I was seeking a way out of the yak-shaving treadmill. However, I realized that my Doom Emacs config was mostly about fighting opinions, and I would be more satisfied with a clean slate and bending everything to MY opinions (har har). So I went back to my own Emacs config and made it publicly available.
 | Doom Emacs                                             | EON                                                        |
 |--------------------------------------------------------+------------------------------------------------------------|
-| - Thousands of users                                   | - No users                                                 |
+| - Thousands of users                                   | - Few users                                                |
 | - Throw away your own Emacs config                     | - Non-invasive; Eon integrates as a library                |
 | - "Fast" startup (masked), lags at runtime             | - Slower startup (not optimized yet), snappy at runtime    |
 | - Focus on VIM-keybindings (Evil)                      | - Agnostic: God-mode, Evil, stock Emacs, Meow, Helix (WIP) |
@@ -125,7 +123,7 @@ I've used Doom Emacs for roughly 2 years, because I was seeking a way out of the
 | - Deeply configured for Evil mode, many extra packages | - Basically stock Evil mode, less packages                 |
 | - Covers hundreds of edge cases and tweaks             | - Less edge cases (dis)covered, less tweaks                |
 | - Many bugfixes, legacy code                           | - Less bugs discovered, fresh start, no legacy code        |
-| - Backwards-compatible to Emacs 28.1                   | - Minimum required Emacs version 30.1                      |
+| - Partly backwards-compatible to Emacs 28.1            | - Minimum required Emacs version 30.1                      |
 | - Uses Straigth.el package manager                     | - Uses built-in Package.el, others possible (WIP)          |
 | - Despises Customization UI                            | - Embraces Customization UI                                |
 | - Relies on shell script helpers & command line        | - Pure Emacs Lisp, self-contained                          |
@@ -135,7 +133,7 @@ I've used Doom Emacs for roughly 2 years, because I was seeking a way out of the
 I don't know Spacemacs very well, as I've been using Doom Emacs mostly. However, I'll give it a (probably unfair) try, reflecting my superficial impression.
 | Spacemacs                                            | EON                                                |
 |------------------------------------------------------+----------------------------------------------------|
-| Community-driven, many users                         | Single-person project, no users                    |
+| Community-driven, many users                         | Single-person project, few users                   |
 | Replaces your own Emacs config                       | Make it your own                                   |
 | Seems messy                                          | Clean, bottom-up design                            |
 | Even more tangled than Doom Emacs                    | Everything is a module                             |
