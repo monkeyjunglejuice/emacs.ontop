@@ -290,8 +290,6 @@ run `eon-user-setup' first" eon-user-dir))
 ;; _____________________________________________________________________________
 ;;; LOADER
 
-(require 'cl-lib)
-
 (defmacro eon-module-metadata (&rest plist)
   "Declare PLIST as metadata for an EON module.
 
