@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 ;;
 ;;
-;; Version: 2.5.1
+;; Version: 2.5.2
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
@@ -222,6 +222,8 @@ Cancel the previous one if present."
 ;; This options are not set if Emacs is started via "emacs --debug-init"
 (unless init-file-debug
   (setopt
+   ;; When to bring the buffer to the foreground? Defaults to :warning
+   warning-minimum-level :error
    ;; Allow bytecode compilation to be verbose?
    byte-compile-verbose nil
    ;; Allow native compilation to be verbose?
@@ -1782,8 +1784,8 @@ buffer."
 ;; _____________________________________________________________________________
 ;;; FRAME MANAGEMENT
 
-(keymap-set ctl-z-x-map "f" #'toggle-frame-maximized)
-(keymap-set ctl-z-x-map "F" #'toggle-frame-fullscreen)
+(keymap-set ctl-z-w-map "M" #'toggle-frame-maximized)
+(keymap-set ctl-z-w-map "C-m" #'toggle-frame-fullscreen)
 
 ;; _____________________________________________________________________________
 ;;; WINDOW MANAGEMENT
@@ -2236,7 +2238,7 @@ pretending to clear it."
   "Visit the init file."
   (interactive)
   (when user-init-file (find-file user-init-file)))
-(keymap-set ctl-z-x-map "i" #'eon-goto-init-file)
+(keymap-set ctl-z-f-map "i" #'eon-goto-init-file)
 
 ;; _____________________________________________________________________________
 ;;; RECENT FILES
@@ -2248,9 +2250,9 @@ pretending to clear it."
 ;; Turn on recent file mode to visit recently edited files
 (recentf-mode 1)
 
-;; Ignore some recently visited files
-(with-eval-after-load 'recentf
-  (add-to-list 'recentf-exclude "^/\\(?:ssh\\|su\\|sudo\\)?:"))
+;; Ignore some recently visited files?
+;; (with-eval-after-load 'recentf
+;;   (add-to-list 'recentf-exclude "^/\\(?:ssh\\|su\\|sudo\\)?:"))
 
 ;; Select from recently opened files via "<leader> f h"
 (keymap-set ctl-z-f-map "h" #'recentf-open)
@@ -2638,6 +2640,7 @@ via `eon-add-to-list'."
   (setopt proced-auto-update-interval 2
           proced-auto-update-flag t
           proced-enable-color-flag t
+          proced-format 'medium
           proced-descend t))
 
 ;; _____________________________________________________________________________
@@ -3380,10 +3383,11 @@ With prefix ARG, pass it through to the underlying command."
 ;; Define local leader keymap for `emacs-lisp-mode'
 (eon-localleader-defkeymap emacs-lisp-mode eon-localleader-elisp-map
   :doc "Local leader keymap for Emacs Lisp buffers."
-  "d"   #'edebug-defun
+  "c"   #'eval-defun
   "e"   #'eon-eval-last-sexp
   "b"   #'eval-buffer
   "r"   #'elisp-eval-region-or-buffer
+  "d"   #'edebug-defun
   "h"   #'describe-symbol
   "l"   #'load-file
   "m"   #'pp-macroexpand-last-sexp
