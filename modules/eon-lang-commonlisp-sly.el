@@ -63,6 +63,8 @@
   (sly-default-lisp 'sbcl)
   ;; General configuration
   (sly-net-coding-system 'utf-8-unix)
+  ;; Disable Slime when installed to prevent conflicts
+  (sly-replace-slime t)
   ;; Select description window on display
   (sly-description-autofocus t)
   ;; Default formatting style
