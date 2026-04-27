@@ -75,7 +75,7 @@
   ;; Setup Emacs so that lisp-mode buffers always use Slime
   (sly-setup sly-contribs)
 
-  ;; Remove clutter from Sly completion buffer
+  ;; Remove clutter from Sly completions buffer
   (setq sly--completion-explanation "")
 
   ;; Prevent these buffers from cluttering certain buffer listings:
