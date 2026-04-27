@@ -150,7 +150,7 @@ and `eon-evil-localleader-key'."
 
 ;; _____________________________________________________________________________
 ;;; EVIL COLLECTION
-;; Ongoing mission to evilize everything - a bottomless hole
+;; Eternal mission to evilize everything - a bottomless hole
 ;; <https://github.com/emacs-evil/evil-collection>
 
 (use-package evil-collection :ensure t

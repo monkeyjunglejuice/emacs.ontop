@@ -150,8 +150,8 @@ for that, use `featurep'."
 
 ;; _____________________________________________________________________________
 ;;; USER-DEFINED MODULES
-;; TODO Implement loading of user-defined modules
 
+;; TODO Implement loading of user-defined modules
 ;; Modules in '[eon-user-dir]/modules/' should be handled separately,
 ;; or classified in another way so they can be told apart.
 ;; This might further enable specific logic, e.g. determining precedence,
@@ -198,8 +198,8 @@ for that, use `featurep'."
 
 ;; _____________________________________________________________________________
 ;;; CONTRIB MODULES
-;; TODO Implement loading of contrib modules
 
+;; TODO Implement loading of contrib modules
 ;; Distinct from built-in modules and user-defined modules.
 ;; Contrib modules may be provided as:
 ;; - (Meta-)Packages available on Melpa etc.
@@ -622,7 +622,6 @@ Interactively, prompt for a module name using completion over all
            ;; Otherwise require feature from file in root directory
            (concat eon-root-dir "eon-setup-modules.el")))
 
-;; Walk through the list of modules and load each module
 ;; TODO Implement loading of user-defined modules and contrib modules
 ;; TODO If contrib module/feature exists, ignore built-in module/feature
 ;;      of the same name.

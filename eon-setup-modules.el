@@ -39,7 +39,7 @@
    ;; eon-base                      ; Shared packages and definitions
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-   ;;; MODAL EDITING - choose one. If none enabled, stay with Emacs keybindings
+   ;;; MODAL EDITING - choose one. If none enabled, stay with Emacs keybindings.
 
    ;; eon-evil                      ; Modal editing: Vim keybindings
    ;; eon-god                       ; Modal editing: Emacs keybindings
@@ -81,9 +81,9 @@
    ;; eon-yasnippet                 ; Code snippets and language server support
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-   ;;; AI / LLM
+   ;;; LLM / AI
 
-   ;; eon-ai                        ; Shared functionality for AI integration
+   ;; eon-ai                        ; Shared functionality for LLM integration
    ;; eon-ollama                    ; Local and cloud LLMs
    ;; eon-gptel                     ; Comprehensive AI chat client
 
