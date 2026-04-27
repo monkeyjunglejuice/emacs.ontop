@@ -53,7 +53,7 @@
    ;;; THEMES
    ;; Installs a theme, but it won't be enabled. Do that in your `eon-user.el'.
 
-   ;; eon-theme-catppuccin         ; Soothing pastel themes
+   ;; eon-theme-batppuccin         ; Soothing pastel themes
    ;; eon-theme-doom               ; Doom Emacs theme pack
    ;; eon-theme-matrix             ; Inspired by "The Matrix" movie
    ;; eon-theme-spacemacs          ; Spacemacs themes
