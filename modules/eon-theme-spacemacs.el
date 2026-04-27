@@ -1,6 +1,6 @@
 ;;; eon-theme-spacemacs.el --- Spacemacs themes -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.0
+;; Version: 2.0.1
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -14,11 +14,12 @@
 ;;; Commentary:
 ;;
 ;; Example how to set the Spacemacs theme in your init.el:
-;; (with-eval-after-load 'eon-theme-spacemacs
-;;   (setopt eon-theme-light 'spacemacs-light
-;;           eon-theme-dark 'spacemacs-dark
-;;           eon-theme-variant-default 'light)
-;;   (eon-theme-load-default))
+;;
+;; (setopt eon-theme-light 'spacemacs-light
+;;         eon-theme-dark 'spacemacs-dark
+;;         eon-theme-variant-default 'light)
+;; 
+;; (eon-theme-load-default)
 ;;
 ;;; Code:
 
