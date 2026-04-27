@@ -290,6 +290,12 @@ run `eon-user-setup' first" eon-user-dir))
 ;; _____________________________________________________________________________
 ;;; LOADER
 
+;; Module loading with dependencies- and conflict resolver.
+;; TODO Doesn't load user-defined modules and contrib modules yet (WIP).
+
+;; The form `eon-module-metadata' should be present in each module file
+;; to declare dependencies and conflicting modules using the
+;; :requires and :conflicts keywords.
 (defmacro eon-module-metadata (&rest plist)
   "Declare PLIST as metadata for an EON module.
 
