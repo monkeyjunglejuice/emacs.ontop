@@ -14,9 +14,12 @@
 ;;     and unload manually loaded modules via "<leader> x M"
 ;;
 ;; --> Documentation lives in the module files. To learn more, place the cursor
-;;     on a module name below and do "<leader> f p" to visit a module file.
+;;     on a module name below and do "<leader> f ." to visit a module file.
 ;;
 ;; The modules will be loaded one after another, as listed below.
+;; The loading process handels module dependencies, so that required modules
+;; will be loaded even if they are not explicitly enabled here.
+;; Conflicting modules will be prevented from loading.
 ;;
 ;;; Code:
 
@@ -32,8 +35,8 @@
    ;; eon-compileangel              ; Improved native compilation
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-   ;;; NECESSARY MODULES
-   ;; Other modules rely on these modules to be enabled:
+   ;;; CORE MODULES
+   ;; Basic and shared functionality.
 
    eon                           ; Configures built-in Emacs packages
    ;; eon-base                      ; Shared packages and definitions
@@ -98,7 +101,7 @@
    ;; eon-lang-gleam                ; Gleam programming
    ;; eon-lang-haskell              ; Haskell programming
    ;; eon-lang-janet                ; Janet programming
-   ;; eon-lang-julia                ; Julia programming
+   ;; eon-lang-julia                ; Julia programming with Snail
    ;; eon-lang-lean                 ; Lean programming
    ;; eon-lang-lfe                  ; Lisp Flavoured Erlang programming
    ;; eon-lang-lua                  ; Lua programming
