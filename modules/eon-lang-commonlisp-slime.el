@@ -34,6 +34,7 @@
 ;; <https://slime.common-lisp.dev>
 
 (use-package slime :ensure t
+  :diminish slime-autodoc-mode
 
   :init
 
