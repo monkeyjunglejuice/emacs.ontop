@@ -297,7 +297,7 @@ run `eon-user-setup' first" eon-user-dir))
 ;; to declare dependencies and conflicting modules using the
 ;; :requires and :conflicts keywords.
 (defmacro eon-module-metadata (&rest plist)
-  "Declare PLIST as metadata for an EON module.
+  "Declare metadata as PLIST for an EON module.
 
 The EON loader reads this form from module source files before the
 module is loaded. At normal evaluation time, it expands to nil.
