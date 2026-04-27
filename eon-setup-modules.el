@@ -39,7 +39,7 @@
    ;; Basic and shared functionality.
 
    eon                           ; Configures built-in Emacs packages
-   ;; eon-base                      ; Shared packages and definitions
+   eon-base                      ; Shared packages and definitions
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ;;; MODAL EDITING - choose one. If none enabled, stay with Emacs keybindings.
