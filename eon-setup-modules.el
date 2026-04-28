@@ -29,9 +29,8 @@
 (setopt
  eon-modules
  '(;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-   ;;; MODULES TO LOAD EARLY
+   ;;; LOAD EARLY
 
-   eon-user                      ; Your personal Emacs Lisp code
    ;; eon-compileangel              ; Improved native compilation
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -53,7 +52,7 @@
    ;;; THEMES
    ;; Installs a theme, but it won't be enabled. Do that in your `eon-user.el'.
 
-   ;; eon-theme-batppuccin         ; Soothing pastel themes
+   eon-theme-batppuccin         ; Soothing pastel themes
    ;; eon-theme-doom               ; Doom Emacs theme pack
    ;; eon-theme-matrix             ; Inspired by "The Matrix" movie
    ;; eon-theme-spacemacs          ; Spacemacs themes
@@ -120,6 +119,10 @@
    ;; eon-lang-scheme-stklos        ; Stklos Scheme
    ;; eon-lang-unison               ; Unison programming
    ;; eon-lang-web                  ; HTML/CSS editing
+
+   ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+   ;;; PERSONNAL MODULES
+   eon-personal                      ; Your personal Emacs Lisp code
 
    ))
 

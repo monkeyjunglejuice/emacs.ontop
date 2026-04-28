@@ -17,7 +17,7 @@
 
 (eon-module-metadata
  :conflicts '()
- :requires  '(eon))
+ :requires  '())
 
 ;; _____________________________________________________________________________
 ;;; EMACS SETTINGS
