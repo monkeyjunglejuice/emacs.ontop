@@ -32,6 +32,7 @@
 
   ;; How many directoriess deep magit looks for git repos
   (magit-repository-directories '(("~/" . 1)))
+
   ;; Inject magit into the `project-switch-commands' dispatch menu
   (project-switch-commands
    (cl-substitute '(magit-project-status "Magit" ?v) 'project-vc-dir
@@ -55,7 +56,12 @@
         ("f" . magit-file-dispatch)
         ("k" . eon-magit-kill-buffers)
         ("r" . magit-file-rename)
-        ("," . magit-dispatch)))
+        ("," . magit-dispatch))
+
+  :hook
+
+  ;; Update the Magit status when a file has been saved
+  (after-save . magit-after-save-refresh-status))
 
 ;; _____________________________________________________________________________
 ;;; GIT TIMEMACHINE
