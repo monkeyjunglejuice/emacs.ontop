@@ -41,7 +41,9 @@
 ;;; BATPPUCCIN THEMES
 ;; <https://github.com/bbatsov/batppuccin-emacs>
 
-(use-package batppuccin :ensure t)
+(use-package batppuccin :ensure t
+  :custom
+  (batppuccin-scale-headings nil))
 
 ;; _____________________________________________________________________________
 (provide 'eon-theme-batppuccin)
