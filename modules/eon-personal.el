@@ -54,9 +54,11 @@
 ;; _____________________________________________________________________________
 ;;; ELISP
 
-;;; - User info
-;; (setopt user-full-name "My Name"
-;;         user-mail-address "my-email@example.com")
+;;; - Files and directories you trust
+(eon-add-to-list 'trusted-content
+                 `(,eon-user-dir  ; your personal user directory
+                   ;; "~/emacs-lisp/"  ; example
+                   ))
 
 ;;; - Theme
 ;; Toggle between light/dark theme via "<leader> x t".
@@ -74,6 +76,10 @@
 ;;         eon-font-proportional "Alegreya Sans"
 ;;         eon-font-proportional-size 160
 ;;         eon-font-marginal-size 0.85)
+
+;;; - Your user info
+;; (setopt user-full-name "My Name"
+;;         user-mail-address "my-email@example.com")
 
 ;; _____________________________________________________________________________
 (provide 'eon-personal)
