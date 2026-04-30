@@ -1,6 +1,6 @@
 ;;; eon-vterm.el --- Faster terminal emulator in Emacs -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.0
+;; Version: 2.0.1
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -73,6 +73,10 @@
   (vterm-max-scrollback 65536)
   ;; Don't ask before compiling the module
   (vterm-always-compile-module t)
+  ;; The shell that gets run in the vterm for tramp
+  (vterm-tramp-shells '(("ssh" login-shell "/bin/bash")
+                        ("scp" login-shell "/bin/bash")
+                        ("docker" "/bin/sh")))
 
   :config
 
@@ -121,7 +125,7 @@ When nil, ESC runs `eon-vterm-escape-command'.")
         ;; Set Vterm as the default terminal emulator
         ("t" . vterm)))
 
-;; _____________________________________________________________________________
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; ESHELL VTERM
 ;; <https://github.com/iostapyshyn/eshell-vterm>
 ;; Allows Eshell to use `vterm' for visual commands
