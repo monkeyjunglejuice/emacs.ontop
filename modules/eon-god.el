@@ -32,8 +32,16 @@
 
   :init
 
+  (defvar-keymap eon-god-leader-map
+    :doc "God-mode frontend for the EON leader keymap.")
+
   (defvar eon-god--emulation-map (make-sparse-keymap)
     "Emulation map used to protect the God leader key.")
+
+  (defun eon-god--valid-key-p (key)
+    "Return non-nil if KEY is a non-empty key description string."
+    (and (stringp key)
+         (> (length key) 0)))
 
   (defun eon-god--install-emulation ()
     "Install `eon-god--emulation-map' for `god-local-mode'."
@@ -42,23 +50,39 @@
 
   (defun eon-god--bind-leader (old new)
     "Bind NEW as God leader in the emulation map and unset OLD."
-    (when (and (stringp old) (> (length old) 0))
+    (set-keymap-parent eon-god-leader-map eon-leader-map)
+    (when (eon-god--valid-key-p old)
       (keymap-unset eon-god--emulation-map old t))
-    (when (and (stringp new) (> (length new) 0))
-      ;; Bind to the stable frontend, not the resolved map
-      (keymap-set eon-god--emulation-map new eon-leader-map)))
+    (when (and (bound-and-true-p eon-leader-mode)
+               (eon-god--valid-key-p new))
+      ;; Bind to the God frontend, not the resolved map
+      (keymap-set eon-god--emulation-map new
+                  `("Leader" . ,eon-god-leader-map))))
+
+  (defun eon-god--bind-localleader (old new)
+    "Bind NEW as God local leader in `eon-god-leader-map' and unset OLD."
+    (when (eon-god--valid-key-p old)
+      (keymap-unset eon-god-leader-map old t))
+    (when (and (bound-and-true-p eon-leader-mode)
+               (eon-god--valid-key-p new))
+      (keymap-set eon-god-leader-map new
+                  `("Local" . ,eon-localleader-map))))
+
+  (defun eon-god--sync-leaders ()
+    "Synchronize God leader keys with `eon-leader-mode'."
+    (eon-god--bind-leader eon-god-leader-key eon-god-leader-key)
+    (eon-god--bind-localleader eon-god-localleader-key
+                               eon-god-localleader-key))
 
   (defun eon-god--set-leaders (sym val)
+    "Set SYM to VAL and update the corresponding God leader binding."
     (let ((old (and (boundp sym) (default-value sym))))
       (set-default sym val)
-      (with-eval-after-load 'god-mode
-        (pcase sym
-          ('eon-god-leader-key
-           (eon-god--bind-leader old val))
-          ('eon-god-localleader-key
-           (when old (keymap-unset eon-leader--map old t))
-           (keymap-set eon-leader--map val
-                       (cons "Local" eon-localleader-map)))))))
+      (pcase sym
+        ('eon-god-leader-key
+         (eon-god--bind-leader old val))
+        ('eon-god-localleader-key
+         (eon-god--bind-localleader old val)))))
 
   (defcustom eon-god-leader-key ","
     "Leader key for God mode."
@@ -99,7 +123,8 @@ Bound to \"i\" per default."
 
   ;; Bind the leader key
   (eon-god--install-emulation)
-  (eon-god--bind-leader nil eon-god-leader-key)
+  (eon-god--sync-leaders)
+  (add-hook 'eon-leader-mode-hook #'eon-god--sync-leaders)
 
   ;; Show special cursor while `god-local-mode' is active in a buffer
   (defun eon-god--cursor-compute ()
