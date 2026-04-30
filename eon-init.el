@@ -250,9 +250,9 @@ The value always ends with a directory separator."
                                           eon-root-dir))
          (dest-mod-setup (expand-file-name "eon-setup-modules.el"
                                            eon-user-dir))
-         (src-user-mod  (expand-file-name "eon-user.el"
+         (src-user-mod  (expand-file-name "eon-personal.el"
                                           eon-modules-dir))
-         (dest-user-mod  (expand-file-name "eon-user.el"
+         (dest-user-mod  (expand-file-name "eon-personal.el"
                                            eon-user-modules-dir)))
     (unless (file-exists-p src-mod-setup)
       (user-error "Missing template: %s" src-mod-setup))
