@@ -1,6 +1,6 @@
 ;;; eon-base.el --- Shared packages and definitions -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.2
+;; Version: 2.0.3
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -120,48 +120,7 @@ Adapted from Doom Emacs.")
     (eon-exec-path-from-shell-refresh)))
 
 ;; _____________________________________________________________________________
-;;; SHELL
-
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - Bash
-
-;; <https://github.com/szermatt/emacs-bash-completion>
-(when (executable-find "bash")
-  (use-package bash-completion :ensure t
-    :custom
-    (bash-completion-nospace t)
-    :config
-    (bash-completion-setup)))
-
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - Fish
-
-(when (executable-find "fish")
-
-  ;; <https://github.com/LemonBreezes/emacs-fish-completion>
-  (use-package fish-completion :ensure t
-    :config
-    (global-fish-completion-mode))
-
-  ;; <https://github.com/wwwjfy/emacs-fish>
-  (use-package fish-mode :ensure t))
-
-;; _____________________________________________________________________________
-;;; OS INTEGRATION
-
-(when (eon-macp)
-
-  ;; Use the MacOS trash instead of freedesktop.org ~/.local/share/Trash
-  ;; <https://github.com/emacsorphanage/osx-trash>
-  (use-package osx-trash :ensure t
-    :config
-    (osx-trash-setup))
-
-  ;; Adapt title bar to macOS theme
-  ;; <https://github.com/purcell/ns-auto-titlebar>
-  (use-package ns-auto-titlebar :ensure t
-    :hook
-    (after-init . ns-auto-titlebar-mode)))
+;;; SYSTEM INTEGRATION
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Manage OS packages from Emacs
@@ -249,16 +208,65 @@ Adapted from Doom Emacs.")
   (advice-add 'system-packages--run-command
               :around #'eon-system-packages--run))
 
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - MacOS Trash
+
+;; Use the MacOS trash instead of freedesktop.org ~/.local/share/Trash
+;; <https://github.com/emacsorphanage/osx-trash>
+(when (eon-macp)
+  (use-package osx-trash :ensure t
+    :config
+    (osx-trash-setup)))
+
 ;; _____________________________________________________________________________
-;;; USER INTERFACE
+;;; SHELLS
 
-;; Hide or alter the mode-line strings of certain minor modes
-;; <https://github.com/myrjola/diminish.el>
-(use-package diminish :ensure t)
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - Bash
 
-;; Hydra
-;; <https://github.com/abo-abo/hydra>
-(use-package hydra :ensure t)
+;; <https://github.com/szermatt/emacs-bash-completion>
+(when (executable-find "bash")
+  (use-package bash-completion :ensure t
+    :custom
+    (bash-completion-nospace t)
+    :config
+    (bash-completion-setup)))
+
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - Fish
+
+(when (executable-find "fish")
+
+  ;; <https://github.com/LemonBreezes/emacs-fish-completion>
+  (use-package fish-completion :ensure t
+    :config
+    (global-fish-completion-mode))
+
+  ;; <https://github.com/wwwjfy/emacs-fish>
+  (use-package fish-mode :ensure t))
+
+;; _____________________________________________________________________________
+;;; GREP / RIPGREP
+;; <https://github.com/BurntSushi/ripgrep>
+;; Ripgrep must be installed on your computer for this to work
+
+;; <https://github.com/dajva/rg.el>
+(when (executable-find "rg")
+  (use-package rg :ensure t
+    :custom
+    ;; Inject Ripgrep into the `project-switch-commands' dispatch menu
+    (project-switch-commands
+     (cl-substitute '(rg-project "Ripgrep" ?g) 'project-find-regexp
+                    project-switch-commands
+                    :key #'car :test #'eq))
+    :bind
+    (:map project-prefix-map
+          ("g" . rg-project))
+    (:map ctl-z-s-map
+          ("G" . rg))))
+
+;; <https://github.com/mhayashi1120/Emacs-wgrep/>
+(use-package wgrep :ensure t)
 
 ;; _____________________________________________________________________________
 ;;; COMPLETION
@@ -302,21 +310,6 @@ Adapted from Doom Emacs.")
   (undo-fu-session-global-mode))
 
 ;; _____________________________________________________________________________
-;; PARENTHESIS DISPLAY
-
-;; Color-code nested parens
-;; <https://github.com/Fanael/rainbow-delimiters>
-(use-package rainbow-delimiters :ensure t
-  :hook
-  ((prog-mode conf-mode comint-mode) . rainbow-delimiters-mode))
-
-;; Make parens styleable, e.g. more or less prominent
-;; <https://github.com/tarsius/paren-face>
-;; (use-package paren-face :ensure t
-;;   :hook
-;;   (prog-mode . paren-face-mode))
-
-;; _____________________________________________________________________________
 ;;; NAVIGATION
 
 ;; Goto visible character
@@ -344,18 +337,6 @@ Adapted from Doom Emacs.")
 (use-package expand-region :ensure t
   :bind
   ("C-=" . er/expand-region))
-
-;; _____________________________________________________________________________
-;;; COLOR NAMES
-;; <https://elpa.gnu.org/packages/rainbow-mode.html>
-
-;; Colorize color names and hex codes in arbitrary buffers
-(use-package rainbow-mode :ensure t
-  :diminish
-  :defer t
-  :bind
-  (:map ctl-z-x-map
-        ("c" . rainbow-mode)))
 
 ;; _____________________________________________________________________________
 ;;; GIT-GUTTER
@@ -398,27 +379,49 @@ Adapted from Doom Emacs.")
   (magit-post-refresh . diff-hl-magit-post-refresh))
 
 ;; _____________________________________________________________________________
-;;; GREP / RIPGREP
-;; <https://github.com/BurntSushi/ripgrep>
-;; Ripgrep must be installed on your computer for this to work
+;;; USER INTERFACE
 
-;; <https://github.com/dajva/rg.el>
-(when (executable-find "rg")
-  (use-package rg :ensure t
-    :custom
-    ;; Inject Ripgrep into the `project-switch-commands' dispatch menu
-    (project-switch-commands
-     (cl-substitute '(rg-project "Ripgrep" ?g) 'project-find-regexp
-                    project-switch-commands
-                    :key #'car :test #'eq))
-    :bind
-    (:map project-prefix-map
-          ("g" . rg-project))
-    (:map ctl-z-s-map
-          ("G" . rg))))
+;; Hide or alter the mode-line strings of certain minor modes
+;; <https://github.com/myrjola/diminish.el>
+(use-package diminish :ensure t)
 
-;; <https://github.com/mhayashi1120/Emacs-wgrep/>
-(use-package wgrep :ensure t)
+;; Hydra
+;; <https://github.com/abo-abo/hydra>
+(use-package hydra :ensure t)
+
+;; Adapt title bar to macOS theme
+;; <https://github.com/purcell/ns-auto-titlebar>
+(when (eon-macp)
+  (use-package ns-auto-titlebar :ensure t
+    :hook
+    (after-init . ns-auto-titlebar-mode)))
+
+;; _____________________________________________________________________________
+;; PARENTHESIS DISPLAY
+
+;; Color-code nested parens
+;; <https://github.com/Fanael/rainbow-delimiters>
+(use-package rainbow-delimiters :ensure t
+  :hook
+  ((prog-mode conf-mode comint-mode) . rainbow-delimiters-mode))
+
+;; Make parens styleable, e.g. more or less prominent
+;; <https://github.com/tarsius/paren-face>
+;; (use-package paren-face :ensure t
+;;   :hook
+;;   (prog-mode . paren-face-mode))
+
+;; _____________________________________________________________________________
+;;; COLOR NAMES
+;; <https://elpa.gnu.org/packages/rainbow-mode.html>
+
+;; Colorize color names and hex codes in arbitrary buffers
+(use-package rainbow-mode :ensure t
+  :diminish
+  :defer t
+  :bind
+  (:map ctl-z-x-map
+        ("c" . rainbow-mode)))
 
 ;; _____________________________________________________________________________
 ;;; ORG MODE EXTENSIONS
