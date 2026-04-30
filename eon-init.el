@@ -60,13 +60,6 @@
 ;; each module. That way they could be available as "meta-packages" on Melpa /
 ;; GNU Elpa. It might be interesting to treat them as global minor modes also.
 
-;; TODO Add package metadata to all modules; as there are:
-;; - Version number
-;; - Minimum required Emacs version
-;; - Dependencies
-;; - License header
-;; - what else?
-
 ;; MAYBE Define and add a metadata format for modules, if the metadata
 ;; required for packages turns out as not enough.
 
@@ -76,8 +69,6 @@
 ;; before-load-hook, after-load-hook, before-unload-hook, after-unload-hook.
 
 ;; MAYBE Explore how to further leverage `use-package' regarding modules.
-
-;; TODO Change license to GPL v3 and greater.
 
 ;; TODO Optimize for startup speed (reasonably), but don't lazy-load everything
 ;; per default, as run-time snappiness is more important than immediate startup
