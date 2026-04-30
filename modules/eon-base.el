@@ -1,6 +1,6 @@
 ;;; eon-base.el --- Shared packages and definitions -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.1
+;; Version: 2.0.2
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -123,6 +123,17 @@ Adapted from Doom Emacs.")
 ;;; SHELL
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - Bash
+
+;; <https://github.com/szermatt/emacs-bash-completion>
+(when (executable-find "bash")
+  (use-package bash-completion :ensure t
+    :custom
+    (bash-completion-nospace t)
+    :config
+    (bash-completion-setup)))
+
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Fish
 
 (when (executable-find "fish")
@@ -135,33 +146,22 @@ Adapted from Doom Emacs.")
   ;; <https://github.com/wwwjfy/emacs-fish>
   (use-package fish-mode :ensure t))
 
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - Bash
-
-;; <https://github.com/szermatt/emacs-bash-completion>
-(when (executable-find "bash")
-  (use-package bash-completion :ensure t
-    :custom
-    (bash-completion-nospace t)
-    :config
-    (bash-completion-setup)))
-
 ;; _____________________________________________________________________________
 ;;; OS INTEGRATION
 
-;; Use the MacOS trash instead of freedesktop.org ~/.local/share/Trash
-;; <https://github.com/emacsorphanage/osx-trash>
 (when (eon-macp)
+
+  ;; Use the MacOS trash instead of freedesktop.org ~/.local/share/Trash
+  ;; <https://github.com/emacsorphanage/osx-trash>
   (use-package osx-trash :ensure t
     :config
-    (osx-trash-setup)))
+    (osx-trash-setup))
 
-;; Adapt title bar to macOS theme
-;; <https://github.com/purcell/ns-auto-titlebar>
-(when (eon-macp)
+  ;; Adapt title bar to macOS theme
+  ;; <https://github.com/purcell/ns-auto-titlebar>
   (use-package ns-auto-titlebar :ensure t
-    :config
-    (ns-auto-titlebar-mode)))
+    :hook
+    (after-init . ns-auto-titlebar-mode)))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Manage OS packages from Emacs
@@ -308,8 +308,7 @@ Adapted from Doom Emacs.")
 ;; <https://github.com/Fanael/rainbow-delimiters>
 (use-package rainbow-delimiters :ensure t
   :hook
-  ((prog-mode conf-mode comint-mode)
-   . rainbow-delimiters-mode))
+  ((prog-mode conf-mode comint-mode) . rainbow-delimiters-mode))
 
 ;; Make parens styleable, e.g. more or less prominent
 ;; <https://github.com/tarsius/paren-face>
