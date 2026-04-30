@@ -27,95 +27,97 @@
 ;; shell; especially helpful when on MacOS, or starting Emacs via Systemd or
 ;; similar, who don't adopt certain environment variables.
 
-(use-package exec-path-from-shell :ensure t
-  :when
-  (or (daemonp)
-      ;; Enable on macOS if not started from the terminal
-      (and (eon-macp)
-           (not (eon-terminalp))
-           (not (getenv "TERM_PROGRAM"))))
+(when (or
+       ;; Always enable when Emacs starts as daemon
+       (daemonp)
+       ;; Enable on macOS if not started from the terminal
+       (and (eon-macp)
+            (not (eon-terminalp))
+            (not (getenv "TERM_PROGRAM"))))
 
-  :preface
+  (use-package exec-path-from-shell :ensure t
 
-  (defvar eon-exec-path-from-shell-blocklist
-    '(;; Unix/shell state
-      "^HOME$" "^\\(OLD\\)?PWD$" "^SHLVL$" "^PS1$" "^R?PROMPT$"
-      "^TERM\\(CAP\\)?$" "^USER$" "^GIT_CONFIG" "^INSIDE_EMACS$" "^_$"
-      "^COLUMNS$" "^LINES$"
-      ;; Display/session
-      "^\\(WAYLAND_\\)?DISPLAY$" "^DBUS_SESSION_BUS_ADDRESS$" "^XAUTHORITY$"
-      ;; WSL
-      "^WSL_INTEROP$"
-      ;; XDG runtime/session
-      "^XDG_CURRENT_DESKTOP$" "^XDG_RUNTIME_DIR$"
-      "^XDG_\\(VTNR$\\|SEAT$\\|BACKEND$\\|SESSION_\\)"
-      ;; Socket-like vars
-      "SOCK$"
-      ;; SSH/GPG can get stale
-      "^SSH_\\(AUTH_SOCK\\|AGENT_PID\\)$" "^\\(SSH\\|GPG\\)_TTY$"
-      "^GPG_AGENT_INFO$")
-    "Regexps for env var names to omit when exporting from the shell.
+    :preface
+
+    (defvar eon-exec-path-from-shell-blocklist
+      '(;; Unix/shell state
+        "^HOME$" "^\\(OLD\\)?PWD$" "^SHLVL$" "^PS1$" "^R?PROMPT$"
+        "^TERM\\(CAP\\)?$" "^USER$" "^GIT_CONFIG" "^INSIDE_EMACS$" "^_$"
+        "^COLUMNS$" "^LINES$"
+        ;; Display/session
+        "^\\(WAYLAND_\\)?DISPLAY$" "^DBUS_SESSION_BUS_ADDRESS$" "^XAUTHORITY$"
+        ;; WSL
+        "^WSL_INTEROP$"
+        ;; XDG runtime/session
+        "^XDG_CURRENT_DESKTOP$" "^XDG_RUNTIME_DIR$"
+        "^XDG_\\(VTNR$\\|SEAT$\\|BACKEND$\\|SESSION_\\)"
+        ;; Socket-like vars
+        "SOCK$"
+        ;; SSH/GPG can get stale
+        "^SSH_\\(AUTH_SOCK\\|AGENT_PID\\)$" "^\\(SSH\\|GPG\\)_TTY$"
+        "^GPG_AGENT_INFO$")
+      "Regexps for env var names to omit when exporting from the shell.
 Adapted from Doom Emacs.")
 
-  (defun eon-exec-path-from-shell--blocklisted-p (var)
-    (seq-some (lambda (re) (string-match-p re var))
-              eon-exec-path-from-shell-blocklist))
+    (defun eon-exec-path-from-shell--blocklisted-p (var)
+      (seq-some (lambda (re) (string-match-p re var))
+                eon-exec-path-from-shell-blocklist))
 
-  (defun eon-exec-path-from-shell--env-lines ()
-    (let* ((sh (or exec-path-from-shell-shell-name
-                   shell-file-name
-                   (getenv "SHELL")))
-           (ok (and sh (executable-find sh)))
-           (args (append exec-path-from-shell-arguments '("-c" "env"))))
-      (cond
-       (ok (or (ignore-errors (apply #'process-lines sh args))
-               (and (executable-find "printenv")
-                    (process-lines "printenv"))
-               (split-string (shell-command-to-string "env") "\n" t)))
-       ((executable-find "printenv") (process-lines "printenv"))
-       (t (split-string (shell-command-to-string "env") "\n" t)))))
+    (defun eon-exec-path-from-shell--env-lines ()
+      (let* ((sh (or exec-path-from-shell-shell-name
+                     shell-file-name
+                     (getenv "SHELL")))
+             (ok (and sh (executable-find sh)))
+             (args (append exec-path-from-shell-arguments '("-c" "env"))))
+        (cond
+         (ok (or (ignore-errors (apply #'process-lines sh args))
+                 (and (executable-find "printenv")
+                      (process-lines "printenv"))
+                 (split-string (shell-command-to-string "env") "\n" t)))
+         ((executable-find "printenv") (process-lines "printenv"))
+         (t (split-string (shell-command-to-string "env") "\n" t)))))
 
-  (defun eon-exec-path-from-shell--env-names ()
-    (seq-keep (lambda (s)
-                (when (string-match-p "=" s)
-                  (car (split-string s "="))))
-              (eon-exec-path-from-shell--env-lines)))
+    (defun eon-exec-path-from-shell--env-names ()
+      (seq-keep (lambda (s)
+                  (when (string-match-p "=" s)
+                    (car (split-string s "="))))
+                (eon-exec-path-from-shell--env-lines)))
 
-  (defun eon-exec-path-from-shell-refresh ()
-    (interactive)
-    (require 'exec-path-from-shell)
-    (let* ((default
-            (eval (car (get 'exec-path-from-shell-variables 'standard-value))))
-           (current exec-path-from-shell-variables)
-           (names (if (equal current default)
-                      (seq-remove
-                       #'eon-exec-path-from-shell--blocklisted-p
-                       ;; TODO Currently inefficient, causes 1st shell spawn
-                       (eon-exec-path-from-shell--env-names))
-                    current)))
-      (setopt exec-path-from-shell-variables names)
-      ;; TODO Causes 2nd shell spawn to do the work; should do all at once
-      (exec-path-from-shell-initialize)
-      (when (called-interactively-p 'interactive)
-        ;; TODO Also show the issued shell command in the message
-        (message "exec-path-from-shell (%d): %s"
-                 (length names) (mapconcat #'identity names " ")))
-      names))
+    (defun eon-exec-path-from-shell-refresh ()
+      (interactive)
+      (require 'exec-path-from-shell)
+      (let* ((default
+              (eval (car (get 'exec-path-from-shell-variables 'standard-value))))
+             (current exec-path-from-shell-variables)
+             (names (if (equal current default)
+                        (seq-remove
+                         #'eon-exec-path-from-shell--blocklisted-p
+                         ;; TODO Currently inefficient, causes 1st shell spawn
+                         (eon-exec-path-from-shell--env-names))
+                      current)))
+        (setopt exec-path-from-shell-variables names)
+        ;; TODO Causes 2nd shell spawn to do the work; should do all at once
+        (exec-path-from-shell-initialize)
+        (when (called-interactively-p 'interactive)
+          ;; TODO Also show the issued shell command in the message
+          (message "exec-path-from-shell (%d): %s"
+                   (length names) (mapconcat #'identity names " ")))
+        names))
 
-  :custom
+    :custom
 
-  ;; Example: '("-l") or nil for non-interactive shells; supposedly faster
-  (exec-path-from-shell-arguments '("-l"))
+    ;; Example: '("-l") or nil for non-interactive shells; supposedly faster
+    (exec-path-from-shell-arguments '("-l"))
 
-  ;; You can set the variables manually, then no autoselection will happen:
-  ;; (exec-path-from-shell-variables '("PATH" "MANPATH"))
+    ;; You can set the variables manually, then no autoselection will happen:
+    ;; (exec-path-from-shell-variables '("PATH" "MANPATH"))
 
-  ;; Use a specific shell if you need:
-  ;; (exec-path-from-shell-shell-name "/bin/bash")
+    ;; Use a specific shell if you need:
+    ;; (exec-path-from-shell-shell-name "/bin/bash")
 
-  :config
+    :config
 
-  (eon-exec-path-from-shell-refresh))
+    (eon-exec-path-from-shell-refresh)))
 
 ;; _____________________________________________________________________________
 ;;; SHELL
