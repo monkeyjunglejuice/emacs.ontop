@@ -138,7 +138,6 @@ Adapted from Doom Emacs.")
 
 ;; <https://github.com/szermatt/emacs-bash-completion>
 (when (executable-find "bash")
-
   (use-package bash-completion :ensure t
     :custom
     (bash-completion-nospace t)
