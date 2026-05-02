@@ -62,10 +62,10 @@
 
 ;;; - Theme
 ;; Toggle between light/dark theme via "<leader> x t".
-(setopt eon-theme-light 'batppuccin-latte
-        eon-theme-dark 'batppuccin-frappe
-        eon-theme-variant-default 'light)
-(eon-theme-load-default)
+;; (setopt eon-theme-light 'batppuccin-latte
+;;         eon-theme-dark 'batppuccin-frappe
+;;         eon-theme-variant-default 'light)
+;; (eon-theme-load-default)
 
 ;;; - Fonts
 ;; Use a font installed on your computer.
