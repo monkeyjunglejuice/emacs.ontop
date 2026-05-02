@@ -51,6 +51,10 @@
 ;;
 ;;; Code:
 
+(eon-module-metadata
+ :conflicts '()
+ :requires  '(eon))
+
 ;; _____________________________________________________________________________
 ;;; ELISP
 
@@ -76,6 +80,7 @@
 ;;         eon-font-proportional "Alegreya Sans"
 ;;         eon-font-proportional-size 160
 ;;         eon-font-marginal-size 0.85)
+;; (eon-fonts)
 
 ;;; - Your user info
 ;; (setopt user-full-name "My Name"
