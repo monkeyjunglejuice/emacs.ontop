@@ -50,7 +50,8 @@
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ;;; THEMES
-   ;; Installs a theme, but it won't be enabled. Do that in your `eon-user.el'.
+   ;; Install a theme, but it won't be enabled. Do that in your
+   ;; `eon-personal.el' or `init.el'
 
    ;; eon-theme-batppuccin         ; Soothing pastel themes
    ;; eon-theme-doom               ; Doom Emacs theme pack
@@ -68,7 +69,7 @@
    ;; eon-dired                     ; Classic Dired with improvements
    ;; eon-embark                    ; Minibuffer actions and context menu
    ;; eon-everywhere                ; Use Emacs for text input in other apps
-   ;; eon-flycheck                  ; Syntax checker alternative
+   ;; eon-flycheck                  ; Syntax check; alternative for Flymake
    ;; eon-git                       ; Magit user interface and friends
    ;; eon-helpful                   ; Extended help viewer
    ;; eon-icons                     ; Icons everywhere
