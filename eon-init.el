@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░     ▒░      ▒░▒░▒░   ▒░
 ;;
 ;;
-;; Version: 2.0.1
+;; Version: 2.0.2
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -140,13 +140,7 @@ for that, use `featurep'."
   (memq module-name eon-modules))
 
 ;; _____________________________________________________________________________
-;;; USER-DEFINED MODULES
-
-;; TODO Implement loading of user-defined modules
-;; Modules in '[eon-user-dir]/modules/' should be handled separately,
-;; or classified in another way so they can be told apart.
-;; This might further enable specific logic, e.g. determining precedence,
-;; managing dependencies, etc.
+;;; USER DIRECTORY
 
 ;; Define the path of the Emacs ONTOP user directory
 (defcustom eon-user-dir
@@ -162,6 +156,15 @@ If you don't like the default path, move your user directory
 somewhere else and customize this variable."
   :type '(directory)
   :group 'eon)
+
+;; _____________________________________________________________________________
+;;; USER-DEFINED MODULES
+
+;; TODO Implement loading of user-defined modules
+;; Modules in '[eon-user-dir]/modules/' should be handled separately,
+;; or classified in another way so they can be told apart.
+;; This might further enable specific logic, e.g. determining precedence,
+;; managing dependencies, etc.
 
 ;; Define the path of the Emacs ONTOP user modules directory
 (defvar eon-user-modules-dir
@@ -222,7 +225,7 @@ The value always ends with a directory separator."
 ;;; USER SETUP
 
 ;; Create user directories according to the variables
-;; `eon-user-dir', `eon-user-modules-dir' and `eon-user-contrib-dir',
+;; `eon-user-dir', `eon-user-contrib-dir' and `eon-user-modules-dir',
 ;; then copy eon-setup-modules.el into `eon-user-dir'.
 
 (defun eon-user-setup--dirs ()
@@ -281,8 +284,18 @@ run `eon-user-setup' first" eon-user-dir))
 ;; _____________________________________________________________________________
 ;;; LOADER
 
-;; Module loading with dependencies- and conflict resolver.
-;; TODO Doesn't load user-defined modules and contrib modules yet (WIP).
+;; Module loading with dependency- and conflict resolver.
+;; Doesn't load user-defined modules and contrib modules yet (WIP).
+
+;; TODO Implement loading of contrib modules
+;; TODO Implement loading of user-defined modules
+;; TODO If contrib module/feature exists, ignore built-in module/feature
+;;      of the same name.
+;; TODO If user-defined module/feature exists, ignore both built-in
+;;      module/feature and contrib module/feature of the same name.
+;; TODO Add branch for interactive use, MAYBE ask for selection which
+;;      set of modules to load, e.g. only built-in modules vs. all modules.
+;; TODO Add option for forced reload.
 
 ;; The form `eon-module-metadata' should be present in each module file
 ;; to declare dependencies and conflicting modules using the
@@ -303,20 +316,22 @@ Supported keywords:
 
 (defun eon-module-load-path ()
   "Return list of existing EON module directories.
-Built from `eon-modules-dir', `eon-user-modules-dir' and
-`eon-user-contrib-dir', keeping only those that name existing directories."
+Built from `eon-modules-dir', `eon-user-contrib-dir' and `eon-user-modules-dir',
+keeping only those that name existing directories."
   (delq nil
         (list (and (bound-and-true-p eon-modules-dir)
                    (file-directory-p eon-modules-dir)
                    eon-modules-dir)
               ;; TODO Implement loading from there
-              (and (bound-and-true-p eon-user-modules-dir)
-                   (file-directory-p eon-user-modules-dir)
-                   eon-user-modules-dir)
-              ;; TODO Implement loading from there
+              ;; Default: ~/.emacs.d/eon/contrib
               (and (bound-and-true-p eon-user-contrib-dir)
                    (file-directory-p eon-user-contrib-dir)
-                   eon-user-contrib-dir))))
+                   eon-user-contrib-dir)
+              ;; TODO Implement loading from there
+              ;; Default: ~/.emacs.d/eon/modules
+              (and (bound-and-true-p eon-user-modules-dir)
+                   (file-directory-p eon-user-modules-dir)
+                   eon-user-modules-dir))))
 
 (defun eon--warning (message &optional level)
   "Report MESSAGE as an EON warning with optional LEVEL.
@@ -617,14 +632,6 @@ Interactively, prompt for a module name using completion over all
            ;; Otherwise require feature from file in root directory
            (concat eon-root-dir "eon-setup-modules.el")))
 
-;; TODO Implement loading of user-defined modules and contrib modules
-;; TODO If contrib module/feature exists, ignore built-in module/feature
-;;      of the same name.
-;; TODO If user-defined module/feature exists, ignore both built-in
-;;      module/feature and contrib module/feature of the same name.
-;; TODO Add branch for interactive use, MAYBE ask for selection which
-;;      set of modules to load, e.g. only built-in modules vs. all modules.
-;; TODO Add option for forced reload.
 (defun eon-load-modules (&optional modules-list)
   "Require each EON module from MODULES-LIST.
 

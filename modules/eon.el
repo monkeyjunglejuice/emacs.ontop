@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 ;;
 ;;
-;; Version: 2.5.2
+;; Version: 2.5.3
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
@@ -101,11 +101,6 @@ cause OS paging."
   :group 'eon-gcmh
   :type '(number))
 
-;; Set the high value immediately to prevent frequent garbage collections
-;; during initialization. Will be adjusted dynamically when `eon-gcmh-mode'
-;; is activated via `emacs-startup-hook'.
-(setq gc-cons-threshold eon-gcmh-high-cons-threshold)
-
 (defcustom eon-gcmh-low-cons-threshold 800000
   "Low cons GC threshold.
 This is the GC threshold used while idling. Default value is the
@@ -188,8 +183,8 @@ Cancel the previous one if present."
     (remove-hook 'pre-command-hook #'eon-gcmh-set-high-threshold)
     (remove-hook 'post-command-hook #'eon-gcmh-register-idle-gc)))
 
-;; Activate GCMH mode (idle timer) after Emacs startup
-(add-hook 'emacs-startup-hook #'eon-gcmh-mode)
+;; Activate GCMH mode (idle timer)
+(eon-gcmh-mode 1)
 
 ;; _____________________________________________________________________________
 ;;; DEBUG / DIAGNOSTICS
@@ -209,10 +204,11 @@ Cancel the previous one if present."
 ;; Prevent stale elisp bytecode from shadowing more up-to-date source files?
 (setopt load-prefer-newer t)
 
-;; Natively compile packages at first use or immediately after installation?
-;; May cause high load initially when many packgages are installed at once.
-;; You may prefer setting this to nil on a computer with less memory / weaak CPU
-;; e.g. Raspberry Pi Zero.
+;; Natively compile packages when they are installed?
+;; This can cause noticeable CPU load, memory pressure, and disk I/O when
+;; many packages are installed or upgraded at once. On low-power machines,
+;; e.g. a Raspberry Pi Zero, setting this to nil may make package installation
+;; less heavy.
 (setopt package-native-compile t)
 
 ;; Native-compile .elc files asynchronously?
@@ -436,13 +432,13 @@ When called interactively, also echo the result."
 (setopt large-file-warning-threshold (* 64 1024 1024))  ; 64 MiB
 
 ;; Increase undo limit
-(setopt undo-limit (* 64 1024 1024)  ; 64 MiB
-        undo-strong-limit (* 96 1024 1024)   ; 96 MiB
-        undo-outer-limit (* 960 1024 1024))  ; 960 MiB
+(setopt undo-limit (* 8 1024 1024)          ; 8 MiB
+        undo-strong-limit (* 12 1024 1024)  ; 12 MiB
+        undo-outer-limit (* 32 1024 1024))  ; 32 MiB
 
 ;; Increase the amount of data that Emacs reads from subprocesses in one chunk.
 ;; Aims to increase performance for communication with language servers, etc.
-(setopt read-process-output-max (* 1024 1024))  ; 1 MiB
+(setopt read-process-output-max (* 1 1024 1024))  ; 1 MiB
 
 ;; _____________________________________________________________________________
 ;;; DEFAULT AND INITIAL FRAME
@@ -2228,8 +2224,9 @@ pretending to clear it."
 
 ;; Auto refresh buffers when contents change?
 (setopt global-auto-revert-non-file-buffers t
+        auto-revert-avoid-polling t
         auto-revert-stop-on-user-input t
-        auto-revert-verbose t)
+        auto-revert-verbose nil)
 (global-auto-revert-mode 1)
 
 ;; Configure Ediff to use a single frame and split windows horizontally
@@ -2249,7 +2246,6 @@ pretending to clear it."
 (setopt recentf-max-menu-items 10
         recentf-max-saved-items 256
         recentf-auto-cleanup 'mode)
-
 ;; Turn on recent file mode to visit recently edited files
 (recentf-mode 1)
 
