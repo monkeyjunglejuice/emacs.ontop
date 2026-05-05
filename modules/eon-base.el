@@ -40,24 +40,60 @@
     :preface
 
     (defvar eon-exec-path-from-shell-blocklist
-      '(;; Unix/shell state
-        "^HOME$" "^\\(OLD\\)?PWD$" "^SHLVL$" "^PS1$" "^R?PROMPT$"
-        "^TERM\\(CAP\\)?$" "^USER$" "^GIT_CONFIG" "^INSIDE_EMACS$" "^_$"
-        "^COLUMNS$" "^LINES$"
-        ;; Display/session
-        "^\\(WAYLAND_\\)?DISPLAY$" "^DBUS_SESSION_BUS_ADDRESS$" "^XAUTHORITY$"
-        ;; WSL
-        "^WSL_INTEROP$"
-        ;; XDG runtime/session
-        "^XDG_CURRENT_DESKTOP$" "^XDG_RUNTIME_DIR$"
+      ;; Shell/process state from temporary shell
+      '("^HOME$"
+        "^\\(OLD\\)?PWD$"
+        "^SHLVL$"
+        "^_$"
+
+        ;; Interactive shell state
+        "^PS1$"
+        "^R?PROMPT$"
+        "^COLUMNS$"
+        "^LINES$"
+
+        ;; Terminal state
+        "^TERM\\(CAP\\)?$"
+        "^TERM_PROGRAM\\(_VERSION\\)?$"
+
+        ;; Identity variables that GUI Emacs already has
+        "^USER$"
+        "^LOGNAME$"
+
+        ;; Emacs recursion / nested shell state
+        "^INSIDE_EMACS$"
+
+        ;; Per-process Git overrides
+        "^GIT_CONFIG"
+
+        ;; Display/session state
+        "^\\(WAYLAND_\\)?DISPLAY$"
+        "^DBUS_SESSION_BUS_ADDRESS$"
+        "^XAUTHORITY$"
+
+        ;; XDG runtime/session state
+        "^XDG_CURRENT_DESKTOP$"
+        "^XDG_RUNTIME_DIR$"
         "^XDG_\\(VTNR$\\|SEAT$\\|BACKEND$\\|SESSION_\\)"
-        ;; Socket-like vars
-        "SOCK$"
-        ;; SSH/GPG can get stale
-        "^SSH_\\(AUTH_SOCK\\|AGENT_PID\\)$" "^\\(SSH\\|GPG\\)_TTY$"
+
+        ;; macOS launch/session state
+        "^TMPDIR$"
+        "^XPC_"
+        "^SECURITYSESSIONID$"
+        "^LaunchInstanceID$"
+        "^COMMAND_MODE$"
+
+        ;; WSL process state
+        "^WSL_INTEROP$"
+
+        ;; Socket-like variables; these are commonly stale when copied
+        "\\(_SOCK\\|_SOCKET\\)$"
+
+        ;; SSH/GPG agent and terminal state
+        "^SSH_\\(AUTH_SOCK\\|AGENT_PID\\)$"
+        "^\\(SSH\\|GPG\\)_TTY$"
         "^GPG_AGENT_INFO$")
-      "Regexps for env var names to omit when exporting from the shell.
-Adapted from Doom Emacs.")
+      "Regexps for environment variable names not imported from the shell.")
 
     (defun eon-exec-path-from-shell--blocklisted-p (var)
       (seq-some (lambda (re) (string-match-p re var))
