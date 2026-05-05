@@ -2648,6 +2648,15 @@ via `eon-add-to-list'."
 (setopt epg-pinentry-mode 'loopback)
 
 ;; _____________________________________________________________________________
+;;; TRAMP / REMOTE EDITING
+;; <https://www.gnu.org/software/tramp>
+
+(with-eval-after-load 'tramp
+  ;; Ensure that Tramp can find a proper `ls' on a Guix-based host
+  ;; <https://blog.smith-manor.us/tramp_and_guix>
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+
+;; _____________________________________________________________________________
 ;;; WEB BROWSERS
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
