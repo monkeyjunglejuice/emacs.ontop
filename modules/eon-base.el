@@ -390,30 +390,6 @@
   ;; Display the indicators on which side?
   (git-gutter-fr:side 'left-fringe))
 
-;; <https://github.com/dgutov/diff-hl>
-;; TODO Consider as an alternative
-(use-package diff-hl :ensure t :disabled t
-  :init
-  (global-diff-hl-mode)
-  :custom
-  ;; Consider disabling on slow or high-latency connections
-  (diff-hl-disable-on-remote nil)
-  ;; Don't block the main Emacs thread
-  (diff-hl-update-async t)
-  ;; Reduce visual noise
-  (diff-hl-draw-borders nil)
-  ;; Display the indicators on which side?
-  (diff-hl-side 'right)
-  :hook
-  ;; Display changes immediately
-  (diff-hl-mode . diff-hl-flydiff-mode)
-  ;; Display the indicators in an extra margin, so the fringe remains untouched
-  (diff-hl-mode . diff-hl-margin-mode)
-  ;; Indicate changed files in Dired
-  (dired-mode . diff-hl-dired-mode)
-  ;; React to Magit
-  (magit-post-refresh . diff-hl-magit-post-refresh))
-
 ;; _____________________________________________________________________________
 ;;; USER INTERFACE
 
