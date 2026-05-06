@@ -131,10 +131,11 @@ When nil, ESC runs `eon-vterm-escape-command'.")
 ;; Allows Eshell to use `vterm' for visual commands
 
 (use-package eshell-vterm :ensure t
-  :after vterm
+  :after eshell
   :config
-  (eshell-vterm-mode)
-  (defalias 'eshell/v #'eshell-exec-visual))
+  (defalias 'eshell/v #'eshell-exec-visual)
+  :hook
+  (eshell-mode . eshell-vterm-mode))
 
 ;; _____________________________________________________________________________
 (provide 'eon-vterm)
