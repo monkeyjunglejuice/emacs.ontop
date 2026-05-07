@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 ;;
 ;;
-;; Version: 2.5.5
+;; Version: 2.6.0
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
@@ -528,9 +528,6 @@ When called interactively, also echo the result."
 
 ;; Show a cursor in inactive windows?
 (setopt cursor-in-non-selected-windows nil)
-
-;; Make sure to highlight the current line only in the active window
-(setopt hl-line-sticky-flag nil)
 
 ;; Highlight current line in special modes?
 (add-hook 'special-mode-hook (lambda () (hl-line-mode 1)))
@@ -1516,16 +1513,26 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (setopt use-short-answers t)
 
 ;; _____________________________________________________________________________
+;;; REPEAT
+;; <https://emacsredux.com/blog/2026/04/04/repeat-mode>
+;; <https://karthinks.com/software/it-bears-repeating>
+
+;; Repeat commands with single-key shortcuts.
+;; Example:
+;;   "C-x u" "C-x u" "C-x u" (undo 3 times) becomes
+;;   "C-x u u u"
+;; Invoke command "<leader> m describe-repeat-maps RET" for a list of
+;; all default repeatable commands. You can create your own repetitions too.
+(repeat-mode 1)
+
+;; _____________________________________________________________________________
 ;;; COMPLETION
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Icomplete>
 
 ;; There are many matching styles available, see `completion-styles-alist'
 ;; <https://www.gnu.org/software/emacs/manual/html_node/emacs/Completion-Styles.html>
 ;; The order within the list determines their priority.
-(setopt completion-styles '(flex basic))
-(setopt completion-category-defaults nil)
-(setopt completion-category-overrides
-        '((file (styles . (partial-completion)))))
+(setopt completion-styles '(basic flex))
 
 ;; Make TAB try completion when appropriate
 (setopt tab-always-indent 'complete)
@@ -1550,6 +1557,8 @@ Some themes may come as functions -- wrap these ones in lambdas."
  completion-show-help nil
  ;; Cycle completion candidates instead?
  completion-cycle-threshold nil
+ ;; Continuously update *Completions* buffer while typing?
+ completion-eager-update t
  ;; Show docstrings for completion candidates?
  completions-detailed t
  ;; Automatically select the *Completions* buffer?
@@ -1618,6 +1627,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 ;; Define local leader keymap for `Custom-mode'
 (eon-localleader-defkeymap Custom-mode eon-localleader-customzation-map
+
   :doc "Local leader keymap for Customization buffers."
   ;; Pop up a  buffer to edit the settings in '.dir-locals.el'
   "d" #'customize-dirlocals)
@@ -1783,8 +1793,8 @@ buffer."
 ;; _____________________________________________________________________________
 ;;; FRAME MANAGEMENT
 
-(keymap-set ctl-z-w-map "M" #'toggle-frame-maximized)
-(keymap-set ctl-z-w-map "C-m" #'toggle-frame-fullscreen)
+(keymap-set ctl-z-w-map "M-f" #'toggle-frame-maximized)
+(keymap-set ctl-z-w-map "C-f" #'toggle-frame-fullscreen)
 
 ;; _____________________________________________________________________________
 ;;; WINDOW MANAGEMENT
@@ -1809,20 +1819,20 @@ buffer."
 (winner-mode 1)
 
 ;; Common window management commands under the leader key
-(keymap-set ctl-z-w-map "=" #'balance-windows)
-(keymap-set ctl-z-w-map "P" #'window-toggle-side-windows)
-(keymap-set ctl-z-w-map "b" #'display-buffer)
-(keymap-set ctl-z-w-map "c" #'delete-window)
-(keymap-set ctl-z-w-map "d" #'dired-other-window)
-(keymap-set ctl-z-w-map "f" #'find-file-other-window)
-(keymap-set ctl-z-w-map "k" #'kill-buffer-and-window)
-(keymap-set ctl-z-w-map "m" #'delete-other-windows)
-(keymap-set ctl-z-w-map "o" #'other-window-prefix)
-(keymap-set ctl-z-w-map "q" #'quit-window)
-(keymap-set ctl-z-w-map "s" #'split-window-below)
-(keymap-set ctl-z-w-map "t" #'toggle-window-dedicated)
-(keymap-set ctl-z-w-map "v" #'split-window-right)
-(keymap-set ctl-z-w-map "w" #'other-window)
+(keymap-set ctl-z-w-map "SPC" #'toggle-window-dedicated)
+(keymap-set ctl-z-w-map "="   #'balance-windows)
+(keymap-set ctl-z-w-map "P"   #'window-toggle-side-windows)
+(keymap-set ctl-z-w-map "b"   #'display-buffer)
+(keymap-set ctl-z-w-map "c"   #'delete-window)
+(keymap-set ctl-z-w-map "d"   #'dired-other-window)
+(keymap-set ctl-z-w-map "f"   #'find-file-other-window)
+(keymap-set ctl-z-w-map "k"   #'kill-buffer-and-window)
+(keymap-set ctl-z-w-map "m"   #'delete-other-windows)
+(keymap-set ctl-z-w-map "o"   #'other-window-prefix)
+(keymap-set ctl-z-w-map "q"   #'quit-window)
+(keymap-set ctl-z-w-map "s"   #'split-window-below)
+(keymap-set ctl-z-w-map "v"   #'split-window-right)
+(keymap-set ctl-z-w-map "w"   #'other-window)
 
 ;; Default window navigation – simply switch to the next window in order.
 ;; Added for convenience; the default keybinding is "C-x o"
@@ -2191,10 +2201,13 @@ pretending to clear it."
 ;; Write buffer to file ("save file as ..."): "<leader> f w"
 (keymap-set ctl-z-f-map "w" #'write-file)
 
-;; Rename a file via "<leader> f r"
+;; Rename a file: "<leader> f r"
 ;; Reach the VC/Git aware renaming command via "<leader> v r"
 (keymap-set ctl-z-f-map "r" #'rename-visited-file)
 (keymap-set ctl-z-f-map "R" #'rename-file)
+
+;; Re-open file with sudo: "<leader f @>"
+(keymap-set ctl-z-f-map "@" #'tramp-revert-buffer-with-sudo)
 
 ;; Deleting files
 
