@@ -13,7 +13,8 @@
 
 ;;; Commentary:
 ;;
-;;; NOTE Helix-mode for Emacs is new and experimental.
+;;; NOTE Helix-mode for Emacs is new and under heavy development right now,
+;;       it may happen that this config may break from time to time.
 ;;
 ;;; - Keys
 ;; You can add new keys to the Helix keymaps via helix-define-key:
