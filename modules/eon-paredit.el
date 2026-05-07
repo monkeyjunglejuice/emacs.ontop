@@ -1,6 +1,6 @@
 ;;; eon-paredit.el --- Edit Lisp code structurally -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.0
+;; Version: 2.0.1
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -55,13 +55,17 @@
   (:map paredit-mode-map
         ;; Change keybindings clashing with Emacs default keybindings;
         ;; <https://emacsredux.com/blog/2026/03/27/paredit-keybinding-conflicts>
-        ("M-s" . nil)
-        ("M-D" . paredit-splice-sexp)
+        ;; Don't shadow `search-map' prefix
+        ("M-s"   . nil)
+        ("M-D"   . paredit-splice-sexp)
         ;; Don't shadow `xref-find-references'
-        ("M-?" . nil)
-        ;; Slurp/barf
-
-        ))
+        ("M-?"   . nil)
+        ;; Alternative forward slurp/barf keybindings
+        ("C-M-)" . paredit-forward-slurp-sexp)
+        ("C-M-}" . paredit-forward-barf-sexp)
+        ;; Alternative backward slurp/barf keybindings
+        ("C-M-(" . paredit-backward-slurp-sexp)
+        ("C-M-{" . paredit-backward-barf-sexp)))
 
 ;; _____________________________________________________________________________
 (provide 'eon-paredit)
