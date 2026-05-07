@@ -314,12 +314,12 @@
   (eon-add-to-list* 'completion-category-overrides
                     '((file
                        ;; `basic' must be first to work with Tramp
-                       (styles . (basic partial-completion)))
+                       (styles basic partial-completion))
                       ;; Explicitly use Orderless for Eglot
                       (eglot
-                       (styles . orderless))
+                       (styles orderless))
                       (eglot-capf
-                       (styles . orderless)))))
+                       (styles orderless)))))
 
 ;; _____________________________________________________________________________
 ;;; COPY / PASTE
