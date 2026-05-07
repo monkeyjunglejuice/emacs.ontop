@@ -45,28 +45,60 @@
 
   :init
 
-  (defun eon-helix--bind-leader-in-states (old new)
-    "Explicitly bind the leader key to prevent hijacking."
-    (when (and (stringp new) (> (length new) 0))
-      (dolist (m (list helix-normal-state-keymap
-                       helix-view-map))
-        (when (and (stringp old) (> (length old) 0))
-          (define-key m (kbd old) nil))
-        (define-key m (kbd new) eon-leader-map))))
+  (defvar-keymap eon-helix-leader-map
+    :doc "Helix frontend for the EON leader keymap.")
+
+  (defun eon-helix--valid-key-p (key)
+    "Return non-nil if KEY is a non-empty key description string."
+    (and (stringp key)
+         (> (length key) 0)))
+
+  (defun eon-helix--state-maps ()
+    "Return Helix keymaps that should receive the leader key."
+    (delq nil
+          (list (and (boundp 'helix-normal-state-keymap)
+                     (keymapp helix-normal-state-keymap)
+                     helix-normal-state-keymap)
+                (and (boundp 'helix-view-map)
+                     (keymapp helix-view-map)
+                     helix-view-map))))
+
+  (defun eon-helix--bind-leader (old new)
+    "Bind NEW as Helix leader in Helix state maps and unset OLD."
+    (set-keymap-parent eon-helix-leader-map eon-leader-map)
+    (dolist (map (eon-helix--state-maps))
+      (when (eon-helix--valid-key-p old)
+        (keymap-unset map old t))
+      (when (and (bound-and-true-p eon-leader-mode)
+                 (eon-helix--valid-key-p new))
+        ;; Bind to the Helix frontend, not the resolved map
+        (keymap-set map new `("Leader" . ,eon-helix-leader-map)))))
+
+  (defun eon-helix--bind-localleader (old new)
+    "Bind NEW as Helix local leader in `eon-helix-leader-map' and unset OLD."
+    (when (eon-helix--valid-key-p old)
+      (keymap-unset eon-helix-leader-map old t))
+    (when (and (bound-and-true-p eon-leader-mode)
+               (eon-helix--valid-key-p new))
+      (keymap-set eon-helix-leader-map new
+                  `("Local" . ,eon-localleader-map))))
+
+  (defun eon-helix--sync-leaders ()
+    "Synchronize Helix leader keys with `eon-leader-mode'."
+    (eon-helix--bind-leader eon-helix-leader-key
+                            eon-helix-leader-key)
+    (eon-helix--bind-localleader eon-helix-localleader-key
+                                 eon-helix-localleader-key))
 
   (defun eon-helix--set-leaders (sym val)
-    "Setter for leader and local leader keys.
-Used by custom variables `eon-helix-leader-key' and `eon-helix-localleader-key'."
+    "Set SYM to VAL and update the corresponding Helix leader binding."
     (let ((old (and (boundp sym) (default-value sym))))
       (set-default sym val)
-      (with-eval-after-load 'helix
-        (pcase sym
-          ('eon-helix-leader-key
-           (eon-helix--bind-leader-in-states old val))
-          ('eon-helix-localleader-key
-           (when old (define-key eon-leader-map (kbd old) nil))
-           (define-key eon-leader-map (kbd val)
-                       (cons "Local" eon-localleader-map)))))))
+      (pcase sym
+        ('eon-helix-leader-key
+         (eon-helix--bind-leader old val))
+        ('eon-helix-localleader-key
+         (eon-helix--bind-localleader old val)))))
 
   (defcustom eon-helix-leader-key ","
     "Leader key for Helix."
@@ -87,7 +119,8 @@ Used by custom variables `eon-helix-leader-key' and `eon-helix-localleader-key'.
   (helix-mode)
 
   ;; Explicitly bind the leader key
-  (eon-helix--bind-leader-in-states nil eon-helix-leader-key)
+  (eon-helix--sync-leaders)
+  (add-hook 'eon-leader-mode-hook #'eon-helix--sync-leaders)
 
   ;;; Show extra cursor when Helix is in normal state
 
