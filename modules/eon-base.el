@@ -310,10 +310,16 @@
 ;; <https://github.com/oantolin/orderless>
 (use-package orderless :ensure t
   :custom
-  (completion-styles '(orderless basic))
-  ;; Explicitly use Orderless for Eglot
-  (completion-category-overrides '((eglot (styles orderless))
-                                   (eglot-capf (styles orderless)))))
+  (completion-styles '(orderless))
+  (eon-add-to-list* 'completion-category-overrides
+                    '((file
+                       ;; `basic' must be first to work with Tramp
+                       (styles . (basic partial-completion)))
+                      ;; Explicitly use Orderless for Eglot
+                      (eglot
+                       (styles . orderless))
+                      (eglot-capf
+                       (styles . orderless)))))
 
 ;; _____________________________________________________________________________
 ;;; COPY / PASTE
