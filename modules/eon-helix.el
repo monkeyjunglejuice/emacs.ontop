@@ -125,6 +125,7 @@
   ;;; Show extra cursor when Helix is in normal state
 
   (defun eon-helix--selection-active-p ()
+    "Return non-nil if Helix has an active selection."
     (or (region-active-p)
         (and (boundp 'helix--current-selection)
              helix--current-selection)))
