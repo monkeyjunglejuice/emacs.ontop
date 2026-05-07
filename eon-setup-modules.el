@@ -80,7 +80,7 @@
    ;; eon-switchwindow              ; Navigate windows
    ;; eon-todo                      ; Highlight todo keywords in comments
    ;; eon-vertico                   ; Vertical minibuffer completion UI
-   ;; eon-vterm                     ; Faster terminal emulator in Emacs
+   ;; eon-vterm                     ; Faster terminal emulator
    ;; eon-yasnippet                 ; Code snippets and language server support
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .

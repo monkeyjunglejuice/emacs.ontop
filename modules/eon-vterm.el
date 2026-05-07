@@ -1,4 +1,4 @@
-;;; eon-vterm.el --- Faster terminal emulator in Emacs -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-vterm.el --- Faster terminal emulator -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;; Version: 2.0.1
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
