@@ -1,6 +1,6 @@
-;;; eon-smartparens.el --- Edit parenthesis structurally -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-smartparens.el --- Paredit alternative with more features -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.0
+;; Version: 2.0.2
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -16,13 +16,11 @@
 ;;; Code:
 
 (eon-module-metadata
- :conflicts '()
+ :conflicts '(eon-paredit)
  :requires  '(eon))
 
 ;; _____________________________________________________________________________
-;;; STRUCTURAL EDITING
-
-;; SMARTPARENS
+;;; SMARTPARENS
 ;; <https://github.com/Fuco1/smartparens>
 ;; <https://smartparens.readthedocs.io/en/latest/>
 

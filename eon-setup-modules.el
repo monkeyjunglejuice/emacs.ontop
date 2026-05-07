@@ -75,8 +75,9 @@
    ;; eon-icons                     ; Icons everywhere
    ;; eon-indent                    ; Indent code immediately
    ;; eon-marginalia                ; Rich annotations
+   ;; eon-paredit                   ; Edit Lisp code structurally
    ;; eon-pdftools                  ; Sophisticated PDF tool suite
-   ;; eon-smartparens               ; Edit parenthesis structurally
+   ;; eon-smartparens               ; Paredit alternative with more features
    ;; eon-switchwindow              ; Navigate windows
    ;; eon-todo                      ; Highlight todo keywords in comments
    ;; eon-vertico                   ; Vertical minibuffer completion UI
