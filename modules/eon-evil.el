@@ -60,30 +60,63 @@
   ;; `eon-leader-key' - default for Evil "C-SPC"
   ;; `eon-localleader-key' - default "C-,"
 
-  (defun eon-evil--bind-leader-in-states (old new)
-    "Explicitly bind the leader key to prevent hijacking."
-    (when (and (stringp new) (> (length new) 0))
-      (dolist (m (list evil-normal-state-map
-                       evil-visual-state-map
-                       evil-motion-state-map))
-        (when (and (stringp old) (> (length old) 0))
-          (define-key m (kbd old) nil))
-        (define-key m (kbd new) eon-leader-map))))
+  (defvar-keymap eon-evil-leader-map
+    :doc "Evil frontend for the EON leader keymap.")
+
+  (defun eon-evil--valid-key-p (key)
+    "Return non-nil if KEY is a non-empty key description string."
+    (and (stringp key)
+         (> (length key) 0)))
+
+  (defun eon-evil--state-maps ()
+    "Return Evil keymaps that should receive the leader key."
+    (delq nil
+          (list (and (boundp 'evil-normal-state-map)
+                     (keymapp evil-normal-state-map)
+                     evil-normal-state-map)
+                (and (boundp 'evil-visual-state-map)
+                     (keymapp evil-visual-state-map)
+                     evil-visual-state-map)
+                (and (boundp 'evil-motion-state-map)
+                     (keymapp evil-motion-state-map)
+                     evil-motion-state-map))))
+
+  (defun eon-evil--bind-leader (old new)
+    "Bind NEW as Evil leader in Evil state maps and unset OLD."
+    (set-keymap-parent eon-evil-leader-map eon-leader-map)
+    (dolist (map (eon-evil--state-maps))
+      (when (eon-evil--valid-key-p old)
+        (keymap-unset map old t))
+      (when (and (bound-and-true-p eon-leader-mode)
+                 (eon-evil--valid-key-p new))
+        ;; Bind to the Evil frontend, not the resolved map
+        (keymap-set map new `("Leader" . ,eon-evil-leader-map)))))
+
+  (defun eon-evil--bind-localleader (old new)
+    "Bind NEW as Evil local leader in `eon-evil-leader-map' and unset OLD."
+    (when (eon-evil--valid-key-p old)
+      (keymap-unset eon-evil-leader-map old t))
+    (when (and (bound-and-true-p eon-leader-mode)
+               (eon-evil--valid-key-p new))
+      (keymap-set eon-evil-leader-map new
+                  `("Local" . ,eon-localleader-map))))
+
+  (defun eon-evil--sync-leaders ()
+    "Synchronize Evil leader keys with `eon-leader-mode'."
+    (eon-evil--bind-leader eon-evil-leader-key
+                           eon-evil-leader-key)
+    (eon-evil--bind-localleader eon-evil-localleader-key
+                                eon-evil-localleader-key))
 
   (defun eon-evil--set-leaders (sym val)
-    "Setter for leader and local leader keys.
-Used by the custom variables `eon-evil-leader-key'
-and `eon-evil-localleader-key'."
+    "Set SYM to VAL and update the corresponding Evil leader binding."
     (let ((old (and (boundp sym) (default-value sym))))
       (set-default sym val)
-      (with-eval-after-load 'evil
-        (pcase sym
-          ('eon-evil-leader-key
-           (eon-evil--bind-leader-in-states old val))
-          ('eon-evil-localleader-key
-           (when old (define-key eon-leader-map (kbd old) nil))
-           (define-key eon-leader-map (kbd val)
-                       (cons "Local" eon-localleader-map)))))))
+      (pcase sym
+        ('eon-evil-leader-key
+         (eon-evil--bind-leader old val))
+        ('eon-evil-localleader-key
+         (eon-evil--bind-localleader old val)))))
 
   (defcustom eon-evil-leader-key "SPC"
     "Leader key for Evil."
@@ -111,7 +144,9 @@ and `eon-evil-localleader-key'."
 
   ;; Explicitly bind the Evil leader key, defaults to "SPC". Customize
   ;; `eon-evil-leader-key' and/or `eon-evil-localleader-key' to change.
-  (eon-evil--bind-leader-in-states nil eon-evil-leader-key)
+  (eon-evil--sync-leaders)
+  (add-hook 'eon-leader-mode-hook #'eon-evil--sync-leaders)
+
   ;; Set "M-SPC" as the default alternative leader key for Evil;
   ;; customize `eon-leader-key' to change the binding.
   (setopt eon-leader-key "M-SPC")
