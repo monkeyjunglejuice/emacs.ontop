@@ -153,7 +153,7 @@ The list of candidates comes from `geiser-active-implementations'."
 
 ;; Macro stepper in Scheme src buffers
 (use-package macrostep-geiser :ensure t
-  :after geiser-mode
+  :after geiser
 
   :hook
 
