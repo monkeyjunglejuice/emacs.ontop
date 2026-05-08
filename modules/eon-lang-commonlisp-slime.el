@@ -51,7 +51,7 @@
                          slime-quicklisp
                          slime-sprof
                          slime-xref-browser
-                         slime-coalton
+                         ;; slime-coalton
                          ))
   
   ;; Set Slime Lisp implementations
