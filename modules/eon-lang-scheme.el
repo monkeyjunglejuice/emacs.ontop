@@ -29,7 +29,7 @@
 (use-package scheme :ensure nil
   :custom
   ;; Don't enable functionality for all Schemes; will be set by the module
-  ;; 'eon-lang-scheme-mit.el'.
+  ;; 'eon-lang-scheme-mit'.
   (scheme-mit-dialect nil))
 
 ;; _____________________________________________________________________________
