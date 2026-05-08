@@ -37,7 +37,6 @@
 ;; <https://www.nongnu.org/geiser/>
 
 (use-package geiser :ensure t
-  :defer t
 
   :init
 
