@@ -1,6 +1,6 @@
 ;;; eon-vertico.el --- Vertical minibuffer completion UI -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.0
+;; Version: 2.0.1
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -38,6 +38,8 @@
   (vertico-mode)
   ;; How to display Vertico per default?
   (vertico-multiform-mode)
+  ;; Jump to candidate number, e.g. "C-3 RET" or "M-5 RET"
+  (vertico-indexed-mode)
 
   :custom
 

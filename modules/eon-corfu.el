@@ -1,6 +1,6 @@
 ;;; eon-corfu.el --- Code (auto-)completion -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.0
+;; Version: 2.0.1
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -87,6 +87,10 @@
   (corfu-popupinfo-max-height 10)
   :hook
   (corfu-mode . corfu-popupinfo-mode))
+
+(use-package corfu-indexed-mode :ensure nil
+  :hook
+  (corfu-mode . corfu-indexed-mode))
 
 ;; _____________________________________________________________________________
 (provide 'eon-corfu)
