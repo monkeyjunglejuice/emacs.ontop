@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 ;;
 ;;
-;; Version: 2.6.0
+;; Version: 2.6.3
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
@@ -94,7 +94,7 @@
   "Garbage collection tuning."
   :group 'eon)
 
-(defcustom eon-gcmh-high-cons-threshold (* 1024 1024 1024)  ; 1 GiB
+(defcustom eon-gcmh-high-cons-threshold (* 512 1024 1024)  ; 512 MiB
   "High cons GC threshold.
 This should be set to a value that makes GC unlikely but does not
 cause OS paging."
@@ -1841,35 +1841,44 @@ buffer."
 ;; _____________________________________________________________________________
 ;;; TAB MANAGEMENT
 
+;; What to do with a window whose buffer was killed?
+;; nil = no special handling. Let `set-window-configuration' decide,
+;; instead of displaying a placeholder bufffer.
+(setopt tab-bar-select-restore-windows nil)
+
+;; Show tab numbers
+(setopt tab-bar-tab-hints t)
+
 ;; Create new tab
-(keymap-set ctl-z-t-map "t" #'tab-new-to)
+(keymap-set ctl-z-t-map "n" #'tab-new)
+(keymap-set ctl-z-t-map "N" #'tab-new-to)
 
 ;; Close tab
 (keymap-set ctl-z-t-map "c" #'tab-close)
 (keymap-set ctl-z-t-map "C" #'tab-close-other)
 
 ;; Fast tab switching
-(keymap-set ctl-z-t-map "p" #'tab-previous)
-(keymap-set ctl-z-t-map "n" #'tab-next)
+(keymap-set ctl-z-t-map "t" #'tab-select)
+(keymap-set ctl-z-t-map "T" #'tab-switch)
+(keymap-set ctl-z-t-map "[" #'tab-previous)
+(keymap-set ctl-z-t-map "]" #'tab-next)
+(keymap-set ctl-z-t-map "r" #'tab-recent)
 
 ;; Run commands in a new tab
 (keymap-set ctl-z-t-map "f" #'find-file-other-tab)
 (keymap-set ctl-z-t-map "d" #'dired-other-tab)
 (keymap-set ctl-z-t-map "b" #'switch-to-buffer-other-tab)
-
-;; What to do with a window whose buffer was killed?
-;; nil = no special handling. Let `set-window-configuration' decide,
-;; instead of displaying a placeholder bufffer.
-(setopt tab-bar-select-restore-windows nil)
+(keymap-set ctl-z-t-map "o" #'other-tab-prefix)
+(keymap-set ctl-z-t-map "p" #'project-other-tab-command)
 
 ;; _____________________________________________________________________________
 ;;; BUFFER MANAGEMENT
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Buffers>
 
 ;; Fast buffer switching
-(keymap-set ctl-z-b-map "p" #'previous-buffer)
-(keymap-set ctl-z-b-map "n" #'next-buffer)
 (keymap-set ctl-z-b-map "b" #'switch-to-buffer)
+(keymap-set ctl-z-b-map "[" #'previous-buffer)
+(keymap-set ctl-z-b-map "]" #'next-buffer)
 
 ;; Reload buffer; when visiting a file, discard all unsaved changes
 (keymap-set ctl-z-b-map "C-r" #'revert-buffer)
@@ -2470,6 +2479,37 @@ pretending to clear it."
         eshell-cmpl-ignore-case t
         eshell-list-files-after-cd t
         eshell-destroy-buffer-when-process-dies t)
+
+;; Prevent from accidently referring to local root in Tramp connections
+;; When `default-directory' is remote and the command is a Lisp
+;; function, typing "/" as the first character of an argument inserts
+;; the current Tramp prefix, such as "/method:host:".  Typing another
+;; "/" undoes this, which is useful when a local path is intended.
+;; Typing "~/" also inserts the Tramp prefix.  This does not apply to
+;; external commands.
+;;
+;; This means Eshell usually inserts the remote prefix only when
+;; needed, so you do not have to remember whether a command is
+;; implemented as a Lisp function or run externally.
+;;
+;; For example:
+;;
+;;   cd /ssh:root@example.com:
+;;   find /etc -name "*gnu*"
+;;
+;; Suppose the output shows "/etc/gnugnu", and you want to move it to
+;; "/tmp":
+;;
+;;   mv /etc/gnugnu /tmp
+;;
+;; In Eshell, `mv' is the local Lisp function `eshell/mv', so without
+;; `eshell-elecslash' this refers to the local "/etc/gnugnu" and local
+;; "/tmp".  With `eshell-elecslash', typing that command inserts the
+;; intended remote paths:
+;;
+;;   mv /ssh:root@example.com:/etc/gnugnu /ssh:root@example.com:/tmp
+(with-eval-after-load 'eshell
+  (add-to-list 'eshell-modules-list 'eshell-elecslash))
 
 ;; Launch an Eshell buffer: "<leader> e e"; re-visit the buffer by repeating
 (keymap-set ctl-z-e-map "e" #'eshell)
