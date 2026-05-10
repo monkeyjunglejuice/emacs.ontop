@@ -311,6 +311,7 @@
 (use-package orderless :ensure t
   :custom
   (completion-styles '(orderless))
+  :config
   (eon-add-to-list* 'completion-category-overrides
                     '((file
                        ;; `basic' must be first to work with Tramp
