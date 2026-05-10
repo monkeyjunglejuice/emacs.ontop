@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 ;;
 ;;
-;; Version: 2.6.3
+;; Version: 2.6.4
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
@@ -438,7 +438,7 @@ When called interactively, also echo the result."
 
 ;; Increase the amount of data that Emacs reads from subprocesses in one chunk.
 ;; Aims to increase performance for communication with language servers, etc.
-(setopt read-process-output-max (* 1 1024 1024))  ; 1 MiB
+(setopt read-process-output-max (* 8 1024 1024))  ; 8 MiB
 
 ;; _____________________________________________________________________________
 ;;; DEFAULT AND INITIAL FRAME
@@ -619,6 +619,10 @@ See also `cursor-type'."
   "Hook of functions that may compute a cursor type.
 Each function is called with no args and should return either
 a `cursor-type' or nil. The first non-nil return wins.")
+
+;; TODO API is buggy; when mode is off, cursor must switch back to its
+;; default state and cursor changes must not happen when initiated
+;; from outside.
 
 (defun eon-cursor-type--desired ()
   "Compute desired cursor type for the current buffer."
@@ -1525,6 +1529,13 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; all default repeatable commands. You can create your own repetitions too.
 (repeat-mode 1)
 
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - Other repeat settings
+
+;; Repeat mark popping:
+;; after "C-u C-SPC" or "<leader> u C-SPC" just keep pressing "C-SPC"
+(setopt mark-command-repeat-pop t)
+
 ;; _____________________________________________________________________________
 ;;; COMPLETION
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Icomplete>
@@ -2026,7 +2037,7 @@ Called without argument just syncs `eon-boring-buffers' to other places."
  select-enable-primary t
  ;; When one selects something in another program to pastes it into Emacs,
  ;; but kills something in Emacs before actually pasting it,
- ;; this selection is gone unless this variable is non-nil
+ ;; this selection is gone unless this variable is non-nil.
  save-interprogram-paste-before-kill t
  ;; Mouse yank commands yank at point instead of at click.
  mouse-yank-at-point t)
@@ -2182,8 +2193,14 @@ pretending to clear it."
 (setopt history-delete-duplicates t)
 
 ;; Remember where the cursor was, the last time you visited that file?
+
 (setopt save-place-limit 1024)
 (save-place-mode 1)
+
+;; Center view when visiting file with saved cursor position
+(advice-add 'save-place-find-file-hook :after
+            (lambda (&rest _)
+              (when buffer-file-name (ignore-errors (recenter)))))
 
 ;; _____________________________________________________________________________
 ;;; FILE MANAGEMENT
