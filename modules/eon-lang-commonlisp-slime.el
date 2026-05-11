@@ -39,8 +39,8 @@
   :init
 
   ;; Create local leader maps
-  (eon-localleader-defkeymap slime-editing-mode eon-localleader-slime-editing-map
-    :doc "Local leader keymap for `slime-editing-mode'.")
+  (eon-localleader-defkeymap slime-mode eon-localleader-slime-map
+    :doc "Local leader keymap for `slime-mode'.")
 
   (eon-localleader-defkeymap slime-repl-mode eon-localleader-slime-repl-map
     :doc "Local leader keymap for `slime-repl-mode'.")
@@ -98,7 +98,7 @@
 
   :bind
 
-  (:map eon-localleader-slime-editing-map
+  (:map eon-localleader-slime-map
         ;; TODO Add ergonomic keybindings to the local leader map
         ("c" . slime-compile-defun)))
 
