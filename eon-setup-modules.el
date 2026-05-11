@@ -90,14 +90,14 @@
    ;; eon-system-packages           ; Manage OS packages within Emacs
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; LLM / AI
+   ;;; LLM / AI
 
    ;; eon-ai                        ; Shared functionality for LLM integration
    ;; eon-ollama                    ; Local and cloud LLMs
    ;; eon-gptel                     ; Comprehensive AI chat client
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; PROGRAMMING LANGUAGES
+   ;;; PROGRAMMING LANGUAGES
 
    ;; eon-lang-clojure              ; Clojure and ClojureScript programming
    ;; eon-lang-commonlisp-slime     ; Common Lisp programming with Slime
@@ -128,7 +128,7 @@
    ;; eon-lang-web                  ; HTML/CSS editing
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; PERSONNAL MODULES
+   ;;; PERSONNAL MODULES
    eon-personal                     ; Your personal Emacs Lisp code
 
    ))
