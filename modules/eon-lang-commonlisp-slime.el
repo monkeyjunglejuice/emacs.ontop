@@ -89,11 +89,12 @@
                             "\\`\\*slime-description"
                             "\\`\\*slime-events"))
 
-  ;; :hook
+  :hook
 
   ;; Automatically start a Lisp REPL when opening a Lisp buffer
-  ;; (slime-editing-mode . (lambda ()
-  ;;                       (unless (slime-connected-p) (save-excursion (slime)))))
+  (slime-mode . (lambda ()
+                  (unless (slime-connected-p)
+                    (save-excursion (slime)))))
 
   :bind
 

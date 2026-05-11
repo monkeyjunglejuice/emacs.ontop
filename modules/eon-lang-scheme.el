@@ -56,7 +56,7 @@
 
   ;;; - Source code buffers
   ;; Launch a REPL whenever a Scheme file is visited?
-  (geiser-mode-start-repl-p nil)
+  (geiser-mode-start-repl-p t)
   ;; Complete or indent by hitting "TAB" depending on the cursor position?
   (geiser-mode-smart-tab-p t)
   ;; Normally Geiser sets this according to what implementation packages are

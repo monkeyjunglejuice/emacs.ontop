@@ -84,11 +84,12 @@
                             "\\`\\*sly-description"
                             "\\`\\*sly-events"))
 
-  ;; :hook
+  :hook
 
   ;; Automatically start a Lisp REPL when opening a Lisp buffer
-  ;; (sly-editing-mode . (lambda ()
-  ;;                       (unless (sly-connected-p) (save-excursion (sly)))))
+  (sly-editing-mode . (lambda ()
+                        (unless (sly-connected-p)
+                          (save-excursion (sly)))))
 
   :bind
 
