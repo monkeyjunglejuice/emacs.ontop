@@ -40,14 +40,20 @@
   (mapc (lambda (mode) (add-hook mode #'paredit-mode))
         (eon-lisp-repl-modes 'hook))
 
+  :config
+
+  ;; Stop SLIME's REPL from grabbing DEL, which is annoying
+  ;; when backspacing over a opening paren
+  (defun eon-paredit-override-slime-repl-bindings ()
+    (define-key slime-repl-mode-map
+                (read-kbd-macro paredit-backward-delete-key)
+                nil))
+
   :hook
 
-  ;; Enable Paredit in the minibuffer
-  ;; (eval-expression-minibuffer-setup . paredit-mode)
-
-  ;; Disable conflicting modes
-  (paredit-mode . (lambda ()
-                    (electric-indent-mode -1)))
+  ;; Resolve conflicts
+  (paredit-mode . (lambda () (electric-indent-mode -1)))
+  (slime-repl-mode . eon-paredit-override-slime-repl-bindings)
 
   :bind
 
