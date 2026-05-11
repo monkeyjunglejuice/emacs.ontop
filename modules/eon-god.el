@@ -176,6 +176,7 @@ Once removed, they will start with `god-local-mode' enabled."
         ("i" . eon-god-local-mode-disable)
         ("." . repeat)
         ("V" . scroll-down-command)
+        ("^" . scroll-up-command)
         ("q" . quit-window)))
 
 ;; _____________________________________________________________________________
