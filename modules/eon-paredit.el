@@ -1,6 +1,6 @@
 ;;; eon-paredit.el --- Edit Lisp code structurally -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.1
+;; Version: 2.0.2
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -38,17 +38,16 @@
 
   ;; Enable Paredit in all known Lisp REPLs
   (mapc (lambda (mode) (add-hook mode #'paredit-mode))
-        (eon-lisp-src-modes 'hook))
+        (eon-lisp-repl-modes 'hook))
 
   :hook
 
   ;; Enable Paredit in the minibuffer
-  (eval-expression-minibuffer-setup . paredit-mode)
+  ;; (eval-expression-minibuffer-setup . paredit-mode)
 
   ;; Disable conflicting modes
   (paredit-mode . (lambda ()
-                    (electric-indent-mode -1)
-                    (electric-pair-mode -1)))
+                    (electric-indent-mode -1)))
 
   :bind
 
