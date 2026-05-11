@@ -330,22 +330,42 @@
     (after-init . ns-auto-titlebar-mode)))
 
 ;; _____________________________________________________________________________
-;; PARENTHESIS DISPLAY
+;; PARENTHESIS STYLING
 
 ;; Color-code nested parens
 ;; <https://github.com/Fanael/rainbow-delimiters>
 (use-package rainbow-delimiters :ensure t
+
+  :config
+
+  ;; Enable mode in all known Lisp source code modes
+  (mapc (lambda (mode) (add-hook mode #'paren-face-mode))
+        (eon-lisp-src-modes 'hook))
+
+  ;; Enable in all known Lisp REPL modes
+  (mapc (lambda (mode) (add-hook mode #'paren-face-mode))
+        (eon-lisp-repl-modes 'hook))
+
   :hook
+
   ((prog-mode conf-mode comint-mode) . rainbow-delimiters-mode))
 
-;; Make parens styleable, e.g. more or less prominent
+;; Make parens stand out less
 ;; <https://github.com/tarsius/paren-face>
-;; (use-package paren-face :ensure t
-;;   :hook
-;;   (prog-mode . paren-face-mode))
+(use-package paren-face :ensure t
 
-;; _____________________________________________________________________________
+  :config
+
+  ;; Enable mode in all known Lisp source code modes
+  (mapc (lambda (mode) (add-hook mode #'paren-face-mode))
+        (eon-lisp-src-modes 'hook))
+
+  ;; Enable in all known Lisp REPL modes
+  (mapc (lambda (mode) (add-hook mode #'paren-face-mode))
+        (eon-lisp-repl-modes 'hook)))
+
 ;;; COLOR NAMES
+;; _____________________________________________________________________________
 ;; <https://elpa.gnu.org/packages/rainbow-mode.html>
 
 ;; Colorize color names and hex codes in arbitrary buffers
