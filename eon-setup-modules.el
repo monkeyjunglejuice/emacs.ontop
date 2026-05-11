@@ -37,8 +37,8 @@
    ;;; CORE MODULES
    ;; Basic and shared functionality.
 
-   eon                           ; Configures built-in Emacs packages
-   eon-base                      ; Shared packages and definitions
+   eon                              ; Configures built-in Emacs packages
+   eon-base                         ; Shared packages and definitions
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ;;; MODAL EDITING - choose one. If none enabled, stay with Emacs keybindings.
@@ -53,10 +53,10 @@
    ;; Install a theme, but it won't be enabled. Do that in your
    ;; `eon-personal.el' or `init.el'
 
-   ;; eon-theme-batppuccin         ; Soothing pastel themes
-   ;; eon-theme-doom               ; Doom Emacs theme pack
-   ;; eon-theme-matrix             ; Inspired by "The Matrix" movie
-   ;; eon-theme-spacemacs          ; Spacemacs themes
+   ;; eon-theme-batppuccin          ; Soothing pastel themes
+   ;; eon-theme-doom                ; Doom Emacs theme pack
+   ;; eon-theme-matrix              ; Inspired by "The Matrix" movie
+   ;; eon-theme-spacemacs           ; Spacemacs themes
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ;;; OPTIONAL MODULES
@@ -85,14 +85,19 @@
    ;; eon-yasnippet                 ; Code snippets and language server support
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-   ;;; LLM / AI
+   ;;; OPERATING SYSTEM
+
+   ;; eon-system-packages           ; Manage OS packages within Emacs
+
+   ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; LLM / AI
 
    ;; eon-ai                        ; Shared functionality for LLM integration
    ;; eon-ollama                    ; Local and cloud LLMs
    ;; eon-gptel                     ; Comprehensive AI chat client
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-   ;;; PROGRAMMING LANGUAGES
+;;; PROGRAMMING LANGUAGES
 
    ;; eon-lang-clojure              ; Clojure and ClojureScript programming
    ;; eon-lang-commonlisp-slime     ; Common Lisp programming with Slime
@@ -123,8 +128,8 @@
    ;; eon-lang-web                  ; HTML/CSS editing
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-   ;;; PERSONNAL MODULES
-   eon-personal                      ; Your personal Emacs Lisp code
+;;; PERSONNAL MODULES
+   eon-personal                     ; Your personal Emacs Lisp code
 
    ))
 
