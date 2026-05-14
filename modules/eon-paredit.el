@@ -1,6 +1,6 @@
 ;;; eon-paredit.el --- Edit Lisp code structurally -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.2
+;; Version: 2.0.3
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -28,19 +28,13 @@
 ;; <http://danmidwood.com/content/2014/11/21/animated-paredit.html>
 
 (use-package paredit :ensure t
-  :diminish paredit-mode
+  :diminish
 
-  :init
+  :config
 
   ;; Enable Paredit in all known Lisp source code buffers
   (mapc (lambda (mode) (add-hook mode #'paredit-mode))
         (eon-lisp-src-modes 'hook))
-
-  ;; Enable Paredit in all known Lisp REPLs
-  (mapc (lambda (mode) (add-hook mode #'paredit-mode))
-        (eon-lisp-repl-modes 'hook))
-
-  :config
 
   ;; Stop SLIME's REPL from grabbing DEL, which is annoying
   ;; when backspacing over a opening paren
@@ -71,6 +65,25 @@
         ;; Alternative backward slurp/barf keybindings
         ("C-M-(" . paredit-backward-slurp-sexp)
         ("C-M-{" . paredit-backward-barf-sexp)))
+
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; PAREDIT EVERYWHERE
+;; <https://github.com/purcell/paredit-everywhere>
+
+;; Make a subset of Paredit functionality available in non-Lisp buffers
+(use-package paredit-everywhere :ensure t
+  :diminish
+
+  :config
+
+  ;; Enable Paredit Everywhere Mode in all known Lisp REPLs
+  (mapc (lambda (mode) (add-hook mode #'paredit-mode))
+        (eon-lisp-repl-modes 'hook))
+
+  :hook
+
+  ;; Enable in other modes where it is useful
+  ((prog-mode conf-mode comint-mode eshell-mode) . paredit-everywhere-mode))
 
 ;; _____________________________________________________________________________
 (provide 'eon-paredit)
