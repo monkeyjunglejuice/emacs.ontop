@@ -17,7 +17,7 @@
 
 (eon-module-metadata
  :conflicts '()
- :requires  '(eon))
+ :requires  '(eon eon-yasnippet))
 
 ;; _____________________________________________________________________________
 ;;; ELIXIR TS MODE
@@ -126,12 +126,6 @@ configuration or restarting applications."
 ;; <https://github.com/elixir-lang/expert>
 
 (use-package eglot :ensure nil
-
-  :init
-
-  ;; The language server needs a snippet engine to provide most completions.
-  ;; Therefore, the module `eon-yasnippet' is required.
-  (eon-load-module 'eon-yasnippet)
 
   :custom
 
