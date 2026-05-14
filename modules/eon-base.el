@@ -1,6 +1,6 @@
 ;;; eon-base.el --- Shared packages and definitions -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.1.0
+;; Version: 2.2.0
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -330,45 +330,10 @@
     (after-init . ns-auto-titlebar-mode)))
 
 ;; _____________________________________________________________________________
-;; PARENTHESIS STYLING
-
-;; Color-code nested parens
-;; <https://github.com/Fanael/rainbow-delimiters>
-(use-package rainbow-delimiters :ensure t
-
-  :config
-
-  ;; Enable mode in all known Lisp source code modes
-  (mapc (lambda (mode) (add-hook mode #'paren-face-mode))
-        (eon-lisp-src-modes 'hook))
-
-  ;; Enable in all known Lisp REPL modes
-  (mapc (lambda (mode) (add-hook mode #'paren-face-mode))
-        (eon-lisp-repl-modes 'hook))
-
-  :hook
-
-  ((prog-mode conf-mode comint-mode) . rainbow-delimiters-mode))
-
-;; Make parens stand out less
-;; <https://github.com/tarsius/paren-face>
-(use-package paren-face :ensure t
-
-  :config
-
-  ;; Enable mode in all known Lisp source code modes
-  (mapc (lambda (mode) (add-hook mode #'paren-face-mode))
-        (eon-lisp-src-modes 'hook))
-
-  ;; Enable in all known Lisp REPL modes
-  (mapc (lambda (mode) (add-hook mode #'paren-face-mode))
-        (eon-lisp-repl-modes 'hook)))
-
-;;; COLOR NAMES
-;; _____________________________________________________________________________
+;;; RENDER COLOR CODES/NAMES VISUALLY
 ;; <https://elpa.gnu.org/packages/rainbow-mode.html>
 
-;; Colorize color names and hex codes in arbitrary buffers
+;; Colorize color names and hex codes in arbitrary buffers: "<leader> x c"
 (use-package rainbow-mode :ensure t
   :diminish
   :defer t
@@ -390,7 +355,7 @@
   (org-mode . eon-org--sticky-header-maybe))
 
 ;; _____________________________________________________________________________
-;;; MARKUP, CONFIG AND SERIALIZATION FORMATS
+;;; MARKUP-, CONFIG- AND SERIALIZATION FORMATS
 
 ;; <https://github.com/emacsorphanage/adoc-mode>
 (use-package adoc-mode :ensure t

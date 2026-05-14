@@ -76,7 +76,9 @@
    ;; eon-indent                    ; Indent code immediately
    ;; eon-marginalia                ; Rich annotations
    ;; eon-paredit                   ; Edit Lisp code structurally
+   ;; eon-paren-face                ; Less visible parenthesis
    ;; eon-pdftools                  ; Sophisticated PDF tool suite
+   ;; eon-rainbow-delimiters        ; Color-code nested parenthesis
    ;; eon-smartparens               ; Paredit alternative with more features
    ;; eon-switchwindow              ; Navigate windows
    ;; eon-todo                      ; Highlight todo keywords in comments
