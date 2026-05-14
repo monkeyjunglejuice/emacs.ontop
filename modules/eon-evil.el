@@ -140,7 +140,7 @@
   (setq evil-normal-state-cursor eon-cursor-type-extra
         evil-visual-state-cursor eon-cursor-type-extra-select
         evil-insert-state-cursor eon-cursor-type-write
-        evil-emacs-state-cursor  eon-cursor-type-write)
+        evil-emacs-state-cursor eon-cursor-type-write)
 
   ;; Explicitly bind the Evil leader key, defaults to "SPC". Customize
   ;; `eon-evil-leader-key' and/or `eon-evil-localleader-key' to change.
