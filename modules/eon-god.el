@@ -109,6 +109,53 @@
 
   :config
 
+  (defun eon-god-unexempt-modes (modes)
+    "Remove certain MODES from `god-exempt-major-modes'.
+Once removed, they will start with `god-local-mode' enabled."
+    (setopt god-exempt-major-modes
+            (seq-difference god-exempt-major-modes modes #'eq)))
+
+  ;; Unblock these major modes:
+  (eon-god-unexempt-modes '(Custom-mode
+                            Info-mode
+                            ag-mode
+                            ;; calculator-mode
+                            ;; calendar-mode
+                            cider-test-report-mode
+                            compilation-mode
+                            ;; debugger-mode
+                            dired-mode
+                            ;; edebug-mode
+                            ediff-mode
+                            eww-mode
+                            geben-breakpoint-list-mode
+                            git-commit-mode
+                            grep-mode
+                            ibuffer-mode
+                            magit-popup-mode
+                            org-agenda-mode
+                            pdf-outline-buffer-mode
+                            recentf-dialog-mode
+                            ;; sldb-mode
+                            ;; sly-db-mode
+                            ;; vc-annotate-mode
+                            ;; wdired-mode
+                            ))
+
+  (defun eon-god-unexempt-predicates (predicates)
+    "Remove certain PREDICATES from `god-exempt-predicates'.
+Once removed, they will start with `god-local-mode' enabled."
+    (setopt god-exempt-predicates
+            (seq-difference god-exempt-predicates predicates #'eq)))
+
+  ;; Unblock these predicates:
+  (eon-god-unexempt-predicates '(;; god-exempt-mode-p
+                                 god-comint-mode-p
+                                 god-git-commit-mode-p
+                                 god-view-mode-p
+                                 god-special-mode-p
+                                 ))
+
   (defun eon-god-local-mode-activate ()
     "Turn God mode on.
 Bound to \"<escape>\" per default."
@@ -142,23 +189,6 @@ Bound to \"i\" per default."
 
   ;; Refresh cursor when god-mode toggles
   (add-hook 'god-local-mode-hook #'eon-cursor-update)
-
-  ;; Unblock a major mode
-  (defun eon-god-unexempt-mode (&rest modes)
-    "Remove certain MODES from `god-exempt-major-modes'.
-Once removed, they will start with `god-local-mode' enabled."
-    (setopt god-exempt-major-modes
-            (seq-difference god-exempt-major-modes modes #'eq)))
-
-  ;; Unblock by predicate
-  (defun eon-god-unexempt-predicate (&rest predicates)
-    "Remove certain PREDICATES from `god-exempt-predicates'.
-Once removed, they will start with `god-local-mode' enabled."
-    (setopt god-exempt-predicates
-            (seq-difference god-exempt-predicates predicates #'eq)))
-
-  ;; Don't start `vterm' with God-mode enabled
-  (eon-add-to-list* 'god-exempt-major-modes 'vterm-mode)
 
   ;; Intercept the ESC key and let Emacs handle it when in `vterm' buffer;
   ;; toggle via "C-c C-q" between interception and passing through to `vterm'.
