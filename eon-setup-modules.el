@@ -3,12 +3,12 @@
 ;;; Commentary:
 ;;
 ;; --> Setup your user directory first via "M-x eon-user-setup"
-;;     or "<leader> x C-u". Visit your user directory via "<leader> x u"
-;;     and edit this file there.
+;;     or "<leader> x C-u" (doesn't overwrite existing files).
+;;     Visit your user directory via "<leader> x u" and edit this file there.
 ;;
 ;; --> 1. Enable or disable modules below by uncommenting and commenting.
 ;;     2. Save the file.
-;;     3. Restart Emacs to apply your changes or do "M-x eon-load-modules".
+;;     3. Restart Emacs to apply your changes, or do "M-x eon-load-modules".
 ;;
 ;;     You can also load single modules via "<leader> x m"
 ;;     and unload manually loaded modules via "<leader> x M"
@@ -43,10 +43,10 @@
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ;;; MODAL EDITING - choose one. If none enabled, stay with Emacs keybindings.
 
-   ;; eon-evil                      ; Modal editing: Vim keybindings
-   ;; eon-god                       ; Modal editing: Emacs keybindings
-   ;; eon-helix                     ; Modal editing: Helix keybindings
-   ;; eon-meow                      ; Modal editing: Meow keybindings
+   ;; eon-evil                      ; Vim keybindings
+   ;; eon-god                       ; Emacs keybindings
+   ;; eon-helix                     ; Helix keybindings (experimental)
+   ;; eon-meow                      ; Meow keybindings
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ;;; THEMES
@@ -131,6 +131,7 @@
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ;;; PERSONNAL MODULES
+
    eon-personal                     ; Your personal Emacs Lisp code
 
    ))
