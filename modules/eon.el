@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 ;;
 ;;
-;; Version: 2.6.4
+;; Version: 2.6.5
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
@@ -1842,12 +1842,15 @@ buffer."
 (keymap-set ctl-z-w-map "o"   #'other-window-prefix)
 (keymap-set ctl-z-w-map "q"   #'quit-window)
 (keymap-set ctl-z-w-map "s"   #'split-window-below)
-(keymap-set ctl-z-w-map "v"   #'split-window-right)
+(keymap-set ctl-z-w-map "S"   #'split-window-right)
 (keymap-set ctl-z-w-map "w"   #'other-window)
 
 ;; Default window navigation – simply switch to the next window in order.
 ;; Added for convenience; the default keybinding is "C-x o"
 (keymap-global-set "M-o" #'other-window)
+
+;; Rotate window layout
+
 
 ;; _____________________________________________________________________________
 ;;; TAB MANAGEMENT
@@ -2193,14 +2196,8 @@ pretending to clear it."
 (setopt history-delete-duplicates t)
 
 ;; Remember where the cursor was, the last time you visited that file?
-
 (setopt save-place-limit 1024)
 (save-place-mode 1)
-
-;; Center view when visiting file with saved cursor position
-(advice-add 'save-place-find-file-hook :after
-            (lambda (&rest _)
-              (when buffer-file-name (ignore-errors (recenter)))))
 
 ;; _____________________________________________________________________________
 ;;; FILE MANAGEMENT
@@ -2705,10 +2702,11 @@ via `eon-add-to-list'."
 
 (with-eval-after-load 'proced
   (setopt proced-auto-update-interval 2
-          proced-auto-update-flag t
+          proced-auto-update-flag 'visible
           proced-enable-color-flag t
           proced-format 'medium
-          proced-descend t))
+          proced-descend t
+          proced-filter 'user))
 
 ;; _____________________________________________________________________________
 ;;; PINENTRY
@@ -2834,6 +2832,11 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 ;; Hook the keymap into the "Code" sub-keymap under the leader
 ;; in order to make it available via "<leader> c f"
 (keymap-set ctl-z-c-map "f" `("Format" . ,ctl-z-c-f-map))
+
+;; Insert unicode characters, emoji
+;; <https://www.rahuljuliato.com/posts/unicode-emojis>
+(keymap-set ctl-z-i-map "c" `("Characters" . ,iso-transl-ctl-x-8-map))
+(keymap-set ctl-z-i-map "e" #'emoji-insert)
 
 ;; _____________________________________________________________________________
 ;;; TEXT / PROSE
@@ -3516,7 +3519,7 @@ With prefix ARG, pass it through to the underlying command."
 
 (defvar eon-lisp-repl-modes-registry
   '(;; Built-in modes
-    eshell-mode
+    ;; eshell-mode
     inferior-emacs-lisp-mode
     inferior-lisp-mode
     inferior-scheme-mode
@@ -3543,22 +3546,32 @@ Calling SWITCH with \='hook returns corresponding ...-hook symbols."
                    modes))
     (_ modes)))
 
-(defun eon-lisp-src-modes (&optional switch)
-  "Return installed Lisp-related source modes from the registry.
-With SWITCH = \='hook, return ...-hook variables."
+(defun eon-lisp-src-modes (&optional switch installedp)
+  "Return Lisp-related source modes from the registry.
+
+SWITCH     -> \='hook, return mode identifiers with ...-hook suffix;
+INSTALLEDP -> return only available modes."
   (eon-lisp--modes-transform
-   (seq-filter #'fboundp eon-lisp-src-modes-registry)
+   ;; Care only about installed modes?
+   (if installedp
+       (seq-filter #'fboundp eon-lisp-src-modes-registry)
+     eon-lisp-src-modes-registry)
    switch))
 
-(defun eon-lisp-repl-modes (&optional switch)
-  "Return installed Lisp-related REPL modes from the registry.
-With SWITCH = \='hook, return ...-hook variables."
+(defun eon-lisp-repl-modes (&optional switch installedp)
+  "Return Lisp-related REPL modes from the registry.
+
+SWITCH     ->  \='hook, return mode identifiers with ...-hook suffix;
+INSTALLEDP -> return only available modes."
   (eon-lisp--modes-transform
-   (seq-filter #'fboundp eon-lisp-repl-modes-registry)
+   ;; Care only about installled modes?
+   (if installedp
+       (seq-filter #'fboundp eon-lisp-repl-modes-registry)
+     eon-lisp-repl-modes-registry)
    switch))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - Check-parens mode
+;;; - Check parens mode
 
 ;; Minor mode that prevents accidentally saving files with mismatched
 ;; parentheses and quotes.
@@ -3593,7 +3606,8 @@ save with a `user-error'."
 ;; Enable minor mode per default; toggle via "M-x eon-check-parens-mode".
 ;; How to remove the hook permanently from a specific lisp major mode:
 ;; (remove-hook 'emacs-lisp-mode-hook #'eon-check-parens-mode)
-(mapc (lambda (mode) (add-hook mode #'eon-check-parens-mode))
+(mapc (lambda (mode)
+        (add-hook mode #'eon-check-parens-mode))
       (eon-lisp-src-modes 'hook))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
