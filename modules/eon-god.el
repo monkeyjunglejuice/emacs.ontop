@@ -1,6 +1,6 @@
 ;;; eon-god.el --- Modal editing: Emacs keybindings -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.0
+;; Version: 2.0.1
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -29,6 +29,7 @@
 ;; <https://github.com/emacsorphanage/god-mode>
 
 (use-package god-mode :ensure t
+  :demand t
 
   :init
 
@@ -98,63 +99,17 @@
     :set #'eon-god--set-leaders
     :initialize 'custom-initialize-set)
 
-  ;; Enable God mode almost everywhere;
-  ;; see `god-exempt-major-modes' and `god-exempt-preticates' where not.
-  (god-mode-all 1)
-
-  :custom
-
-  (god-mode-lighter-string "G")
-  (god-mode-enable-function-key-translation nil)
-
-  :config
-
   (defun eon-god-unexempt-modes (modes)
     "Remove certain MODES from `god-exempt-major-modes'.
 Once removed, they will start with `god-local-mode' enabled."
     (setopt god-exempt-major-modes
             (seq-difference god-exempt-major-modes modes #'eq)))
 
-  ;; Unblock these major modes:
-  (eon-god-unexempt-modes '(Custom-mode
-                            Info-mode
-                            ag-mode
-                            ;; calculator-mode
-                            ;; calendar-mode
-                            cider-test-report-mode
-                            compilation-mode
-                            ;; debugger-mode
-                            dired-mode
-                            ;; edebug-mode
-                            ediff-mode
-                            eww-mode
-                            geben-breakpoint-list-mode
-                            git-commit-mode
-                            grep-mode
-                            ibuffer-mode
-                            magit-popup-mode
-                            org-agenda-mode
-                            pdf-outline-buffer-mode
-                            recentf-dialog-mode
-                            ;; sldb-mode
-                            ;; sly-db-mode
-                            ;; vc-annotate-mode
-                            ;; wdired-mode
-                            ))
-
   (defun eon-god-unexempt-predicates (predicates)
     "Remove certain PREDICATES from `god-exempt-predicates'.
 Once removed, they will start with `god-local-mode' enabled."
     (setopt god-exempt-predicates
             (seq-difference god-exempt-predicates predicates #'eq)))
-
-  ;; Unblock these predicates:
-  (eon-god-unexempt-predicates '(;; god-exempt-mode-p
-                                 god-comint-mode-p
-                                 god-git-commit-mode-p
-                                 god-view-mode-p
-                                 god-special-mode-p
-                                 ))
 
   (defun eon-god-local-mode-activate ()
     "Turn God mode on.
@@ -168,11 +123,6 @@ Bound to \"i\" per default."
     (interactive)
     (god-local-mode -1))
 
-  ;; Bind the leader key
-  (eon-god--install-emulation)
-  (eon-god--sync-leaders)
-  (add-hook 'eon-leader-mode-hook #'eon-god--sync-leaders)
-
   ;; Show special cursor while `god-local-mode' is active in a buffer
   (defun eon-god--cursor-compute ()
     "Return a cursor type when God-mode is active, else nil."
@@ -185,19 +135,70 @@ Bound to \"i\" per default."
      ((bound-and-true-p god-local-mode)
       eon-cursor-type-extra)
      (t nil)))
-  (add-hook 'eon-cursor-functions #'eon-god--cursor-compute)
+
+  :custom
+
+  (god-mode-lighter-string "G")
+  (god-mode-enable-function-key-translation nil)
+
+  :config
+
+  ;; Bind the leader key
+  (eon-god--install-emulation)
+  (eon-god--sync-leaders)
+  (add-hook 'eon-leader-mode-hook #'eon-god--sync-leaders)
 
   ;; Refresh cursor when god-mode toggles
+  (add-hook 'eon-cursor-functions #'eon-god--cursor-compute)
   (add-hook 'god-local-mode-hook #'eon-cursor-update)
 
   ;; Intercept the ESC key and let Emacs handle it when in `vterm' buffer;
   ;; toggle via "C-c C-q" between interception and passing through to `vterm'.
-  (with-eval-after-load 'vterm
+  (with-eval-after-load 'eon-vterm
     (add-hook 'vterm-mode-hook
               (lambda ()
                 (setq eon-vterm-escape-command #'eon-god-local-mode-activate
                       eon-vterm-send-escape-to-vterm nil)
                 (eon-vterm-update-escape))))
+
+  ;; Unblock these major modes:
+  (eon-god-unexempt-modes '(Custom-mode
+                            ;; Info-mode
+                            ;; ag-mode
+                            ;; calculator-mode
+                            ;; calendar-mode
+                            ;; cider-test-report-mode
+                            ;; compilation-mode
+                            ;; debugger-mode
+                            dired-mode
+                            ;; edebug-mode
+                            ;; ediff-mode
+                            ;; eww-mode
+                            ;; geben-breakpoint-list-mode
+                            ;; git-commit-mode
+                            ;; grep-mode
+                            ;; ibuffer-mode
+                            ;; magit-popup-mode
+                            ;; org-agenda-mode
+                            ;; pdf-outline-buffer-mode
+                            ;; recentf-dialog-mode
+                            ;; sldb-mode
+                            ;; sly-db-mode
+                            ;; vc-annotate-mode
+                            ;; wdired-mode
+                            ))
+
+  ;; Unblock these predicates:
+  (eon-god-unexempt-predicates '(;; god-exempt-mode-p
+                                 ;; god-comint-mode-p
+                                 ;; god-git-commit-mode-p
+                                 ;; god-view-mode-p
+                                 god-special-mode-p
+                                 ))
+  
+  ;; Enable God mode almost everywhere;
+  ;; see `god-exempt-major-modes' and `god-exempt-predicates' where not.
+  (god-mode-all 1)
 
   :bind
 
@@ -214,6 +215,7 @@ Bound to \"i\" per default."
 
 ;; Adjustments for Isearch
 (use-package god-mode-isearch :ensure nil
+  :after isearch
   :bind
   (:map isearch-mode-map
         ("<escape>" . god-mode-isearch-activate))
