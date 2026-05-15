@@ -1,6 +1,6 @@
 ;;; eon-helix.el --- Modal editing: Helix keybindings -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.0
+;; Version: 2.0.1
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -114,16 +114,6 @@
     :set #'eon-helix--set-leaders
     :initialize 'custom-initialize-set)
 
-  :config
-
-  (helix-mode)
-
-  ;; Explicitly bind the leader key
-  (eon-helix--sync-leaders)
-  (add-hook 'eon-leader-mode-hook #'eon-helix--sync-leaders)
-
-  ;;; Show extra cursor when Helix is in normal state
-
   (defun eon-helix--selection-active-p ()
     "Return non-nil if Helix has an active selection."
     (or (region-active-p)
@@ -145,25 +135,30 @@
       eon-cursor-type-extra)
      (t nil)))
 
+  :config
+
+  ;; Explicitly bind the leader key
+  (eon-helix--sync-leaders)
+  (add-hook 'eon-leader-mode-hook #'eon-helix--sync-leaders)
+
+  ;;; Show extra cursor when Helix is in normal state
   (add-hook 'eon-cursor-functions #'eon-helix--cursor-compute)
 
   ;; Refresh on Helix state flips
   (add-hook 'helix-normal-mode-hook #'eon-cursor-update)
-  (add-hook 'helix-insert-mode-hook #'eon-cursor-update))
+  (add-hook 'helix-insert-mode-hook #'eon-cursor-update)
 
-;; _____________________________________________________________________________
-;;; DIRED
+  ;; Dired-local Helix normal-state overrides
+  (helix-define-key 'normal "l" #'dired-find-file 'dired-mode)
+  (helix-define-key 'normal "h" #'dired-up-directory 'dired-mode)
+  (with-eval-after-load 'eon-dired
+    (helix-define-key 'normal "y" #'dired-ranger-copy 'dired-mode)
+    (helix-define-key 'normal "p" #'dired-ranger-paste 'dired-mode)
+    (helix-define-key 'normal "P" #'dired-ranger-move 'dired-mode))
 
-(use-package dired :ensure nil
-  :after helix
-  :bind
-  ;; Add Ranger-like movements to Dired
-  (:map dired-mode-map
-        ("l" . dired-find-file)
-        ("h" . dired-up-directory)
-        ("y" . dired-ranger-copy)
-        ("p" . dired-ranger-paste)
-        ("P" . dired-ranger-move)))
+  ;; Enable Helix, but do not toggle it off when this file is reloaded
+  (unless helix-global-mode
+    (helix-mode)))
 
 ;; _____________________________________________________________________________
 (provide 'eon-helix)
