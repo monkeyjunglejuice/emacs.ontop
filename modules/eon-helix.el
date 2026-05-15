@@ -151,7 +151,7 @@
   ;; Dired-local Helix normal-state overrides
   (helix-define-key 'normal "l" #'dired-find-file 'dired-mode)
   (helix-define-key 'normal "h" #'dired-up-directory 'dired-mode)
-  (with-eval-after-load 'eon-dired
+  (when (eon-modulep 'eon-dired)
     (helix-define-key 'normal "y" #'dired-ranger-copy 'dired-mode)
     (helix-define-key 'normal "p" #'dired-ranger-paste 'dired-mode)
     (helix-define-key 'normal "P" #'dired-ranger-move 'dired-mode))
