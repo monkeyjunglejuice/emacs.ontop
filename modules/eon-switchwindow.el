@@ -28,7 +28,7 @@
   :custom
 
   (switch-window-background t)
-  (switch-window-multiple-frames nil)
+  (switch-window-multiple-frames t)
   (switch-window-threshold 2)
   (switch-window-mvborder-increment 1)
   (switch-window-shortcut-style 'qwerty)
@@ -42,7 +42,7 @@
   ;; Remove hard-coded right split for commands like `switch-window-then-dired',
   ;; in order to respect user preference. Uses `split-window-sensibly' when just
   ;; one single window exists.
-  ;; Upstream pull request: <https://github.com/dimitri/switch-window/pull/97
+  ;; Upstream pull request: <https://github.com/dimitri/switch-window/pull/97>
 
   (defun eon-switch-window--call-with-cleanup
       (function original-window created-window)
