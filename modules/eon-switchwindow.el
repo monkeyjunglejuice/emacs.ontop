@@ -105,12 +105,14 @@
           (define-key map (kbd "j") 'switch-window-mvborder-down)
           (define-key map (kbd "h") 'switch-window-mvborder-left)
           (define-key map (kbd "l") 'switch-window-mvborder-right)
-          (define-key map (kbd "b") 'balance-windows)
+          (define-key map (kbd "=") 'balance-windows)
           (define-key map (kbd "SPC") 'switch-window-resume-auto-resize-window)
           map))
+
   (set-face-attribute 'switch-window-background nil
                       :foreground 'unspecified
                       :inherit 'shadow)
+
   (set-face-attribute 'switch-window-label nil
                       :inherit 'show-paren-match-expression
                       :height 1.5)
@@ -138,7 +140,7 @@
         ("k" . switch-window-then-kill-buffer)
         ("m" . switch-window-then-maximize)
         ("s" . switch-window-then-split-below)
-        ("v" . switch-window-then-split-right)
+        ("S" . switch-window-then-split-right)
         ("w" . switch-window)
         ("x" . switch-window-then-swap-buffer)))
 
