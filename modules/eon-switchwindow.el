@@ -39,6 +39,65 @@
 
   :config
 
+  ;; Remove hard-coded right split for commands like `switch-window-then-dired',
+  ;; in order to respect user preference. Uses `split-window-sensibly' when just
+  ;; one single window exists.
+  ;; Upstream pull request: <https://github.com/dimitri/switch-window/pull/97
+
+  (defun eon-switch-window--call-with-cleanup
+      (function original-window created-window)
+    "Call FUNCTION interactively, cleaning up on quit or error.
+
+  If FUNCTION does not complete, reselect ORIGINAL-WINDOW and delete
+  CREATED-WINDOW when it is still live. CREATED-WINDOW should be
+  non-nil only for a window created speculatively for this command."
+    (condition-case signal-data
+        (call-interactively function)
+      ((quit error)
+       (when (and (window-live-p original-window)
+                  (window-live-p created-window))
+         (delete-window created-window))
+       (when (window-live-p original-window)
+         (select-window original-window))
+       (signal (car signal-data) (cdr signal-data)))))
+
+  (defun eon-switch-window--then-other-window (prompt function)
+    "PROMPT for a target window and call FUNCTION there.
+
+  This is an override for `switch-window--then-other-window'.
+  It uses `split-window-sensibly' instead of a hardcoded right split.
+  A newly split window is provisional and is deleted again if
+  FUNCTION quits or signals an error."
+    (let ((preferred-function
+           (switch-window--get-preferred-function function))
+          (original-window
+           (selected-window)))
+      (switch-window--then
+       prompt
+       (lambda ()
+         (let* ((created-window
+                 (and (one-window-p)
+                      (or (split-window-sensibly)
+                          (user-error
+                           "Cannot split selected window sensibly"))))
+                (target-window
+                 (or created-window
+                     (next-window))))
+           (select-window target-window)
+           (eon-switch-window--call-with-cleanup
+            preferred-function original-window created-window)))
+       (lambda ()
+         (eon-switch-window--call-with-cleanup
+          preferred-function original-window nil))
+       nil
+       2)))
+
+  (advice-add 'switch-window--then-other-window
+              :override
+              #'eon-switch-window--then-other-window)
+
+  ;; Keybindings when `switch-window' UI is active
+
   (setq switch-window-extra-map
         (let ((map (make-sparse-keymap)))
           ;; Set Vim-like keybindings for window resizing
