@@ -162,7 +162,7 @@ Bound to \"i\" per default."
                 (eon-vterm-update-escape))))
 
   ;; Unblock these major modes:
-  (eon-god-unexempt-modes '(Custom-mode
+  (eon-god-unexempt-modes '(;; Custom-mode
                             ;; Info-mode
                             ;; ag-mode
                             ;; calculator-mode
@@ -170,7 +170,7 @@ Bound to \"i\" per default."
                             ;; cider-test-report-mode
                             ;; compilation-mode
                             ;; debugger-mode
-                            dired-mode
+                            ;; dired-mode
                             ;; edebug-mode
                             ;; ediff-mode
                             ;; eww-mode
