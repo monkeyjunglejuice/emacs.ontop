@@ -64,7 +64,7 @@ string with no whitespace and is prepended to each model name."
              (or (not (stringp prefix))
                  (string-match-p "[ \t\n\r\f\v]" prefix)))
     (user-error "PREFIX must be a string without whitespace: %S" prefix))
-  (let* ((output (shell-command-to-string "ollama list"))
+  (let* ((output (shell-command-to-string "ollama list 2>/dev/null"))
          (lines (split-string output "\n" t))
          (rows (cdr lines))
          (names (mapcar (lambda (line)
