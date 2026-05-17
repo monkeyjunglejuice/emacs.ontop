@@ -38,7 +38,7 @@
 ;; _____________________________________________________________________________
 ;;; REPL
 
-(use-package inf-elixir :load-path "~/code/inf-elixir"
+(use-package inf-elixir :ensure t
 
   :autoload inf-elixir--find-project-root
 
