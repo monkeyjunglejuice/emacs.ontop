@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 ;;
 ;;
-;; Version: 2.6.5
+;; Version: 2.6.6
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
@@ -481,6 +481,9 @@ When called interactively, also echo the result."
             (when (display-graphic-p)
               (select-frame-set-input-focus (selected-frame)))))
 
+;; Avoid gaps in some window managers
+(setopt frame-resize-pixelwise t)
+
 ;; _____________________________________________________________________________
 ;;; USER INTERFACE
 
@@ -646,9 +649,8 @@ a `cursor-type' or nil. The first non-nil return wins.")
         (mapc (lambda (buf)
                 (with-current-buffer buf (eon-cursor-update)))
               (buffer-list))
-        ;; It seems unreasonable to use `after-command-hook' to update
-        ;; the cursor type; better avoid that potential overhead.
-        ;; Instead we're listing the triggers one-by-one.
+        ;; It may be unreasonable to use `post-command-hook' to update the
+        ;; cursor type; better avoid that and list the triggers one-by-one.
         (add-hook   'buffer-list-update-hook      #'eon-cursor-update)
         (add-hook   'read-only-mode-hook          #'eon-cursor-update)
         (add-hook   'after-change-major-mode-hook #'eon-cursor-update)
@@ -657,7 +659,8 @@ a `cursor-type' or nil. The first non-nil return wins.")
         (add-hook   'deactivate-mark-hook         #'eon-cursor-update)
         ;; Make sure the cursor will be updated after leaving wdired
         (advice-add 'wdired-abort-changes :after  #'eon-cursor-update)
-        (advice-add 'wdired-finish-edit :after    #'eon-cursor-update))
+        (advice-add 'wdired-finish-edit :after    #'eon-cursor-update)
+        )
     ;; Tear down
     (remove-hook   'buffer-list-update-hook      #'eon-cursor-update)
     (remove-hook   'read-only-mode-hook          #'eon-cursor-update)
@@ -665,7 +668,8 @@ a `cursor-type' or nil. The first non-nil return wins.")
     (remove-hook   'activate-mark-hook           #'eon-cursor-update)
     (remove-hook   'deactivate-mark-hook         #'eon-cursor-update)
     (advice-remove 'wdired-abort-changes         #'eon-cursor-update)
-    (advice-remove 'wdired-finish-edit           #'eon-cursor-update)))
+    (advice-remove 'wdired-finish-edit           #'eon-cursor-update)
+    ))
 
 ;; Turn it on
 (eon-cursor-mode 1)
@@ -679,10 +683,7 @@ a `cursor-type' or nil. The first non-nil return wins.")
         which-key-idle-delay 0.3
         which-key-idle-secondary-delay 0.0
         which-key-sort-uppercase-first nil
-        which-key-sort-order 'which-key-key-order-alpha
-        which-key-preserve-window-configuration t
-        which-key-show-remaining-keys nil
-        which-key-show-transient-maps nil)
+        which-key-sort-order 'which-key-key-order-alpha)
 
 (which-key-mode 1)
 
@@ -910,6 +911,7 @@ Use `eon-customize-group' to change, or `setopt' from Lisp."
 (defvar-keymap ctl-z-t-map   :doc "Tab/WS")
 (defvar-keymap ctl-z-v-map   :doc "VC/Git")
 (defvar-keymap ctl-z-w-map   :doc "Window")
+(defvar-keymap ctl-z-W-map   :doc "Frame")
 (defvar-keymap ctl-z-x-map   :doc "Misc")
 (defvar-keymap ctl-z-ret-map :doc "Bookmark")
 
@@ -935,6 +937,7 @@ Use `eon-customize-group' to change, or `setopt' from Lisp."
   "t"   `("Tab/WS"   . ,ctl-z-t-map)
   "v"   `("VC/Git"   . ,ctl-z-v-map)
   "w"   `("Window"   . ,ctl-z-w-map)
+  "W"   `("Frame"    . ,ctl-z-W-map)
   "x"   `("Misc"     . ,ctl-z-x-map)
   "RET" `("Bookmark" . ,ctl-z-ret-map))
 
@@ -1442,14 +1445,14 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;;; DISPLAY & SCROLLING
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Scrolling>
 
-(setopt mouse-wheel-scroll-amount '(1 ((shift) . 1))
-        mouse-wheel-progressive-speed t
+(setopt mouse-wheel-progressive-speed t
         mouse-wheel-follow-mouse t)
 
 (setopt scroll-preserve-screen-position t
-        scroll-margin 1
-        scroll-up-aggressively 0.01
-        scroll-down-aggressively 0.01)
+        scroll-margin 2
+        scroll-conservatively 0
+        scroll-up-aggressively 0.0
+        scroll-down-aggressively 0.0)
 
 ;; Horizontal scrolling
 (setopt auto-window-vscroll nil
@@ -1607,12 +1610,12 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 ;; Let TAB accept the current candidates in Icomplete/Fido minibuffers
 (with-eval-after-load 'icomplete
-  (keymap-set icomplete-minibuffer-map "TAB" #'icomplete-force-complete)
-  (keymap-set icomplete-minibuffer-map "<tab>" #'icomplete-force-complete)
+  (keymap-set icomplete-fido-mode-map "TAB" #'icomplete-force-complete)
+  (keymap-set icomplete-fido-mode-map "<tab>" #'icomplete-force-complete)
   ;; Let "SPC" insert the literal space character instead of triggering
   ;; `minibuffer-complete-word'. This enables filtering for candidates who
   ;; contain whitespace and prevents the *Completions* buffer from popping up.
-  (keymap-set icomplete-minibuffer-map "SPC" #'self-insert-command))
+  (keymap-set icomplete-fido-mode-map "SPC" #'self-insert-command))
 
 (fido-vertical-mode 1)
 
@@ -1676,10 +1679,17 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; Focus a help window when it appears?
 (setopt help-window-select t)
 
+;; Reuse help windows?
+(setopt help-window-keep-selected t)
+
 ;; Show all options when running `apropos' and friends (fulltext search)?
 ;; Keybinding: <leader> h a"
 (setopt apropos-do-all t)
 (keymap-set ctl-z-h-map "a" #'apropos)
+
+(when (>= emacs-major-version 31)
+  ;; Auto-update "C-h l" buffer
+  (setopt view-lossage-auto-refresh t))
 
 ;; _____________________________________________________________________________
 ;;; ELDOC
@@ -1804,8 +1814,8 @@ buffer."
 ;; _____________________________________________________________________________
 ;;; FRAME MANAGEMENT
 
-(keymap-set ctl-z-w-map "M-f" #'toggle-frame-maximized)
-(keymap-set ctl-z-w-map "C-f" #'toggle-frame-fullscreen)
+(keymap-set ctl-z-W-map "m" #'toggle-frame-maximized)
+(keymap-set ctl-z-W-map "f" #'toggle-frame-fullscreen)
 
 ;; _____________________________________________________________________________
 ;;; WINDOW MANAGEMENT
@@ -1816,12 +1826,24 @@ buffer."
 ;; Set to nil to leave the window configuration alone.
 (setopt even-window-sizes 'height-only)
 
+;; When quitting a window, rather delete window entirely than switching
+;; to some unrelated buffer that hasn't been shown before
+;; HACK User option is declared as type boolean in Emacs 31.60, but documented
+;; to accept the symbol 'skip-first; hence set it via `setq' instead to avoid
+;; the type check.
+(when (>= emacs-major-version 31)
+  (setq quit-restore-window-no-switch 'skip-first))
+
 ;; Focus follows mouse?
 (setopt mouse-autoselect-window nil
         focus-follows-mouse nil)
 
 ;; Make window splits more evenly sized?
-(setopt window-resize-pixelwise t)
+(setopt window-resize-pixelwise nil)
+
+;; Window splitting
+(setopt split-width-threshold 160
+        split-height-threshold 40)
 
 ;; Undo/redo window layouts
 (setopt winner-dont-bind-my-keys t)
@@ -1846,11 +1868,10 @@ buffer."
 (keymap-set ctl-z-w-map "w"   #'other-window)
 
 ;; Default window navigation – simply switch to the next window in order.
-;; Added for convenience; the default keybinding is "C-x o"
+;; Added for convenience; the default keybindings are "C-x o" and "C-x O".
 (keymap-global-set "M-o" #'other-window)
-
-;; Rotate window layout
-
+(when (>= emacs-major-version 31)
+  (keymap-global-set "M-O" #'other-window-backward))
 
 ;; _____________________________________________________________________________
 ;;; TAB MANAGEMENT
@@ -1859,6 +1880,9 @@ buffer."
 ;; nil = no special handling. Let `set-window-configuration' decide,
 ;; instead of displaying a placeholder bufffer.
 (setopt tab-bar-select-restore-windows nil)
+
+;; Create a fresh tab with *scratch* buffer only
+(setopt tab-bar-new-tab-choice "*scratch*")
 
 ;; Show tab numbers
 (setopt tab-bar-tab-hints t)
@@ -1884,6 +1908,16 @@ buffer."
 (keymap-set ctl-z-t-map "b" #'switch-to-buffer-other-tab)
 (keymap-set ctl-z-t-map "o" #'other-tab-prefix)
 (keymap-set ctl-z-t-map "p" #'project-other-tab-command)
+
+;; Enable tabs
+(tab-bar-mode 1)
+
+;; Go back/forward trough tab layouts
+(keymap-set ctl-z-t-map "<" #'tab-bar-history-back)
+(keymap-set ctl-z-t-map ">" #'tab-bar-history-forward)
+
+;; Enable tab bar history
+(tab-bar-history-mode 1)
 
 ;; _____________________________________________________________________________
 ;;; BUFFER MANAGEMENT
@@ -1958,6 +1992,9 @@ If called from the minibuffer, exit via `abort-recursive-edit'."
 
 ;; Uniquify buffer names for buffers that would have identical names
 (setopt uniquify-buffer-name-style 'forward)
+
+;; Should `switch-to-buffer' use `pop-to-buffer-same-window'?
+(setopt switch-to-buffer-obey-display-actions t)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Boring buffers
@@ -2232,6 +2269,13 @@ pretending to clear it."
 ;; Re-open file with sudo: "<leader f @>"
 (keymap-set ctl-z-f-map "@" #'tramp-revert-buffer-with-sudo)
 
+;; Add option "d" to whenever using "C-x s", "<leader> f S" or "C-x C-c",
+;; allowing a diff preview of what you're asked to save.
+(add-to-list 'save-some-buffers-action-alist
+             (list "d"
+                   (lambda (buffer) (diff-buffer-with-file (buffer-file-name buffer)))
+                   "show diff between the buffer and its file"))
+
 ;; Deleting files
 
 (defun eon-trash-on ()
@@ -2260,7 +2304,7 @@ pretending to clear it."
 
 ;; Auto refresh buffers when contents change?
 (setopt global-auto-revert-non-file-buffers t
-        auto-revert-verbose nil)
+        auto-revert-verbose t)
 (global-auto-revert-mode 1)
 
 ;; Configure Ediff to use a single frame and split windows horizontally
@@ -2388,8 +2432,6 @@ pretending to clear it."
 
 ;; Keybindings in Dired
 (with-eval-after-load 'dired
-  ;; Switch to wdired-mode and edit directory content like a text buffer
-  (keymap-set dired-mode-map "e" #'wdired-change-to-wdired-mode)
   ;; "f" opens file/directory; bring forward/backward pattern to Dired
   (keymap-set dired-mode-map "b" #'dired-up-directory))
 
@@ -2422,6 +2464,14 @@ pretending to clear it."
 
 ;; Highlight current line in Dired?
 (add-hook 'dired-mode-hook #'hl-line-mode)
+
+;; Edit directory file listings like an ordinary text buffer?
+(with-eval-after-load 'dired
+  (keymap-set dired-mode-map "e" #'wdired-change-to-wdired-mode))
+
+(with-eval-after-load 'wdired
+  (setopt wdired-allow-to-redirect-links t
+          wdired-allow-to-change-permissions t))
 
 ;; Images
 (with-eval-after-load 'image-dired
@@ -2487,7 +2537,7 @@ pretending to clear it."
 (setopt eshell-banner-message ""
         eshell-scroll-to-bottom-on-input 'this
         eshell-buffer-maximum-lines 65536
-        eshell-history-size 1024
+        eshell-history-size 65536
         eshell-history-append t
         eshell-hist-ignoredups t
         eshell-cmpl-ignore-case t
@@ -2540,7 +2590,7 @@ pretending to clear it."
 (keymap-set ctl-z-e-map "E" #'eon-eshell-new)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; Faster Eshell cd command; similar to Zoxide
+;;; - Faster Eshell cd command; similar to Zoxide
 
 (defun eshell/d (&optional regexp)
   "Navigate to a previously visited directory in Eshell.
@@ -2626,7 +2676,8 @@ Add/override an alias with `add-to-list', or add/override multiple aliases
 via `eon-add-to-list'."
   :type '(alist :key-type (choice string symbol)
                 :value-type string)
-  :set #'eon-eshell--set-aliases)
+  :set #'eon-eshell--set-aliases
+  :group 'eon-eshell)
 
 (with-eval-after-load 'em-alias
   ;; Ensure they exist when Eshell initializes/loads aliases
@@ -3061,6 +3112,10 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 
 ;; _____________________________________________________________________________
 ;;; TREE-SITTER
+
+(when (>= emacs-major-version 31)
+  (setopt treesit-auto-install-grammar 'ask
+          treesit-enabled-modes t))
 
 ;; Define grammar specs for ts-modes already built into Emacs.
 ;; Grammars can be built and installed via:
