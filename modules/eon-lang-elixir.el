@@ -17,7 +17,7 @@
 
 (eon-module-metadata
  :conflicts '()
- :requires  '(eon eon-yasnippet))
+ :requires  '(eon))
 
 ;; _____________________________________________________________________________
 ;;; ELIXIR TS MODE
