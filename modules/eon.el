@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 ;;
 ;;
-;; Version: 2.6.6
+;; Version: 2.6.8
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
@@ -1587,7 +1587,12 @@ Some themes may come as functions -- wrap these ones in lambdas."
  completions-sort 'historical)
 
 ;; Prevent visual line wrapping in narrow frames
-(add-hook 'completion-list-mode-hook (lambda () (setq-local truncate-lines t)))
+(defun eon-completion-list-setup ()
+  "Configure display behavior for completion list buffers."
+  (setq-local truncate-lines t)
+  (setq-local word-wrap nil))
+
+(add-hook 'completion-list-mode-hook #'eon-completion-list-setup)
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Icomplete
@@ -1697,7 +1702,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; <https://www.masteringemacs.org/article/seamlessly-merge-multiple-documentation-sources-eldoc>
 
 (setopt eldoc-minor-mode-string nil
-        eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly
+        eldoc-documentation-strategy 'eldoc-documentation-compose
         eldoc-echo-area-display-truncation-message nil
         eldoc-echo-area-prefer-doc-buffer t)
 
@@ -2924,11 +2929,11 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 ;; visual line breaks, a.k.a soft wrapping
 ;; (add-hook 'prog-mode-hook (lambda () (visual-line-mode 1)))
 
-;; Wrap lines at whitespace, rather than in the middle of a word
-(setopt word-wrap t)
-
-;; Visual line wrapping in text mode
+;; Enable visual line wrapping in text mode?
 (add-hook 'text-mode-hook #'visual-line-mode)
+
+;; Wrap lines at whitespace rather than in the middle of a word?
+(setopt word-wrap t)
 
 ;; Toggle `visual-line-mode' via "<leader> x l"
 (keymap-set ctl-z-x-map "l" #'visual-line-mode)
@@ -3116,6 +3121,9 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 (when (>= emacs-major-version 31)
   (setopt treesit-auto-install-grammar 'ask
           treesit-enabled-modes t))
+
+;; TODO Redundant for (>= emacs-major-version 31), remove when
+;; backwards-compatibility for Emacs 30 is dropped.
 
 ;; Define grammar specs for ts-modes already built into Emacs.
 ;; Grammars can be built and installed via:
