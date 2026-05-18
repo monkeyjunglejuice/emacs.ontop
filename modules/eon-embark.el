@@ -45,26 +45,40 @@
   ("C-;"   . embark-dwim)
   ("C-h B" . embark-bindings))
 
-(use-package embark :ensure t
-  :when (eon-modulep 'eon-vertico)
-  :after vertico
-  :config
-  (defun +embark-live-vertico ()
-    "Shrink Vertico minibuffer when `embark-live' is active."
-    (and-let* ((win (active-minibuffer-window))
-               (_   (string-prefix-p "*Embark Live" (buffer-name))))
-      (with-selected-window win
-        (when (and (bound-and-true-p vertico--input)
-                   (fboundp 'vertico-multiform-unobtrusive))
-          (vertico-multiform-unobtrusive)))))
-  (add-hook 'embark-collect-mode-hook #'+embark-live-vertico))
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; VERTICO INTEGRATION
 
-;; Consult users will also want the embark-consult package
-(use-package embark-consult :ensure t
-  :when (eon-modulep 'eon-consult)
-  :after consult
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
+(when (eon-modulep 'eon-vertico)
+
+  (use-package embark :ensure t
+    :after vertico
+
+    :config
+
+    (defun eon-embark-live-vertico ()
+      "Shrink Vertico minibuffer when `embark-live' is active."
+      (and-let* ((win (active-minibuffer-window))
+                 (_   (string-prefix-p "*Embark Live" (buffer-name))))
+        (with-selected-window win
+          (when (and (bound-and-true-p vertico--input)
+                     (fboundp 'vertico-multiform-unobtrusive))
+            (vertico-multiform-unobtrusive)))))
+    
+    :hook
+
+    (embark-collect-mode . eon-embark-live-vertico)))
+
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; CONSULT INTEGRATION
+
+(when (eon-modulep 'eon-consult)
+
+  (use-package embark-consult :ensure t
+    :after consult
+
+    :hook
+
+    (embark-collect-mode . consult-preview-at-point-mode)))
 
 ;; _____________________________________________________________________________
 (provide 'eon-embark)
