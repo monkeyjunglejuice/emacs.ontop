@@ -79,7 +79,7 @@
    ;; eon-paren-face                ; Less visible parenthesis
    ;; eon-pdftools                  ; Sophisticated PDF tool suite
    ;; eon-rainbow-delimiters        ; Color-code nested parenthesis
-   ;; eon-smartparens               ; Paredit alternative with more features
+   ;; eon-smartparens               ; More general Paredit alternative
    ;; eon-switchwindow              ; Navigate windows
    ;; eon-todo                      ; Highlight todo keywords in comments
    ;; eon-vertico                   ; Vertical minibuffer completion UI
