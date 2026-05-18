@@ -27,9 +27,6 @@
 
   :custom
 
-  (magit-bury-buffer-function #'magit-restore-window-configuration)
-  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
-
   ;; How many directoriess deep magit looks for git repos
   (magit-repository-directories '(("~/" . 1)))
 
