@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░     ▒░      ▒░▒░▒░   ▒░
 ;;
 ;;
-;; Version: 2.0.2
+;; Version: 2.0.3
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -59,9 +59,6 @@
 ;; are basically Emacs packages, if the required metadata has been added to
 ;; each module. That way they could be available as "meta-packages" on Melpa /
 ;; GNU Elpa. It might be interesting to treat them as global minor modes also.
-
-;; MAYBE Define and add a metadata format for modules, if the metadata
-;; required for packages turns out as not enough.
 
 ;; MAYBE Generate hooks for all modules automatically, since using
 ;; `with-eval-after-load' alone is quite blunt.
@@ -159,12 +156,6 @@ somewhere else and customize this variable."
 
 ;; _____________________________________________________________________________
 ;;; USER-DEFINED MODULES
-
-;; TODO Implement loading of user-defined modules
-;; Modules in '[eon-user-dir]/modules/' should be handled separately,
-;; or classified in another way so they can be told apart.
-;; This might further enable specific logic, e.g. determining precedence,
-;; managing dependencies, etc.
 
 ;; Define the path of the Emacs ONTOP user modules directory
 (defvar eon-user-modules-dir
@@ -285,14 +276,10 @@ run `eon-user-setup' first" eon-user-dir))
 ;;; LOADER
 
 ;; Module loading with dependency- and conflict resolver.
-;; Doesn't load user-defined modules and contrib modules yet (WIP).
 
 ;; TODO Implement loading of contrib modules
-;; TODO Implement loading of user-defined modules
 ;; TODO If contrib module/feature exists, ignore built-in module/feature
 ;;      of the same name.
-;; TODO If user-defined module/feature exists, ignore both built-in
-;;      module/feature and contrib module/feature of the same name.
 ;; TODO Add branch for interactive use, MAYBE ask for selection which
 ;;      set of modules to load, e.g. only built-in modules vs. all modules.
 ;; TODO Add option for forced reload.
@@ -327,7 +314,6 @@ keeping only those that name existing directories."
               (and (bound-and-true-p eon-user-contrib-dir)
                    (file-directory-p eon-user-contrib-dir)
                    eon-user-contrib-dir)
-              ;; TODO Implement loading from there
               ;; Default: ~/.emacs.d/eon/modules
               (and (bound-and-true-p eon-user-modules-dir)
                    (file-directory-p eon-user-modules-dir)
