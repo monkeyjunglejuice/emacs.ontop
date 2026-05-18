@@ -1,6 +1,6 @@
 ;;; eon-switchwindow.el --- Navigate windows -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.0
+;; Version: 2.0.1
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -44,38 +44,19 @@
   ;; one single window exists.
   ;; Upstream pull request: <https://github.com/dimitri/switch-window/pull/97>
 
-  (defun eon-switch-window--call-with-cleanup
-      (function original-window created-window)
-    "Call FUNCTION interactively, cleaning up on quit or error.
-
-  If FUNCTION does not complete, reselect ORIGINAL-WINDOW and delete
-  CREATED-WINDOW when it is still live. CREATED-WINDOW should be
-  non-nil only for a window created speculatively for this command."
-    (condition-case signal-data
-        (call-interactively function)
-      ((quit error)
-       (when (and (window-live-p original-window)
-                  (window-live-p created-window))
-         (delete-window created-window))
-       (when (window-live-p original-window)
-         (select-window original-window))
-       (signal (car signal-data) (cdr signal-data)))))
-
   (defun eon-switch-window--then-other-window (prompt function)
     "PROMPT for a target window and call FUNCTION there.
-
-  This is an override for `switch-window--then-other-window'.
-  It uses `split-window-sensibly' instead of a hardcoded right split.
-  A newly split window is provisional and is deleted again if
-  FUNCTION quits or signals an error."
-    (let ((preferred-function
-           (switch-window--get-preferred-function function))
-          (original-window
-           (selected-window)))
+  
+  This override uses `split-window-sensibly' instead of the
+  upstream hardcoded `split-window-right'. When a new window is
+  created speculatively, it is deleted again if FUNCTION quits or
+  signals an error."
+    (let ((f (switch-window--get-preferred-function function)))
       (switch-window--then
        prompt
        (lambda ()
-         (let* ((created-window
+         (let* ((original-window (selected-window))
+                (created-window
                  (and (one-window-p)
                       (or (split-window-sensibly)
                           (user-error
@@ -84,18 +65,23 @@
                  (or created-window
                      (next-window))))
            (select-window target-window)
-           (eon-switch-window--call-with-cleanup
-            preferred-function original-window created-window)))
-       (lambda ()
-         (eon-switch-window--call-with-cleanup
-          preferred-function original-window nil))
+           (condition-case signal-data
+               (call-interactively f)
+             ((quit error)
+              (when (and created-window
+                         (window-live-p created-window))
+                (delete-window created-window))
+              (when (window-live-p original-window)
+                (select-window original-window))
+              (signal (car signal-data) (cdr signal-data))))))
+       (lambda () (call-interactively f))
        nil
        2)))
 
   (advice-add 'switch-window--then-other-window
               :override
               #'eon-switch-window--then-other-window)
-
+  
   ;; Keybindings when `switch-window' UI is active
 
   (setq switch-window-extra-map
