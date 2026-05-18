@@ -12,7 +12,7 @@ EON is a new Emacs distribution in the making, built on top of the zero-deps [[h
   + tabula rasa leader keymap for you to populate (if you don't like the default)
   + or just bring your own keymap(s) and simply bind it to the leader/local-leader machinery
 
-- You cam customize EON without touching code if you prefer by just using Emacs' Customization UI. That comes with some perks like type checked variables (use `setopt` instead of plain `setq`).
+- You cam customize EON without touching code if you prefer by just using Emacs' Customization UI. That comes with some perks like type checked variables (use ~setopt~ instead of plain ~setq~).
 
 - Fully modular with dependency/conflict management (e.g. Smartparens vs. Paredit)
   + separation of built-in, contrib and user-defined modules
