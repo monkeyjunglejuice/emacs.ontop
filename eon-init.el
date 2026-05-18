@@ -280,7 +280,7 @@ run `eon-user-setup' first" eon-user-dir))
 ;; TODO Implement loading of contrib modules
 ;; TODO If contrib module/feature exists, ignore built-in module/feature
 ;;      of the same name.
-;; TODO Add branch for interactive use, MAYBE ask for selection which
+;; TODO Add branch for interactive use, maybe ask for selection which
 ;;      set of modules to load, e.g. only built-in modules vs. all modules.
 ;; TODO Add option for forced reload.
 
