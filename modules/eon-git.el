@@ -48,12 +48,16 @@
   :bind
 
   (:map ctl-z-v-map
-        ("v" . magit-status)
-        ("V" . magit-project-status)
+        ("," . magit-dispatch)
+        ("c" . magit-clone-shallow)
+        ("C" . magit-clone)
         ("f" . magit-file-dispatch)
         ("k" . eon-magit-kill-buffers)
+        ("p" . magit-patch-apply)
+        ("P" . magit-patch)
         ("r" . magit-file-rename)
-        ("," . magit-dispatch))
+        ("v" . magit-status)
+        ("V" . magit-project-status))
 
   :hook
 
