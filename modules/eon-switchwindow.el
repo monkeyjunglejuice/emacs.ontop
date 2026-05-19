@@ -83,10 +83,11 @@
               #'eon-switch-window--then-other-window)
 
   (defun eon-switch-window-multiple-frames-toggle ()
-    "Toggle window navigation over multiple frames"
+    "Toggle whether window navigation operates across multiple frames."
     (interactive)
-    (setopt switch-window-multiple-frames
-            (if switch-window-multiple-frames nil t)))
+    (let ((new-status (not switch-window-multiple-frames)))
+      (setopt switch-window-multiple-frames new-status)
+      (message "Window switching across frames %s" (if new-status "enabled" "disabled"))))
 
   ;; Keybindings when `switch-window' UI is active
 
