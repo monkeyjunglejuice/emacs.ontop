@@ -36,7 +36,7 @@ EON is supposed to be completely modular with strictly separated concerns. There
 
 * LLM / Agent integration (WIP)
 
-EON comes with the the amazing Gptel ... well, "framework"? Because it follows the Emacs philosophy of deep, fine-grained integration. Supports local LLMs too via Ollama (Llama.cpp planned).
+EON comes with the the amazing Gptel, because it follows the Emacs philosophy of deep, open-ended integration.
 
 * Use Cases
 
