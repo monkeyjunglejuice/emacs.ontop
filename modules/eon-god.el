@@ -1,6 +1,6 @@
 ;;; eon-god.el --- Modal editing: Emacs keybindings -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.1
+;; Version: 2.0.2
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -193,7 +193,7 @@ Bound to \"i\" per default."
                                  ;; god-comint-mode-p
                                  ;; god-git-commit-mode-p
                                  ;; god-view-mode-p
-                                 god-special-mode-p
+                                 ;; god-special-mode-p
                                  ))
   
   ;; Enable God mode almost everywhere;
