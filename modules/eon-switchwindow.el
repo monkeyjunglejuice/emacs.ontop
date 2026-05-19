@@ -28,7 +28,7 @@
   :custom
 
   (switch-window-background t)
-  (switch-window-multiple-frames t)
+  (switch-window-multiple-frames nil)
   (switch-window-threshold 2)
   (switch-window-mvborder-increment 1)
   (switch-window-shortcut-style 'qwerty)
@@ -46,7 +46,7 @@
 
   (defun eon-switch-window--then-other-window (prompt function)
     "PROMPT for a target window and call FUNCTION there.
-  
+
   This override uses `split-window-sensibly' instead of the
   upstream hardcoded `split-window-right'. When a new window is
   created speculatively, it is deleted again if FUNCTION quits or
@@ -81,17 +81,23 @@
   (advice-add 'switch-window--then-other-window
               :override
               #'eon-switch-window--then-other-window)
-  
+
+  (defun eon-switch-window-multiple-frames-toggle ()
+    "Toggle window navigation over multiple frames"
+    (interactive)
+    (setopt switch-window-multiple-frames
+            (if switch-window-multiple-frames nil t)))
+
   ;; Keybindings when `switch-window' UI is active
 
   (setq switch-window-extra-map
         (let ((map (make-sparse-keymap)))
           ;; Set Vim-like keybindings for window resizing
-          (define-key map (kbd "k") 'switch-window-mvborder-up)
-          (define-key map (kbd "j") 'switch-window-mvborder-down)
-          (define-key map (kbd "h") 'switch-window-mvborder-left)
-          (define-key map (kbd "l") 'switch-window-mvborder-right)
-          (define-key map (kbd "=") 'balance-windows)
+          (define-key map (kbd "k")   'switch-window-mvborder-up)
+          (define-key map (kbd "j")   'switch-window-mvborder-down)
+          (define-key map (kbd "h")   'switch-window-mvborder-left)
+          (define-key map (kbd "l")   'switch-window-mvborder-right)
+          (define-key map (kbd "=")   'balance-windows)
           (define-key map (kbd "SPC") 'switch-window-resume-auto-resize-window)
           map))
 
@@ -122,16 +128,17 @@
 
   ;; Bind `switch-window' commands in the leader keymap
   (:map ctl-z-w-map
-        ("b" . switch-window-then-display-buffer)
-        ("c" . switch-window-then-delete)
-        ("d" . switch-window-then-dired)
-        ("f" . switch-window-then-find-file)
-        ("k" . switch-window-then-kill-buffer)
-        ("m" . switch-window-then-maximize)
-        ("s" . switch-window-then-split-below)
-        ("S" . switch-window-then-split-right)
-        ("w" . switch-window)
-        ("x" . switch-window-then-swap-buffer)))
+        ("b"   . switch-window-then-display-buffer)
+        ("c"   . switch-window-then-delete)
+        ("d"   . switch-window-then-dired)
+        ("f"   . switch-window-then-find-file)
+        ("k"   . switch-window-then-kill-buffer)
+        ("m"   . switch-window-then-maximize)
+        ("s"   . switch-window-then-split-below)
+        ("S"   . switch-window-then-split-right)
+        ("w"   . switch-window)
+        ("x"   . switch-window-then-swap-buffer)
+        ("M-f" . eon-switch-window-multiple-frames-toggle)))
 
 ;; _____________________________________________________________________________
 (provide 'eon-switchwindow)
