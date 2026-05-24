@@ -99,18 +99,6 @@
     :set #'eon-god--set-leaders
     :initialize 'custom-initialize-set)
 
-  (defun eon-god-unexempt-modes (modes)
-    "Remove certain MODES from `god-exempt-major-modes'.
-Once removed, they will start with `god-local-mode' enabled."
-    (setopt god-exempt-major-modes
-            (seq-difference god-exempt-major-modes modes #'eq)))
-
-  (defun eon-god-unexempt-predicates (predicates)
-    "Remove certain PREDICATES from `god-exempt-predicates'.
-Once removed, they will start with `god-local-mode' enabled."
-    (setopt god-exempt-predicates
-            (seq-difference god-exempt-predicates predicates #'eq)))
-
   (defun eon-god-local-mode-activate ()
     "Turn God mode on.
 Bound to \"<escape>\" per default."
@@ -141,6 +129,42 @@ Bound to \"i\" per default."
   (god-mode-lighter-string "G")
   (god-mode-enable-function-key-translation nil)
 
+  (god-exempt-major-modes '(;; Default major modes
+                            Info-mode
+                            ag-mode
+                            calculator-mode
+                            calendar-mode
+                            cider-test-report-mode
+                            compilation-mode
+                            debugger-mode
+                            dired-mode
+                            edebug-mode
+                            ediff-mode
+                            eww-mode
+                            geben-breakpoint-list-mode
+                            git-commit-mode
+                            grep-mode
+                            ibuffer-mode
+                            magit-popup-mode
+                            org-agenda-mode
+                            pdf-outline-buffer-mode
+                            recentf-dialog-mode
+                            sldb-mode
+                            sly-db-mode
+                            vc-annotate-mode
+                            wdired-mode
+                            ;; Additional major modes
+                            ;; ...
+                            ))
+
+  (god-exempt-predicates '(;; Default predicates
+                           god-exempt-mode-p
+                           god-comint-mode-p
+                           god-git-commit-mode-p
+                           god-view-mode-p
+                           ;; god-special-mode-p
+                           ))
+
   :config
 
   ;; Bind the leader key
@@ -161,41 +185,6 @@ Bound to \"i\" per default."
                       eon-vterm-send-escape-to-vterm nil)
                 (eon-vterm-update-escape))))
 
-  ;; Unblock these major modes:
-  (eon-god-unexempt-modes '(;; Custom-mode
-                            ;; Info-mode
-                            ;; ag-mode
-                            ;; calculator-mode
-                            ;; calendar-mode
-                            ;; cider-test-report-mode
-                            ;; compilation-mode
-                            ;; debugger-mode
-                            ;; dired-mode
-                            ;; edebug-mode
-                            ;; ediff-mode
-                            ;; eww-mode
-                            ;; geben-breakpoint-list-mode
-                            ;; git-commit-mode
-                            ;; grep-mode
-                            ;; ibuffer-mode
-                            ;; magit-popup-mode
-                            ;; org-agenda-mode
-                            ;; pdf-outline-buffer-mode
-                            ;; recentf-dialog-mode
-                            ;; sldb-mode
-                            ;; sly-db-mode
-                            ;; vc-annotate-mode
-                            ;; wdired-mode
-                            ))
-
-  ;; Unblock these predicates:
-  (eon-god-unexempt-predicates '(;; god-exempt-mode-p
-                                 ;; god-comint-mode-p
-                                 ;; god-git-commit-mode-p
-                                 ;; god-view-mode-p
-                                 ;; god-special-mode-p
-                                 ))
-  
   ;; Enable God mode almost everywhere;
   ;; see `god-exempt-major-modes' and `god-exempt-predicates' where not.
   (god-mode-all 1)
