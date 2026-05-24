@@ -97,6 +97,8 @@
    ;; eon-ai                        ; Shared functionality for LLM integration
    ;; eon-ollama                    ; Local and cloud LLMs
    ;; eon-gptel                     ; Comprehensive AI chat client
+   ;; eon-gptel-agent               ; Tools and presets for Gptel
+   ;; eon-agent-shell               ; ACP-powered frontend for coding agents
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ;;; PROGRAMMING LANGUAGES
