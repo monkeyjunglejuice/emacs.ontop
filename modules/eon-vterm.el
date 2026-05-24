@@ -68,6 +68,20 @@
 
 (use-package vterm :ensure t
 
+  :init
+
+  (defun eon-vterm-send-q ()
+    "Pass the 'q' key to vterm, commonly used to quit TUI programs."
+    (interactive)
+    (vterm-send "q"))
+
+  (eon-localleader-defkeymap vterm-mode eon-localleader-vterm-map
+    :doc "Local leader keymap for Vterm buffers."
+    "\\"  #'vterm-send-next-key
+    "SPC" #'vterm-send-space
+    "ESC" #'vterm-send-escape
+    "q"   #'eon-vterm-send-q)
+
   :custom
 
   (vterm-max-scrollback 65536)
