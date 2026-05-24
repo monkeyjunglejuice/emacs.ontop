@@ -56,7 +56,8 @@
         ("v" . #'helpful-variable))
 
   (:map eon-localleader-elisp-map
-        ("h" . #'helpful-symbol)))
+        ("h" . #'helpful-at-point)
+        ("H" . #'helpful-symbol)))
 
 ;; _____________________________________________________________________________
 (provide 'eon-helpful)
