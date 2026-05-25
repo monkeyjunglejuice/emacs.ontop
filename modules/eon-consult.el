@@ -155,10 +155,11 @@
    ;; Leader
    :map ctl-z-map
    ("SPC" . consult-project-buffer)
+   ("/"   . eon-consult-grep)
 
    ;; Leader -> Buffer
    :map ctl-z-b-map
-   ("b" . consult-buffer)
+   ("b"   . consult-buffer)
    ("SPC" . consult-project-buffer)
 
    ;; Leader -> Code
