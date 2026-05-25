@@ -25,6 +25,7 @@
 ;; <https://smartparens.readthedocs.io/en/latest/>
 
 (use-package smartparens :ensure t
+  :diminish
 
   :init
 
@@ -32,17 +33,18 @@
   (electric-pair-mode -1)
   (show-paren-mode -1)
 
+  ;; Enable
+  (smartparens-global-strict-mode 1)
+  (show-smartparens-global-mode 1)
+
   :config
 
   ;; Enable language-specific configurations
   (require 'smartparens-config)
 
-  (smartparens-global-mode 1)
-  (show-smartparens-global-mode 1)
-
   ;; Only use the pseudo-quote inside strings where it serves as hyperlink
   (sp-with-modes 'emacs-lisp-mode
-                 (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p)))
+    (sp-local-pair "`" "'" :when '(sp-in-string-p sp-in-comment-p)))
 
   ;; Minibuffer
   (defun eon-smartparens-minibuffer-setup ()
@@ -55,6 +57,7 @@
   :hook
 
   (eval-expression-minibuffer-setup . eon-smartparens-minibuffer-setup)
+  ((eshell-mode comint-mode) . smartparens-mode)
 
   :bind
 
@@ -64,12 +67,14 @@
         ;; Navigation
         ("C-M-f"           . sp-forward-sexp)
         ("C-M-b"           . sp-backward-sexp)
-        ("C-M-u"           . sp-up-sexp)
+        ("C-M-u"           . sp-backward-up-sexp)
         ("C-M-d"           . sp-down-sexp)
+        ("C-M-S-u"         . sp-up-sexp)
+        ("C-M-S-d"         . sp-backward-down-sexp)
         ("C-M-a"           . sp-beginning-of-sexp)
         ("C-M-e"           . sp-end-of-sexp)
         ;; Depth-changing commands
-        ("C-M-S-u"         . sp-unwrap-sexp)
+        ("C-M-s"           . sp-unwrap-sexp)
         ("C-M-S-s"         . sp-splice-sexp)
         ;; Forward slurp/barf
         ("C-M-)"           . sp-forward-slurp-sexp)
@@ -83,7 +88,9 @@
         ("C-M-SPC"         . sp-mark-sexp)
         ("C-M-@"           . sp-mark-sexp)
         ("C-M-w"           . sp-copy-sexp)
-        ("C-M-t"           . sp-transpose-sexp)))
+        ("C-M-t"           . sp-transpose-sexp)
+        ("C-M-n"           . sp-select-next-thing)
+        ("C-M-p"           . sp-select-previous-thing-exchange)))
 
 ;; _____________________________________________________________________________
 (provide 'eon-smartparens)
