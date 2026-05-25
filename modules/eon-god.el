@@ -192,12 +192,19 @@ Bound to \"i\" per default."
   :bind
 
   ("<escape>" . eon-god-local-mode-activate)
+
   (:map god-local-mode-map
         ("i" . eon-god-local-mode-disable)
         ("." . repeat)
         ("V" . scroll-down-command)
         ("^" . scroll-up-command)
-        ("q" . quit-window)))
+        ("q" . quit-window)
+        ("[" . backward-paragraph)
+        ("]" . forward-paragraph))
+
+  (:repeat-map eon-god-local-mode-repeat-map
+               ("f" . forward-word)
+               ("b" . backward-word)))
 
 ;; _____________________________________________________________________________
 ;;; ISEARCH
