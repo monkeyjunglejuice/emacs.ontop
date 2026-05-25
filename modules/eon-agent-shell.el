@@ -37,7 +37,7 @@
   :bind
 
   (:map ctl-z-l-map
-        ("s" . agent-shell)))
+        ("a" . agent-shell)))
 
 ;; _____________________________________________________________________________
 (provide 'eon-agent-shell)
