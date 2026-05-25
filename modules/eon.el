@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 ;;
 ;;
-;; Version: 2.6.8
+;; Version: 2.6.9
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
@@ -161,7 +161,8 @@ Cancel the previous one if present."
         (message "Garbage collecting...")
         (condition-case-unless-debug e
             (message "Garbage collecting...done (%.3fs)"
-                     (setf eon-gcmh-last-gc-time (eon-gcmh-time (garbage-collect))))
+                     (setf eon-gcmh-last-gc-time
+                           (eon-gcmh-time (garbage-collect))))
           (error (message "Garbage collecting...failed")
                  (signal (car e) (cdr e)))))
     (setf eon-gcmh-last-gc-time (eon-gcmh-time (garbage-collect))))
@@ -178,8 +179,10 @@ Cancel the previous one if present."
         ;; Release severe GC strategy before the user restart to working
         (add-hook 'pre-command-hook #'eon-gcmh-set-high-threshold)
         (add-hook 'post-command-hook #'eon-gcmh-register-idle-gc))
-    (setf gc-cons-threshold eon-gcmh-low-cons-threshold
-          eon-gcmh-idle-timer nil)
+    (setf gc-cons-threshold eon-gcmh-low-cons-threshold)
+    (when (timerp eon-gcmh-idle-timer)
+      (cancel-timer eon-gcmh-idle-timer))
+    (setf eon-gcmh-idle-timer nil)
     (remove-hook 'pre-command-hook #'eon-gcmh-set-high-threshold)
     (remove-hook 'post-command-hook #'eon-gcmh-register-idle-gc)))
 
@@ -227,7 +230,9 @@ Cancel the previous one if present."
    byte-compile-verbose nil
    ;; Allow native compilation to be verbose?
    native-comp-async-report-warnings-errors nil
-   native-comp-warning-on-missing-source nil))
+   native-comp-warning-on-missing-source nil)
+  ;; Suppress noisy byte-compiler warnings?
+  (setq byte-compile-warnings '(not docstrings)))
 
 ;; _____________________________________________________________________________
 ;;; PACKAGE MANAGEMENT INIT
@@ -317,11 +322,21 @@ Examples:
   (eon-adjoin '(a b) 'c)                                 ; => (c a b)
   (eon-adjoin '(a b) '(c a))                             ; => (c a b)
   (eon-adjoin '(a b) '(d) t)                             ; => (a b d)
-  (eon-adjoin '(a b) '(\"x\" \"x\") nil #'string-equal)  ; => (\"x\" a b)"
-  (let* ((xs   (if (consp elements) elements (list elements)))
+  (eon-adjoin '(a b) '(\"x\" \"x\") nil #'string-equal)  ; => (\"x\" a b)
+  (eon-adjoin '(a b) '(c . d))                           ; => ((c . d) a b)"
+  (let* ((xs (if (and elements (proper-list-p elements))
+                 elements
+               (list elements)))
          (test (or compare-fn #'equal))
-         (cand (if append (append cur xs) (append xs cur))))
-    (cl-remove-duplicates cand :test test)))
+         (new (cl-remove-duplicates
+               (seq-remove (lambda (x)
+                             (cl-member x cur :test test))
+                           xs)
+               :test test
+               :from-end t)))
+    (if append
+        (append cur new)
+      (append new cur))))
 
 (defun eon-add-to-list (list-sym elements &optional append compare-fn)
   "Modifies the current binding of LIST-SYM, respects buffer-local.
@@ -508,10 +523,10 @@ When called interactively, also echo the result."
 ;; Draw extra space/lines between windows?
 ;; Helps if a certain theme makes the window boundaries indistinguishable,
 ;; or if you prefer to have some space between windows.
-(window-divider-mode -1)
 (setopt window-divider-default-places t
         window-divider-default-bottom-width 1
         window-divider-default-right-width 1)
+(window-divider-mode -1)
 
 ;; _____________________________________________________________________________
 ;;; CURSOR
@@ -1154,50 +1169,75 @@ minibuffer, even without explicitly focusing it."
   "Font settings."
   :group 'eon)
 
-;; FIXME Fix inheritance, so that the fallbacks are actually set
-;; TODO Add a setter function to the custom variables
+(defun eon-font--set (symbol value)
+  "Set SYMBOL to VALUE and reapply the EON font faces when possible."
+  (set-default-toplevel-value symbol value)
+  (when (fboundp 'eon-fonts)
+    (eon-fonts)))
+
+(defun eon-font--family (font fallback)
+  "Return FONT, or FALLBACK when FONT is nil or an empty string."
+  (if (and (stringp font) (not (string= font "")))
+      font
+    fallback))
 
 (defcustom eon-font-default nil
   "Name of the default font; set it to a monospaced or duospaced font.
 If not set explicitly, choosen by Emacs according to your system's default."
   :group 'eon-font-settings
-  :type '(string))
+  :set #'eon-font--set
+  :type '(choice
+          (const :tag "System default" nil)
+          string))
 
 (defcustom eon-font-default-size 140
   "Set the default font size in 1/10 of the desired point size.
 Example: 140 -> 14 pt
 You must specify an absolute size as an integer."
   :group 'eon-font-settings
+  :set #'eon-font--set
   :type '(integer))
 
-(defcustom eon-font-fixed eon-font-default
+(defcustom eon-font-fixed nil
   "Optionally name a fixed-width font.
 When `eon-font-default' is set to a fixed-width font,
 the font specified here should have the same character width.
 If not set explicitly, fall back to `eon-font-default'."
   :group 'eon-font-settings
-  :type '(string))
+  :set #'eon-font--set
+  :type '(choice
+          (const :tag "Fall back to default font" nil)
+          string))
 
-(defcustom eon-font-fixed-alt eon-font-fixed
+(defcustom eon-font-fixed-alt nil
   "Optionally name an alternative fixed-width font.
 It should have the same character width as `eon-font-fixed'.
 If not set explicitly, fall back to `eon-font-fixed'."
   :group 'eon-font-settings
-  :type '(string))
+  :set #'eon-font--set
+  :type '(choice
+          (const :tag "Fall back to fixed-width font" nil)
+          string))
 
 (defcustom eon-font-proportional nil
   "Name for the proportional font, used for text that isn't code.
 If not set explicitly, choosen by Emacs according to your system's default."
   :group 'eon-font-settings
-  :type '(string))
+  :set #'eon-font--set
+  :type '(choice
+          (const :tag "System default" nil)
+          string))
 
-(defcustom eon-font-proportional-size eon-font-default-size
+(defcustom eon-font-proportional-size nil
   "Size for the proportinal font.
 You can specify an absolute size as an integer, or a relative size as a float.
 Examples: 140 -> 14 pt / 0.9 -> 90% of `eon-font-default-size'.
 If not set explicitly, fall back to `eon-font-default-size'."
   :group 'eon-font-settings
-  :type '(number))
+  :set #'eon-font--set
+  :type '(choice
+          (const :tag "Fall back to default font size" nil)
+          number))
 
 (defcustom eon-font-marginal-size 0.9
   "Size for the mode line, tab bar and the tab line.
@@ -1205,83 +1245,90 @@ You can specify an absolute size as an integer, or a relative size as a float.
 Examples: 140 -> 14 pt / 0.9 -> 90% of `eon-font-default-size'.
 If not set explicitly, fall back to 90% of `eon-font-default-size'."
   :group 'eon-font-settings
+  :set #'eon-font--set
   :type '(number))
 
-(defcustom eon-font-mode-line eon-font-default
+(defcustom eon-font-mode-line nil
   "Base font face for the mode-line.
 If not set explicitly, fall back to `eon-font-default'."
   :group 'eon-font-settings
-  :type '(string))
+  :set #'eon-font--set
+  :type '(choice
+          (const :tag "Fall back to default font" nil)
+          string))
 
-(defcustom eon-font-tab-bar eon-font-mode-line
+(defcustom eon-font-tab-bar nil
   "Base font face used for the tab bar.
 When not set explicitly, fall back to `eon-font-mode-line'."
   :group 'eon-font-settings
-  :type '(string))
+  :set #'eon-font--set
+  :type '(choice
+          (const :tag "Fall back to mode-line font" nil)
+          string))
 
-(defcustom eon-font-tab-line eon-font-tab-bar
+(defcustom eon-font-tab-line nil
   "Base font face for the tab line.
 When not set explicitly, fall back to `eon-font-tab-bar'."
   :group 'eon-font-settings
-  :type '(string))
+  :set #'eon-font--set
+  :type '(choice
+          (const :tag "Fall back to tab-bar font" nil)
+          string))
 
-;; TODO Refactor into a setter function for the custom variables
 (defun eon-fonts ()
   "Set the font faces.
 Per default, the function is called by the hooks:
 `eon-theme-light-post-load-hook' - set font faces after loading the light theme;
 `eon-theme-dark-post-load-hook' - set font faces after loading the dark theme."
   (interactive)
-  ;; Default font
-  (set-face-attribute 'default nil
-                      :family eon-font-default
-                      :weight 'normal
-                      :width  'normal
-                      :height eon-font-default-size)
-  ;; Fixed-width font face
-  (set-face-attribute 'fixed-pitch nil
-                      :family eon-font-fixed
-                      :weight 'normal
-                      :width  'normal
-                      :height 1.0)
-  ;; Alternative fixed-width font face
-  (set-face-attribute 'fixed-pitch-serif nil
-                      :family eon-font-fixed-alt
-                      :weight 'normal
-                      :width  'normal
-                      :height 1.0)
-  ;; Proportional font face;
-  ;; can be toggled for the current buffer via "M-x variable-pitch-mode"
-  (set-face-attribute 'variable-pitch nil
-                      :family eon-font-proportional
-                      :weight 'normal
-                      :width  'normal
-                      :height eon-font-proportional-size)
-  ;; Base font face for the active mode line
-  (set-face-attribute 'mode-line nil
-                      :family eon-font-mode-line
-                      :weight 'normal
-                      :width  'normal
-                      :height eon-font-marginal-size)
-  ;; Base font face for the inactive mode line
-  (set-face-attribute 'mode-line-inactive nil
-                      :family eon-font-mode-line
-                      :weight 'normal
-                      :width  'normal
-                      :height eon-font-marginal-size)
-  ;; Base font face for the tab bar
-  (set-face-attribute 'tab-bar nil
-                      :family eon-font-tab-bar
-                      :weight 'normal
-                      :width  'normal
-                      :height eon-font-marginal-size)
-  ;; Base font face for the tab line
-  (set-face-attribute 'tab-line nil
-                      :family eon-font-tab-line
-                      :weight 'normal
-                      :width  'normal
-                      :height eon-font-marginal-size)
-  ;; Don't extend the selection background past the end of the line
+  (let* ((default-family (eon-font--family eon-font-default nil))
+         (fixed-family (eon-font--family eon-font-fixed default-family))
+         (fixed-alt-family (eon-font--family eon-font-fixed-alt fixed-family))
+         (proportional-size (or eon-font-proportional-size
+                                eon-font-default-size))
+         (proportional-family (eon-font--family eon-font-proportional nil))
+         (mode-line-family (eon-font--family eon-font-mode-line default-family))
+         (tab-bar-family (eon-font--family eon-font-tab-bar mode-line-family))
+         (tab-line-family (eon-font--family eon-font-tab-line tab-bar-family)))
+    ;; Default font
+    (set-face-attribute 'default nil
+                        :family default-family
+                        :height eon-font-default-size)
+    ;; Fixed-width font face
+    (set-face-attribute 'fixed-pitch nil
+                        :family fixed-family
+                        :height 1.0)
+    ;; Alternative fixed-width font face
+    (set-face-attribute 'fixed-pitch-serif nil
+                        :family fixed-alt-family
+                        :height 1.0)
+    ;; Proportional font face;
+    ;; can be toggled for the current buffer via "M-x variable-pitch-mode"
+    (set-face-attribute 'variable-pitch nil
+                        :family proportional-family
+                        :height proportional-size)
+    ;; Base font face for the active mode line
+    (set-face-attribute 'mode-line nil
+                        :family mode-line-family
+                        :height eon-font-marginal-size)
+    ;; Base font face for the inactive mode line
+    (set-face-attribute 'mode-line-inactive nil
+                        :family mode-line-family
+                        :height eon-font-marginal-size)
+    ;; Base font face for the tab bar
+    (set-face-attribute 'tab-bar nil
+                        :family tab-bar-family
+                        :height eon-font-marginal-size)
+    ;; Base font face for the tab line
+    (set-face-attribute 'tab-line nil
+                        :family tab-line-family
+                        :height eon-font-marginal-size)))
+
+(defun eon-region-face ()
+  "Don't extend the selection background past the end of the line.
+Per default, the function is called by the hooks:
+`eon-theme-light-post-load-hook' - set region face after loading the light theme;
+`eon-theme-dark-post-load-hook' - set region face after loading the dark theme."
   (set-face-attribute 'region nil :extend nil))
 
 ;; _____________________________________________________________________________
@@ -1423,8 +1470,9 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 ;; Load the default font set; if you want to load a different font set,
 ;; "unhook" `eon-fonts' first via:
-;; (remove-hook 'eon-theme-dark-post-load-hook #'eon-fonts)
+;; (remove-hook 'eon-theme-light-post-load-hook #'eon-fonts)
 (add-hook 'eon-theme-light-post-load-hook #'eon-fonts)
+(add-hook 'eon-theme-light-post-load-hook #'eon-region-face)
 
 ;; Dark theme hooks
 
@@ -1437,6 +1485,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; "unhook" `eon-fonts' first via:
 ;; (remove-hook 'eon-theme-dark-post-load-hook #'eon-fonts)
 (add-hook 'eon-theme-dark-post-load-hook #'eon-fonts)
+(add-hook 'eon-theme-dark-post-load-hook #'eon-region-face)
 
 ;; Load the theme
 (eon-theme-load-default)
@@ -1449,14 +1498,15 @@ Some themes may come as functions -- wrap these ones in lambdas."
         mouse-wheel-follow-mouse t)
 
 (setopt scroll-preserve-screen-position t
-        scroll-margin 2
-        scroll-conservatively 0
-        scroll-up-aggressively 0.0
-        scroll-down-aggressively 0.0)
+        scroll-margin 1
+        scroll-conservatively 101
+        scroll-step 1
+        scroll-up-aggressively nil
+        scroll-down-aggressively nil
+        auto-window-vscroll t)
 
 ;; Horizontal scrolling
-(setopt auto-window-vscroll nil
-        hscroll-margin 2
+(setopt hscroll-margin 2
         hscroll-step 1)
 
 ;; Enable pixel-based scrolling?
@@ -1745,10 +1795,10 @@ buffer."
 (keymap-set ctl-z-s-map "P" #'isearch-forward-symbol-at-point)
 
 ;; Swap search functions to make regexp-search the default
-;; (keymap-global-set "C-s"   #'isearch-forward-regexp)
-;; (keymap-global-set "C-r"   #'isearch-backward-regexp)
-;; (keymap-global-set "C-S-s" #'isearch-forward)
-;; (keymap-global-set "C-S-r" #'isearch-backward)
+(keymap-global-set "C-s"   #'isearch-forward-regexp)
+(keymap-global-set "C-r"   #'isearch-backward-regexp)
+(keymap-global-set "C-S-s" #'isearch-forward)
+(keymap-global-set "C-S-r" #'isearch-backward)
 
 ;;; - Search and replace
 ;; If text is selected, then the commands act on that region only
@@ -1844,11 +1894,11 @@ buffer."
         focus-follows-mouse nil)
 
 ;; Make window splits more evenly sized?
-(setopt window-resize-pixelwise nil)
+(setopt window-resize-pixelwise t)
 
 ;; Window splitting
 (setopt split-width-threshold 160
-        split-height-threshold 40)
+        split-height-threshold 32)
 
 ;; Undo/redo window layouts
 (setopt winner-dont-bind-my-keys t)
@@ -1959,15 +2009,18 @@ If called from the minibuffer, exit via `abort-recursive-edit'."
   "Bury the current buffer.
 If visiting a file and modified, ask to save first;
 then bury the buffer and delete the window.
-When prefix arg RESTORE is non-nil, restore the previous window configuration.
+When prefix arg RESTORE is non-nil, show the last buried buffer in a new
+window.
 If called from the minibuffer, exit via `abort-recursive-edit'."
   (interactive "P")
   (if (minibufferp)
       (abort-recursive-edit)
     (if restore
-        (progn
-          (winner-undo)
-          (unbury-buffer))
+        (pop-to-buffer (save-window-excursion
+                         (unbury-buffer)
+                         (current-buffer))
+                       '((display-buffer-reuse-window
+                          display-buffer-pop-up-window)))
       (when (and buffer-file-name (buffer-modified-p))
         (when (y-or-n-p (format "Save buffer %s before bury? "
                                 (buffer-name)))
@@ -2665,21 +2718,21 @@ Set SYM's default value to VALUE. If the Eshell alias module
     (eon-eshell--install-aliases value)))
 
 (defcustom eon-eshell-aliases
-  '(("e"     . "find-file $@*")
-    ("f"     . "find-file $@*")
-    ("l"     . "ls $@*")
-    ("ll"    . "ls -l -h $@*")
-    ("la"    . "ls -lA -h $@*")
-    ("targ"  . "tar cfvz $@*")
-    ("targx" . "tar xfvz $@*")
-    ("tarb"  . "tar cfvj $@*")
-    ("tarbx" . "tar xfvj $@*")
-    ("q"     . "exit"))
+  '((e     . "find-file $@*")
+    (f     . "find-file $@*")
+    (l     . "ls $@*")
+    (ll    . "ls -l -h $@*")
+    (la    . "ls -l -h -A $@*")
+    (targ  . "tar cfvz $@*")
+    (targx . "tar xfvz $@*")
+    (tarb  . "tar cfvj $@*")
+    (tarbx . "tar xfvj $@*")
+    (q     . "exit"))
   "Alist of Eshell aliases: ((NAME . DEF) ...).
 
-Add/override an alias with `add-to-list', or add/override multiple aliases
-via `eon-add-to-list'."
-  :type '(alist :key-type (choice string symbol)
+NAME can be a symbol or a string. Add/override a single alias with
+`add-to-list', or add/override multiple aliases via `eon-add-to-list'."
+  :type '(alist :key-type (choice symbol string)
                 :value-type string)
   :set #'eon-eshell--set-aliases
   :group 'eon-eshell)
@@ -2781,41 +2834,101 @@ via `eon-add-to-list'."
 ;; _____________________________________________________________________________
 ;;; WEB BROWSERS
 
+;; Primary browser
+;; Prefer the built-in web browser to follow URLs
+(setopt browse-url-browser-function #'eww-browse-url)
+
+;; Secondary browser
+;; Use the system default browser as the alternative
+(setopt browse-url-secondary-browser-function #'browse-url-default-browser)
+
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;; - EWW, a built-in web browser
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/eww.html#Top>
 
-(setopt url-privacy-level '(email lastloc cookies))
-(url-setup-privacy-info)
-
-;; TODO Refactor to make the user-agent string customizable/selectable
-(defun eon-user-agent (browser-name)
-  "Accepts a symbol in order to return a pre-defined user-agent string.
-BROWSER-NAME can be either \='safari-macos, \='safari-iphone, \='w3m or t -
-which sets the default `eww' user-agent according to `url-privacy-level'."
-  (pcase browser-name
-    ('safari-macos
-     (setopt url-user-agent
-             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/603.3.8 (KHTML, like Gecko) Version/11.0.1 Safari/603.3.8"))
-    ('safari-iphone
-     (setopt url-user-agent
-             "Mozilla/5.0 (iPhone; CPU iPhone OS 18_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.2 Mobile/15E148 Safari/604.1"))
-    ('w3m
-     (setopt url-user-agent
-             "w3m/0.5.3+git20230121"))
-    (_
-     (setopt url-user-agent 'default))))
-
-;; Set the user agent for the internal web browser
-(eon-user-agent 'safari-iphone)
-
-;; Browse web with EWW, the internal web browser
+;; Browse web with EWW, the built-in web browser
 (keymap-set ctl-z-g-map "w" #'browse-web)
 
 (eon-localleader-defkeymap eww-mode eon-localleader-eww-map
   :doc "Local leader keymap for the Emacs Web Wowser"
   "e" #'eww-browse-with-external-browser
-  "r" #'eww-readable)
+  "r" #'eww-readable
+  "a" #'eon-eww-user-agent)
+
+(setopt url-privacy-level '(email lastloc cookies))
+(url-setup-privacy-info)
+
+(defgroup eon-web nil
+  "Web browsing settings."
+  :group 'eon)
+
+(defun eon-eww-user-agent--profile (profile)
+  "Return normalized user-agent PROFILE."
+  (pcase profile
+    ('nil eon-eww-user-agent-profile)
+    ('t 'eww-default)
+    ((pred stringp) (intern profile))
+    (_ profile)))
+
+(defun eon-eww-user-agent--profile-names ()
+  "Return `eon-eww-user-agent-profiles' keys as strings."
+  (mapcar (lambda (profile)
+            (symbol-name (car profile)))
+          eon-eww-user-agent-profiles))
+
+(defun eon-eww-user-agent--set-profile (symbol value)
+  "Set SYMBOL to VALUE and apply the selected EWW user-agent profile."
+  (if (and (boundp 'eon-eww-user-agent-profiles)
+           (fboundp 'eon-eww-user-agent))
+      (eon-eww-user-agent value)
+    (set-default symbol (eon-eww-user-agent--profile value))))
+
+(defcustom eon-eww-user-agent-profiles
+  `((eww-default . default)
+    (safari-macos
+     . ,(concat "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) "
+                "AppleWebKit/603.3.8 (KHTML, like Gecko) "
+                "Version/11.0.1 Safari/603.3.8"))
+    (safari-iphone
+     . ,(concat "Mozilla/5.0 (iPhone; CPU iPhone OS 18_2 like Mac OS X) "
+                "AppleWebKit/605.1.15 (KHTML, like Gecko) "
+                "Version/18.2 Mobile/15E148 Safari/604.1"))
+    (w3m
+     . "w3m/0.5.3+git20230121"))
+  "Named user-agent profiles for `eon-eww-user-agent'."
+  :group 'eon-web
+  :type '(alist :key-type symbol
+                :value-type (choice (const :tag "EWW default" default)
+                                    string)))
+
+(defcustom eon-eww-user-agent-profile 'safari-iphone
+  "Default profile selected by `eon-eww-user-agent'.
+The value must be a key in `eon-eww-user-agent-profiles'."
+  :group 'eon-web
+  :set #'eon-eww-user-agent--set-profile
+  :type 'symbol)
+
+(defun eon-eww-user-agent (&optional profile)
+  "Set `url-user-agent' according to PROFILE.
+PROFILE must be nil, a string, or a key in `eon-eww-user-agent-profiles'.  When
+nil, use `eon-eww-user-agent-profile'. PROFILE may also be t, which selects
+the default EWW user-agent according to `url-privacy-level'.
+When called interactively, select PROFILE with completion."
+  (interactive
+   (list (completing-read "User agent: "
+                          (eon-eww-user-agent--profile-names)
+                          nil t nil nil
+                          (symbol-name eon-eww-user-agent-profile))))
+  (let* ((profile (eon-eww-user-agent--profile profile))
+         (user-agent (alist-get profile eon-eww-user-agent-profiles
+                                nil nil #'eq)))
+    (unless user-agent
+      (user-error "Unknown user-agent profile: %s" profile))
+    (setq eon-eww-user-agent-profile profile
+          url-user-agent user-agent)))
+
+;; Set the user agent for the internal web browser
+(eon-eww-user-agent)
 
 ;; _____________________________________________________________________________
 ;;; EMAIL
@@ -2881,7 +2994,8 @@ which sets the default `eww' user-agent according to `url-privacy-level'."
 
 ;; Define a keymap in order to group formatting commands
 (defvar-keymap ctl-z-c-f-map :doc "Formatting"
-               "a" #'align-regexp
+               "a" #'align
+               "A" #'align-regexp
                ;; Tipps: <https://susam.github.io/sorting-in-emacs.html>
                "s" #'sort-lines
                "S" #'sort-fields)
@@ -3527,6 +3641,7 @@ With prefix ARG, pass it through to the underlying command."
   :doc "Local leader keymap for Emacs Lisp buffers."
   "c"   #'eval-defun
   "e"   #'eon-eval-last-sexp
+  "p"   #'eval-print-last-sexp
   "b"   #'eval-buffer
   "r"   #'elisp-eval-region-or-buffer
   "d"   #'edebug-defun
