@@ -27,6 +27,18 @@
 
 (use-package agent-shell :ensure t
 
+  :init
+
+  (defvar-keymap ctl-z-a-map :doc "AI Agents")
+  (keymap-set ctl-z-map "a" `("Agent" . ,ctl-z-a-map))
+
+  (eon-localleader-defkeymap
+      agent-shell-mode eon-localleader-agent-shell-map
+    :doc "Local leader keymap for `agent-shell-mode'."
+    "r"   #'agent-shell-reload
+    "C-r" #'agent-shell-restart
+    "m"   #'agent-shell-help-menu)
+
   :custom
 
   (agent-shell-display-action '(display-buffer-pop-up-window))
@@ -36,8 +48,13 @@
 
   :bind
 
-  (:map ctl-z-l-map
-        ("a" . agent-shell)))
+  (:map ctl-z-a-map
+        ("a"   . agent-shell)
+        ("."   . agent-shell-send-dwim)
+        ("f"   . agent-shell-send-file)
+        ("F"   . agent-shell-send-file-to)
+        ("r"   . agent-shell-send-region)
+        ("R"   . agent-shell-send-region-to)))
 
 ;; _____________________________________________________________________________
 (provide 'eon-agent-shell)
