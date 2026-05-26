@@ -1,6 +1,6 @@
 ;;; eon-activities.el --- Suspend/resume windows, buffers, etc. -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.0
+;; Version: 2.0.1
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -30,8 +30,8 @@
 
   :init
 
-  (defvar-keymap ctl-z-a-map :doc "Activity")
-  (keymap-set ctl-z-map "a" `("Activity" . ,ctl-z-a-map))
+  (defvar-keymap ctl-z-T-map :doc "Activity")
+  (keymap-set ctl-z-map "T" `("Activity" . ,ctl-z-T-map))
 
   (activities-mode)
   (activities-tabs-mode)
@@ -45,7 +45,7 @@
 
   :bind
 
-  (:map ctl-z-a-map
+  (:map ctl-z-T-map
         ("d"   . activities-define)
         ("D"   . activities-discard)
         ("k"   . activities-kill)
