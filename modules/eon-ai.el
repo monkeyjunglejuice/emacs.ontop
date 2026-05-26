@@ -1,6 +1,6 @@
 ;;; eon-ai.el --- Shared functionality for AI integration -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.0
+;; Version: 2.0.1
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -25,9 +25,6 @@
 (defgroup eon-ai nil
   "AI integration."
   :group 'eon)
-
-(defvar-keymap ctl-z-l-map :doc "Large Language Models / AI")
-(keymap-set ctl-z-map "l" `("LLM/AI" . ,ctl-z-l-map))
 
 ;; _____________________________________________________________________________
 (provide 'eon-ai)

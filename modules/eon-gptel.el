@@ -27,6 +27,9 @@
 
   :init
 
+  (defvar-keymap ctl-z-l-map :doc "Large Language Models / AI")
+  (keymap-set ctl-z-map "l" `("LLM/AI" . ,ctl-z-l-map))
+
   ;; Gptel requires package `transient' version 0.7.4 or later.
   (unless (package-installed-p 'transient '(0 7 4))
     (package-upgrade 'transient))
