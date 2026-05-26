@@ -38,7 +38,7 @@
   :bind
 
   (:map ctl-z-l-map
-        ("L" . gptel-agent)))
+        ("a" . gptel-agent)))
 
 ;; _____________________________________________________________________________
 (provide 'eon-gptel-agent)
