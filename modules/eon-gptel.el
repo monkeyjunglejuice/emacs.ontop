@@ -131,24 +131,26 @@
 ;; (sans extension) is the key. There are several supported formats:
 ;;
 ;; - Plain text (.txt, .md, .org)
-;; The file content is used directly as a system prompt string. This is the
-;; simplest option -- just write your prompt and save it.
+;;   The file content is used directly as a system prompt string. This is the
+;;   simplest option -- just write your prompt and save it.
 ;;
 ;; - Emacs Lisp (.el, .eld)
-;; For .eld files, the content is read as a Lisp data structure -- a list of
-;; strings and/or symbols, matching what gptel-directives expects. For .el
-;; files, the content is evaluated as Emacs Lisp and should return the same kind
-;; of list. See the gptel-directives documentation for the expected format.
+;;   For .eld files, the content is read as a Lisp data structure -- a list of
+;;   strings and/or symbols, matching what gptel-directives expects. For .el
+;;   files, the content is evaluated as Emacs Lisp and should return the same
+;;   kind of list. See the gptel-directives documentation for the expected
+;;   format.
 ;;
 ;; - JSON (.json)
-;; JSON files can contain either a simple string (used as a system prompt) or an
-;; array of objects with role and content fields for multi-turn conversations.
+;;   JSON files can contain either a simple string (used as a system prompt) or
+;;   an array of objects with role and content fields for multi-turn
+;;   conversations.
 ;;
 ;; - Prompt Poet (.poet, .jinja, .j2)
-;; Based on Prompt Poet, these files are YAML with Jinja templating. The
-;; templating is applied dynamically when the prompt is used, so you can see the
-;; expansion results via GPTel's Inspect capabilities when gptel-expert-commands
-;; is non-nil.
+;;   Based on Prompt Poet, these files are YAML with Jinja templating. The
+;;   templating is applied dynamically when the prompt is used, so you can see
+;;   the expansion results via GPTel's Inspect capabilities when
+;;   gptel-expert-commands is non-nil.
 
 (use-package gptel-prompts
   :vc (:url "https://github.com/jwiegley/gptel-prompts.git"
