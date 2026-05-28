@@ -13,7 +13,7 @@
 
 ;;; Commentary:
 ;;
-;; URL: https://github.com/karthink/gptel-agent
+;; Website: https://github.com/karthink/gptel-agent
 ;; 
 ;; What is Gptel-agent?
 ;; <https://github.com/karthink/gptel-agent/issues/64>
