@@ -79,6 +79,7 @@
    ;; eon-paren-face                ; Less visible parenthesis
    ;; eon-pdftools                  ; Sophisticated PDF tool suite
    ;; eon-rainbow-delimiters        ; Color-code nested parenthesis
+   ;; eon-reader                    ; Major mode for reading EPUBs in Emacs
    ;; eon-smartparens               ; More general Paredit alternative
    ;; eon-switchwindow              ; Navigate windows
    ;; eon-todo                      ; Highlight todo keywords in comments
