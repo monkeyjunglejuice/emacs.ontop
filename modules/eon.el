@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 ;;
 ;;
-;; Version: 2.6.9
+;; Version: 2.6.10
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
@@ -834,7 +834,7 @@ local leader is shown."
   "Local leader key, pressed after the leader.
 
 - GUI default: \"C-,\" -> reach local leader via \"C-, C-,\"
-- TTY default: \"C-z\" -> reach local leader via \"C-z C-z\"
+- TUI default: \"C-z\" -> reach local leader via \"C-z C-z\"
 
 Use `eon-customize-group' to change, or use `setopt' from Lisp."
   :group 'eon-leader
@@ -902,7 +902,7 @@ Customize `eon-localleader-key' explicitly to override this default."
 
 (defcustom eon-leader-key
   (if (eon-terminalp) "C-z" "C-,")
-  "Leader prefix key. GUI default: \"C-,\" - TTY default: \"C-z\".
+  "Leader prefix key. GUI default: \"C-,\" - TUI default: \"C-z\".
 Use `eon-customize-group' to change, or `setopt' from Lisp."
   :group 'eon-leader
   :type '(string)
@@ -1695,8 +1695,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; Open the GUI via "<leader> x C"
 
 ;; Define local leader keymap for `Custom-mode'
-(eon-localleader-defkeymap Custom-mode eon-localleader-customzation-map
-
+(eon-localleader-defkeymap Custom-mode eon-localleader-customization-map
   :doc "Local leader keymap for Customization buffers."
   ;; Pop up a  buffer to edit the settings in '.dir-locals.el'
   "d" #'customize-dirlocals)
@@ -1705,7 +1704,6 @@ Some themes may come as functions -- wrap these ones in lambdas."
   "Set preferences via GUI."
   (interactive)
   (customize-group 'eon))
-
 (keymap-set ctl-z-x-map "C" #'eon-customize-group)
 
 ;; Don't accumulate customization buffers?
@@ -1933,7 +1931,7 @@ buffer."
 
 ;; What to do with a window whose buffer was killed?
 ;; nil = no special handling. Let `set-window-configuration' decide,
-;; instead of displaying a placeholder bufffer.
+;; instead of displaying a placeholder buffer.
 (setopt tab-bar-select-restore-windows nil)
 
 ;; Create a fresh tab with *scratch* buffer only
@@ -2602,43 +2600,40 @@ pretending to clear it."
         eshell-list-files-after-cd t
         eshell-destroy-buffer-when-process-dies t)
 
-;; Prevent from accidently referring to local root in Tramp connections
-;; When `default-directory' is remote and the command is a Lisp
-;; function, typing "/" as the first character of an argument inserts
-;; the current Tramp prefix, such as "/method:host:".  Typing another
-;; "/" undoes this, which is useful when a local path is intended.
-;; Typing "~/" also inserts the Tramp prefix. This does not apply to
-;; external commands.
-;;
-;; This means Eshell usually inserts the remote prefix only when
-;; needed, so you do not have to remember whether a command is
-;; implemented as a Lisp function or run externally.
-;;
-;; For example:
-;;
-;;   cd /ssh:root@example.com:
-;;   find /etc -name "*gnu*"
-;;
-;; Suppose the output shows "/etc/gnugnu", and you want to move it to
-;; "/tmp":
-;;
-;;   mv /etc/gnugnu /tmp
-;;
-;; In Eshell, `mv' is the local Lisp function `eshell/mv', so without
-;; `eshell-elecslash' this refers to the local "/etc/gnugnu" and local
-;; "/tmp".  With `eshell-elecslash', typing that command inserts the
-;; intended remote paths:
-;;
-;;   mv /ssh:root@example.com:/etc/gnugnu /ssh:root@example.com:/tmp
 (with-eval-after-load 'eshell
-  (add-to-list 'eshell-modules-list 'eshell-elecslash))
+  ;; Prevent from accidently referring to local root in Tramp connections
+  ;; When `default-directory' is remote and the command is a Lisp
+  ;; function, typing "/" as the first character of an argument inserts
+  ;; the current Tramp prefix, such as "/method:host:".  Typing another
+  ;; "/" undoes this, which is useful when a local path is intended.
+  ;; Typing "~/" also inserts the Tramp prefix. This does not apply to
+  ;; external commands.
+  ;;
+  ;; This means Eshell usually inserts the remote prefix only when
+  ;; needed, so you do not have to remember whether a command is
+  ;; implemented as a Lisp function or run externally.
+  ;;
+  ;; For example:
+  ;;   cd /ssh:root@example.com:
+  ;;   find /etc -name "*gnu*"
+  ;;
+  ;; Suppose the output shows "/etc/gnugnu", and you want to move it to "/tmp":
+  ;;   mv /etc/gnugnu /tmp
+  ;;
+  ;; In Eshell, `mv' is the local Lisp function `eshell/mv', so without
+  ;; `eshell-elecslash' this refers to the local "/etc/gnugnu" and local
+  ;; "/tmp".  With `eshell-elecslash', typing that command inserts the
+  ;; intended remote paths:
+  ;;   mv /ssh:root@example.com:/etc/gnugnu /ssh:root@example.com:/tmp
+  (add-to-list 'eshell-modules-list 'eshell-elecslash)
+  ;; Replace Eshell’s plain sudo/doas handling with TRAMP-based remote privilege
+  ;; escalation. In a remote Eshell buffer, sudo cat /etc/foo is evaluated as
+  ;; “run this on the remote host as root”, not as a broken mix of local /etc,
+  ;; remote default-directory, and shell expansion.
+  (add-to-list 'eshell-modules-list 'eshell-tramp))
 
 ;; Launch an Eshell buffer: "<leader> e e"; re-visit the buffer by repeating
 (keymap-set ctl-z-e-map "e" #'eshell)
-
-;; Use Outline commands with Eshell prompts/buffers
-(add-hook 'eshell-mode-hook
-          (lambda () (setq outline-regexp eshell-prompt-regexp)))
 
 ;; Launch a fresh Eshell buffer: "<leader> e E"
 (defun eon-eshell-new ()
@@ -2647,10 +2642,14 @@ pretending to clear it."
   (eshell 't))
 (keymap-set ctl-z-e-map "E" #'eon-eshell-new)
 
+;; Use Outline commands with Eshell prompts/buffers
+(add-hook 'eshell-mode-hook
+          (lambda () (setq outline-regexp eshell-prompt-regexp)))
+
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Faster Eshell cd command; similar to Zoxide
 
-(defun eshell/d (&optional regexp)
+(defun eshell/D (&optional regexp)
   "Navigate to a previously visited directory in Eshell.
 
 If REGEXP is non-nil, jump to the most recent previous directory matching
@@ -2720,6 +2719,7 @@ Set SYM's default value to VALUE. If the Eshell alias module
 (defcustom eon-eshell-aliases
   '((e     . "find-file $@*")
     (f     . "find-file $@*")
+    (d     . "dired $@*")
     (l     . "ls $@*")
     (ll    . "ls -l -h $@*")
     (la    . "ls -l -h -A $@*")
@@ -2741,6 +2741,46 @@ NAME can be a symbol or a string. Add/override a single alias with
   ;; Ensure they exist when Eshell initializes/loads aliases
   (add-hook 'eshell-first-time-mode-hook #'eon-eshell-apply-aliases)
   (add-hook 'eshell-alias-load-hook #'eon-eshell-apply-aliases))
+
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - Prompt styling
+
+(defun eon-eshell--cwd ()
+  "Return the current Eshell directory for prompt display.
+
+For remote TRAMP directories, strip the TRAMP prefix and show only the
+path on the remote host.  For local directories, abbreviate the path in
+the usual Emacs way."
+  (let ((dir (directory-file-name (eshell/pwd))))
+    (if (file-remote-p dir)
+        (file-local-name dir)
+      (abbreviate-file-name dir))))
+
+(defun eon-eshell-prompt ()
+  "Build a two-line Eshell prompt with status, user, host, and directory.
+
+The first line shows the previous command's non-zero exit status, the
+current user/host, and the current directory.  The second line contains
+only the command marker, using `#' for root and `$' otherwise."
+  (let* ((status (or eshell-last-command-status 0))
+         (remote-user (file-remote-p default-directory 'user))
+         (remote-host (file-remote-p default-directory 'host))
+         (user (or remote-user (user-login-name)))
+         (host (or remote-host (system-name)))
+         (cwd (eon-eshell--cwd))
+         (marker (if (string= user "root") "# " "$ ")))
+    (concat
+     (propertize
+      (format "%s[%s@%s] %s"
+              (if (zerop status) "" (format "[%d] " status))
+              user
+              host
+              cwd)
+      'face 'bold)
+     "\n"
+     marker)))
+
+(setopt eshell-prompt-function #'eon-eshell-prompt)
 
 ;; _____________________________________________________________________________
 ;;; SHELL
@@ -2829,7 +2869,10 @@ NAME can be a symbol or a string. Add/override a single alias with
 (with-eval-after-load 'tramp
   ;; Ensure that Tramp can find a proper `ls' on a Guix-based host
   ;; <https://blog.smith-manor.us/tramp_and_guix>
-  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+  ;; Speed up Tramp
+  (setopt tramp-use-scp-direct-remote-copying t
+          remote-file-name-inhibit-locks t))
 
 ;; _____________________________________________________________________________
 ;;; WEB BROWSERS
@@ -2862,13 +2905,13 @@ NAME can be a symbol or a string. Add/override a single alias with
   "Web browsing settings."
   :group 'eon)
 
-(defun eon-eww-user-agent--profile (profile)
+(defun eon-eww-user-agent--normalize-profile (profile)
   "Return normalized user-agent PROFILE."
   (pcase profile
-    ('nil eon-eww-user-agent-profile)
     ('t 'eww-default)
     ((pred stringp) (intern profile))
-    (_ profile)))
+    ((pred symbolp) profile)
+    (_ (user-error "Invalid user-agent profile: %s" profile))))
 
 (defun eon-eww-user-agent--profile-names ()
   "Return `eon-eww-user-agent-profiles' keys as strings."
@@ -2876,32 +2919,64 @@ NAME can be a symbol or a string. Add/override a single alias with
             (symbol-name (car profile)))
           eon-eww-user-agent-profiles))
 
+(defun eon-eww-user-agent--profile-value (profile &optional profiles)
+  "Return the `url-user-agent' value for PROFILE in PROFILES."
+  (let* ((missing (make-symbol "missing"))
+         (value (alist-get profile (or profiles eon-eww-user-agent-profiles)
+                           missing nil #'eq)))
+    (if (eq value missing)
+        (user-error "Unknown user-agent profile: %s" profile)
+      value)))
+
+(defun eon-eww-user-agent--apply-profile (profile)
+  "Apply PROFILE to `url-user-agent'."
+  (setopt url-user-agent (eon-eww-user-agent--profile-value profile)))
+
+(defun eon-eww-user-agent--set-profiles (symbol value)
+  "Set SYMBOL to VALUE and reapply the selected user-agent profile."
+  (when (boundp 'eon-eww-user-agent-profile)
+    (eon-eww-user-agent--profile-value eon-eww-user-agent-profile value))
+  (set-default symbol value)
+  (when (boundp 'eon-eww-user-agent-profile)
+    (eon-eww-user-agent--apply-profile eon-eww-user-agent-profile)))
+
 (defun eon-eww-user-agent--set-profile (symbol value)
   "Set SYMBOL to VALUE and apply the selected EWW user-agent profile."
-  (if (and (boundp 'eon-eww-user-agent-profiles)
-           (fboundp 'eon-eww-user-agent))
-      (eon-eww-user-agent value)
-    (set-default symbol (eon-eww-user-agent--profile value))))
+  (let ((profile (eon-eww-user-agent--normalize-profile value)))
+    (eon-eww-user-agent--profile-value profile)
+    (set-default symbol profile)
+    (eon-eww-user-agent--apply-profile profile)))
 
 (defcustom eon-eww-user-agent-profiles
-  `((eww-default . default)
+  `((chrome-windows
+     . ,(concat "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/131.0.0.0 Safari/537.36"))
+    (chrome-android
+     . ,(concat "Mozilla/5.0 (Linux; Android 10; K) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/131.0.0.0 Mobile Safari/537.36"))
     (safari-macos
-     . ,(concat "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) "
-                "AppleWebKit/603.3.8 (KHTML, like Gecko) "
-                "Version/11.0.1 Safari/603.3.8"))
+     . ,(concat "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                "AppleWebKit/605.1.15 (KHTML, like Gecko) "
+                "Version/18.2 Safari/605.1.15"))
     (safari-iphone
      . ,(concat "Mozilla/5.0 (iPhone; CPU iPhone OS 18_2 like Mac OS X) "
                 "AppleWebKit/605.1.15 (KHTML, like Gecko) "
-                "Version/18.2 Mobile/15E148 Safari/604.1"))
-    (w3m
-     . "w3m/0.5.3+git20230121"))
-  "Named user-agent profiles for `eon-eww-user-agent'."
+                "Version/18.2 Mobile/15E148 Safari/605.1.15"))
+    (w3m . "w3m/0.5.3+git20230121")
+    (eww-default . default)
+    (none . nil))
+  "Named `url-user-agent' profiles for `eon-eww-user-agent'."
   :group 'eon-web
+  :set #'eon-eww-user-agent--set-profiles
   :type '(alist :key-type symbol
                 :value-type (choice (const :tag "EWW default" default)
+                                    (const :tag "No User-Agent" nil)
+                                    function
                                     string)))
 
-(defcustom eon-eww-user-agent-profile 'safari-iphone
+(defcustom eon-eww-user-agent-profile 'chrome-android
   "Default profile selected by `eon-eww-user-agent'.
 The value must be a key in `eon-eww-user-agent-profiles'."
   :group 'eon-web
@@ -2909,26 +2984,19 @@ The value must be a key in `eon-eww-user-agent-profiles'."
   :type 'symbol)
 
 (defun eon-eww-user-agent (&optional profile)
-  "Set `url-user-agent' according to PROFILE.
-PROFILE must be nil, a string, or a key in `eon-eww-user-agent-profiles'.  When
-nil, use `eon-eww-user-agent-profile'. PROFILE may also be t, which selects
-the default EWW user-agent according to `url-privacy-level'.
+  "Select EWW user-agent PROFILE.
+PROFILE must name a key in `eon-eww-user-agent-profiles'.  When nil, use
+`eon-eww-user-agent-profile'.  PROFILE may also be t, which selects the default
+EWW user-agent according to `url-privacy-level'.
 When called interactively, select PROFILE with completion."
   (interactive
    (list (completing-read "User agent: "
                           (eon-eww-user-agent--profile-names)
                           nil t nil nil
                           (symbol-name eon-eww-user-agent-profile))))
-  (let* ((profile (eon-eww-user-agent--profile profile))
-         (user-agent (alist-get profile eon-eww-user-agent-profiles
-                                nil nil #'eq)))
-    (unless user-agent
-      (user-error "Unknown user-agent profile: %s" profile))
-    (setq eon-eww-user-agent-profile profile
-          url-user-agent user-agent)))
-
-;; Set the user agent for the internal web browser
-(eon-eww-user-agent)
+  (setopt eon-eww-user-agent-profile
+          (eon-eww-user-agent--normalize-profile
+           (or profile eon-eww-user-agent-profile))))
 
 ;; _____________________________________________________________________________
 ;;; EMAIL
@@ -3243,7 +3311,6 @@ When called interactively, select PROFILE with completion."
 ;; Grammars can be built and installed via:
 ;; - `eon-treesitter-ensure-grammar' (declarative in your Elisp code)
 ;; - `treesit-install-language-grammar' (interactive, single grammar)
-;; - `eon-treesitter-install-all' (interactive, all grammars)
 (defvar eon-treesitter-specs
   '((bash       "https://github.com/tree-sitter/tree-sitter-bash")
     (c          "https://github.com/tree-sitter/tree-sitter-c")
@@ -3475,17 +3542,6 @@ Returns an alist of (LANG . STATUS) where STATUS is one of:
       (user-error "eon-treesitter-ensure-grammar: No specs provided"))
     (eon-treesitter--ensure-impl elems nil)))
 
-(cl-defun eon-treesitter-install-all (&key reinstall)
-  "Install all grammars in `eon-treesitter-specs'.
-
-Accepts keyword arg :REINSTALL (non-nil to rebuild grammar even if present).
-
-When called interactively with a prefix argument, acts like :reinstall t.
-
-Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
-  (interactive (list :reinstall current-prefix-arg))
-  (eon-treesitter--ensure-impl eon-treesitter-specs (and reinstall t)))
-
 ;; _____________________________________________________________________________
 ;;; ORG MODE
 ;; <https://orgmode.org/>
@@ -3515,9 +3571,6 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
 ;; Alignment of tags at the end of headlines
 (setopt  org-auto-align-tags t
          org-tags-column 0)
-
-;; Toggle indicator for headlines
-(setopt org-ellipsis "▼")
 
 ;; Don't add leading indentation to code blocks, remove them during export
 (setopt org-edit-src-content-indentation 0
@@ -3551,7 +3604,7 @@ Returns the same (LANG . STATUS) alist as `eon-treesitter-ensure-grammar'."
 
 ;; Set some sensible default states for todo-items
 (setopt org-todo-keywords
-        '((sequence "TODO(t)" "PROJ(p)" "LOOP(r)" "STRT(s)" "WAIT(w)" "HOLD(h)" "IDEA(i)" "|" "DONE(d)" "KILL(k)")
+        '((sequence "TODO(t)" "LOOP(r)" "STRT(s)" "WAIT(w)" "HOLD(h)" "IDEA(i)" "|" "DONE(d)" "KILL(k)")
           (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)")
           (sequence "|" "OKAY(o)" "YES(y)" "NO(n)")))
 
