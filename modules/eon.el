@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 ;;
 ;;
-;; Version: 2.6.10
+;; Version: 2.6.11
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
@@ -3237,6 +3237,10 @@ When called interactively, select PROFILE with completion."
 ;;; VERSION CONTROL / GIT
 ;; Setup for Emacs' built-in VC management
 
+;; Reduce load by setting VC recognized backends to the most commonly used ones
+(with-eval-after-load 'vc-hooks
+  (setopt vc-handled-backends '(Git Hg SVN)))
+
 (keymap-set ctl-z-v-map "v" #'vc-dir)
 (keymap-set ctl-z-v-map "V" #'project-vc-dir)
 (keymap-set ctl-z-v-map "g" #'vc-git-grep)
@@ -3569,8 +3573,8 @@ Returns an alist of (LANG . STATUS) where STATUS is one of:
 (add-hook 'org-mode-hook #'visual-line-mode)
 
 ;; Alignment of tags at the end of headlines
-(setopt  org-auto-align-tags t
-         org-tags-column 0)
+(setopt org-auto-align-tags t
+        org-tags-column 0)
 
 ;; Don't add leading indentation to code blocks, remove them during export
 (setopt org-edit-src-content-indentation 0
@@ -3673,7 +3677,8 @@ Returns an alist of (LANG . STATUS) where STATUS is one of:
 ;; <https://orgmode.org/worg/org-contrib/babel/intro.html>
 
 ;; Activate code blocks via Babel languages
-(org-babel-do-load-languages 'org-babel-load-languages '((emacs-lisp . t)))
+(with-eval-after-load 'org
+  (org-babel-do-load-languages 'org-babel-load-languages '((emacs-lisp . t))))
 
 ;; _____________________________________________________________________________
 ;;; LISP
