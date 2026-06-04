@@ -1,4 +1,4 @@
-;;; eon-reader.el --- Major mode for reading EPUBs in Emacs -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-reader.el --- Read EPUBs in Emacs -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;; Version: 2.0.1
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
