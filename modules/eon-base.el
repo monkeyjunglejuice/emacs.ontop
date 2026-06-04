@@ -346,13 +346,9 @@
 
 ;; <https://github.com/alphapapa/org-sticky-header>
 (use-package org-sticky-header :ensure t
-  :init
-  (defun eon-org--sticky-header-maybe ()
-    "Enable org-sticky-header unless in *scratch* buffer."
-    (unless (string= (buffer-name) "*scratch*")
-      (org-sticky-header-mode 1)))
-  :hook
-  (org-mode . eon-org--sticky-header-maybe))
+  :bind
+  (:map eon-localleader-org-mode-map
+        ("^" . org-sticky-header-mode)))
 
 ;; _____________________________________________________________________________
 ;;; MARKUP-, CONFIG- AND SERIALIZATION FORMATS
