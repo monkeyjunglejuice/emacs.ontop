@@ -454,45 +454,45 @@ Resolution rules:
 
     (cl-labels
         ((skip
-          (module reason)
-          (unless (assq module skipped)
-            (push (cons module reason) skipped)))
+           (module reason)
+           (unless (assq module skipped)
+             (push (cons module reason) skipped)))
 
          (skipped-p
-          (module)
-          (assq module skipped))
+           (module)
+           (assq module skipped))
 
          (visit
-          (module)
-          (cond
-           ((memq module seen)
-            nil)
-           ((memq module visiting)
-            (skip module "circular dependency"))
-           ((not (eon-module-known-p module))
-            (skip module "unknown EON module"))
-           (t
-            (condition-case err
-                (let ((requires (eon-module-requires module)))
-                  (push module visiting)
-                  (dolist (required requires)
-                    (visit required))
-                  (setq visiting (delq module visiting))
-                  (push module seen)
-                  (push module ordered))
-              (error
-               (setq visiting (delq module visiting))
-               (skip module (error-message-string err)))))))
+           (module)
+           (cond
+            ((memq module seen)
+             nil)
+            ((memq module visiting)
+             (skip module "circular dependency"))
+            ((not (eon-module-known-p module))
+             (skip module "unknown EON module"))
+            (t
+             (condition-case err
+                 (let ((requires (eon-module-requires module)))
+                   (push module visiting)
+                   (dolist (required requires)
+                     (visit required))
+                   (setq visiting (delq module visiting))
+                   (push module seen)
+                   (push module ordered))
+               (error
+                (setq visiting (delq module visiting))
+                (skip module (error-message-string err)))))))
 
          (mark-needed
-          (module needed)
-          (if (or (assq module skipped)
-                  (memq module needed))
-              needed
-            (let ((next (cons module needed)))
-              (dolist (required (eon-module-requires module))
-                (setq next (mark-needed required next)))
-              next))))
+           (module needed)
+           (if (or (assq module skipped)
+                   (memq module needed))
+               needed
+             (let ((next (cons module needed)))
+               (dolist (required (eon-module-requires module))
+                 (setq next (mark-needed required next)))
+               next))))
 
       ;; Build dependency closure
       (dolist (module roots)
