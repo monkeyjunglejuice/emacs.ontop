@@ -65,7 +65,8 @@
   :hook
 
   ;; Update the Magit status when a file has been saved
-  (after-save . magit-after-save-refresh-status))
+  (after-save . magit-after-save-refresh-status)
+  (magit-mode . magit-auto-revert-mode))
 
 ;; _____________________________________________________________________________
 ;;; GIT TIMEMACHINE
