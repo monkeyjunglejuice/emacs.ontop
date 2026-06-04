@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 ;;
 ;;
-;; Version: 2.6.11
+;; Version: 2.6.12
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
@@ -54,7 +54,7 @@
 ;; Examples:
 ;;
 ;; "M-x eon-"                      Show all commands defined by Emacs ONBOARD
-;; "M-x eon-visit-user-init-file"  Visit main config file: .emacs or init.el
+;; "M-x eon-goto-init-file"        Visit main config file: .emacs or init.el
 ;; "M-x check-parens"              Check if all parens match in Emacs Lisp code
 ;; "M-x help"                      Reach the ultimate help menu
 ;;
@@ -910,25 +910,25 @@ Use `eon-customize-group' to change, or `setopt' from Lisp."
 
 ;; Sub-keymaps under the leader
 
-(defvar-keymap ctl-z-b-map   :doc "Buffer")
-(defvar-keymap ctl-z-c-map   :doc "Code")
-(defvar-keymap ctl-z-e-map   :doc "Exec")
-(defvar-keymap ctl-z-f-map   :doc "File")
-(defvar-keymap ctl-z-g-map   :doc "Goto")
-(defvar-keymap ctl-z-h-map   :doc "Help")
-(defvar-keymap ctl-z-i-map   :doc "Insert")
-(defvar-keymap ctl-z-j-map   :doc "User")
-(defvar-keymap ctl-z-o-map   :doc "Org")
-(defvar-keymap ctl-z-p-map   :doc "Project")
-(defvar-keymap ctl-z-q-map   :doc "Quit")
-(defvar-keymap ctl-z-r-map   :doc "Register")
-(defvar-keymap ctl-z-s-map   :doc "Search")
-(defvar-keymap ctl-z-t-map   :doc "Tab/WS")
-(defvar-keymap ctl-z-v-map   :doc "VC/Git")
-(defvar-keymap ctl-z-w-map   :doc "Window")
-(defvar-keymap ctl-z-W-map   :doc "Frame")
-(defvar-keymap ctl-z-x-map   :doc "Misc")
-(defvar-keymap ctl-z-ret-map :doc "Bookmark")
+(defvar-keymap ctl-z-b-map   :doc "Buffer"   :prefix t)
+(defvar-keymap ctl-z-c-map   :doc "Code"     :prefix t)
+(defvar-keymap ctl-z-e-map   :doc "Exec"     :prefix t)
+(defvar-keymap ctl-z-f-map   :doc "File"     :prefix t)
+(defvar-keymap ctl-z-g-map   :doc "Goto"     :prefix t)
+(defvar-keymap ctl-z-h-map   :doc "Help"     :prefix t)
+(defvar-keymap ctl-z-i-map   :doc "Insert"   :prefix t)
+(defvar-keymap ctl-z-j-map   :doc "User"     :prefix t)
+(defvar-keymap ctl-z-o-map   :doc "Org"      :prefix t)
+(defvar-keymap ctl-z-p-map   :doc "Project"  :prefix t)
+(defvar-keymap ctl-z-q-map   :doc "Quit"     :prefix t)
+(defvar-keymap ctl-z-r-map   :doc "Register" :prefix t)
+(defvar-keymap ctl-z-s-map   :doc "Search"   :prefix t)
+(defvar-keymap ctl-z-t-map   :doc "Tab/WS"   :prefix t)
+(defvar-keymap ctl-z-v-map   :doc "VC/Git"   :prefix t)
+(defvar-keymap ctl-z-w-map   :doc "Window"   :prefix t)
+(defvar-keymap ctl-z-W-map   :doc "Frame"    :prefix t)
+(defvar-keymap ctl-z-x-map   :doc "Misc"     :prefix t)
+(defvar-keymap ctl-z-ret-map :doc "Bookmark" :prefix t)
 
 ;; Default Top-level leader keymap, referencing the sub-keymaps
 ;; TODO Rename ctl-z-.*-map to eon-leader-default-.*-map, because
@@ -936,6 +936,7 @@ Use `eon-customize-group' to change, or `setopt' from Lisp."
 
 (defvar-keymap ctl-z-map
   :doc "Top-level leader keymap."
+  :prefix t
   "b"   `("Buffer"   . ,ctl-z-b-map)
   "c"   `("Code"     . ,ctl-z-c-map)
   "e"   `("Exec"     . ,ctl-z-e-map)
@@ -1907,6 +1908,14 @@ buffer."
 ;; Common window management commands under the leader key
 (keymap-set ctl-z-w-map "SPC" #'toggle-window-dedicated)
 (keymap-set ctl-z-w-map "="   #'balance-windows)
+(when (>= 31 emacs-major-version)
+  (keymap-set ctl-z-w-map "]"   #'window-layout-rotate-clockwise)
+  (keymap-set ctl-z-w-map "["   #'window-layout-rotate-anticlockwise)
+  (keymap-set ctl-z-w-map "|"   #'window-layout-flip-leftright)
+  (keymap-set ctl-z-w-map "_"   #'window-layout-flip-topdown)
+  (keymap-set ctl-z-w-map "\\"  #'window-layout-transpose)
+  (keymap-set ctl-z-w-map "}"   #'rotate-windows)
+  (keymap-set ctl-z-w-map "{"   #'rotate-windows-back))
 (keymap-set ctl-z-w-map "P"   #'window-toggle-side-windows)
 (keymap-set ctl-z-w-map "b"   #'display-buffer)
 (keymap-set ctl-z-w-map "c"   #'delete-window)
@@ -2867,12 +2876,22 @@ only the command marker, using `#' for root and `$' otherwise."
 ;; <https://www.gnu.org/software/tramp>
 
 (with-eval-after-load 'tramp
+
   ;; Ensure that Tramp can find a proper `ls' on a Guix-based host
   ;; <https://blog.smith-manor.us/tramp_and_guix>
-  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+  (add-to-list 'tramp-remote-path #'tramp-own-remote-path)
+
   ;; Speed up Tramp
-  (setopt tramp-use-scp-direct-remote-copying t
-          remote-file-name-inhibit-locks t))
+  ;; <https://coredumped.dev/2025/06/18/making-tramp-go-brrrr.>
+  (setopt tramp-verbose 2
+          tramp-default-method "ssh"
+          tramp-copy-size-limit (* 1 1024 1024)  ; 1 MiB
+          tramp-use-scp-direct-remote-copying t
+          tramp-direct-async-process t
+          tramp-completion-reread-directory-timeout 60
+          remote-file-name-inhibit-cache 60
+          remote-file-name-inhibit-locks t
+          remote-file-name-inhibit-auto-save-visited t))
 
 ;; _____________________________________________________________________________
 ;;; WEB BROWSERS
@@ -3061,7 +3080,7 @@ When called interactively, select PROFILE with completion."
 (keymap-global-set "M-z" #'zap-up-to-char)
 
 ;; Define a keymap in order to group formatting commands
-(defvar-keymap ctl-z-c-f-map :doc "Formatting"
+(defvar-keymap ctl-z-c-f-map :doc "Formatting" :prefix t
                "a" #'align
                "A" #'align-regexp
                ;; Tipps: <https://susam.github.io/sorting-in-emacs.html>
