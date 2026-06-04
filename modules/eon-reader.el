@@ -99,7 +99,12 @@
 ;;; NOV.EL
 
 (use-package nov :ensure t
-  :mode ("\\.epub\\'" . nov-mode))
+
+  :mode ("\\.epub\\'" . nov-mode)
+
+  :custom
+
+  (nov-text-width 72))
 
 ;; _____________________________________________________________________________
 (provide 'eon-reader)
