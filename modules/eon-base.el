@@ -364,14 +364,17 @@
 ;; <https://github.com/dhall-lang/dhall-lang>
 (use-package dhall-mode :ensure t)
 
-;; <https://jblevins.org/projects/markdown-mode/>
-(use-package markdown-mode :ensure t
-  :hook
-  ;; Turn on visual word wrapping
-  (markdown-mode . visual-line-mode))
+;; TODO Remove with Emacs 31 requirement
+(when (< emacs-major-version 31)
 
-(use-package yaml-ts-mode :ensure nil
-  :mode (("\\.yaml\\'" . yaml-ts-mode)))
+  ;; <https://jblevins.org/projects/markdown-mode/>
+  (use-package markdown-mode :ensure t
+    :hook
+    ;; Turn on visual word wrapping
+    (markdown-mode . visual-line-mode))
+
+  (use-package yaml-ts-mode :ensure nil
+    :mode (("\\.yaml\\'" . yaml-ts-mode))))
 
 ;; _____________________________________________________________________________
 ;;; LISP
