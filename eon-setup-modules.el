@@ -133,7 +133,7 @@
    ;; eon-lang-web                  ; HTML/CSS editing
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-   ;;; PERSONNAL MODULES
+   ;;; PERSONAL MODULES
 
    eon-personal                     ; Your personal Emacs Lisp code
 
