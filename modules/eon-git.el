@@ -38,6 +38,9 @@
 
   :config
 
+  ;; Use a pty instead of a pipe; doesn't work for files with DOS line endings
+  (setq magit-tramp-pipe-stty-settings 'pty)
+
   (defun eon-magit-kill-buffers ()
     "Restore window configuration and kill all Magit buffers."
     (interactive)
