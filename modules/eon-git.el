@@ -30,7 +30,7 @@
   ;; How many directoriess deep magit looks for git repos
   (magit-repository-directories '(("~/" . 1)))
 
-  ;; Inject magit into the `project-switch-commands' dispatch menu
+  ;; Inject Magit into the `project-switch-commands' dispatch menu
   (project-switch-commands
    (cl-substitute '(magit-project-status "Magit" ?v) 'project-vc-dir
                   project-switch-commands
