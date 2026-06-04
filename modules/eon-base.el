@@ -364,7 +364,7 @@
 ;; <https://github.com/dhall-lang/dhall-lang>
 (use-package dhall-mode :ensure t)
 
-;; TODO Remove with Emacs 31 requirement
+;; TODO Remove with Emacs 31 minimum requirement
 (when (< emacs-major-version 31)
 
   ;; <https://jblevins.org/projects/markdown-mode/>
