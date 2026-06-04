@@ -538,11 +538,8 @@ Resolution rules:
               :skipped
               (nreverse skipped))))))
 
-(defun eon-load-module (&optional feature)
-  "Require FEATURE.
-
-Interactively, prompt for a module name using completion over all
-.el/.elc files in the existing EON module directories."
+(defun eon-load-module (&optional module)
+  "From Lisp: require MODULE; interactively: prompt to load module library."
   (interactive
    (let* ((paths (eon-module-load-path)))
      (unless paths
@@ -554,14 +551,21 @@ Interactively, prompt for a module name using completion over all
                                   paths)))
             (names (delete-dups
                     (mapcar #'file-name-sans-extension files)))
-            (name (completing-read "EON module: " names nil t)))
-       (list (intern name)))))
+            (completion-table
+             (lambda (string predicate action)
+               (if (eq action 'metadata)
+                   '(metadata (category . library))
+                 (complete-with-action action names string predicate))))
+            (load-path paths)
+            (find-library-source-path nil))
+       (list (intern
+              (completing-read "EON module: " completion-table nil t))))))
 
-  (unless feature
-    (error "FEATURE is required"))
+  (unless module
+    (error "MODULE is required"))
 
-  (unless (eon-module-known-p feature)
-    (error "Unknown EON module: %S" feature))
+  (unless (eon-module-known-p module)
+    (error "Unknown EON module: %S" module))
 
   ;; Single-module loading must also honor conflicts against enabled modules
   ;; and already loaded EON modules
@@ -569,24 +573,24 @@ Interactively, prompt for a module name using completion over all
           (cl-remove-if-not #'eon-module-known-p features))
          (context
           (delete-dups
-           (append (list feature) eon-modules loaded-eon-modules)))
+           (append (list module) eon-modules loaded-eon-modules)))
          (context-resolution
           (eon-module-resolve context))
          (context-skipped
           (plist-get context-resolution :skipped))
-         (feature-skipped
-          (assq feature context-skipped)))
-    (when feature-skipped
+         (module-skipped
+          (assq module context-skipped)))
+    (when module-skipped
       (error "Cannot load %S: %s"
-             (car feature-skipped)
-             (cdr feature-skipped))))
+             (car module-skipped)
+             (cdr module-skipped))))
 
   ;; Load the requested module's requirements before the module itself
-  (let* ((resolution (eon-module-resolve (list feature)))
+  (let* ((resolution (eon-module-resolve (list module)))
          (modules (plist-get resolution :load))
          (skipped (plist-get resolution :skipped)))
     (when skipped
-      (let ((entry (or (assq feature skipped)
+      (let ((entry (or (assq module skipped)
                        (car skipped))))
         (error "Cannot load %S: %s"
                (car entry)
