@@ -55,11 +55,6 @@
 ;; commenting. There might be more elegant and sensible ways; must work from
 ;; Lisp code and the `customize' UI.
 
-;; TODO Modules are currently implemented as Emacs "features". Therefore they
-;; are basically Emacs packages, if the required metadata has been added to
-;; each module. That way they could be available as "meta-packages" on Melpa /
-;; GNU Elpa. It might be interesting to treat them as global minor modes also.
-
 ;; MAYBE Generate hooks for all modules automatically, since using
 ;; `with-eval-after-load' alone is quite blunt.
 ;; As there are:
