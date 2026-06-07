@@ -29,11 +29,6 @@
 (setopt
  eon-modules
  '(;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-   ;;; LOAD EARLY
-
-   ;; eon-compileangel              ; Improved native compilation
-
-   ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ;;; CORE MODULES
    ;; Basic and shared functionality.
 
