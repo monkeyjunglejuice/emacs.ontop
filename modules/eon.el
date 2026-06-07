@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 ;;
 ;;
-;; Version: 2.6.12
+;; Version: 2.6.13
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
@@ -94,7 +94,7 @@
   "Garbage collection tuning."
   :group 'eon)
 
-(defcustom eon-gcmh-high-cons-threshold (* 512 1024 1024)  ; 512 MiB
+(defcustom eon-gcmh-high-cons-threshold (* 1024 1024 1024)  ; 1024 MiB
   "High cons GC threshold.
 This should be set to a value that makes GC unlikely but does not
 cause OS paging."
@@ -186,7 +186,7 @@ Cancel the previous one if present."
     (remove-hook 'pre-command-hook #'eon-gcmh-set-high-threshold)
     (remove-hook 'post-command-hook #'eon-gcmh-register-idle-gc)))
 
-;; Activate GCMH mode (idle timer)
+;; Activate GCMH mode
 (eon-gcmh-mode 1)
 
 ;; _____________________________________________________________________________
@@ -221,16 +221,23 @@ Cancel the previous one if present."
 ;; Prevents from interrupted compilations and leftover artifacts.
 (setopt native-comp-async-query-on-exit t)
 
+;; Don't waste battery on native compilation?
+(setopt native-comp-async-on-battery-power nil)
+
+;; Compiler optimization level; default 2
+(setopt native-comp-speed 3)
+
 ;; This options are not set if Emacs is started via "emacs --debug-init"
 (unless init-file-debug
+
   (setopt
    ;; When to bring the buffer to the foreground? Defaults to :warning
    warning-minimum-level :error
    ;; Allow bytecode compilation to be verbose?
    byte-compile-verbose nil
    ;; Allow native compilation to be verbose?
-   native-comp-async-report-warnings-errors nil
-   native-comp-warning-on-missing-source nil)
+   native-comp-async-report-warnings-errors nil)
+
   ;; Suppress noisy byte-compiler warnings?
   (setq byte-compile-warnings '(not docstrings)))
 
@@ -490,7 +497,7 @@ When called interactively, also echo the result."
 ;; Distance from the bottom edge, using negative numbers:
 ;; (setf (alist-get 'top default-frame-alist) -1)
 
-;; Bring frame to the front (steals focus)
+;; Bring frame to the front; steals focus
 (add-hook 'window-setup-hook
           (lambda ()
             (when (display-graphic-p)
@@ -698,7 +705,9 @@ a `cursor-type' or nil. The first non-nil return wins.")
         which-key-idle-delay 0.3
         which-key-idle-secondary-delay 0.0
         which-key-sort-uppercase-first nil
-        which-key-sort-order 'which-key-key-order-alpha)
+        which-key-sort-order 'which-key-key-order-alpha
+        which-key-preserve-window-configuration t
+        which-key-add-column-padding 2)
 
 (which-key-mode 1)
 
@@ -1308,8 +1317,12 @@ Per default, the function is called by the hooks:
     (set-face-attribute 'variable-pitch nil
                         :family proportional-family
                         :height proportional-size)
-    ;; Base font face for the active mode line
+    ;; Base font face for mode line elements
     (set-face-attribute 'mode-line nil
+                        :family mode-line-family
+                        :height eon-font-marginal-size)
+    ;; Base font face for the active mode line
+    (set-face-attribute 'mode-line-active nil
                         :family mode-line-family
                         :height eon-font-marginal-size)
     ;; Base font face for the inactive mode line
@@ -1463,28 +1476,22 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; Restart Emacs to take effect after changing the hooks.
 
 ;; Light theme hooks
-
 ;; Call a function before/after loading the light theme.
 ;; Example for commands ("interactive" functions):
 ;; (add-hook 'eon-theme-light-post-load-hook #'my-interactive-function)
 ;; Functions not designated as "(interactive)" must be wrapped in lambdas.
 
-;; Load the default font set; if you want to load a different font set,
-;; "unhook" `eon-fonts' first via:
-;; (remove-hook 'eon-theme-light-post-load-hook #'eon-fonts)
+;; Load the default font set
 (add-hook 'eon-theme-light-post-load-hook #'eon-fonts)
 (add-hook 'eon-theme-light-post-load-hook #'eon-region-face)
 
 ;; Dark theme hooks
-
 ;; Call a function before/after loading the dark theme.
 ;; Example for commands ("interactive" functions):
 ;; (add-hook 'eon-theme-dark-post-load-hook #'my-interactive-function)
 ;; Functions not designated as "(interactive)" must be wrapped in lambdas.
 
-;; Load the default font set; if you want to load your own font set,
-;; "unhook" `eon-fonts' first via:
-;; (remove-hook 'eon-theme-dark-post-load-hook #'eon-fonts)
+;; Load the default font set
 (add-hook 'eon-theme-dark-post-load-hook #'eon-fonts)
 (add-hook 'eon-theme-dark-post-load-hook #'eon-region-face)
 
@@ -1892,12 +1899,12 @@ buffer."
 (setopt mouse-autoselect-window nil
         focus-follows-mouse nil)
 
-;; Make window splits more evenly sized?
-(setopt window-resize-pixelwise t)
-
 ;; Window splitting
 (setopt split-width-threshold 160
         split-height-threshold 32)
+
+;; Make window splits more evenly sized?
+(setopt window-resize-pixelwise t)
 
 ;; Undo/redo window layouts
 (setopt winner-dont-bind-my-keys t)
@@ -1938,16 +1945,18 @@ buffer."
 ;; _____________________________________________________________________________
 ;;; TAB MANAGEMENT
 
-;; What to do with a window whose buffer was killed?
-;; nil = no special handling. Let `set-window-configuration' decide,
-;; instead of displaying a placeholder buffer.
-(setopt tab-bar-select-restore-windows nil)
+;; Tabs hold entire window layouts, not just a single buffer.
 
 ;; Create a fresh tab with *scratch* buffer only
 (setopt tab-bar-new-tab-choice "*scratch*")
 
 ;; Show tab numbers
 (setopt tab-bar-tab-hints t)
+
+;; What to do with a window whose buffer was killed?
+;; nil = no special handling. Let `set-window-configuration' decide,
+;; instead of displaying a placeholder buffer.
+(setopt tab-bar-select-restore-windows nil)
 
 ;; Create new tab
 (keymap-set ctl-z-t-map "n" #'tab-new)
