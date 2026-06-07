@@ -82,6 +82,7 @@
    ;; eon-reader                    ; Read EPUBs in Emacs
    ;; eon-smartparens               ; More general Paredit alternative
    ;; eon-switchwindow              ; Navigate windows
+   ;; eon-tempel                    ; Code snippets and language server support
    ;; eon-todo                      ; Highlight todo keywords in comments
    ;; eon-vertico                   ; Vertical minibuffer completion UI
    ;; eon-vterm                     ; Faster terminal emulator
