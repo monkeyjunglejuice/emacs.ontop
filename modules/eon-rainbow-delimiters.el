@@ -1,6 +1,6 @@
 ;;; eon-rainbow-delimiters.el --- Color-code nested parenthesis -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.0
+;; Version: 2.0.1
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -42,13 +42,13 @@
 
   :hook
 
-  ;; Useful for non-Lisp languages, so enable for parent modes too
-  ((prog-mode conf-mode comint-mode) . rainbow-delimiters-mode)
+  ;; Useful for non-Lisp languages
+  ((prog-mode conf-mode) . rainbow-delimiters-mode)
 
-  ;; Add to all known lisp modes after the entire config has been loaded
-  ;; to improve the change mode-specific ...-mode-hook variables actually exist.
-  (emacs-startup . eon-rainbow-delimiters-enable-lisp-src-modes)
-  (emacs-startup . eon-rainbow-delimiters-enable-lisp-repl-modes))
+  ;; Add to all known Lisp modes after the entire config has been loaded
+  ;; to improve the chance mode-specific ...-mode-hook variables actually exist.
+  (after-init . eon-rainbow-delimiters-enable-lisp-src-modes)
+  (after-init . eon-rainbow-delimiters-enable-lisp-repl-modes))
 
 ;; _____________________________________________________________________________
 (provide 'eon-rainbow-delimiters)
