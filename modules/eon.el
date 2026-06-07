@@ -202,7 +202,7 @@ Cancel the previous one if present."
                      gcs-done)))
 
 ;; _____________________________________________________________________________
-;;; ELISP NATIVE COMPILATION / BYTECODE
+;;; ELISP NATIVE & BYTECODE COMPILATION
 
 ;; Prevent stale elisp bytecode from shadowing more up-to-date source files?
 (setopt load-prefer-newer t)
@@ -227,7 +227,7 @@ Cancel the previous one if present."
 ;; Compiler optimization level; default 2
 (setopt native-comp-speed 3)
 
-;; This options are not set if Emacs is started via "emacs --debug-init"
+;; Following options are not set if Emacs starts via "emacs --debug-init"
 (unless init-file-debug
 
   (setopt
@@ -279,30 +279,36 @@ Cancel the previous one if present."
   "True if `system-type' is GNU/Linux or something compatible.
 For finer granularity, use the variables `system-type'
 or `system-configuration' directly."
-  (memq system-type '(gnu/linux berkeley-unix gnu gnu/kfreebsd)))
+  (memq system-type '(gnu/linux gnu)))
 
 (defun eon-wslp ()
-  "True if `system-type' is GNU/Linux or compatible, running within WSL.
+  "True if `system-type' is GNU/Linux running within WSL.
 For finer granularity, use the variables `system-type'
 or `system-configuration' directly."
-  (and (memq system-type '(gnu/linux berkeley-unix gnu gnu/kfreebsd))
+  (and (memq system-type '(gnu/linux gnu))
        (or (getenv "WSLENV")
            (getenv "WSL_DISTRO_NAME"))))
 
-(defun eon-winp ()
-  "True if `system-type' is Microsoft Windows or something compatible.
-For finer granularity, use the variables `system-type'
-or `system-configuration' directly."
-  (memq system-type '(windows-nt cygwin ms-dos)))
-
 (defun eon-androidp ()
-  "True if `system-type' is Android or something compatible.
+  "True if `system-type' is Android.
 For finer granularity, use the variables `system-type'
 or `system-configuration' directly."
   (eq system-type 'android))
 
+(defun eon-winp ()
+  "True if `system-type' is Microsoft Windows.
+For finer granularity, use the variables `system-type'
+or `system-configuration' directly."
+  (memq system-type '(windows-nt cygwin ms-dos)))
+
+(defun eon-bsdp ()
+  "True if `system-type' is BSD derivate; except MacOS.
+For finer granularity, use the variables `system-type'
+or `system-configuration' directly."
+  (memq system-type '(berkeley-unix gnu/kfreebsd)))
+
 (defun eon-macp ()
-  "True if `system-type' is MacOS or something compatible.
+  "True if `system-type' is MacOS.
 For finer granularity, use the variables `system-type'
 or `system-configuration' directly."
   (eq system-type 'darwin))
@@ -314,8 +320,6 @@ or `system-configuration' directly."
 
 ;;; - Extended `add-to-list' and friends
 
-;; TODO Since we're using `cl-lib' anyway, we could use keyword arguments
-;; instead of merely positional arguments.
 (require 'cl-lib)
 
 (defun eon-adjoin (cur elements &optional append compare-fn)
@@ -450,17 +454,33 @@ When called interactively, also echo the result."
 ;; _____________________________________________________________________________
 ;;; EMACS SYSTEM LIMITS
 
-;; Increase warning threshold
+;; Increase warning threshold when visiting files
 (setopt large-file-warning-threshold (* 64 1024 1024))  ; 64 MiB
 
 ;; Increase undo limit
-(setopt undo-limit (* 8 1024 1024)          ; 8 MiB
+(setopt undo-limit (* 8 1024 1024)          ;  8 MiB
         undo-strong-limit (* 12 1024 1024)  ; 12 MiB
         undo-outer-limit (* 32 1024 1024))  ; 32 MiB
 
-;; Increase the amount of data that Emacs reads from subprocesses in one chunk.
-;; Aims to increase performance for communication with language servers, etc.
-(setopt read-process-output-max (* 8 1024 1024))  ; 8 MiB
+;; Adjust the amount of data Emacs reads from subprocesses in one chunk. Aims to
+;; increase performance for communication with async processes like language
+;; servers, etc. On GNU/Linux systems, the value should not exceed
+;; /proc/sys/fs/pipe-max-size. The Linux default pipe capacity is usually 1 MiB.
+;; If you want to push your Emacs speed even higher (e.g., setting
+;; read-process-output-max to > 1 MiB), you will also need to increase the
+;; /proc/sys/fs/pipe-max-size kernel ceiling, otherwise setting a higher value
+;; won't have any effect. On MacOS/BSD, the default pipe capacity is fixed to 64
+;; KiB; setting `read-process-output-max' to a higher value won't have any
+;; effect. On Windows there's no hard limit, but will be adjusted dynamically.
+(setopt read-process-output-max (cond
+                                 ((eon-linp)     (* 1 1024 1024))  ;  1 MiB
+                                 ((eon-wslp)     (* 1 1024 1024))  ;  1 MiB
+                                 ((eon-androidp) (*     64 1024))  ; 64 KiB
+                                 ((eon-bsdp)     (*     64 1024))  ; 64 KiB
+                                 ((eon-macp)     (*     64 1024))  ; 64 KiB
+                                 ((eon-winp)     (* 2 1024 1024))  ;  2 MiB
+                                 ;; Keep the default value everywhere else
+                                 (t              read-process-output-max)))
 
 ;; _____________________________________________________________________________
 ;;; DEFAULT AND INITIAL FRAME
@@ -533,6 +553,8 @@ When called interactively, also echo the result."
 (setopt window-divider-default-places t
         window-divider-default-bottom-width 1
         window-divider-default-right-width 1)
+
+;; Pre-configured, but keep it off
 (window-divider-mode -1)
 
 ;; _____________________________________________________________________________
@@ -1145,7 +1167,8 @@ minibuffer, even without explicitly focusing it."
 ;; _____________________________________________________________________________
 ;;; VI KEYBINDINGS (VIPER-MODE)
 
-;; TODO It's an old mode and behaves a bit strangely; needs review
+;; TODO It's an old mode and behaves a bit strangely; needs review.
+;; Viper also messes with `completing-read' and/or `fido-vertical-mode'.
 ;; FIXME Needs a customizable leader key
 ;; e.g. eon-viper-leader-key and eon-viper-localleader-key.
 ;; Best keymap to bind it seems `viper-vi-global-user-map'.
@@ -1174,6 +1197,11 @@ minibuffer, even without explicitly focusing it."
 ;;         eon-font-proportional "Gentium Plus"  ; font name
 ;;         eon-font-proportional-size 160        ; size in 1/10 pt
 ;;         eon-font-marginal-size 0.9)           ; 90% for mode line and tabs
+
+;; TODO Maybe add font profiles to switch between different font sets easily,
+;; e.g. depending on the dark/light theme. Could be an argument to `eon-fonts'.
+;; TODO Make the distinction between font, family and face correct & clear,
+;; ergo rename affected variables and update related documentation.
 
 (defgroup eon-font-settings nil
   "Font settings."
@@ -1348,7 +1376,7 @@ Per default, the function is called by the hooks:
 ;; _____________________________________________________________________________
 ;;; TOGGLE THEME
 
-;; Default/fallback definitions – don't change them here,
+;; Default/fallback definitions; don't change them here,
 ;; but set them in your 'init.el'. For examples, see THEME CONFIG.
 
 ;; TODO Refactor in order to dissolve duplication
@@ -1452,20 +1480,20 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (setopt modus-themes-bold-constructs t
         modus-themes-italic-constructs nil
         modus-themes-mixed-fonts t)
-;; Remove the border around the mode line
+;; Remove the border around the mode line?
 (setopt modus-themes-common-palette-overrides
         '((border-mode-line-active bg-mode-line-active)
           (border-mode-line-inactive bg-mode-line-inactive)))
 
 ;; Customize via "M-x eon-customize-group" or via `setopt' in your init.el:
 
-;;; - Set your light theme:
+;; Set your light theme:
 ;; (setopt eon-theme-light 'modus-operandi-tinted)
 
-;;; - Set your dark theme:
+;; Set your dark theme:
 ;; (setopt eon-theme-dark 'modus-vivendi-tinted)
 
-;;; - Set 'light or 'dark as your default theme variant:
+;; Set 'light or 'dark as your default theme variant:
 ;; (setopt eon-theme-variant-default 'light)
 
 ;;; - Theme hooks
@@ -1477,20 +1505,12 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 ;; Light theme hooks
 ;; Call a function before/after loading the light theme.
-;; Example for commands ("interactive" functions):
-;; (add-hook 'eon-theme-light-post-load-hook #'my-interactive-function)
-;; Functions not designated as "(interactive)" must be wrapped in lambdas.
-
 ;; Load the default font set
 (add-hook 'eon-theme-light-post-load-hook #'eon-fonts)
 (add-hook 'eon-theme-light-post-load-hook #'eon-region-face)
 
 ;; Dark theme hooks
 ;; Call a function before/after loading the dark theme.
-;; Example for commands ("interactive" functions):
-;; (add-hook 'eon-theme-dark-post-load-hook #'my-interactive-function)
-;; Functions not designated as "(interactive)" must be wrapped in lambdas.
-
 ;; Load the default font set
 (add-hook 'eon-theme-dark-post-load-hook #'eon-fonts)
 (add-hook 'eon-theme-dark-post-load-hook #'eon-region-face)
@@ -1540,7 +1560,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 
 ;; Show the current line number along with column number in mode line?
 ;; This is nice if you think line numbers on the left margin are distracting.
-;; The line number indicator turnes off if you enable
+;; The line number indicator turns off if you enable
 ;; `display-line-numbers-mode' or `global-display-line-numbers-mode'.
 (column-number-mode 1)
 (line-number-mode 1)
@@ -1658,7 +1678,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; Make Icomplete snappy and tweak it further
 (with-eval-after-load 'icomplete
   (setopt icomplete-compute-delay 0.01
-          icomplete-delay-completions-threshold 256
+          icomplete-delay-completions-threshold 1024
           icomplete-show-matches-on-no-input t
           icomplete-hide-common-prefix nil))
 
@@ -1699,8 +1719,8 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; _____________________________________________________________________________
 ;;; CUSTOMIZATION UI SETTINGS
 
-;; The most important Emacs ONBOARD preferences are customizable via GUI.
-;; Open the GUI via "<leader> x C"
+;; The most important Emacs ONBOARD preferences are customizable via UI.
+;; Open the UI via "<leader> x C"
 
 ;; Define local leader keymap for `Custom-mode'
 (eon-localleader-defkeymap Custom-mode eon-localleader-customization-map
@@ -1709,7 +1729,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
   "d" #'customize-dirlocals)
 
 (defun eon-customize-group ()
-  "Set preferences via GUI."
+  "Set preferences via UI."
   (interactive)
   (customize-group 'eon))
 (keymap-set ctl-z-x-map "C" #'eon-customize-group)
@@ -1797,8 +1817,8 @@ buffer."
         isearch-motion-changes-direction t)
 
 ;; Bind some Isearch commands under the leader
-(keymap-set ctl-z-s-map "p" #'isearch-forward-thing-at-point)
-(keymap-set ctl-z-s-map "P" #'isearch-forward-symbol-at-point)
+(keymap-set ctl-z-s-map "."   #'isearch-forward-thing-at-point)
+(keymap-set ctl-z-s-map "M-." #'isearch-forward-symbol-at-point)
 
 ;; Swap search functions to make regexp-search the default
 (keymap-global-set "C-s"   #'isearch-forward-regexp)
