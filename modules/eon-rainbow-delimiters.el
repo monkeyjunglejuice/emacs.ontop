@@ -13,7 +13,7 @@
 
 ;;; Commentary:
 ;;
-;; <https://github.com/Fanael/rainbow-delimiters>
+;; Website: <https://github.com/Fanael/rainbow-delimiters>
 ;;
 ;;; Code:
 
@@ -32,14 +32,12 @@
     "Enable `rainbow-delimiters-mode' in all known Lisp source code buffers."
     (mapc (lambda (mode)
             (add-hook mode #'rainbow-delimiters-mode))
-          ;; Return all modes, as some may not be available at eval time
           (eon-lisp-src-modes 'hook)))
 
   (defun eon-rainbow-delimiters-enable-lisp-repl-modes ()
     "Enable `rainbow-delimiters-mode' in all known Lisp REPL buffers."
     (mapc (lambda (mode)
             (add-hook mode #'rainbow-delimiters-mode))
-          ;; Return all modes, as some may not be available at eval time
           (eon-lisp-repl-modes 'hook)))
 
   :hook
