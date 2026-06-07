@@ -1,6 +1,6 @@
 ;;; eon-paren-face.el --- Less visible parenthesis -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.0
+;; Version: 2.0.1
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -14,7 +14,7 @@
 ;;; Commentary:
 ;;
 ;; Make parens stand out less
-;; <https://github.com/tarsius/paren-face>
+;; Website: <https://github.com/tarsius/paren-face>
 ;;
 ;;; Code:
 
@@ -33,7 +33,7 @@
   (eon-add-to-list* 'paren-face-modes (eon-lisp-src-modes))
   (eon-add-to-list* 'paren-face-modes (eon-lisp-repl-modes))
 
-  ;; Enable Paren Face Mode according to `paren-face-modes`
+  ;; Enable Paren Face Mode for all `paren-face-modes`
   (global-paren-face-mode 1))
 
 ;; _____________________________________________________________________________
