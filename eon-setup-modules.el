@@ -33,10 +33,10 @@
    ;; Basic and shared functionality.
 
    eon                              ; Configures built-in Emacs packages
-   eon-base                         ; Shared packages and definitions
+   eon-base                         ; Configures generally useful packages
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-   ;;; MODAL EDITING - choose one. If none enabled, stay with Emacs keybindings.
+   ;;; MODAL EDITING - choose one; if none enabled, stay with Emacs keybindings.
 
    ;; eon-evil                      ; Vim keybindings
    ;; eon-god                       ; Emacs keybindings
