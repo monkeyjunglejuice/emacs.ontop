@@ -1,6 +1,6 @@
 ;;; eon-git.el --- Magit user interface and friends -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.1
+;; Version: 2.0.2
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -27,8 +27,12 @@
 
   :custom
 
-  ;; How many directoriess deep magit looks for git repos
+  ;; How many directories deep Magit looks for git repos
   (magit-repository-directories '(("~/" . 1)))
+
+  ;; How to display Magit buffers
+  (magit-display-buffer-function
+   #'magit-display-buffer-same-window-except-diff-v1)
 
   ;; Inject Magit into the `project-switch-commands' dispatch menu
   (project-switch-commands
