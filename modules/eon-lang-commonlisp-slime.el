@@ -100,7 +100,11 @@
 
   (:map eon-localleader-slime-map
         ;; TODO Add ergonomic keybindings to the local leader map
-        ("c" . slime-compile-defun)))
+        ("c" . slime-compile-defun))
+
+  (:map eon-localleader-slime-repl-map
+        ;; TODO Add ergonomic keybindings to the local leader map
+        ("m" . slime-handle-repl-shortcut)))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; Common Lisp documentation
