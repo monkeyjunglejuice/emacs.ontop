@@ -200,11 +200,7 @@ Bound to \"i\" per default."
         ("^" . scroll-up-command)
         ("q" . quit-window)
         ("[" . backward-paragraph)
-        ("]" . forward-paragraph)
-        ;; Bind to keymaps
-        ("s" . ctl-z-s-map)
-        ("r" . ctl-z-r-map)
-        ("t" . ctl-z-t-map))
+        ("]" . forward-paragraph))
 
   (:repeat-map eon-god-local-mode-repeat-map
                ("f" . forward-word)
