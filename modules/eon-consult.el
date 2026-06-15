@@ -54,8 +54,10 @@
     (if (executable-find "fd") #'consult-fd #'consult-find)
     "Run consult-fd if fd is available, else consult-find.")
 
-  ;; Provide the "..." label for the global local leader keymap
+  ;; Consult-based replacement for `execute-extended-command-for-buffer'
+  ;; in the global local leader keymap
   (keymap-set eon-localleader-global-map "," #'consult-mode-command)
+  ;; Provide the "..." label for the global local leader keymap
   (with-eval-after-load 'which-key
     (which-key-add-keymap-based-replacements
       eon-localleader-global-map "," "..."))
