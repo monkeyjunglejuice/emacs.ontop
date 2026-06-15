@@ -228,6 +228,10 @@
    ("s" . consult-line)
    ("S" . consult-line-multi)
 
+   ;; Leader -> Frame
+   :map ctl-z-W-map
+   ("b" . consult-buffer-other-frame)
+
    ;; Leader -> Tab
    :map ctl-z-t-map
    ("b" . consult-buffer-other-tab)
