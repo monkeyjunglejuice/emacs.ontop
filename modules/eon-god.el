@@ -196,8 +196,6 @@ Bound to \"i\" per default."
   (:map god-local-mode-map
         ("i" . eon-god-local-mode-disable)
         ("." . repeat)
-        ("V" . scroll-down-command)
-        ("^" . scroll-up-command)
         ("q" . quit-window)
         ("[" . backward-paragraph)
         ("]" . forward-paragraph))
