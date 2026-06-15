@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 ;;
 ;;
-;; Version: 2.6.14
+;; Version: 2.6.16
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
@@ -463,24 +463,26 @@ When called interactively, also echo the result."
         undo-outer-limit (* 32 1024 1024))  ; 32 MiB
 
 ;; Adjust the amount of data Emacs reads from subprocesses in one chunk. Aims to
-;; increase performance for communication with async processes like language
-;; servers, etc. On GNU/Linux systems, the value should not exceed
-;; /proc/sys/fs/pipe-max-size. The Linux default pipe capacity is usually 1 MiB.
-;; If you want to push your Emacs speed even higher (e.g., setting
-;; read-process-output-max to > 1 MiB), you will also need to increase the
-;; /proc/sys/fs/pipe-max-size kernel ceiling, otherwise setting a higher value
-;; won't have any effect. On MacOS/BSD, the default pipe capacity is fixed to 64
-;; KiB; setting `read-process-output-max' to a higher value won't have any
-;; effect. On Windows there's no hard limit, but will be adjusted dynamically.
-(setopt read-process-output-max (cond
-                                 ((eon-linp)     (* 1 1024 1024))  ;  1 MiB
-                                 ((eon-wslp)     (* 1 1024 1024))  ;  1 MiB
-                                 ((eon-androidp) (*     64 1024))  ; 64 KiB
-                                 ((eon-bsdp)     (*     64 1024))  ; 64 KiB
-                                 ((eon-macp)     (*     64 1024))  ; 64 KiB
-                                 ((eon-winp)     (* 2 1024 1024))  ;  2 MiB
-                                 ;; Keep the default value everywhere else
-                                 (t              read-process-output-max)))
+;; increase performance for communication with async processes, e.g. language
+;; servers. Higher values come with an overhead and may have negative effects,
+;; e.g. on responsivity.
+;; - On GNU/Linux systems, the value should not exceed
+;;   /proc/sys/fs/pipe-max-size, which is usually 1 MiB. If you want to push
+;;   higher (e.g., setting read-process-output-max to > 1 MiB), you will also
+;;   need to increase the /proc/sys/fs/pipe-max-size kernel ceiling, otherwise
+;;   setting a higher value won't have a positive effect.
+;; - On MacOS/BSD, the default pipe capacity is fixed to 64 KiB; setting
+;;   `read-process-output-max' to a higher value won't have a positive effect.
+;; - On Windows there's no hard limit, the pipe capacity will be adjusted
+;;   dynamically.
+(setopt read-process-output-max (cond ((eon-linp)     (* 1 1024 1024))  ;  1 MiB
+                                      ((eon-wslp)     (* 1 1024 1024))  ;  1 MiB
+                                      ((eon-androidp) (*     64 1024))  ; 64 KiB
+                                      ((eon-bsdp)     (*     64 1024))  ; 64 KiB
+                                      ((eon-macp)     (*     64 1024))  ; 64 KiB
+                                      ((eon-winp)     (* 1 1024 1024))  ;  1 MiB
+                                      ;; Keep the default value everywhere else
+                                      (t              read-process-output-max)))
 
 ;; _____________________________________________________________________________
 ;;; DEFAULT AND INITIAL FRAME
@@ -1572,8 +1574,10 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; Recursive minibuffers
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Recursive-Edit>
 ;; Allow minibuffer commands while in the minibuffer!
-;; There are two commands to get out of recursive minibuffers:
-;; "C-M-c" `exit-recursive-edit' and "C-]" `abort-recursive-edit'.
+;; There are normally two commands to get out of recursive minibuffers:
+;; "C-M-c" `exit-recursive-edit' and "C-]" `abort-recursive-edit',
+;; But Emacs ONboard defines `eon-keyboard-quit' so that "C-g" gets you out
+;; of recursive minibuffers too.
 (setopt enable-recursive-minibuffers t)
 ;; Show how deep you're in there?
 (minibuffer-depth-indicate-mode 1)
@@ -1895,8 +1899,81 @@ buffer."
 ;; _____________________________________________________________________________
 ;;; FRAME MANAGEMENT
 
-(keymap-set ctl-z-W-map "m" #'toggle-frame-maximized)
-(keymap-set ctl-z-W-map "f" #'toggle-frame-fullscreen)
+;; In Emacs terminology, "frames" are Emacs' ordinary desktop windows, so
+;; these commands are about managing Emacs desktop windows from within Emacs.
+
+;; Create new frame
+(keymap-set ctl-z-W-map "n"   #'make-frame)
+(keymap-set ctl-z-W-map "N"   #'clone-frame)
+(keymap-set ctl-z-W-map "M-n" #'make-frame-on-monitor)
+(keymap-set ctl-z-W-map "C-n" #'make-frame-on-display)
+
+;; Close frame
+(keymap-set ctl-z-W-map "c"   #'delete-frame)
+(keymap-set ctl-z-W-map "C"   #'delete-other-frames)
+
+;; Frame switching
+(keymap-set ctl-z-W-map "w"   #'select-frame-by-name)
+(keymap-set ctl-z-W-map "W"   #'other-frame)
+
+;; Run commands in a new frame
+(keymap-set ctl-z-W-map "b"   #'display-buffer-other-frame)
+(keymap-set ctl-z-W-map "f"   #'find-file-other-frame)
+(keymap-set ctl-z-W-map "d"   #'dired-other-frame)
+(keymap-set ctl-z-W-map "o"   #'other-frame-prefix)
+(keymap-set ctl-z-W-map "p"   #'project-other-frame-command)
+
+;; Change frame display
+(keymap-set ctl-z-W-map "f"   #'toggle-frame-fullscreen)
+(keymap-set ctl-z-W-map "m"   #'toggle-frame-maximized)
+
+;; _____________________________________________________________________________
+;;; TAB MANAGEMENT
+
+;; Tabs hold entire window layouts, not just a single buffer.
+
+;; Create a fresh tab with *scratch* buffer only
+(setopt tab-bar-new-tab-choice "*scratch*")
+
+;; Show tab numbers
+(setopt tab-bar-tab-hints t)
+
+;; What to do with a window whose buffer was killed?
+;; nil = no special handling. Let `set-window-configuration' decide,
+;; instead of displaying a placeholder buffer.
+(setopt tab-bar-select-restore-windows nil)
+
+;; Create new tab
+(keymap-set ctl-z-t-map "n" #'tab-new)
+(keymap-set ctl-z-t-map "N" #'tab-new-to)
+
+;; Close tab
+(keymap-set ctl-z-t-map "c" #'tab-close)
+(keymap-set ctl-z-t-map "C" #'tab-close-other)
+
+;; Fast tab switching
+(keymap-set ctl-z-t-map "t" #'tab-select)
+(keymap-set ctl-z-t-map "T" #'tab-switch)
+(keymap-set ctl-z-t-map "[" #'tab-previous)
+(keymap-set ctl-z-t-map "]" #'tab-next)
+(keymap-set ctl-z-t-map "r" #'tab-recent)
+
+;; Run commands in a new tab
+(keymap-set ctl-z-t-map "f" #'find-file-other-tab)
+(keymap-set ctl-z-t-map "d" #'dired-other-tab)
+(keymap-set ctl-z-t-map "b" #'switch-to-buffer-other-tab)
+(keymap-set ctl-z-t-map "o" #'other-tab-prefix)
+(keymap-set ctl-z-t-map "p" #'project-other-tab-command)
+
+;; Enable tabs
+(tab-bar-mode 1)
+
+;; Go back/forward trough tab layouts
+(keymap-set ctl-z-t-map "<" #'tab-bar-history-back)
+(keymap-set ctl-z-t-map ">" #'tab-bar-history-forward)
+
+;; Enable tab bar history
+(tab-bar-history-mode 1)
 
 ;; _____________________________________________________________________________
 ;;; WINDOW MANAGEMENT
@@ -1967,54 +2044,6 @@ buffer."
 (keymap-global-set "M-o" #'other-window)
 (when (>= emacs-major-version 31)
   (keymap-global-set "M-O" #'other-window-backward))
-
-;; _____________________________________________________________________________
-;;; TAB MANAGEMENT
-
-;; Tabs hold entire window layouts, not just a single buffer.
-
-;; Create a fresh tab with *scratch* buffer only
-(setopt tab-bar-new-tab-choice "*scratch*")
-
-;; Show tab numbers
-(setopt tab-bar-tab-hints t)
-
-;; What to do with a window whose buffer was killed?
-;; nil = no special handling. Let `set-window-configuration' decide,
-;; instead of displaying a placeholder buffer.
-(setopt tab-bar-select-restore-windows nil)
-
-;; Create new tab
-(keymap-set ctl-z-t-map "n" #'tab-new)
-(keymap-set ctl-z-t-map "N" #'tab-new-to)
-
-;; Close tab
-(keymap-set ctl-z-t-map "c" #'tab-close)
-(keymap-set ctl-z-t-map "C" #'tab-close-other)
-
-;; Fast tab switching
-(keymap-set ctl-z-t-map "t" #'tab-select)
-(keymap-set ctl-z-t-map "T" #'tab-switch)
-(keymap-set ctl-z-t-map "[" #'tab-previous)
-(keymap-set ctl-z-t-map "]" #'tab-next)
-(keymap-set ctl-z-t-map "r" #'tab-recent)
-
-;; Run commands in a new tab
-(keymap-set ctl-z-t-map "f" #'find-file-other-tab)
-(keymap-set ctl-z-t-map "d" #'dired-other-tab)
-(keymap-set ctl-z-t-map "b" #'switch-to-buffer-other-tab)
-(keymap-set ctl-z-t-map "o" #'other-tab-prefix)
-(keymap-set ctl-z-t-map "p" #'project-other-tab-command)
-
-;; Enable tabs
-(tab-bar-mode 1)
-
-;; Go back/forward trough tab layouts
-(keymap-set ctl-z-t-map "<" #'tab-bar-history-back)
-(keymap-set ctl-z-t-map ">" #'tab-bar-history-forward)
-
-;; Enable tab bar history
-(tab-bar-history-mode 1)
 
 ;; _____________________________________________________________________________
 ;;; BUFFER MANAGEMENT
@@ -3945,15 +3974,8 @@ Don't enable in:
                   (when (server-running-p)
                     (concat " " server-name)))))
 
-  (add-hook 'emacs-startup-hook
-            (lambda ()
-              "Run functions after loading init files"
-              (eon-frame-title)))
-
-  (add-hook 'server-mode-hook
-            (lambda ()
-              "Run functions after entering or leaving server-mode."
-              (eon-frame-title))))
+  (add-hook 'emacs-startup-hook #'eon-frame-title)
+  (add-hook 'server-mode-hook #'eon-frame-title))
 
 (defun eon-server-stop ()
   "Save buffers, quit and shutdown (kill) server."
