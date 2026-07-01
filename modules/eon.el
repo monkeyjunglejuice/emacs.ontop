@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 ;;
 ;;
-;; Version: 2.6.16
+;; Version: 2.6.17
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
@@ -302,7 +302,7 @@ or `system-configuration' directly."
   (memq system-type '(windows-nt cygwin ms-dos)))
 
 (defun eon-bsdp ()
-  "True if `system-type' is BSD derivate; except MacOS.
+  "True if `system-type' is a BSD derivate; except MacOS.
 For finer granularity, use the variables `system-type'
 or `system-configuration' directly."
   (memq system-type '(berkeley-unix gnu/kfreebsd)))
@@ -943,25 +943,25 @@ Use `eon-customize-group' to change, or `setopt' from Lisp."
 
 ;; Sub-keymaps under the leader
 
-(defvar-keymap ctl-z-b-map   :doc "Buffer"   :prefix t)
-(defvar-keymap ctl-z-c-map   :doc "Code"     :prefix t)
-(defvar-keymap ctl-z-e-map   :doc "Exec"     :prefix t)
-(defvar-keymap ctl-z-f-map   :doc "File"     :prefix t)
-(defvar-keymap ctl-z-g-map   :doc "Goto"     :prefix t)
-(defvar-keymap ctl-z-h-map   :doc "Help"     :prefix t)
-(defvar-keymap ctl-z-i-map   :doc "Insert"   :prefix t)
-(defvar-keymap ctl-z-j-map   :doc "User"     :prefix t)
-(defvar-keymap ctl-z-o-map   :doc "Org"      :prefix t)
-(defvar-keymap ctl-z-p-map   :doc "Project"  :prefix t)
-(defvar-keymap ctl-z-q-map   :doc "Quit"     :prefix t)
-(defvar-keymap ctl-z-r-map   :doc "Register" :prefix t)
-(defvar-keymap ctl-z-s-map   :doc "Search"   :prefix t)
-(defvar-keymap ctl-z-t-map   :doc "Tab/WS"   :prefix t)
-(defvar-keymap ctl-z-v-map   :doc "VC/Git"   :prefix t)
-(defvar-keymap ctl-z-w-map   :doc "Window"   :prefix t)
-(defvar-keymap ctl-z-W-map   :doc "Frame"    :prefix t)
-(defvar-keymap ctl-z-x-map   :doc "Misc"     :prefix t)
-(defvar-keymap ctl-z-ret-map :doc "Bookmark" :prefix t)
+(defvar-keymap ctl-z-b-map   :doc "Buffer")
+(defvar-keymap ctl-z-c-map   :doc "Code")
+(defvar-keymap ctl-z-e-map   :doc "Exec")
+(defvar-keymap ctl-z-f-map   :doc "File")
+(defvar-keymap ctl-z-g-map   :doc "Goto")
+(defvar-keymap ctl-z-h-map   :doc "Help")
+(defvar-keymap ctl-z-i-map   :doc "Insert")
+(defvar-keymap ctl-z-j-map   :doc "User")
+(defvar-keymap ctl-z-o-map   :doc "Org")
+(defvar-keymap ctl-z-p-map   :doc "Project")
+(defvar-keymap ctl-z-q-map   :doc "Quit")
+(defvar-keymap ctl-z-r-map   :doc "Register")
+(defvar-keymap ctl-z-s-map   :doc "Search")
+(defvar-keymap ctl-z-t-map   :doc "Tab/WS")
+(defvar-keymap ctl-z-v-map   :doc "VC/Git")
+(defvar-keymap ctl-z-w-map   :doc "Window")
+(defvar-keymap ctl-z-W-map   :doc "Frame")
+(defvar-keymap ctl-z-x-map   :doc "Misc")
+(defvar-keymap ctl-z-ret-map :doc "Bookmark")
 
 ;; Default Top-level leader keymap, referencing the sub-keymaps
 ;; TODO Rename ctl-z-.*-map to eon-leader-default-.*-map, because
@@ -969,7 +969,6 @@ Use `eon-customize-group' to change, or `setopt' from Lisp."
 
 (defvar-keymap ctl-z-map
   :doc "Top-level leader keymap."
-  :prefix t
   "b"   `("Buffer"   . ,ctl-z-b-map)
   "c"   `("Code"     . ,ctl-z-c-map)
   "e"   `("Exec"     . ,ctl-z-e-map)
@@ -1383,6 +1382,8 @@ Per default, the function is called by the hooks:
 
 ;; TODO Refactor in order to dissolve duplication
 ;; TODO Add setters to custom variables
+;; TODO Combine disabling/loading into `eon-theme-load' as an alternative
+;; to `load-theme' and add alias `eon-load-theme'.
 
 (defgroup eon-theme nil
   "Set your light and dark themes."
@@ -2403,7 +2404,7 @@ pretending to clear it."
 (add-to-list 'save-some-buffers-action-alist
              (list "d"
                    (lambda (buffer) (diff-buffer-with-file (buffer-file-name buffer)))
-                   "show diff between the buffer and its file"))
+                   "Show diff between the buffer and its file"))
 
 ;; Deleting files
 
@@ -2470,7 +2471,7 @@ pretending to clear it."
 ;; ---> CAUTION: This mode makes copies of the files you are editing.
 ;; If you're editing files with sensitive data (e.g. on temporally mounted,
 ;; encrypted devices), either disable this mode or specify the location
-;; via regexp where to save (or not to save) backup copies of these files.
+;; via regexp where to save (to not save) backup copies of these files.
 
 ;; Make backup before editing?
 (setopt make-backup-files t)
@@ -2677,7 +2678,7 @@ pretending to clear it."
   ;; Prevent from accidently referring to local root in Tramp connections
   ;; When `default-directory' is remote and the command is a Lisp
   ;; function, typing "/" as the first character of an argument inserts
-  ;; the current Tramp prefix, such as "/method:host:".  Typing another
+  ;; the current Tramp prefix, such as "/method:host:". Typing another
   ;; "/" undoes this, which is useful when a local path is intended.
   ;; Typing "~/" also inserts the Tramp prefix. This does not apply to
   ;; external commands.
@@ -2833,7 +2834,7 @@ the usual Emacs way."
   "Build a two-line Eshell prompt with status, user, host, and directory.
 
 The first line shows the previous command's non-zero exit status, the
-current user/host, and the current directory.  The second line contains
+current user/host, and the current directory. The second line contains
 only the command marker, using `#' for root and `$' otherwise."
   (let* ((status (or eshell-last-command-status 0))
          (remote-user (file-remote-p default-directory 'user))
@@ -2860,7 +2861,7 @@ only the command marker, using `#' for root and `$' otherwise."
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Shell-Mode>
 
 ;; This is also no terminal emulator, but a buffer to issue shell commands
-;; and display their output
+;; and display their output.
 
 ;; Create Shell local leader keymap
 (eon-localleader-defkeymap shell-mode eon-localleader-shell-map
@@ -3129,7 +3130,7 @@ When called interactively, select PROFILE with completion."
 
 ;; While a text selection is active, typing characters will replace
 ;; the selection with the typed characters (default: -1 = off)
-(delete-selection-mode -1)
+(delete-selection-mode 1)
 
 ;; Save always with a final new line?
 (setopt require-final-newline t)
@@ -3144,7 +3145,7 @@ When called interactively, select PROFILE with completion."
 (keymap-global-set "M-z" #'zap-up-to-char)
 
 ;; Define a keymap in order to group formatting commands
-(defvar-keymap ctl-z-c-f-map :doc "Formatting" :prefix t
+(defvar-keymap ctl-z-c-f-map :doc "Formatting"
                "a" #'align
                "A" #'align-regexp
                ;; Tipps: <https://susam.github.io/sorting-in-emacs.html>
