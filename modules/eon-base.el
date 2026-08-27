@@ -348,6 +348,7 @@
 (use-package org-sticky-header :ensure t
   :bind
   (:map eon-localleader-org-mode-map
+        ;; Toggle sticky headlines via "<localleader> ^"
         ("^" . org-sticky-header-mode)))
 
 ;; _____________________________________________________________________________
