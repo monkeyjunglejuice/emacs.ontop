@@ -75,6 +75,7 @@
    ;; eon-pdftools                  ; Sophisticated PDF tool suite
    ;; eon-rainbow-delimiters        ; Color-code nested parenthesis
    ;; eon-reader                    ; Read EPUBs in Emacs
+   ;; eon-scratch                   ; Scratch buffer enhancements
    ;; eon-smartparens               ; More general Paredit alternative
    ;; eon-switchwindow              ; Navigate windows
    ;; eon-tempel                    ; Code snippets and language server support
