@@ -63,6 +63,7 @@
    ;; eon-corfu                     ; Code (auto-)completion
    ;; eon-dired                     ; Classic Dired with improvements
    ;; eon-embark                    ; Minibuffer actions and context menu
+   ;; eon-epubreader                ; Read EPUBs in Emacs
    ;; eon-everywhere                ; Use Emacs for text input in other apps
    ;; eon-flycheck                  ; Syntax check; alternative for Flymake
    ;; eon-git                       ; Magit user interface and friends
@@ -74,7 +75,6 @@
    ;; eon-paren-face                ; Less visible parenthesis
    ;; eon-pdftools                  ; Sophisticated PDF tool suite
    ;; eon-rainbow-delimiters        ; Color-code nested parenthesis
-   ;; eon-reader                    ; Read EPUBs in Emacs
    ;; eon-scratch                   ; Scratch buffer enhancements
    ;; eon-smartparens               ; More general Paredit alternative
    ;; eon-switchwindow              ; Navigate windows

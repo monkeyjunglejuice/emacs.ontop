@@ -1,4 +1,4 @@
-;;; eon-reader.el --- Read EPUBs in Emacs -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-epubreader.el --- Read EPUBs in Emacs -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;; Version: 2.0.1
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
@@ -107,5 +107,5 @@
   (nov-text-width 72))
 
 ;; _____________________________________________________________________________
-(provide 'eon-reader)
-;;; eon-reader.el ends here
+(provide 'eon-epubreader)
+;;; eon-epubreader.el ends here
