@@ -1,6 +1,6 @@
 ;;; eon-helix.el --- Modal editing: Helix keybindings -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.2
+;; Version: 2.0.3
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -100,7 +100,7 @@
         ('eon-helix-localleader-key
          (eon-helix--bind-localleader old val)))))
 
-  (defcustom eon-helix-leader-key ","
+  (defcustom eon-helix-leader-key "SPC"
     "Leader key for Helix."
     :group 'eon-leader
     :type 'string
@@ -141,6 +141,9 @@
   (eon-helix--sync-leaders)
   (add-hook 'eon-leader-mode-hook #'eon-helix--sync-leaders)
 
+  ;; Additionally, bind the EON local leader to ","
+  (helix-define-key 'normal "," eon-localleader-map)
+
   ;;; Show extra cursor when Helix is in normal state
   (add-hook 'eon-cursor-functions #'eon-helix--cursor-compute)
 
@@ -158,15 +161,7 @@
 
   ;; Enable Helix, but do not toggle it off when this file is reloaded
   (unless helix-global-mode
-    (helix-mode))
-
-  :bind
-  
-  ;; The Helix leader menu on "SPC" is of little use, so EON uses its own
-  ;; leader menu on "," instead. To use "SPC", customize
-  ;; `eon-helix-leader-key' and `eon-helix-localleader-key' accordingly.
-  (:map helix-normal-state-keymap
-        ("SPC" . nil)))
+    (helix-mode)))
 
 ;; _____________________________________________________________________________
 (provide 'eon-helix)
