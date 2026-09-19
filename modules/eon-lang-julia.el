@@ -36,8 +36,10 @@
 
   :init
 
-  ;; In order to use Snail, the module `eon-vterm' is required
-  (eon-load-module 'eon-vterm)
+  ;; In order to use Snail, either module `eon-vterm' or `eon-ghostel'
+  ;; is required. Defaults to `eon-ghostel', which is generally faster.
+  (eon-load-module (cond ((eon-modulep 'eon-vterm) 'eon-vterm)
+                         (t 'eon-ghostel)))
 
   (eon-localleader-defkeymap
       julia-snail-mode

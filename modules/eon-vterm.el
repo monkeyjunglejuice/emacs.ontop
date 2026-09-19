@@ -60,7 +60,7 @@
 ;;; Code:
 
 (eon-module-metadata
- :conflicts '()
+ :conflicts '(eon-ghostty)
  :requires  '(eon))
 
 ;; _____________________________________________________________________________

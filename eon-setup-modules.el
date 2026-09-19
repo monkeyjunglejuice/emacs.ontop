@@ -66,6 +66,7 @@
    ;; eon-epubreader                ; Read EPUBs in Emacs
    ;; eon-everywhere                ; Use Emacs for text input in other apps
    ;; eon-flycheck                  ; Syntax check; alternative for Flymake
+   ;; eon-ghostel                   ; Terminal emulator powered by libghostty
    ;; eon-git                       ; Magit user interface and friends
    ;; eon-helpful                   ; Extended help viewer
    ;; eon-icons                     ; Icons everywhere
