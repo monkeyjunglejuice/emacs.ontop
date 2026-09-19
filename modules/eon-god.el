@@ -130,7 +130,7 @@ Bound to \"i\" per default."
   (god-mode-enable-function-key-translation nil)
 
   (god-exempt-major-modes '(;; Default major modes
-                            Info-mode
+                            ;; Info-mode
                             ag-mode
                             calculator-mode
                             calendar-mode
@@ -154,7 +154,11 @@ Bound to \"i\" per default."
                             vc-annotate-mode
                             wdired-mode
                             ;; Additional major modes
-                            ;; ...
+                            shell-mode
+                            term-mode
+                            eshell-mode
+                            ghostel-mode
+                            vterm-mode
                             ))
 
   (god-exempt-predicates '(;; Default predicates
