@@ -16,7 +16,7 @@
 ;; Requirements: Emacs with dynamic module support, on macOS, Linux, FreeBSD,
 ;; Android/Termux, or native Windows. The native module is a prebuilt binary
 ;; that auto-downloads on first use. No toolchain or build step required.
-;; 
+;;
 ;; Windows release binaries are built for common native Windows Emacs builds on
 ;; x86_64 and aarch64. Releases include optional ConPTY support files from
 ;; Microsoft's redistributable console runtime, which can improve latency and
@@ -78,50 +78,13 @@
   :custom
 
   (ghostel-max-scrollback (* 32 1024 1024))  ; MiB
+
   ;; Start Ghostel in line mode instead of semi-char mode
-  ;; (ghostel-initial-input-mode 'line)
+  (ghostel-initial-input-mode 'line)
   ;; The shell that gets run in Ghostel for Tramp
   (ghostel-tramp-shells '(("ssh" login-shell "/bin/bash")
                           ("scp" login-shell "/bin/bash")
                           ("docker" "/bin/sh")))
-
-  :config
-
-  (defvar eon-ghostel-escape-command nil
-    "Command to run when ESC is handled by Emacs in `ghostel-mode'.
-If nil, ESC is always sent directly to the Ghostel process.")
-
-  ;; Ensure ESC is not sent raw by Ghostel when we intercept it
-  (add-to-list 'ghostel-keymap-exceptions
-               (key-description (kbd "<escape>")))
-
-  (defvar-local eon-ghostel-send-escape-to-ghostel t
-    "Non-nil means ESC goes to the Ghostel process.
-When nil, ESC runs `eon-ghostel-escape-command'.")
-
-  (defun eon-ghostel-update-escape ()
-    "Install ESC behavior for `ghostel-mode'."
-    (when eon-ghostel-escape-command
-      (keymap-set ghostel-mode-map "<escape>"
-                  (if eon-ghostel-send-escape-to-ghostel
-                      #'ghostel--self-insert
-                    eon-ghostel-escape-command))))
-
-  (defun eon-ghostel-toggle-escape ()
-    "Toggle whether ESC in Ghostel goes to Ghostel or Emacs."
-    (interactive)
-    (unless eon-ghostel-escape-command
-      (user-error "Set `eon-ghostel-escape-command' first"))
-    (setq eon-ghostel-send-escape-to-ghostel
-          (not eon-ghostel-send-escape-to-ghostel))
-    (eon-ghostel-update-escape)
-    (message "ESC → %s"
-             (if eon-ghostel-send-escape-to-ghostel
-                 "ghostel process"
-               (symbol-name eon-ghostel-escape-command))))
-
-  ;; Toggle where ESC goes in Ghostel
-  (keymap-set ghostel-mode-map "C-c C-q" #'eon-ghostel-toggle-escape)
 
   :bind
 
@@ -153,9 +116,10 @@ When nil, ESC runs `eon-ghostel-escape-command'.")
 ;; <https://github.com/dakra/meow-ghostel>
 
 (when (eon-modulep 'eon-meow)
-  (use-package meow-ghostel :ensure t
-    :after (ghostel meow)
-    :hook (ghostel-mode . meow-ghostel-mode)))
+  (use-package meow-ghostel
+  :vc (:url "https://github.com/dakra/meow-ghostel" :rev :newest)
+  :after (ghostel meow)
+  :hook (ghostel-mode . meow-ghostel-mode)))
 
 ;; _____________________________________________________________________________
 (provide 'eon-ghostel)
