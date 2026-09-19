@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 ;;
 ;;
-;; Version: 2.6.17
+;; Version: 2.6.20
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
@@ -41,31 +41,61 @@
 ;; It stays close to vanilla Emacs, but offers convenience and a better
 ;; user experience, while only relying on built-in packages.
 ;;
-;; Keybindings:
+;; - Keybindings:
 ;;
 ;; "M-x"  Show all commands
 ;;        – hold down the "Meta key" and press <x>
-;;        – the "Meta key" is usually <Alt> on Linux/Windows and <Option> on Mac
+;;        – the "Meta key" is usually <ALT> on Linux/Windows and <OPT> on macOS
 ;;
 ;; "C-g"  Get out! Press <Ctrl>+<g> to cancel whatever happens – or hit 3x <ESC>
 ;;
-;; "<leader> x t"  Toggle between dark and light theme
+;; - Examples:
+;; "M-x eon-"          Show all commands defined by Emacs ONBOARD
+;; "M-x check-parens"  Check if all parens match in Emacs Lisp code
+;; "M-x help"          Reach the ultimate help menu
+;; "M-;"               Comment/uncomment a selected piece of code
+;; "C-h o"             Place the cursor behind a keyword, function, variable or
+;;                     other symbol to issue the command `describe-symbol'
+;;                     via keybinding and read the symbol's documentation
 ;;
-;; Examples:
+;; - Leader keys:
+;; Emacs ONBOARD comes with a pre-configured leader- and a local leader key.
 ;;
-;; "M-x eon-"                      Show all commands defined by Emacs ONBOARD
-;; "M-x eon-goto-init-file"        Visit main config file: .emacs or init.el
-;; "M-x check-parens"              Check if all parens match in Emacs Lisp code
-;; "M-x help"                      Reach the ultimate help menu
+;; The leader key groups frequently used keybindings under a quickly accessible,
+;; menu-like structure. You can reach the leader key menu via:
+;; "C-,"     in graphical Emacs;
+;; "C-z"     if Emacs runs within a terminal emulator.
 ;;
-;; "C-h o" Place the cursor behind a keyword, function, variable or other symbol
-;;         to issue the command `describe-symbol' via keybinding
-;;         and view the symbol's documentation
+;; The local leader key provides a selection of commonly used keybindings for
+;; specific modes. Reach it either via:
+;; "C-, C-," in graphical Emacs
+;;           hold down <CTRL> (CMD on macOS) and hit the <,> key 2 times;
+;; "C-z C-z" in the terminal
+;;           hold down <CTRL> (CMD on macOS) and hit the <z> key 2 times.
 ;;
-;; "M-;"   Comment/uncomment a selected piece of text or code
+;; You can change these keybindings and more - customize the variables
+;; `eon-leader-key' and `eon-localleader-key' via "<leader> x C",
+;; "M-x customize-variable", or "M-x eon-customize-group RET".
+;; For in-depth documentation, search for the section
+;; "LEADER-KEY / LOCAL LEADER-KEY and KEYMAPS".
 ;;
-;;; Please report bugs and issues here:
+;; - Examples with leader key:
+;; "<leader> x t"      Toggle between dark and light theme
+;; "<leader> f f"      Open a file in a buffer
+;; "<leader> f s"      Save a buffer (saves the file)
+;; "<leader> f i"      Visit your main config file (.emacs or init.el)
+;; "<leader> b k"      Kill a buffer (closes the file)
+;; "<leader> d"        Open a directory in Dired, the file manager
+;; "<leader> w s"      Split window downwards (horizontally)
+;; "<leader> w S"      Split window to the right (vertically)
+;; "<leader> w w"      Switch to the next window
+;; "<leader> q q"      Quit Emacs
+;;
+;; - Something's not right?
+;;
+;; Please report bugs and issues here:
 ;; <https://github.com/monkeyjunglejuice/emacs.onboard/issues>
+;; or send an email to <monkeyjunglejuice@pm.me>
 ;;
 ;;; Code:
 
@@ -89,6 +119,7 @@
 ;; "Garbage Collection Magic Hack" by Andrea Corallo <akrl@sdf.org> v0.2.1
 ;; Original: <https://gitlab.com/koral/gcmh> License: GPL-3.0-OR-LATER
 ;; Discussion: <https://news.ycombinator.com/item?id=39190110>
+;; TODO Might become redundant when new garbage collector lands with Emacs 32
 
 (defgroup eon-gcmh nil
   "Garbage collection tuning."
@@ -223,9 +254,6 @@ Cancel the previous one if present."
 
 ;; Don't waste battery on native compilation?
 (setopt native-comp-async-on-battery-power nil)
-
-;; Compiler optimization level; default 2
-(setopt native-comp-speed 3)
 
 ;; Following options are not set if Emacs starts via "emacs --debug-init"
 (unless init-file-debug
@@ -766,7 +794,7 @@ a `cursor-type' or nil. The first non-nil return wins.")
   :group 'eon)
 
 ;; Minor mode keymap that installs the leader prefix with higher precedence
-;; than major-mode keymaps (e.g. Org binding `C-,').
+;; than major-mode keymaps (e.g. avoids clash with Org binding `C-,').
 (defvar-keymap eon-leader-mode-map
   :doc "Keymap for `eon-leader-mode'.")
 
@@ -963,7 +991,7 @@ Use `eon-customize-group' to change, or `setopt' from Lisp."
 (defvar-keymap ctl-z-x-map   :doc "Misc")
 (defvar-keymap ctl-z-ret-map :doc "Bookmark")
 
-;; Default Top-level leader keymap, referencing the sub-keymaps
+;; Default top-level leader keymap, referencing the sub-keymaps
 ;; TODO Rename ctl-z-.*-map to eon-leader-default-.*-map, because
 ;; the ctl-z-... part is merely historical and has no meaning anymore.
 
@@ -1592,7 +1620,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
 (add-hook 'minibuffer-setup-hook (lambda () (setq-local truncate-lines t)))
 
 ;; For mouse commands to ask questions, use a dialog box instead of minibuffer?
-(setopt use-dialog-box nil)
+(setopt use-dialog-box t)
 
 ;; Grow and shrink the minibuffer according to its lines of content?
 ;; If you experience too much jumping, set it to 'grow-only.
@@ -1705,6 +1733,7 @@ Some themes may come as functions -- wrap these ones in lambdas."
   ;; contain whitespace and prevents the *Completions* buffer from popping up.
   (keymap-set icomplete-fido-mode-map "SPC" #'self-insert-command))
 
+;; Enable the mode
 (fido-vertical-mode 1)
 
 ;; _____________________________________________________________________________
@@ -2019,7 +2048,7 @@ buffer."
 ;; Common window management commands under the leader key
 (keymap-set ctl-z-w-map "SPC" #'toggle-window-dedicated)
 (keymap-set ctl-z-w-map "="   #'balance-windows)
-(when (>= 31 emacs-major-version)
+(when (>= emacs-major-version 31)
   (keymap-set ctl-z-w-map "]"   #'window-layout-rotate-clockwise)
   (keymap-set ctl-z-w-map "["   #'window-layout-rotate-anticlockwise)
   (keymap-set ctl-z-w-map "|"   #'window-layout-flip-leftright)
@@ -2794,6 +2823,7 @@ Set SYM's default value to VALUE. If the Eshell alias module
   '((e     . "find-file $@*")
     (f     . "find-file $@*")
     (d     . "dired $@*")
+    (v     . "eshell-exec-visual $@*")
     (l     . "ls $@*")
     (ll    . "ls -l -h $@*")
     (la    . "ls -l -h -A $@*")
@@ -3069,8 +3099,8 @@ The value must be a key in `eon-eww-user-agent-profiles'."
 
 (defun eon-eww-user-agent (&optional profile)
   "Select EWW user-agent PROFILE.
-PROFILE must name a key in `eon-eww-user-agent-profiles'.  When nil, use
-`eon-eww-user-agent-profile'.  PROFILE may also be t, which selects the default
+PROFILE must name a key in `eon-eww-user-agent-profiles'. When nil, use
+`eon-eww-user-agent-profile'. PROFILE may also be t, which selects the default
 EWW user-agent according to `url-privacy-level'.
 When called interactively, select PROFILE with completion."
   (interactive
@@ -3763,6 +3793,20 @@ Returns an alist of (LANG . STATUS) where STATUS is one of:
 ;; Activate code blocks via Babel languages
 (with-eval-after-load 'org
   (org-babel-do-load-languages 'org-babel-load-languages '((emacs-lisp . t))))
+
+;; _____________________________________________________________________________
+;;; MARKDOWN
+
+;; Markdown mode is experimental in Emacs 31, therefore there's need to opt-in.
+(when (= emacs-major-version 31)
+
+  (autoload 'markdown-ts-mode "markdown-ts-mode" nil t)
+
+  (dolist (re '("\\.md\\'" "\\.mdx\\'" "\\.markdown\\'"))
+    (add-to-list 'auto-mode-alist (cons re 'markdown-ts-mode)))
+
+  (with-eval-after-load 'markdown-ts-mode
+    (require 'markdown-ts-mode-x)))
 
 ;; _____________________________________________________________________________
 ;;; LISP
