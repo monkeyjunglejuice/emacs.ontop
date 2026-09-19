@@ -30,7 +30,7 @@
   :init
 
   ;; Tweak the register preview for `consult-register-load',
-  ;; `consult-register-store' and the built-in commands.  This improves the
+  ;; `consult-register-store' and the built-in commands. This improves the
   ;; register formatting, adds thin separator lines, register sorting and hides
   ;; the window mode line.
   (setopt register-use-preview 'traditional)  ; reset to default
@@ -47,7 +47,7 @@
   ;; Grep
   (defalias 'eon-consult-grep
     (if (executable-find "rg") #'consult-ripgrep #'consult-grep)
-    "Run consult-ripgrep if rg is available, else consult-grep.")
+    "Run `consult-ripgrep' if rg is available, else `consult-grep.'")
 
   ;; Find
   (defalias 'eon-consult-find
@@ -67,8 +67,8 @@
 
   :config
 
-  ;; Optionally configure preview. The default value
-  ;; is 'any, such that any key triggers the preview.
+  ;; Optionally configure preview.
+  ;; The default value is 'any, such that any key triggers the preview.
   ;; (setq consult-preview-key 'any)
   ;; (setq consult-preview-key "M-.")
   ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
@@ -276,7 +276,9 @@
 ;; CONSULT-DIR
 
 (use-package consult-dir :ensure t
+
   :config
+
   (defun eon-eshell-d--consult-dir (orig-fun &optional regexp)
     "Use `consult-dir' instead of raw `completing-read' for `eshell/d'."
     (if (and (null regexp) (featurep 'consult-dir))
