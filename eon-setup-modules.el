@@ -113,6 +113,7 @@
    ;; eon-lang-lean                 ; Lean programming
    ;; eon-lang-lfe                  ; Lisp Flavoured Erlang programming
    ;; eon-lang-lua                  ; Lua programming
+   ;; eon-lang-nix                  ; Nix programming
    ;; eon-lang-ocaml                ; Ocaml programming
    ;; eon-lang-racket               ; Racket programming
    ;; eon-lang-scheme               ; Shared config for Scheme programming
