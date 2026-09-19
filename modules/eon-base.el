@@ -1,6 +1,6 @@
 ;;; eon-base.el --- Shared packages and definitions -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.2.0
+;; Version: 2.2.1
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -140,10 +140,12 @@
                    (length names) (mapconcat #'identity names " ")))
         names))
 
-    :custom
+    ;; :custom
 
-    ;; Example: '("-l") or nil for non-interactive shells; supposedly faster
-    (exec-path-from-shell-arguments '("-l"))
+    ;; Example: '("-l") or nil for non-interactive shells. Supposedly faster,
+    ;; but will not capture parts of your $PATH that are unavailable in your
+    ;; login shell.
+    ;; (exec-path-from-shell-arguments '("-l"))
 
     ;; You can set the variables manually, then no autoselection will happen:
     ;; (exec-path-from-shell-variables '("PATH" "MANPATH"))
@@ -153,6 +155,7 @@
 
     :config
 
+    ;; Trigger environment capture
     (eon-exec-path-from-shell-refresh)))
 
 ;; _____________________________________________________________________________
