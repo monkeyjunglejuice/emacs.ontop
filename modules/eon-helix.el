@@ -14,7 +14,7 @@
 ;;; Commentary:
 ;;
 ;;; NOTE Helix-mode for Emacs is new and under heavy development right now,
-;;       it may happen that this config may break from time to time.
+;;       it may happen that this config breaks from time to time.
 ;;
 ;;; - Keys
 ;; You can add new keys to the Helix keymaps via helix-define-key:
@@ -108,7 +108,7 @@
     :initialize 'custom-initialize-set)
 
   (defcustom eon-helix-localleader-key ","
-    "Local leader key for Helix."
+    "Local leader key for Helix, typed after `eon-helix-leader-key'."
     :group 'eon-leader
     :type 'string
     :set #'eon-helix--set-leaders
@@ -137,7 +137,7 @@
 
   :config
 
-  ;; Explicitly bind the leader key
+  ;; Explicitly bind the EON leader key
   (eon-helix--sync-leaders)
   (add-hook 'eon-leader-mode-hook #'eon-helix--sync-leaders)
 
