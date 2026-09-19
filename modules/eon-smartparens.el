@@ -31,11 +31,9 @@
 
   ;; Disable conflicting modes
   (electric-pair-mode -1)
-  (show-paren-mode -1)
 
   ;; Enable
   (smartparens-global-strict-mode 1)
-  (show-smartparens-global-mode 1)
 
   :config
 
