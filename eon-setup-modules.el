@@ -40,6 +40,7 @@
 
    ;; eon-evil                      ; Vim keybindings
    ;; eon-god                       ; Emacs keybindings
+   ;; eon-hel                       ; Helix keybindings (experimental)
    ;; eon-helix                     ; Helix keybindings (experimental)
    ;; eon-meow                      ; Meow keybindings (experimental)
 
