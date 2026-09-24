@@ -41,7 +41,7 @@
    ;; eon-evil                      ; Vim keybindings
    ;; eon-god                       ; Emacs keybindings
    ;; eon-helix                     ; Helix keybindings (experimental)
-   ;; eon-meow                      ; Meow keybindings
+   ;; eon-meow                      ; Meow keybindings (experimental)
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
    ;;; THEMES
