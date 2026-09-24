@@ -140,16 +140,13 @@ When nil, ESC runs `eon-vterm-escape-command'.")
         ("t" . vterm)))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; ESHELL VTERM
+;;; ESHELL
 ;; <https://github.com/iostapyshyn/eshell-vterm>
-;; Allows Eshell to use `vterm' for visual commands
+;; Allow Eshell to use Vterm for visual commands
 
 (use-package eshell-vterm :ensure t
-  :after eshell
-  :config
-  (defalias 'eshell/v #'eshell-exec-visual)
   :hook
-  (eshell-mode . eshell-vterm-mode))
+  (eshell-load . eshell-vterm-mode))
 
 ;; _____________________________________________________________________________
 (provide 'eon-vterm)
