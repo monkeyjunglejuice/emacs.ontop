@@ -24,6 +24,7 @@
 
 ;; _____________________________________________________________________________
 ;;; AGENT SHELL
+;; <https://github.com/xenodium/agent-shell>
 
 (use-package agent-shell :ensure t
 
