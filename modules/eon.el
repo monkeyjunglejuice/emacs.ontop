@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 ;;
 ;;
-;; Version: 2.6.20
+;; Version: 2.6.22
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
@@ -548,10 +548,14 @@ When called interactively, also echo the result."
 ;; (setf (alist-get 'top default-frame-alist) -1)
 
 ;; Bring frame to the front; steals focus
-(add-hook 'window-setup-hook
-          (lambda ()
-            (when (display-graphic-p)
-              (select-frame-set-input-focus (selected-frame)))))
+(defun eon-focus-frame ()
+  "Give the current graphical Emacs frame input focus."
+  (when (display-graphic-p)
+    (select-frame-set-input-focus (selected-frame))))
+;; Hook for standalone Emacs
+(add-hook 'window-setup-hook #'eon-focus-frame)
+;; Hook for Emacs running as a daemon
+(add-hook 'server-after-make-frame-hook #'eon-focus-frame)
 
 ;; Avoid gaps in some window managers
 (setopt frame-resize-pixelwise t)
@@ -1657,7 +1661,9 @@ Some themes may come as functions -- wrap these ones in lambdas."
 ;; There are many matching styles available, see `completion-styles-alist'
 ;; <https://www.gnu.org/software/emacs/manual/html_node/emacs/Completion-Styles.html>
 ;; The order within the list determines their priority.
-(setopt completion-styles '(basic flex))
+(setopt completion-styles '(basic flex)
+        completion-category-overrides
+        '((file (styles basic partial-completion))))
 
 ;; Make TAB try completion when appropriate
 (setopt tab-always-indent 'complete)
@@ -2974,7 +2980,7 @@ only the command marker, using `#' for root and `$' otherwise."
 
   ;; Ensure that Tramp can find a proper `ls' on a Guix-based host
   ;; <https://blog.smith-manor.us/tramp_and_guix>
-  (add-to-list 'tramp-remote-path #'tramp-own-remote-path)
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 
   ;; Speed up Tramp
   ;; <https://coredumped.dev/2025/06/18/making-tramp-go-brrrr.>
@@ -3378,6 +3384,8 @@ When called interactively, select PROFILE with completion."
   (setopt eglot-autoshutdown t)
   ;; Allow edits without confirmation?
   (setopt eglot-confirm-server-initiated-edits nil)
+  ;; Block Emacs until connected?
+  (setopt eglot-sync-connect nil)
   ;; Show code action indicators?
   (setopt eglot-code-action-indications nil)
   ;; Activate Eglot in cross-referenced non-project files?
