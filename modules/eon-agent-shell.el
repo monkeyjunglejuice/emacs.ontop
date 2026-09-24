@@ -58,5 +58,28 @@
         ("R"   . agent-shell-send-region-to)))
 
 ;; _____________________________________________________________________________
+;;; TRAMP SUPPORT
+;; <https://github.com/junyi-hou/agent-shell-tramp>
+;;
+;; When the agent runs as a different user, in a container or remote and that
+;; separation is represented to Emacs through a Tramp path.
+;;
+;; Typical cases:
+;; - Another local user, e.g. /sudo:agent@localhost:/home/agent/project/
+;; - A remote host, e.g. /ssh:user@host:/code/project/
+;; - A container, if accessed through a TRAMP container method any other
+;;   environment where Emacs sees the project through Tramp.
+;;
+;; Its job is mainly to bridge the pathname/process
+;; boundary between Emacs and the ACP agent.
+
+(use-package agent-shell-tramp
+  :vc (:url "https://github.com/junyi-hou/agent-shell-tramp"
+       :rev :newest)
+  :after agent-shell
+  :config
+  (agent-shell-tramp-mode 1))
+
+;; _____________________________________________________________________________
 (provide 'eon-agent-shell)
 ;;; eon-agent-shell.el ends here
