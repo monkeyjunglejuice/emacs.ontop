@@ -40,7 +40,8 @@
 ;; <https://github.com/mgmarlow/helix-mode>
 
 (use-package helix
-  :vc (:url "https://github.com/mgmarlow/helix-mode")
+  :vc (:url "https://github.com/mgmarlow/helix-mode"
+            :rev :newest)
   :diminish helix-normal-mode helix-insert-mode
 
   :init
