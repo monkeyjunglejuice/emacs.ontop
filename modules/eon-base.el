@@ -47,14 +47,15 @@
         "^_$"
 
         ;; Interactive shell state
-        "^PS1$"
-        "^R?PROMPT$"
+        "^PS[0-9]+$"
+        "^R?PROMPT\\(_COMMAND\\)?$"
         "^COLUMNS$"
         "^LINES$"
 
         ;; Terminal state
         "^TERM\\(CAP\\)?$"
         "^TERM_PROGRAM\\(_VERSION\\)?$"
+        "^TERM_SESSION_ID$"
 
         ;; Identity variables that GUI Emacs already has
         "^USER$"
@@ -64,7 +65,11 @@
         "^INSIDE_EMACS$"
 
         ;; Per-process Git overrides
-        "^GIT_CONFIG"
+        "^GIT_CONFIG$"
+        "^GIT_CONFIG_COUNT$"
+        "^GIT_CONFIG_KEY_[0-9]+$"
+        "^GIT_CONFIG_VALUE_[0-9]+$"
+        "^GIT_CONFIG_PARAMETERS$"
 
         ;; Display/session state
         "^\\(WAYLAND_\\)?DISPLAY$"
@@ -76,7 +81,7 @@
         "^XDG_RUNTIME_DIR$"
         "^XDG_\\(VTNR$\\|SEAT$\\|BACKEND$\\|SESSION_\\)"
 
-        ;; macOS launch/session state
+        ;; MacOS launch/session state
         "^TMPDIR$"
         "^XPC_"
         "^SECURITYSESSIONID$"
@@ -89,8 +94,8 @@
         ;; Socket-like variables; these are commonly stale when copied
         "\\(_SOCK\\|_SOCKET\\)$"
 
-        ;; SSH/GPG agent and terminal state
-        "^SSH_\\(AUTH_SOCK\\|AGENT_PID\\)$"
+        ;; SSH/GPG agent and session state
+        "^SSH_\\(AUTH_SOCK\\|AGENT_PID\\|CLIENT\\|CONNECTION\\)$"
         "^\\(SSH\\|GPG\\)_TTY$"
         "^GPG_AGENT_INFO$")
       "Regexps for environment variable names not imported from the shell.")
