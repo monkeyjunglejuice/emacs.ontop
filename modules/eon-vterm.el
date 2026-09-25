@@ -87,7 +87,7 @@
   (vterm-max-scrollback 65536)
   ;; Don't ask before compiling the module
   (vterm-always-compile-module t)
-  ;; The shell that gets run in the vterm for Tramp connections;
+  ;; The shell that gets run in Vterm for Tramp connections;
   ;; prefer the user's login shell, fall back to /bin/sh.
   (vterm-tramp-shells '((t login-shell "/bin/sh")
                         ("docker" "/bin/sh")))

@@ -81,8 +81,9 @@
 
   ;; Start Ghostel in line mode instead of semi-char mode
   (ghostel-initial-input-mode 'line)
-  ;; The shell that gets run in the Vterm for Tramp connections;
-  ;; prefer the user's login shell, fall back to /bin/sh
+
+  ;; The shell that gets run in Ghostel for Tramp connections;
+  ;; prefer the user's login shell, fall back to /bin/sh.
   (ghostel-tramp-shells '((t login-shell "/bin/sh")
                           ("docker" "/bin/sh")))
 
