@@ -198,6 +198,41 @@
   ;; <https://github.com/wwwjfy/emacs-fish>
   (use-package fish-mode :ensure t))
 
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - Tramp login shell discovery on MacOS
+
+;; Set SHELL to 'login-shell to use the user's login shell over Tramp. MacOS
+;; lacks the getent command, so this is required to start e.g. Vterm and Ghostel
+;; with the user's login shell instead of /bin/sh.
+
+(when (eon-macp)
+  (defun eon-tramp-macos-login-shell ()
+    "Return the login shell of the current macOS TRAMP user, or nil.
+
+Also remove TRAMP's empty LC_CTYPE override in the current buffer."
+    (when (file-remote-p default-directory)
+      (setq-local tramp-remote-process-environment
+                  (remove "LC_CTYPE=''"
+                          tramp-remote-process-environment))
+      (let ((remote-directory default-directory))
+        (with-temp-buffer
+          (let ((default-directory remote-directory))
+            (when (zerop
+                   (process-file "/usr/bin/id" nil t nil "-un"))
+              (let ((user (string-trim (buffer-string))))
+                (erase-buffer)
+                (when (zerop
+                       (process-file
+                        "/usr/bin/dscl" nil t nil
+                        "." "-read"
+                        (concat "/Users/" user)
+                        "UserShell"))
+                  (goto-char (point-min))
+                  (when (re-search-forward
+                         "^UserShell:[[:space:]]+\\(.+\\)$"
+                         nil t)
+                    (match-string-no-properties 1)))))))))))
+
 ;; _____________________________________________________________________________
 ;;; GREP / RIPGREP
 ;; <https://github.com/BurntSushi/ripgrep>

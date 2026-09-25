@@ -60,8 +60,8 @@
 ;;; Code:
 
 (eon-module-metadata
- :conflicts '(eon-ghostty)
- :requires  '(eon))
+ :conflicts '(eon-ghostel)
+ :requires  '(eon eon-base))
 
 ;; _____________________________________________________________________________
 ;;; VTERM
@@ -87,9 +87,9 @@
   (vterm-max-scrollback 65536)
   ;; Don't ask before compiling the module
   (vterm-always-compile-module t)
-  ;; The shell that gets run in the vterm for tramp
-  (vterm-tramp-shells '(("ssh" login-shell "/bin/bash")
-                        ("scp" login-shell "/bin/bash")
+  ;; The shell that gets run in the vterm for Tramp connections;
+  ;; prefer the user's login shell, fall back to /bin/sh.
+  (vterm-tramp-shells '((t login-shell "/bin/sh")
                         ("docker" "/bin/sh")))
 
   :config
@@ -130,6 +130,20 @@ When nil, ESC runs `eon-vterm-escape-command'.")
   ;; Toggle where ESC goes in vterm
   (keymap-set vterm-mode-map "C-c C-q" #'eon-vterm-toggle-escape)
 
+  ;; Login-shell discovery on MacOS
+  (defun eon-vterm-tramp-get-shell (function method)
+    "Use MacOS login-shell discovery around FUNCTION for METHOD."
+    (let ((spec (cdr (assoc method vterm-tramp-shells))))
+      (if (eq (car spec) 'login-shell)
+          (if-let* ((shell (eon-tramp-macos-login-shell)))
+              shell
+            (funcall function method))
+        (funcall function method))))
+
+  (with-eval-after-load 'vterm
+    (advice-add 'vterm--tramp-get-shell
+                :around #'eon-vterm-tramp-get-shell))
+  
   :bind
 
   (:map vterm-mode-map

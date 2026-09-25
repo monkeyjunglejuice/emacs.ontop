@@ -44,7 +44,7 @@
 
 (eon-module-metadata
  :conflicts '(eon-vterm)
- :requires  '(eon))
+ :requires  '(eon eon-base))
 
 ;; _____________________________________________________________________________
 ;;; GHOSTEL
@@ -81,11 +81,26 @@
 
   ;; Start Ghostel in line mode instead of semi-char mode
   (ghostel-initial-input-mode 'line)
-  ;; The shell that gets run in Ghostel for Tramp
-  (ghostel-tramp-shells '(("ssh" login-shell "/bin/bash")
-                          ("scp" login-shell "/bin/bash")
+  ;; The shell that gets run in the Vterm for Tramp connections;
+  ;; prefer the user's login shell, fall back to /bin/sh
+  (ghostel-tramp-shells '((t login-shell "/bin/sh")
                           ("docker" "/bin/sh")))
 
+  :config
+
+  ;; Login-shell discovery on MacOS
+  (defun eon-ghostel-tramp-shell-spec (function method)
+    "Use MacOS login-shell discovery around FUNCTION for METHOD."
+    (let ((spec (cdr (assoc method ghostel-tramp-shells))))
+      (if (eq (car spec) 'login-shell)
+          (if-let* ((shell (eon-tramp-macos-login-shell)))
+              (cons shell (cddr spec))
+            (funcall function method))
+        (funcall function method))))
+
+  (advice-add 'ghostel--tramp-shell-spec
+              :around #'eon-ghostel-tramp-shell-spec)
+  
   :bind
 
   (:map ghostel-mode-map
