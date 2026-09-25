@@ -75,7 +75,7 @@
 
 (use-package agent-shell-tramp
   :vc (:url "https://github.com/junyi-hou/agent-shell-tramp"
-       :rev :newest)
+            :rev :newest)
   :after agent-shell
   :config
   (agent-shell-tramp-mode 1))
