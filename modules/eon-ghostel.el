@@ -80,7 +80,7 @@
   (ghostel-max-scrollback (* 32 1024 1024))  ; MiB
 
   ;; Start Ghostel in line mode instead of semi-char mode
-  (ghostel-initial-input-mode 'line)
+  ;; (ghostel-initial-input-mode 'line)
 
   ;; The shell that gets run in Ghostel for Tramp connections;
   ;; prefer the user's login shell, fall back to /bin/sh.
