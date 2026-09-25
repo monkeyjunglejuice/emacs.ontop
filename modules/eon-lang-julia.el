@@ -13,6 +13,9 @@
 
 ;;; Commentary:
 ;;
+;; In order to use Snail, either module `eon-vterm' or `eon-ghostel'
+;; is required.
+;;
 ;;; Code:
 
 (eon-module-metadata
@@ -36,11 +39,6 @@
 
   :init
 
-  ;; In order to use Snail, either module `eon-vterm' or `eon-ghostel'
-  ;; is required. Defaults to `eon-ghostel', which is generally faster.
-  (eon-load-module (cond ((eon-modulep 'eon-vterm) 'eon-vterm)
-                         (t 'eon-ghostel)))
-
   (eon-localleader-defkeymap
       julia-snail-mode
       eon-localleader-julia-snail-map
@@ -61,9 +59,16 @@
   (julia-snail-imenu-style :module-tree)  ; :module-tree, :flat or nil
 
   :config
-  
+
   ;; Set the terminal Vterm
-  (setopt julia-snail-terminal-type :vterm)
+  (setopt julia-snail-terminal-type
+          (cond
+           ((eon-modulep 'eon-ghostel) :ghostel)
+           ((eon-modulep 'eon-vterm) :vterm)
+           ;; Default to Ghostel
+           (t (progn
+                (eon-load-module 'eon-ghostel)
+                :ghostel))))
 
   :hook
 
