@@ -204,6 +204,16 @@
   (use-package fish-mode :ensure t))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; WIDTH-EDITOR
+;; <https://github.com/magit/with-editor>
+;; <https://doc.emacsen.de/with-editor>
+;; Use Emacsclient as the $EDITOR of child processes
+
+(use-package with-editor :ensure t
+  :hook
+  ((eshell-mode shell-mode term-exec) . with-editor-export-editor))
+
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Tramp login shell discovery on MacOS
 
 ;; Set SHELL to 'login-shell to use the user's login shell over Tramp. MacOS
