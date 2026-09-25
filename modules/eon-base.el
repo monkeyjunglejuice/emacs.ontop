@@ -284,12 +284,11 @@ Also remove TRAMP's empty LC_CTYPE override in the current buffer."
   (setf (alist-get 'file completion-category-overrides)
         '((styles basic orderless partial-completion)))
 
-  (eon-add-to-list*
-   'completion-category-overrides
-   '((eglot
-      (styles orderless))
-     (eglot-capf
-      (styles orderless)))))
+  (eon-add-to-list* 'completion-category-overrides
+                    '((eglot
+                       (styles orderless))
+                      (eglot-capf
+                       (styles orderless)))))
 
 ;; _____________________________________________________________________________
 ;;; COPY / PASTE
