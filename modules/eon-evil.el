@@ -55,10 +55,10 @@
   ;; e.g. <insert> or <emacs>.
   ;;
   ;; You may want to customize the variables:
-  ;; `eon-evil-leader-key' - default "SPC"
-  ;; `eon-evil-localleader-key' - default ","
-  ;; `eon-leader-key' - default for Evil "C-SPC"
-  ;; `eon-localleader-key' - default "C-,"
+  ;; `eon-evil-leader-key'
+  ;; `eon-evil-localleader-key'
+  ;; `eon-leader-key': reach the leader from insert- or Emacs state
+  ;; `eon-localleader-key': pressed after the leader key
 
   (defvar-keymap eon-evil-leader-map
     :doc "Evil frontend for the EON leader keymap.")
@@ -137,6 +137,7 @@
   ;; Enable Evil first
   (evil-mode 1)
 
+  ;; Set the Evil cursor styles to EON cursor types
   (setq evil-normal-state-cursor eon-cursor-type-extra
         evil-visual-state-cursor eon-cursor-type-extra-select
         evil-insert-state-cursor eon-cursor-type-write
