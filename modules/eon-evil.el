@@ -159,8 +159,11 @@
                         "Toggle comment for the region between BEG and END."
                         (interactive "<r>")
                         (comment-or-uncomment-region beg end))
-  (evil-define-key 'normal 'global
-                   (kbd "gc") #'eon-evil-comment-or-uncomment))
+  (evil-define-key '(normal visual) 'global
+                   "gc" #'eon-evil-comment-or-uncomment)
+
+  ;; Enable Evil
+  (evil-mode 1))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
