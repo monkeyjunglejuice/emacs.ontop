@@ -256,13 +256,16 @@ Also remove TRAMP's empty LC_CTYPE override in the current buffer."
 ;; <https://github.com/dajva/rg.el>
 (when (executable-find "rg")
   (use-package rg :ensure t
+
     :custom
+
     ;; Inject Ripgrep into the `project-switch-commands' dispatch menu
     (project-switch-commands
      (cl-substitute '(rg-project "Ripgrep" ?g) 'project-find-regexp
                     project-switch-commands
                     :key #'car :test #'eq))
     :bind
+
     (:map project-prefix-map
           ("g" . rg-project))
     (:map ctl-z-s-map

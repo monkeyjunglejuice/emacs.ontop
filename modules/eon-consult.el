@@ -63,7 +63,7 @@
       eon-localleader-global-map "," "..."))
 
   ;; Consult history as Eshell alias
-  (eon-add-to-list 'eon-eshell-aliases '((h . "consult-history")))
+  (eon-add-to-list* 'eon-eshell-aliases '((h . "consult-history")))
 
   :config
 
