@@ -218,7 +218,7 @@
 
 ;; Set SHELL to 'login-shell to use the user's login shell over Tramp. MacOS
 ;; lacks the getent command, so this is required to start e.g. Vterm and Ghostel
-;; with the user's login shell instead of /bin/sh.
+;; with the user's login shell instead of the /bin/sh fallback.
 
 (when (eon-macp)
   (defun eon-tramp-macos-login-shell ()
