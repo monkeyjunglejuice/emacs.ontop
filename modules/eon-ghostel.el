@@ -134,7 +134,8 @@
 (when (eon-modulep 'eon-evil)
   (use-package evil-ghostel :ensure t
     :after (ghostel evil)
-    :hook (ghostel-mode . evil-ghostel-mode)))
+    :hook
+    (ghostel-mode . evil-ghostel-mode)))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; MEOW INTEGRATION
