@@ -77,15 +77,19 @@
 
   :custom
 
-  (ghostel-max-scrollback (* 32 1024 1024))  ; MiB
-
-  ;; Start Ghostel in line mode instead of semi-char mode
-  ;; (ghostel-initial-input-mode 'line)
+  (ghostel-max-scrollback (* 8 1024 1024))  ; MiB
+  (ghostel-ignore-cursor-change t)
+  (ghostel-readonly-fake-cursor nil)
 
   ;; The shell that gets run in Ghostel for Tramp connections;
   ;; prefer the user's login shell, fall back to /bin/sh.
   (ghostel-tramp-shells '((t login-shell "/bin/sh")
                           ("docker" "/bin/sh")))
+
+  ;; Automatically transfer integration scripts to the remote host.
+  ;; This creates small temporary files on the remote host;
+  ;; cleaned up when the terminal exits.
+  (ghostel-tramp-shell-integration t)
 
   :config
 
