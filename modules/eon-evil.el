@@ -213,15 +213,15 @@
 
   ;; Add VIM-like movements to Dired
   (evil-collection-define-key 'normal 'dired-mode-map
-    "l" #'dired-find-file
-    "h" #'dired-up-directory)
+                              "l" #'dired-find-file
+                              "h" #'dired-up-directory)
 
   ;; Add VIM-like copy/paste to Dired
   (when (eon-modulep 'eon-dired)
     (evil-collection-define-key 'normal 'dired-mode-map
-      "y" #'dired-ranger-copy
-      "p" #'dired-ranger-paste
-      "P" #'dired-ranger-move)))
+                                "y" #'dired-ranger-copy
+                                "p" #'dired-ranger-paste
+                                "P" #'dired-ranger-move)))
 
 ;; _____________________________________________________________________________
 ;;; WHICH-KEY
