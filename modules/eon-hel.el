@@ -19,7 +19,7 @@
 ;;; Code:
 
 (eon-module-metadata
- :conflicts '(eon-evil eon-god eon-meow eon-helix)
+ :conflicts '(eon-evil eon-god eon-helix eon-meow)
  :requires  '(eon))
 
 ;; _____________________________________________________________________________
@@ -42,6 +42,52 @@
   :config
 
   (hel-mode))
+
+;; <https://github.com/helheim-emacs/hel-leader>
+(use-package hel-leader
+  :vc (:url "https://github.com/helheim-emacs/hel-leader.git"
+            :rev "main")
+  :after hel)
+
+
+;; <https://github.com/helheim-emacs/hel-collection>
+(use-package hel-collection
+  :vc (:url "https://github.com/helheim-emacs/hel-collection.git"
+            :rev "main")
+  :after hel
+  :config (hel-collection-init))
+
+
+;; <https://github.com/helheim-emacs/hel-org>
+(use-package hel-org
+  :vc (:url "https://github.com/helheim-emacs/hel-org.git"
+            :rev "main")
+  :after org)
+
+
+;; <https://github.com/helheim-emacs/hel-paredit>
+(use-package paredit :ensure t)
+
+(use-package hel-paredit
+  :vc (:url "https://github.com/helheim-emacs/hel-paredit.git"
+            :rev "main")
+
+  :hook
+  (emacs-lisp-mode-hook . hel-paredit-mode))
+
+
+;; <https://github.com/helheim-emacs/hel-ghostel>
+(use-package hel-ghostel
+  :vc (:url "https://github.com/helheim-emacs/hel-ghostel.git"
+            :rev "main")
+  :after (ghostel hel))
+
+
+;; <https://github.com/helheim-emacs/hel-vterm>
+(use-package hel-vterm
+  :vc (:url "https://github.com/helheim-emacs/hel-vterm.git"
+            :rev "main")
+  :after vterm)
 
 ;; _____________________________________________________________________________
 (provide 'eon-hel)
