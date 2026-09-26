@@ -83,9 +83,10 @@
 ;; Options when Emacs is started via "emacs --debug-init"
 (when init-file-debug
   (setopt use-package-verbose t
-          use-package-expand-minimally nil
+          use-package-expand-minimally t
           ;; "M-x use-package-report" to see the result for statistics
-          use-package-compute-statistics t))
+          use-package-compute-statistics t
+          debug-on-error t))
 
 ;; Enable the built-in `use-package' extension ":ensure-system-package"
 (use-package use-package-ensure-system-package :ensure nil)
@@ -638,7 +639,7 @@ When called interactively, use `eon-modules'."
 
     ;; Load unaffected modules
     (dolist (module modules)
-      (condition-case err
+      (condition-case-unless-debug err
           (require module)
         (error
          (eon--warning
