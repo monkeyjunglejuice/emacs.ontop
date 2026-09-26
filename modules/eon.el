@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 ;;
 ;;
-;; Version: 2.6.22
+;; Version: 2.7.0
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
@@ -397,22 +397,20 @@ Examples (assuming LIST-SYM initially holds (a b)):
 
 Returns the new current value of LIST-SYM."
   (unless (symbolp list-sym)
-    (error "eon-add-to-list: LIST-SYM must be quoted: 'my-var"))
+    (error "eon-add-to-list: LIST-SYM must be a symbol"))
   (set list-sym
-       (eon-adjoin
-        (if (boundp list-sym) (symbol-value list-sym) nil)
-        elements append compare-fn)))
+       (eon-adjoin (symbol-value list-sym)
+                   elements append compare-fn)))
 
-(defun eon-add-to-list* (list-sym elements &optional append compare-fn)
-  "Modifies the default, custom or global value of LIST-SYM.
+(defmacro eon-add-to-list* (list-sym elements &optional append compare-fn)
+  "Modify the default, Custom or global value of LIST-SYM.
 
-If LIST-SYM is a user option (see `custom-variable-p'), use
-`customize-set-variable' so its :set function and type checks are
-applied. Otherwise, use `set-default' to modify the variable’s global
-default value directly.
+LIST-SYM must be a quoted symbol naming an existing list variable.
+Use `setopt' semantics so a Custom setter is applied and the value is
+checked against the option's declared type.
 
 ELEMENTS may be a single item or a list of items to add to the
-variable’s *default* (global) value.
+variable's *default* (global) value.
 
 If APPEND is non-nil, append items left->right;
 otherwise prepend them while preserving the order of ELEMENTS.
@@ -421,14 +419,15 @@ COMPARE-FN, if non-nil, is a function used to test for membership;
 it defaults to `equal'.
 
 Returns the new default value of LIST-SYM."
-  (unless (symbolp list-sym)
-    (error "eon-add-to-list*: LIST-SYM must be a symbol"))
-  (let* ((cur (and (default-boundp list-sym) (default-value list-sym)))
-         (new (eon-adjoin cur elements append compare-fn)))
-    (if (custom-variable-p list-sym)
-        (customize-set-variable list-sym new 'setopt)
-      (set-default list-sym new))
-    new))
+  (unless (and (eq (car-safe list-sym) 'quote)
+               (symbolp (cadr list-sym))
+               (null (cddr list-sym)))
+    (error "eon-add-to-list*: LIST-SYM must be a quoted symbol"))
+  (let ((symbol (cadr list-sym)))
+    `(let* ((cur (default-value ',symbol))
+            (new (eon-adjoin cur ,elements ,append ,compare-fn)))
+       (setopt ,symbol new)
+       new)))
 
 ;; General helper to update association lists
 (cl-defun eon-alist-update (key value alist
@@ -1960,8 +1959,8 @@ buffer."
 (keymap-set ctl-z-W-map "p"   #'project-other-frame-command)
 
 ;; Change frame display
-(keymap-set ctl-z-W-map "f"   #'toggle-frame-fullscreen)
 (keymap-set ctl-z-W-map "m"   #'toggle-frame-maximized)
+(keymap-set ctl-z-W-map "M"   #'toggle-frame-fullscreen)
 
 ;; _____________________________________________________________________________
 ;;; TAB MANAGEMENT
@@ -2195,8 +2194,7 @@ Called without argument just syncs `eon-boring-buffers' to other places."
   (when regexp
     (eon-add-to-list 'eon-boring-buffers regexp))
   ;; Define other places where `eon-boring-buffers' are synced to:
-  (eon-add-to-list* 'switch-to-prev-buffer-skip-regexp eon-boring-buffers)
-  (eon-add-to-list* 'switch-to-next-buffer-skip-regexp eon-boring-buffers))
+  (eon-add-to-list* 'switch-to-prev-buffer-skip-regexp eon-boring-buffers))
 
 ;; Hide boring buffers
 (with-eval-after-load 'window (eon-boring-buffers-add))
@@ -2368,12 +2366,13 @@ pretending to clear it."
 ;;; HISTORY
 
 ;; Which histories to save between Emacs sessions?
-(eon-add-to-list* 'savehist-additional-variables
-                  '(kill-ring  ; CAUTION, persists copied text - see below
-                    register-alist
-                    search-ring
-                    regexp-search-ring
-                    compile-command))
+(with-eval-after-load 'savehist
+  (eon-add-to-list* 'savehist-additional-variables
+                    '(kill-ring  ; CAUTION, persists copied text - see below
+                      register-alist
+                      search-ring
+                      regexp-search-ring
+                      compile-command)))
 
 ;; Enable `savehist-mode' after setting the variables
 (savehist-mode 1)
@@ -2741,6 +2740,20 @@ pretending to clear it."
   ;; remote default-directory, and shell expansion.
   (add-to-list 'eshell-modules-list 'eshell-tramp))
 
+(with-eval-after-load 'em-term
+  ;; Eshell is a an extremely powerful shell, but in a line-oriented interface,
+  ;; not a terminal emulator. That means it can not run TUI programs like Vim in
+  ;; the line-oriented UI; therefore TUI commands must be delegated to an actual
+  ;; terminal emulator running within Emacs. TUI commands are called "visual
+  ;; commands". You can delegate any visual commands to the terminal emulator
+  ;; with "v" - e.g. "v mytuicommand". The variable `eshell-visual-commands'
+  ;; contains all TUI commands Eshell recognizes.
+  ;; You can add more commands benefitting from running in a terminal emulator:
+  (eon-add-to-list* 'eshell-visual-commands
+                    '("hx" "nnn" "bat" "w3m" "fzf" "nmtui" "nix" "brew"
+                      "pi" "codex" "claude" "autolith"
+                      "julia" "utop" "iex" "ghcup")))
+
 ;; Launch an Eshell buffer: "<leader> e e"; re-visit the buffer by repeating
 (keymap-set ctl-z-e-map "e" #'eshell)
 
@@ -2781,11 +2794,12 @@ REGEXP. Otherwise, prompt with `completing-read' over `eshell-last-dir-ring'."
 ;; Define Eshell aliases directly in your init file without external
 ;; `/.emacs.d/eshell/alias' file.
 
+;; TODO Dead code
 (defun eon-eshell--name (key)
   "Return KEY as an Eshell alias name string.
 
-K may be a symbol (e.g. `ll`) or a string (e.g. \"ll\").
-Signal an error for any other type."
+  K may be a symbol (e.g. `ll`) or a string (e.g. \"ll\").
+  Signal an error for any other type."
   (cond ((symbolp key) (symbol-name key))
         ((stringp key) key)
         (t (error "Alias key must be symbol or string: %S" key))))
@@ -2793,12 +2807,12 @@ Signal an error for any other type."
 (defun eon-eshell--install-aliases (aliases)
   "Install ALIASES into Eshell without persisting them to disk.
 
-ALIASES must be an alist of (NAME . DEF) pairs, where NAME is a symbol
-or string and DEF is an Eshell alias expansion string.
+  ALIASES must be an alist of (NAME . DEF) pairs, where NAME is a symbol
+  or string and DEF is an Eshell alias expansion string.
 
-If an alias NAME already exists, it is deleted first and then redefined.
-Alias persistence is disabled by binding `eshell-aliases-file'
-to `null-device'."
+  If an alias NAME already exists, it is deleted first and then redefined.
+  Alias persistence is disabled by binding `eshell-aliases-file'
+  to `null-device'."
   (require 'em-alias)
   (let ((eshell-aliases-file null-device))
     (mapc
@@ -2819,8 +2833,8 @@ to `null-device'."
 (defun eon-eshell--set-aliases (sym value)
   "Setter for the user option `eon-eshell-aliases'.
 
-Set SYM's default value to VALUE. If the Eshell alias module
-`em-alias' is already loaded, also install VALUE immediately."
+  Set SYM's default value to VALUE. If the Eshell alias module
+  `em-alias' is already loaded, also install VALUE immediately."
   (set-default sym value)
   (when (featurep 'em-alias)
     (eon-eshell--install-aliases value)))
@@ -2840,8 +2854,8 @@ Set SYM's default value to VALUE. If the Eshell alias module
     (q     . "exit"))
   "Alist of Eshell aliases: ((NAME . DEF) ...).
 
-NAME can be a symbol or a string. Add/override a single alias with
-`add-to-list', or add/override multiple aliases via `eon-add-to-list'."
+  NAME can be a symbol or a string. Add/override a single alias with
+  `add-to-list', or add/override multiple aliases via `eon-add-to-list'."
   :type '(alist :key-type (choice symbol string)
                 :value-type string)
   :set #'eon-eshell--set-aliases
@@ -2858,9 +2872,9 @@ NAME can be a symbol or a string. Add/override a single alias with
 (defun eon-eshell--cwd ()
   "Return the current Eshell directory for prompt display.
 
-For remote TRAMP directories, strip the TRAMP prefix and show only the
-path on the remote host.  For local directories, abbreviate the path in
-the usual Emacs way."
+  For remote TRAMP directories, strip the TRAMP prefix and show only the
+  path on the remote host.  For local directories, abbreviate the path in
+  the usual Emacs way."
   (let ((dir (directory-file-name (eshell/pwd))))
     (if (file-remote-p dir)
         (file-local-name dir)
@@ -2869,9 +2883,9 @@ the usual Emacs way."
 (defun eon-eshell-prompt ()
   "Build a two-line Eshell prompt with status, user, host, and directory.
 
-The first line shows the previous command's non-zero exit status, the
-current user/host, and the current directory. The second line contains
-only the command marker, using `#' for root and `$' otherwise."
+  The first line shows the previous command's non-zero exit status, the
+  current user/host, and the current directory. The second line contains
+  only the command marker, using `#' for root and `$' otherwise."
   (let* ((status (or eshell-last-command-status 0))
          (remote-user (file-remote-p default-directory 'user))
          (remote-host (file-remote-p default-directory 'host))
