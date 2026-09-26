@@ -105,7 +105,7 @@
 
   (advice-add 'ghostel--tramp-shell-spec
               :around #'eon-ghostel-tramp-shell-spec)
-  
+
   ;; Don't pass "<escape>" to the terminal in `semi-char-mode';
   ;; to send ESC, use "<localleader> ESC" instead.
   (setopt ghostel-keymap-exceptions
