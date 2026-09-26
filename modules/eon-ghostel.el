@@ -143,9 +143,68 @@
 
 (when (eon-modulep 'eon-meow)
   (use-package meow-ghostel
-  :vc (:url "https://github.com/dakra/meow-ghostel" :rev :newest)
-  :after (ghostel meow)
-  :hook (ghostel-mode . meow-ghostel-mode)))
+    :vc (:url "https://github.com/dakra/meow-ghostel"
+              :rev :newest)
+    :after (ghostel meow)
+    :hook
+    (ghostel-mode . meow-ghostel-mode)))
+
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; WITH-EDITOR
+;; <https://github.com/magit/with-editor>
+;; <https://doc.emacsen.de/with-editor>
+;; Use Emacsclient as the $EDITOR of child processes
+
+;; In every interactive Ghostel shell, $EDITOR shall ultimately point to the
+;; Emacs instance containing that Ghostel buffer, regardless of what the user's
+;; shell startup files set.
+
+(use-package with-editor :ensure t
+  :demand t
+
+  :preface
+
+  (defvar eon-ghostel-post-spawn-hook nil
+    "Hook run after Ghostel has spawned an interactive shell.")
+
+  :config
+
+  ;; KLUDGE Ghostel only provides `ghostel-pre-spawn-hook', but shell startup
+  ;; files may overwrite an inherited EDITOR after the shell starts. Since
+  ;; Ghostel has no post-spawn hook, advise its shell startup function to
+  ;; provide one, then inject the `with-editor' environment into the running
+  ;; shell. This relies on Ghostel's private API and is therefore ugly. We can
+  ;; remove that kludge once Ghostel and `with-editor' provide a proper
+  ;; integration.
+
+  (defun eon-ghostel--run-post-spawn-hook (&rest _)
+    "Run `eon-ghostel-post-spawn-hook'."
+    (run-hooks 'eon-ghostel-post-spawn-hook))
+
+  (cl-defun eon-ghostel--with-editor (&optional (envvar "EDITOR"))
+    "Export ENVVAR for the current Emacs instance into Ghostel."
+    (with-editor* envvar
+      (when-let* ((editor (getenv envvar)))
+        ;; You may see a short flicker because of this ...
+        (ghostel-send-string
+         (format " export %s=%S\n" envvar editor)))
+      (when-let* ((server-file (getenv "EMACS_SERVER_FILE")))
+        ;; ... and that ...
+        (ghostel-send-string
+         (format " export EMACS_SERVER_FILE=%S\n" server-file)))
+      ;; ... but hey, we pretend it hasn't happened.
+      (ghostel-send-string " clear\n")
+      (message "Successfully exported %s" envvar)))
+
+  (with-eval-after-load 'ghostel
+    (unless (advice-member-p #'eon-ghostel--run-post-spawn-hook
+                             'ghostel--start-process)
+      (advice-add 'ghostel--start-process :after
+                  #'eon-ghostel--run-post-spawn-hook)))
+
+  :hook
+
+  (eon-ghostel-post-spawn . eon-ghostel--with-editor))
 
 ;; _____________________________________________________________________________
 (provide 'eon-ghostel)
