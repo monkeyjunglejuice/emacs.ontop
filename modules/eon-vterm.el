@@ -162,6 +162,16 @@ When nil, ESC runs `eon-vterm-escape-command'.")
   :hook
   (eshell-load . eshell-vterm-mode))
 
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; WITH-EDITOR
+;; <https://github.com/magit/with-editor>
+;; <https://doc.emacsen.de/with-editor>
+;; Use Emacsclient as the $EDITOR of child processes
+
+(use-package with-editor :ensure t
+  :hook
+  (vterm-mode . with-editor-export-editor))
+
 ;; _____________________________________________________________________________
 (provide 'eon-vterm)
 ;;; eon-vterm.el ends here
