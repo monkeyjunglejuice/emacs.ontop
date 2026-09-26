@@ -1,6 +1,6 @@
 ;;; eon-meow.el --- Modal editing: Meow keybindings -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.1
+;; Version: 2.0.2
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -30,66 +30,173 @@
   ;; Let Meow handle the cursor style
   (eon-cursor-mode -1)
 
-  (defun eon-meow--keypad-title (definition)
-    "Return a Meow keypad title for DEFINITION.
+  (defun eon-meow--valid-key-p (key)
+    "Return non-nil if KEY is a non-empty key description string."
+    (and (stringp key)
+         (> (length key) 0)))
 
-Understands labelled bindings of the form \(LABEL . VALUE),
-where LABEL is a string. VALUE may be a command, a keymap object,
-or a symbol whose value is a keymap."
+  (defun eon-meow--prefix (binding)
+    "Return (TITLE . KEYMAP) when BINDING denotes a prefix map."
     (cond
-     ;; EON / which-key style labels: `(\"Label\" . VALUE)'.
-     ;; Preserve the label, regardless of whether VALUE is a command or keymap.
-     ((and (consp definition)
-           (stringp (car definition)))
-      (intern (car definition)))
+     ((and (consp binding)
+           (stringp (car binding))
+           (keymapp (cdr binding)))
+      binding)
+     ((keymapp binding)
+      (cons (or (keymap-prompt binding) "Prefix")
+            binding))))
 
-     ;; Fallback for keymaps that have a prompt/name.  Use sparingly in your
-     ;; own maps, because keymap prompts can affect command-loop behavior.
-     ((and (keymapp definition)
-           (keymap-prompt definition))
-      (intern (keymap-prompt definition)))
+  (defun eon-meow--keypad-title (definition)
+    "Return a Meow keypad title for DEFINITION."
+    (if (and (consp definition)
+             (stringp (car definition)))
+        (intern (car definition))
+      (meow-keypad-get-title definition)))
 
-     ;; Fallback to Meow's normal title logic
-     (t
-      (meow-keypad-get-title definition))))
+  (defun eon-meow--display-keymap (keymap title)
+    "Display KEYMAP in Meow keypad style under TITLE."
+    (when meow-keypad-describe-keymap-function
+      (let ((display-map (make-sparse-keymap))
+            (meow-keypad-message-prefix (concat title ": ")))
+        (map-keymap
+         (lambda (event binding)
+           (unless (eq event 'remap)
+             (define-key
+              display-map
+              (vector event)
+              (funcall meow-keypad-get-title-function binding))))
+         keymap)
+        (funcall meow-keypad-describe-keymap-function display-map))))
 
-  (defun eon-meow--hide-remap-entry (keymap)
-    "Return a copy of KEYMAP without display-noise entries.
+  (defun eon-meow--dispatch-map (keymap)
+    "Return a transient dispatcher for KEYMAP.
 
-Meow builds a temporary keymap for keypad help. Command remappings
-can appear there as the dummy event `remap', which is not a real
-user-facing key. Do not merely bind it to nil; skip it entirely."
+Commands retain their original bindings. Prefix maps re-enter the EON
+Meow frontend so their bindings are displayed in Meow keypad style."
+    (let ((dispatch-map (copy-keymap keymap)))
+      (map-keymap
+       (lambda (event binding)
+         (when-let* ((prefix (eon-meow--prefix binding)))
+           (let ((title (car prefix))
+                 (prefix-map (cdr prefix)))
+             (define-key
+              dispatch-map
+              (vector event)
+              (lambda ()
+                (interactive)
+                (eon-meow--enter-keymap prefix-map title))))))
+       keymap)
+      dispatch-map))
+
+  (defun eon-meow--enter-keymap (keymap title)
+    "Enter KEYMAP transiently and display it under TITLE."
+    (let ((keymap (keymap-canonicalize keymap)))
+      (set-transient-map (eon-meow--dispatch-map keymap))
+      (eon-meow--display-keymap keymap title)))
+
+  (defun eon-meow--leader ()
+    "Enter the EON leader from Meow."
+    (interactive)
+    (eon-leader--sync-prefix-parent)
+    (eon-localleader--sync-local-prefix-parent)
+    (eon-meow--enter-keymap eon-leader-map "Leader"))
+
+  (defun eon-meow--localleader ()
+    "Enter the EON local leader from Meow."
+    (interactive)
+    (eon-localleader--sync-local-prefix-parent)
+    (eon-meow--enter-keymap eon-localleader-map "Local"))
+
+  (defun eon-meow--bind-entry (old new command)
+    "Replace OLD with NEW in Meow's leader map, bound to COMMAND."
+    (let ((leader-map (alist-get 'leader meow-keymap-alist)))
+      (when (eon-meow--valid-key-p old)
+        (keymap-unset leader-map old t))
+      (when (and (bound-and-true-p eon-leader-mode)
+                 (eon-meow--valid-key-p new))
+        (meow-leader-define-key
+         (cons new command)))))
+
+  (defun eon-meow--sync-leaders ()
+    "Synchronize the Meow frontend with `eon-leader-mode'."
+    (eon-meow--bind-entry eon-meow-leader-key
+                          eon-meow-leader-key
+                          #'eon-meow--leader)
+    (eon-meow--bind-entry eon-meow-localleader-key
+                          eon-meow-localleader-key
+                          #'eon-meow--localleader))
+
+  (defun eon-meow--set-leaders (symbol value)
+    "Set SYMBOL to VALUE and update its Meow leader binding."
+    (let ((old (and (boundp symbol)
+                    (default-value symbol))))
+      (set-default symbol value)
+      (when (featurep 'meow)
+        (pcase symbol
+          ('eon-meow-leader-key (eon-meow--bind-entry
+                                 old value #'eon-meow--leader))
+          ('eon-meow-localleader-key (eon-meow--bind-entry
+                                      old value #'eon-meow--localleader))))))
+
+  (defcustom eon-meow-leader-key "SPC"
+    "Key for entering the EON leader from Meow's keypad."
+    :group 'eon-leader
+    :type 'string
+    :set #'eon-meow--set-leaders
+    :initialize 'custom-initialize-set)
+
+  (defcustom eon-meow-localleader-key ","
+    "Key for entering the EON local leader from Meow's keypad."
+    :group 'eon-leader
+    :type 'string
+    :set #'eon-meow--set-leaders
+    :initialize 'custom-initialize-set)
+
+  (defun eon-meow--filter-keypad-description (keymap)
+    "Return KEYMAP adapted for the EON Meow keypad display.
+
+Hide command remappings and restore Meow's literal-prefix key when it
+has an actual leader binding."
     (if (not (keymapp keymap))
         keymap
-      (let ((filtered (make-sparse-keymap)))
-        (set-keymap-parent filtered (keymap-parent keymap))
+      (let ((filtered-map (make-sparse-keymap)))
         (map-keymap
          (lambda (event binding)
            (unless (or (eq event 'remap)
                        (null binding))
-             (define-key filtered (vector event) binding)))
+             (define-key filtered-map (vector event) binding)))
          keymap)
-        filtered)))
+        (when (null meow--keypad-keys)
+          (let* ((leader-map (alist-get 'leader meow-keymap-alist))
+                 (event meow-keypad-literal-prefix)
+                 (binding (lookup-key leader-map (vector event))))
+            (when binding
+              (define-key
+               filtered-map
+               (vector event)
+               (funcall meow-keypad-get-title-function binding)))))
+        filtered-map)))
 
   :config
 
+  ;; Meow hides its literal-prefix key from the initial keypad popup.
+  ;; Restore it when that key has an actual leader binding.
   (advice-add 'meow--keypad-get-keymap-for-describe
               :filter-return
-              #'eon-meow--hide-remap-entry)
+              #'eon-meow--filter-keypad-description)
 
-  ;; QWERTY layout
-  (defun meow-setup-qwerty ()
-    "Meow setup for QWERTY layout."
+  (defun eon-meow-setup-qwerty ()
+    "Set up Meow for a QWERTY keyboard."
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty
           meow-keypad-get-title-function #'eon-meow--keypad-title)
+
     (meow-motion-define-key
      '("j" . meow-next)
      '("k" . meow-prev)
      '("<escape>" . ignore))
+
     (meow-leader-define-key
-     ;; EON leader inside Meow keypad
-     `("," . ("Leader" . ,eon-leader-map))
-     ;; Use SPC (0-9) for digit arguments.
+     ;; Use SPC (0-9) for digit arguments
      '("1" . meow-digit-argument)
      '("2" . meow-digit-argument)
      '("3" . meow-digit-argument)
@@ -102,6 +209,7 @@ user-facing key. Do not merely bind it to nil; skip it entirely."
      '("0" . meow-digit-argument)
      '("/" . meow-keypad-describe-key)
      '("?" . meow-cheatsheet))
+
     (meow-normal-define-key
      '("0" . meow-expand-0)
      '("9" . meow-expand-9)
@@ -165,8 +273,12 @@ user-facing key. Do not merely bind it to nil; skip it entirely."
      '("'" . repeat)
      '("<escape>" . ignore)))
 
-  ;; Run setup
-  (meow-setup-qwerty)
+  (eon-meow-setup-qwerty)
+
+  ;; Add the configurable EON entries after the ordinary Meow bindings
+  (eon-meow--sync-leaders)
+  (add-hook 'eon-leader-mode-hook #'eon-meow--sync-leaders)
+
   ;; Enable Meow
   (meow-global-mode 1))
 
