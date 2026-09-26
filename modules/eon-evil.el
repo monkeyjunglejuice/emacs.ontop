@@ -134,9 +134,6 @@
 
   :config
 
-  ;; Enable Evil first
-  (evil-mode 1)
-
   ;; Set the Evil cursor styles to EON cursor types
   (setq evil-normal-state-cursor eon-cursor-type-extra
         evil-visual-state-cursor eon-cursor-type-extra-select
