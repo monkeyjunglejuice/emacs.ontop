@@ -59,10 +59,10 @@
 ;;; ELISP
 
 ;;; - Files and directories you trust
-(eon-add-to-list 'trusted-content
-                 `(,eon-user-dir  ; your personal user directory
-                   ;; "~/emacs-lisp/"  ; example
-                   ))
+(eon-add-to-list* 'trusted-content
+                  `(,eon-user-dir  ; your personal user directory
+                    ;; "~/emacs-lisp/"  ; example
+                    ))
 
 ;;; - Theme
 ;; Toggle between light/dark theme via "<leader> x t".
