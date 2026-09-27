@@ -143,6 +143,11 @@ When nil, ESC runs `eon-vterm-escape-command'.")
   (with-eval-after-load 'vterm
     (advice-add 'vterm--tramp-get-shell
                 :around #'eon-vterm-tramp-get-shell))
+
+  (defun eon-vterm-new ()
+    "Open a new Vterm instance."
+    (interactive)
+    (vterm t))
   
   :bind
 
@@ -151,7 +156,8 @@ When nil, ESC runs `eon-vterm-escape-command'.")
         ("C-q" . vterm-send-next-key))
   (:map ctl-z-e-map
         ;; Set Vterm as the default terminal emulator
-        ("t" . vterm)))
+        ("t" . vterm)
+        ("T" . eon-vterm-new)))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; ESHELL

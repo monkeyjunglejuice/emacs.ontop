@@ -111,6 +111,11 @@
   (setopt ghostel-keymap-exceptions
           (eon-adjoin ghostel-keymap-exceptions "<escape>"))
 
+  (defun eon-ghostel-new ()
+    "Open a new Ghostel instance."
+    (interactive)
+    (ghostel t))
+
   :bind
 
   (:map ghostel-mode-map
@@ -118,7 +123,8 @@
         ("C-q" . ghostel-send-next-key))
   (:map ctl-z-e-map
         ;; Set Ghostel as the default terminal emulator
-        ("t" . ghostel)))
+        ("t" . ghostel)
+        ("T" . eon-ghostel-new)))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; ESHELL INTEGRATION
