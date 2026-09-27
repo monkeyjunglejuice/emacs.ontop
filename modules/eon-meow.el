@@ -16,7 +16,7 @@
 ;;; Code:
 
 (eon-module-metadata
- :conflicts '(eon-evil eon-god eon-helix eon-hel)
+ :conflicts '(eon-evil eon-god eon-hel eon-helix)
  :requires  '(eon))
 
 ;; _____________________________________________________________________________

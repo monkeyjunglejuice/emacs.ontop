@@ -32,7 +32,7 @@
 ;;; Code:
 
 (eon-module-metadata
- :conflicts '(eon-evil eon-god eon-meow eon-hel)
+ :conflicts '(eon-evil eon-god eon-hel eon-meow)
  :requires  '(eon))
 
 ;; _____________________________________________________________________________
