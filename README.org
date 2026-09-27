@@ -7,12 +7,12 @@ EON is a new Emacs distribution in the making, built on top of the zero-deps [[h
 - Choose your keybindings: Evil (Vim), God Mode, Helix, Meow or Emacs. EON is not tied to a single editing model.
 
 - Easy to change leader keymap(s)
-  + agnostic leader + local leader for God Mode, Helix, Meow -- implemented with plain keymaps and without any 3rd party packages like General et. al.
+  + agnostic leader + local leader that can be used for Evil, God Mode, Helix, Meow -- implemented with plain keymaps and without any 3rd party packages like General et. al.
   + default pre-configured leader keymap(s)
   + tabula rasa leader keymap for you to populate -- if you don't like the default
   + or just bring your own keymap(s) and simply bind it to the leader/local-leader machinery.
 
-- You cam customize EON without touching code if you prefer by just using Emacs' Customization UI. That comes with some perks like type checks (use ~setopt~ instead of plain ~setq~).
+- You cam customize EON without touching code if you prefer, just via Emacs' Customization UI. That comes with some perks like type checks (use ~setopt~ instead of plain ~setq~).
 
 - Fully modular with dependency/conflict management (e.g. Smartparens vs. Paredit)
   + separation of built-in, contrib and user-defined modules
