@@ -158,7 +158,7 @@ ENDPOINT."
 (use-package ob-gptel
   :vc (:url "https://github.com/jwiegley/ob-gptel.git"
             :rev :newest)
-  :after org
+  :after (org gptel)
 
   :config
 
