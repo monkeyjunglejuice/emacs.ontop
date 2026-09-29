@@ -17,7 +17,7 @@
 
 (eon-module-metadata
  :conflicts '()
- :requires  '(eon eon-ai eon-gptel))
+ :requires  '(eon-gptel))
 
 ;; _____________________________________________________________________________
 ;;; GPTEL LLAMA.CPP BACKEND
