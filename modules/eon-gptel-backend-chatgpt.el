@@ -1,6 +1,6 @@
 ;;; eon-gptel-backend-chatgpt.el --- Gptel preset for ChatGPT backend -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.0
+;; Version: 2.0.1
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -13,6 +13,9 @@
 
 ;;; Commentary:
 ;;
+;; ChatGPT Plus or Pro subscription needed (this is different from OpenAI API).
+;; Authenticate via "M-x gptel-openai-oauth-login".
+;; 
 ;;; Code:
 
 (eon-module-metadata
