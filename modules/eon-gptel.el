@@ -72,51 +72,6 @@
         ("x"   . gptel-context-confirm)))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - Ollama
-;; Module `eon-ollama' must be enabled/loaded to make Gptel aware of Ollama.
-
-(when (and (eon-modulep 'eon-ollama)
-           (executable-find "ollama"))
-
-  (use-package gptel-ollama :ensure nil
-    :after gptel
-
-    :init
-
-    ;; Module with common definitions and functionality is required.
-    (eon-load-module 'eon-ollama)
-
-    :config
-
-    (defun eon-gptel-ollama-model-spec (model)
-      "Return a Gptel model specification for Ollama MODEL."
-      (append
-       (list model
-             :capabilities (copy-sequence eon-ollama-default-capabilities)
-             :mime-types (copy-sequence eon-ollama-default-mime-types))
-       (when eon-ollama-default-context-window
-         ;; Gptel expects not raw token count like Ollama, but divided by 1024;
-         ;; e.g. 65536 becomes 64
-         (list :context-window (/ eon-ollama-default-context-window 1024)))))
-
-    (defun eon-gptel-ollama-model-specs ()
-      "Return installed Ollama models as Gptel model specifications."
-      (mapcar #'eon-gptel-ollama-model-spec
-              (eon-ollama-models 'symbol)))
-
-    (defun eon-gptel-register-ollama-backend ()
-      "Register local/cloud Ollama models with Gptel."
-      (setopt gptel-backend
-              (gptel-make-ollama "Ollama"
-                :host "localhost:11434"
-                :endpoint "/api/chat"
-                :stream t
-                :models (eon-gptel-ollama-model-specs)))
-      (when eon-ollama-default-model
-        (setopt gptel-model eon-ollama-default-model)))
-
-    ;; Register once during init
-    (eon-gptel-register-ollama-backend)))
 
 ;; _____________________________________________________________________________
 ;;; GPTEL PROMPTS
