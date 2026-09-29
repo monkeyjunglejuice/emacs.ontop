@@ -34,6 +34,40 @@
   (unless (package-installed-p 'transient '(0 7 4))
     (package-upgrade 'transient))
 
+  (defun eon-gptel-openai-url-parts (api-base-url)
+    "Return Gptel connection parts for OpenAI-compatible API-BASE-URL.
+
+API-BASE-URL is the URL prefix preceding the `/v1' API path.
+
+The return value is a list of PROTOCOL, HOST and chat-completions
+ENDPOINT."
+    (let* ((url (url-generic-parse-url api-base-url))
+           (path
+            (string-trim-right
+             (or (url-filename url) "")
+             "/+"))
+           (port
+            (url-portspec url)))
+      (list
+       (url-type url)
+       (if port
+           (format "%s:%d" (url-host url) port)
+         (url-host url))
+       (concat path "/v1/chat/completions"))))
+
+  (defun eon-gptel-make-openai-compatible (name api-base-url)
+    "Register NAME as an OpenAI-compatible backend at API-BASE-URL."
+    (pcase-let
+        ((`(,protocol ,host ,endpoint)
+          (eon-gptel-openai-url-parts api-base-url)))
+      (gptel-make-openai name
+        :protocol protocol
+        :host host
+        :endpoint endpoint
+        :stream t
+        :models
+        (eon-openai-list-models api-base-url))))
+
   :custom
 
   (gptel-default-mode 'org-mode)
@@ -51,7 +85,6 @@
         ("P"   . gptel-preset)
         ("r"   . gptel-rewrite)
         ("t"   . gptel-tools)))
-
 
 (use-package gptel-context :ensure nil
 
@@ -132,6 +165,7 @@
   (add-to-list 'org-babel-load-languages '(gptel . t))
 
   (defun eon-ob-gptel-setup-completions ()
+    "Enable Gptel completion for Org Babel blocks."
     (add-hook 'completion-at-point-functions 'ob-gptel-capf nil t))
 
   :hook

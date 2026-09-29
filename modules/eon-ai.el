@@ -1,6 +1,6 @@
-;;; eon-ai.el --- Shared functionality for AI integration -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; eon-ai.el --- Generic AI integration helpers -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.1
+;; Version: 2.0.0
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -20,20 +20,18 @@
  :requires  '(eon))
 
 ;; _____________________________________________________________________________
-;;; GLOBAL DEFINITIONS
+;;; OPENAI-COMPATIBLE APIS
 
-(defgroup eon-ai nil
-  "AI integration."
-  :group 'eon)
-
-(require 'json)
+(require 'subr-x)
 (require 'url)
 
 (defun eon-openai-list-models (api-base-url)
-  "Return model IDs exposed by OpenAI-compatible API-BASE-URL."
+  "Return model IDs exposed by OpenAI-compatible API-BASE-URL.
+
+API-BASE-URL is the URL prefix preceding the `/v1' API path."
   (let ((url
          (concat
-          (string-remove-suffix "/" api-base-url)
+          (string-trim-right api-base-url "/+")
           "/v1/models")))
     (with-temp-buffer
       (url-insert-file-contents url)
@@ -48,7 +46,8 @@
          (lambda (model)
            (let ((id (plist-get model :id)))
              (unless (stringp id)
-               (error "Invalid model entry from %s: %S" url model))
+               (error "Invalid model entry from %s: %S"
+                      url model))
              id))
          models)))))
 

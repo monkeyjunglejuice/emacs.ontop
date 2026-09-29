@@ -21,48 +21,24 @@
 
 ;; _____________________________________________________________________________
 ;;; GPTEL LLAMA.CPP BACKEND
-;; <https://github.com/karthink/gptel>
-
-(require 'url-parse)
+;; <https://github.com/ggml-org/llama.cpp>
 
 (defcustom eon-gptel-backend-llama-api-base-url
   "http://localhost:9931"
-  "Base URL of the Llama.cpp OpenAI-compatible API."
+  "Base URL of the Llama.cpp OpenAI-compatible API.
+
+The URL is the prefix preceding the `/v1' API path."
   :type 'string
   :group 'eon-ai)
-
-(defun eon-gptel-backend-llama-url-parts ()
-  "Return protocol, host and endpoint for the configured Llama.cpp API."
-  (let* ((url
-          (url-generic-parse-url
-           eon-gptel-backend-llama-api-base-url))
-         (path
-          (string-remove-suffix "/" (or (url-filename url) "")))
-         (port
-          (url-portspec url)))
-    (list
-     (url-type url)
-     (if port
-         (format "%s:%d" (url-host url) port)
-       (url-host url))
-     (concat path "/v1/chat/completions"))))
 
 (use-package gptel-openai :ensure nil
   :after gptel
 
   :config
 
-  (pcase-let
-      ((`(,protocol ,host ,endpoint)
-        (eon-gptel-backend-llama-url-parts)))
-    (gptel-make-openai "Llama.cpp"
-      :protocol protocol
-      :host host
-      :endpoint endpoint
-      :stream t
-      :models
-      (eon-openai-list-models
-       eon-gptel-backend-llama-api-base-url)))
+  (eon-gptel-make-openai-compatible
+   "Llama.cpp"
+   eon-gptel-backend-llama-api-base-url)
 
   (defun eon-gptel-backend-llama-set-default ()
     "Set the registered Llama.cpp backend as Gptel's default."
@@ -73,3 +49,4 @@
 ;; _____________________________________________________________________________
 (provide 'eon-gptel-backend-llama)
 ;;; eon-gptel-backend-llama.el ends here
+
