@@ -96,8 +96,8 @@
 
    ;; eon-ai                        ; Shared functionality for LLM integration
    ;; eon-gptel                     ; Comprehensive LLM integration
-   ;; eon-gptel-backend-llama       ; Gptel preset for Llama.cpp backend
    ;; eon-gptel-backend-chatgpt     ; Gptel preset for ChatGPT backend
+   ;; eon-gptel-backend-llama       ; Gptel preset for Llama.cpp backend
    ;; eon-gptel-agent               ; Tools and presets for Gptel
    ;; eon-agent-shell               ; ACP-powered frontend for coding agents
 
