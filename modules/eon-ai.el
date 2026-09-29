@@ -26,6 +26,32 @@
   "AI integration."
   :group 'eon)
 
+(require 'json)
+(require 'url)
+
+(defun eon-openai-list-models (api-base-url)
+  "Return model IDs exposed by OpenAI-compatible API-BASE-URL."
+  (let ((url
+         (concat
+          (string-remove-suffix "/" api-base-url)
+          "/v1/models")))
+    (with-temp-buffer
+      (url-insert-file-contents url)
+      (let* ((response
+              (json-parse-buffer
+               :object-type 'plist
+               :array-type 'list))
+             (models (plist-get response :data)))
+        (unless (plist-member response :data)
+          (error "Response from %s has no `data' member" url))
+        (mapcar
+         (lambda (model)
+           (let ((id (plist-get model :id)))
+             (unless (stringp id)
+               (error "Invalid model entry from %s: %S" url model))
+             id))
+         models)))))
+
 ;; _____________________________________________________________________________
 (provide 'eon-ai)
 ;;; eon-ai.el ends here
