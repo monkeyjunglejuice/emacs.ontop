@@ -61,12 +61,12 @@
   (defun eon-ghostel-send-spc ()
     "Pass the 'SPC' key to Ghostel."
     (interactive)
-    (ghostel-send-key "SPC"))
+    (ghostel-send-key "space"))
 
   (defun eon-ghostel-send-esc ()
     "Pass the 'ESC' key to Ghostel."
     (interactive)
-    (ghostel-send-key "ESC"))
+    (ghostel-send-key "escape"))
 
   (eon-localleader-defkeymap ghostel-mode eon-localleader-ghostel-map
     :doc "Local leader keymap for Ghostel buffers."
