@@ -53,11 +53,6 @@
 
   :init
 
-  (defun eon-ghostel-send-esc ()
-    "Pass the 'ESC' key to Ghostel."
-    (interactive)
-    (ghostel-send-key "escape"))
-
   (defun eon-ghostel-new ()
     "Open a new Ghostel instance."
     (interactive)
@@ -119,18 +114,6 @@
       (advice-add 'ghostel--start-process :after
                   #'eon-ghostel--run-post-spawn-hook)))
 
-  (defun eon-ghostel-shell (&optional arg)
-    "Shell buffer replacement via Ghostel in line-mode."
-    (interactive "P")
-    (let ((ghostel-initial-input-mode 'line))
-      (ghostel arg)))
-
-  (defun eon-ghostel-shell-new ()
-    "Open a new Shell buffer replacement instance via Ghostel in line-mode."
-    (interactive)
-    (let ((ghostel-initial-input-mode 'line))
-      (ghostel t)))
-
   :hook
 
   (eon-ghostel-post-spawn . eon-cursor-update)
@@ -143,10 +126,7 @@
   (:map ctl-z-e-map
         ;; Set Ghostel as the default terminal emulator
         ("t" . ghostel)
-        ("T" . eon-ghostel-new)
-        ;; Shell buffer replacements
-        ("s" . eon-ghostel-shell)
-        ("S" . eon-ghostel-shell-new)))
+        ("T" . eon-ghostel-new)))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; ESHELL INTEGRATION
