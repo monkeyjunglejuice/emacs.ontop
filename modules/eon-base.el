@@ -210,7 +210,16 @@
 ;; Use Emacsclient as the $EDITOR of child processes
 
 (use-package with-editor :ensure t
+
+  :config
+
+  (keymap-global-set "<remap> <async-shell-command>"
+                     #'with-editor-async-shell-command)
+  (keymap-global-set "<remap> <shell-command>"
+                     #'with-editor-shell-command)
+
   :hook
+
   ((eshell-mode shell-mode term-exec) . with-editor-export-editor))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
