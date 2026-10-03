@@ -1,6 +1,6 @@
 ;;; eon-lang-julia.el --- Julia -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Version: 2.0.0
+;; Version: 2.0.1
 ;; URL: https://github.com/monkeyjunglejuice/emacs.ontop
 ;; Package-Requires: ((emacs "30.1")
 ;;                    (use-package "2.4.6"))
@@ -13,14 +13,11 @@
 
 ;;; Commentary:
 ;;
-;; In order to use Snail, either module `eon-vterm' or `eon-ghostel'
-;; is required.
-;;
 ;;; Code:
 
 (eon-module-metadata
  :conflicts '()
- :requires  '(eon))
+ :requires  '(eon eon-ghostel))
 
 ;; _____________________________________________________________________________
 ;;; JULIA MODE
@@ -51,24 +48,14 @@
 
   :custom
 
+  ;; Use ghostel for the REPL
+  (julia-snail-terminal-type :ghostel)
   ;; Print the result of evaluating code to the REPL
   (julia-snail-repl-display-eval-results t)  ; nil to disable
   ;; Show result of evaluating code in the source buffer
   (julia-snail-popup-display-eval-results nil)  ; :command, :change or nil
   ;; The default works with Consult and Helm
   (julia-snail-imenu-style :module-tree)  ; :module-tree, :flat or nil
-
-  :config
-
-  ;; Set the terminal Vterm
-  (setopt julia-snail-terminal-type
-          (cond
-           ((eon-modulep 'eon-ghostel) :ghostel)
-           ((eon-modulep 'eon-vterm) :vterm)
-           ;; Default to Ghostel
-           (t (progn
-                (eon-load-module 'eon-ghostel)
-                :ghostel))))
 
   :hook
 

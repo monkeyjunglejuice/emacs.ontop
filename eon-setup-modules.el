@@ -83,7 +83,6 @@
    ;; eon-tempel                    ; Code snippets and language server support
    ;; eon-todo                      ; Highlight todo keywords in comments
    ;; eon-vertico                   ; Vertical minibuffer completion UI
-   ;; eon-vterm                     ; Terminal emulator powered by libvterm
    ;; eon-yasnippet                 ; Code snippets and language server support
 
    ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .

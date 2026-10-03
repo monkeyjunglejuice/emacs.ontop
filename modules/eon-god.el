@@ -158,7 +158,6 @@ Bound to \"i\" per default."
                             term-mode
                             eshell-mode
                             ghostel-mode
-                            vterm-mode
                             ))
 
   (god-exempt-predicates '(;; Default predicates
@@ -179,15 +178,6 @@ Bound to \"i\" per default."
   ;; Refresh cursor when god-mode toggles
   (add-hook 'eon-cursor-functions #'eon-god--cursor-compute)
   (add-hook 'god-local-mode-hook #'eon-cursor-update)
-
-  ;; Intercept the ESC key and let Emacs handle it when in `vterm' buffer;
-  ;; toggle via "C-c C-q" between interception and passing through to `vterm'.
-  (with-eval-after-load 'eon-vterm
-    (add-hook 'vterm-mode-hook
-              (lambda ()
-                (setq eon-vterm-escape-command #'eon-god-local-mode-activate
-                      eon-vterm-send-escape-to-vterm nil)
-                (eon-vterm-update-escape))))
 
   ;; Enable God mode almost everywhere;
   ;; see `god-exempt-major-modes' and `god-exempt-predicates' where not.

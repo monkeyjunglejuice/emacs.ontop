@@ -82,13 +82,6 @@
             :rev "main")
   :after (ghostel hel))
 
-
-;; <https://github.com/helheim-emacs/hel-vterm>
-(use-package hel-vterm
-  :vc (:url "https://github.com/helheim-emacs/hel-vterm.git"
-            :rev "main")
-  :after vterm)
-
 ;; _____________________________________________________________________________
 (provide 'eon-hel)
 ;;; eon-hel.el ends here

@@ -43,7 +43,7 @@
 ;;; Code:
 
 (eon-module-metadata
- :conflicts '(eon-vterm)
+ :conflicts '()
  :requires  '(eon eon-base))
 
 ;; _____________________________________________________________________________

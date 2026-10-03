@@ -56,7 +56,7 @@ Programming language support is rather limited at that time; it covers merely la
 *eon-lang-clojure*: The Clojure setup is a basic setup with Cider, but usable out-of-the-box. Further tweaks might provide an even better experience.
 
 *** Emacs for Julia ★★★★☆
-*eon-lang-julia*: The Julia setup is based on the Julia language server and [[https://github.com/gcv/julia-snail][Snail]]. The Snail REPL runs within Vterm, the fastest terminal emulator available for Emacs. Enjoy notebook-style literate programming in Org-mode.
+*eon-lang-julia*: The Julia setup is based on the Julia language server and [[https://github.com/gcv/julia-snail][Snail]]. The Snail REPL runs within Ghostel, the fastest terminal emulator available for Emacs. Enjoy notebook-style literate programming in Org-mode.
 
 *** Emacs for OCaml ★★★★☆
 *eon-lang-ocaml-tuareg*: OCaml setup in Emacs based on Tuareg and Merlin. Not LSP based, as using Merlin pure feels better integrated. Completion in Utop works, with completion candidates provided by Merlin.
