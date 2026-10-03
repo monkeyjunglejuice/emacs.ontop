@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 ;;
 ;;
-;; Version: 2.7.1
+;; Version: 2.7.2
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
@@ -2750,7 +2750,7 @@ pretending to clear it."
   ;; contains all TUI commands Eshell recognizes.
   ;; You can add more commands benefitting from running in a terminal emulator:
   (eon-add-to-list* 'eshell-visual-commands
-                    '("hx" "nnn" "bat" "w3m" "fzf" "nmtui" "nix" "brew"
+                    '("hx" "nnn" "bat" "w3m" "fzf" "nmtui" "brew"
                       "pi" "codex" "claude" "autolith"
                       "julia" "utop" "iex" "ghcup")))
 
@@ -4049,7 +4049,7 @@ Don't enable in:
   (interactive)
   (save-some-buffers)
   (kill-emacs))
-(keymap-set ctl-z-q-map "s" #'eon-server-stop)
+(keymap-set ctl-z-q-map "S" #'eon-server-stop)
 
 ;; Start the server?
 (unless (daemonp)
