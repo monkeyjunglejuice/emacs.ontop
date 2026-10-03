@@ -53,27 +53,25 @@
 
   :init
 
-  (defun eon-ghostel-send-q ()
-    "Pass the 'q' key to Ghostel, commonly used to quit TUI programs."
-    (interactive)
-    (ghostel-send-key "q"))
-
-  (defun eon-ghostel-send-spc ()
-    "Pass the 'SPC' key to Ghostel."
-    (interactive)
-    (ghostel-send-key "space"))
-
   (defun eon-ghostel-send-esc ()
     "Pass the 'ESC' key to Ghostel."
     (interactive)
     (ghostel-send-key "escape"))
 
-  (eon-localleader-defkeymap ghostel-mode eon-localleader-ghostel-map
-    :doc "Local leader keymap for Ghostel buffers."
-    "\\"  #'ghostel-send-next-key
-    "q"   #'eon-ghostel-send-q
-    "SPC" #'eon-ghostel-send-spc
-    "ESC" #'eon-ghostel-send-esc)
+  (defun eon-ghostel-new ()
+    "Open a new Ghostel instance."
+    (interactive)
+    (ghostel t))
+
+  ;; Login-shell discovery on MacOS
+  (defun eon-ghostel-tramp-shell-spec (function method)
+    "Use MacOS login-shell discovery around FUNCTION for METHOD."
+    (let ((spec (cdr (assoc method ghostel-tramp-shells))))
+      (if (eq (car spec) 'login-shell)
+          (if-let* ((shell (eon-tramp-macos-login-shell)))
+              (cons shell (cddr spec))
+            (funcall function method))
+        (funcall function method))))
 
   :custom
 
@@ -93,28 +91,37 @@
 
   :config
 
-  ;; Login-shell discovery on MacOS
-  (defun eon-ghostel-tramp-shell-spec (function method)
-    "Use MacOS login-shell discovery around FUNCTION for METHOD."
-    (let ((spec (cdr (assoc method ghostel-tramp-shells))))
-      (if (eq (car spec) 'login-shell)
-          (if-let* ((shell (eon-tramp-macos-login-shell)))
-              (cons shell (cddr spec))
-            (funcall function method))
-        (funcall function method))))
-
   (advice-add 'ghostel--tramp-shell-spec
               :around #'eon-ghostel-tramp-shell-spec)
 
-  ;; Don't pass "<escape>" to the terminal in `semi-char-mode';
-  ;; to send ESC, use "<localleader> ESC" instead.
+  ;; Don't pass "<escape>" to the terminal in `semi-char-mode'.
+  ;; To send ESC, use "<localleader> ESC" instead.
   (setopt ghostel-keymap-exceptions
           (eon-adjoin ghostel-keymap-exceptions "<escape>"))
 
-  (defun eon-ghostel-new ()
-    "Open a new Ghostel instance."
-    (interactive)
-    (ghostel t))
+  ;; KLUDGE Ghostel only provides `ghostel-pre-spawn-hook', but shell startup
+  ;; files may overwrite injected environment variables after the shell starts.
+  ;; Since Ghostel has no ghostel-post-spawn-hook, advise its shell startup
+  ;; function to provide one. This relies on Ghostel's private API and is
+  ;; therefore ugly. We can remove that kludge once Ghostel adds this hook or
+  ;; Ghostel and `with-editor' integrate well.
+
+  (defvar eon-ghostel-post-spawn-hook nil
+    "Hook run after Ghostel has spawned an interactive shell.")
+
+  (defun eon-ghostel--run-post-spawn-hook (&rest _)
+    "Run `eon-ghostel-post-spawn-hook'."
+    (run-hooks 'eon-ghostel-post-spawn-hook))
+
+  (with-eval-after-load 'ghostel
+    (unless (advice-member-p #'eon-ghostel--run-post-spawn-hook
+                             'ghostel--start-process)
+      (advice-add 'ghostel--start-process :after
+                  #'eon-ghostel--run-post-spawn-hook)))
+
+  :hook
+
+  (eon-ghostel-post-spawn . eon-cursor-update)
 
   :bind
 
@@ -166,27 +173,10 @@
 ;; shell startup files set.
 
 (use-package with-editor :ensure t
-  :demand t
-
-  :preface
-
-  (defvar eon-ghostel-post-spawn-hook nil
-    "Hook run after Ghostel has spawned an interactive shell.")
-
+  
   :config
 
-  ;; KLUDGE Ghostel only provides `ghostel-pre-spawn-hook', but shell startup
-  ;; files may overwrite an inherited EDITOR after the shell starts. Since
-  ;; Ghostel has no post-spawn hook, advise its shell startup function to
-  ;; provide one, then inject the `with-editor' environment into the running
-  ;; shell. This relies on Ghostel's private API and is therefore ugly. We can
-  ;; remove that kludge once Ghostel and `with-editor' provide a proper
-  ;; integration.
-
-  (defun eon-ghostel--run-post-spawn-hook (&rest _)
-    "Run `eon-ghostel-post-spawn-hook'."
-    (run-hooks 'eon-ghostel-post-spawn-hook))
-
+  ;; Inject the `with-editor' environment into the running shell.
   (cl-defun eon-ghostel--with-editor (&optional (envvar "EDITOR"))
     "Export ENVVAR for the current Emacs instance into Ghostel."
     (with-editor* envvar
@@ -201,12 +191,6 @@
       ;; ... but hey, we pretend it hasn't happened.
       (ghostel-send-string " clear\n")
       (message "Successfully exported %s" envvar)))
-
-  (with-eval-after-load 'ghostel
-    (unless (advice-member-p #'eon-ghostel--run-post-spawn-hook
-                             'ghostel--start-process)
-      (advice-add 'ghostel--start-process :after
-                  #'eon-ghostel--run-post-spawn-hook)))
 
   :hook
 
