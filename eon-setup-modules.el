@@ -51,6 +51,7 @@
 
    ;; eon-theme-batppuccin          ; Soothing pastel themes
    ;; eon-theme-doom                ; Doom Emacs theme pack
+   ;; eon-theme-lambda              ; Theme set with limited color palette
    ;; eon-theme-matrix              ; Inspired by "The Matrix" movie
    ;; eon-theme-spacemacs           ; Spacemacs themes
 
