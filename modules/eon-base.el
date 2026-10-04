@@ -203,7 +203,7 @@
   ;; <https://github.com/wwwjfy/emacs-fish>
   (use-package fish-mode :ensure t))
 
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;; _____________________________________________________________________________
 ;;; WIDTH-EDITOR
 ;; <https://github.com/magit/with-editor>
 ;; <https://doc.emacsen.de/with-editor>
