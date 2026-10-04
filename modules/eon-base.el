@@ -213,6 +213,21 @@
 
   :config
 
+  ;; Remove the duplicate prompt
+  (defun eon-with-editor-export-editor-shell ()
+    "Export `$EDITOR' and replace With-Editor's output with a fresh prompt."
+    (with-editor-export-editor)
+    (when-let ((process (get-buffer-process (current-buffer))))
+      (let ((inhibit-read-only t))
+        (delete-region (point-min) (process-mark process)))
+      (comint-simple-send process "")))
+
+  ;; Remove the with-editor output
+  (defun eon-with-editor-export-editor-term ()
+    "Export `$EDITOR' and clear With-Editor's setup from Term."
+    (with-editor-export-editor)
+    (term-send-invisible "clear"))
+
   (keymap-global-set "<remap> <async-shell-command>"
                      #'with-editor-async-shell-command)
   (keymap-global-set "<remap> <shell-command>"
@@ -220,7 +235,9 @@
 
   :hook
 
-  ((eshell-mode shell-mode term-exec) . with-editor-export-editor))
+  (eshell-mode . with-editor-export-editor)
+  (shell-mode . eon-with-editor-export-editor-shell)
+  (term-exec . eon-with-editor-export-editor-term))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Tramp login shell discovery on MacOS
