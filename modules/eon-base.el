@@ -147,12 +147,10 @@
 
     ;; :custom
 
-    ;; Example: '("-l") or nil for non-interactive shells. Supposedly faster,
-    ;; but will not capture parts of your $PATH that are unavailable in your
-    ;; login shell.
-    ;; (exec-path-from-shell-arguments '("-l"))
+    ;; Shell arguments; the default is shown below:
+    ;; (exec-path-from-shell-arguments '("-l" "-i"))
 
-    ;; You can set the variables manually, then no autoselection will happen:
+    ;; You can set variables to import manually, then autoselection won't happen:
     ;; (exec-path-from-shell-variables '("PATH" "MANPATH"))
 
     ;; Use a specific shell if you need:
