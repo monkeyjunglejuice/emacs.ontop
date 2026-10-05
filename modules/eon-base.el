@@ -401,10 +401,6 @@ Also remove TRAMP's empty LC_CTYPE override in the current buffer."
 ;; <https://github.com/myrjola/diminish.el>
 (use-package diminish :ensure t)
 
-;; Hydra
-;; <https://github.com/abo-abo/hydra>
-(use-package hydra :ensure t)
-
 ;; Adapt title bar to macOS theme
 ;; <https://github.com/purcell/ns-auto-titlebar>
 (when (eon-macp)
