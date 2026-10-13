@@ -81,7 +81,7 @@
 
   ;; Automatically transfer integration scripts to the remote host.
   ;; This creates small temporary files on the remote host;
-  ;; cleaned up when the terminal exits.
+  ;; supposed to be cleaned up when the terminal exits.
   (ghostel-tramp-shell-integration t)
 
   :config
