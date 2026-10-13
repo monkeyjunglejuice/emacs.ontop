@@ -168,7 +168,7 @@
 ;; shell startup files set.
 
 (use-package with-editor :ensure t
-  
+
   :config
 
   ;; Inject the `with-editor' environment into the running shell.
