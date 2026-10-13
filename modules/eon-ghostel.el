@@ -116,7 +116,7 @@
 
   :hook
 
-  ((ghostel-readonly-enter eon-ghostel-post-spawn) . eon-cursor-update)
+  (ghostel-readonly-change . eon-cursor-update)
 
   :bind
 
