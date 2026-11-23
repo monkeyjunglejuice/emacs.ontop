@@ -198,6 +198,10 @@
 
   :config
 
+  ;; Automatically export $EDITOR making sure the executed command uses the
+  ;; current Emacs instance as “the editor”.
+  (shell-command-with-editor-mode)
+
   ;; Remove the duplicate prompt
   (defun eon-with-editor-export-editor-shell ()
     "Export `$EDITOR' and replace With-Editor's output with a fresh prompt."
@@ -212,11 +216,6 @@
     "Export `$EDITOR' and clear With-Editor's setup from Term."
     (with-editor-export-editor)
     (term-send-invisible "clear"))
-
-  (keymap-global-set "<remap> <async-shell-command>"
-                     #'with-editor-async-shell-command)
-  (keymap-global-set "<remap> <shell-command>"
-                     #'with-editor-shell-command)
 
   :hook
 
