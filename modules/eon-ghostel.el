@@ -150,7 +150,7 @@
 
   :hook
 
-  (ghostel-pre-spawn . #'with-editor-export-editor))
+  (ghostel-pre-spawn . with-editor-export-editor))
 
 ;; _____________________________________________________________________________
 (provide 'eon-ghostel)
