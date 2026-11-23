@@ -162,19 +162,6 @@
     (eon-exec-path-from-shell-refresh)))
 
 ;; _____________________________________________________________________________
-;;; SYSTEM INTEGRATION
-
-;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-;;; - MacOS Trash
-
-;; Use the MacOS trash instead of freedesktop.org ~/.local/share/Trash
-;; <https://github.com/emacsorphanage/osx-trash>
-(when (eon-macp)
-  (use-package osx-trash :ensure t
-    :config
-    (osx-trash-setup)))
-
-;; _____________________________________________________________________________
 ;;; SHELLS
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -236,6 +223,19 @@
   (eshell-mode . with-editor-export-editor)
   (shell-mode . eon-with-editor-export-editor-shell)
   (term-exec . eon-with-editor-export-editor-term))
+
+;; _____________________________________________________________________________
+;;; SYSTEM INTEGRATION
+
+;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+;;; - MacOS Trash
+
+;; Use the MacOS trash instead of freedesktop.org ~/.local/share/Trash
+;; <https://github.com/emacsorphanage/osx-trash>
+(when (eon-macp)
+  (use-package osx-trash :ensure t
+    :config
+    (osx-trash-setup)))
 
 ;; . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 ;;; - Tramp login shell discovery on MacOS
