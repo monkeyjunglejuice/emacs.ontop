@@ -144,8 +144,7 @@
 ;; Use Emacsclient as the $EDITOR of child processes
 
 ;; In every interactive Ghostel shell, $EDITOR shall ultimately point to the
-;; Emacs instance containing that Ghostel buffer, regardless of what the user's
-;; shell startup files set.
+;; Emacs instance containing that Ghostel buffer.
 
 (use-package with-editor :ensure t
 
