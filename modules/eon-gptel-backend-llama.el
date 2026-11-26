@@ -13,6 +13,8 @@
 
 ;;; Commentary:
 ;;
+;; This helper module registers a Gptel backend for Llama.cpp.
+;;
 ;;; Code:
 
 (eon-module-metadata

@@ -13,6 +13,7 @@
 
 ;;; Commentary:
 ;;
+;; This helper module registers a Gptel backend for ChatGPT.
 ;; ChatGPT Plus or Pro subscription needed (this is different from OpenAI API).
 ;; Authenticate via "M-x gptel-openai-oauth-login".
 ;; 
