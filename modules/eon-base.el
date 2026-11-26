@@ -37,7 +37,7 @@
 
   (use-package exec-path-from-shell :ensure t
 
-    :preface
+    :init
 
     (defvar eon-exec-path-from-shell-blocklist
       ;; Shell/process state from temporary shell
