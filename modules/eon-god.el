@@ -124,6 +124,28 @@ Bound to \"i\" per default."
       eon-cursor-type-extra)
      (t nil)))
 
+  ;; Make ESC key work in TUI Emacs to turn on God-mode; Evil-style.
+
+  (defun eon-god--decode-escape (map)
+    "Return an escape event for lone terminal ESC, otherwise return MAP."
+    (let ((keys (this-single-command-keys)))
+      (if (and (> (length keys) 0)
+               (eq (aref keys (1- (length keys))) ?\e)
+               (sit-for 0.05))
+          [escape]
+        map)))
+
+  (defun eon-god--setup-terminal-escape (frame)
+    "Decode lone ESC on FRAME's terminal without replacing its prefix map."
+    (with-selected-frame frame
+      (let ((terminal (frame-terminal frame)))
+        (when (and (eon-terminalp)
+                   (not (terminal-parameter terminal 'eon-god--escape)))
+          (define-key input-decode-map [27]
+                      `(menu-item "" ,(lookup-key input-decode-map [27])
+                                  :filter ,#'eon-god--decode-escape))
+          (set-terminal-parameter terminal 'eon-god--escape t)))))
+
   :custom
 
   (god-mode-lighter-string "G")
@@ -137,14 +159,14 @@ Bound to \"i\" per default."
                             cider-test-report-mode
                             compilation-mode
                             debugger-mode
-                            dired-mode
+                            ;; dired-mode
                             edebug-mode
-                            ediff-mode
-                            eww-mode
+                            ;; ediff-mode
+                            ;; eww-mode
                             geben-breakpoint-list-mode
                             git-commit-mode
                             grep-mode
-                            ibuffer-mode
+                            ;; ibuffer-mode
                             magit-popup-mode
                             org-agenda-mode
                             pdf-outline-buffer-mode
@@ -154,21 +176,24 @@ Bound to \"i\" per default."
                             vc-annotate-mode
                             wdired-mode
                             ;; Additional major modes
-                            shell-mode
-                            term-mode
-                            eshell-mode
-                            ghostel-mode
+                            ;; shell-mode
+                            ;; term-mode
+                            ;; eshell-mode
+                            ;; ghostel-mode
                             ))
 
   (god-exempt-predicates '(;; Default predicates
                            god-exempt-mode-p
-                           god-comint-mode-p
+                           ;; god-comint-mode-p
                            god-git-commit-mode-p
                            god-view-mode-p
                            ;; god-special-mode-p
                            ))
 
   :config
+
+  (add-hook 'after-make-frame-functions #'eon-god--setup-terminal-escape)
+  (mapc #'eon-god--setup-terminal-escape (frame-list))
 
   ;; Bind the leader key
   (eon-god--install-emulation)
