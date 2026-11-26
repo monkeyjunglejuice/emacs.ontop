@@ -10,7 +10,7 @@
 ;;    ▒░▒░▒░  ▒░      ▒░ ▒░▒░▒░▒░     ▒░▒░▒░  ▒░      ▒░ ▒░      ▒░ ▒░▒░▒░▒░
 ;;
 ;;
-;; Version: 2.7.3
+;; Version: 2.8.0
 ;; URL: https://github.com/monkeyjunglejuice/emacs.onboard
 ;; Package: eon
 ;; Package-Requires: ((emacs "30.1"))
@@ -62,16 +62,14 @@
 ;; Emacs ONBOARD comes with a pre-configured leader- and a local leader key.
 ;;
 ;; The leader key groups frequently used keybindings under a quickly accessible,
-;; menu-like structure. You can reach the leader key menu via:
-;; "C-,"     in graphical Emacs;
-;; "C-z"     if Emacs runs within a terminal emulator.
+;; menu-like structure. Press "C-," in graphical or terminal Emacs.
 ;;
 ;; The local leader key provides a selection of commonly used keybindings for
-;; specific modes. Reach it either via:
-;; "C-, C-," in graphical Emacs
-;;           hold down <CTRL> (CMD on macOS) and hit the <,> key 2 times;
-;; "C-z C-z" in the terminal
-;;           hold down <CTRL> (CMD on macOS) and hit the <z> key 2 times.
+;; specific modes. Hold down Control and press comma twice: "C-, C-,".
+;; In graphical macOS builds that map Command to Control, use Command.
+;;
+;; If your terminal doesn't recognize "C-,", run
+;; "M-x eon-customize-group RET", set both leader keys to "C-z", and save.
 ;;
 ;; You can change these keybindings and more - customize the variables
 ;; `eon-leader-key' and `eon-localleader-key' via "<leader> x C",
@@ -562,8 +560,20 @@ When called interactively, also echo the result."
 ;; _____________________________________________________________________________
 ;;; USER INTERFACE
 
-;; Menu bar: on/off by default?
-(menu-bar-mode 1)
+;; Menu bar: on in graphical Emacs, off in the terminal.
+;; To override this default, put the following in your init.el
+;; after loading eon.el:
+;; (remove-hook 'after-make-frame-functions #'eon-menu-bar-setup)
+;; (menu-bar-mode -1)
+;; Removing the hook stops EON from overriding your choice on new frames;
+;; use -1 to hide the menu bar on all frames or 1 to show the menu bar.
+(defun eon-menu-bar-setup (frame)
+  "Show the menu bar on FRAME only if it is graphical."
+  (set-frame-parameter frame 'menu-bar-lines
+                       (if (display-graphic-p frame) 1 0)))
+
+(mapc #'eon-menu-bar-setup (frame-list))
+(add-hook 'after-make-frame-functions #'eon-menu-bar-setup)
 
 ;; Scroll bar: on/off by default?
 (when (fboundp #'scroll-bar-mode) (scroll-bar-mode -1))
@@ -593,6 +603,10 @@ When called interactively, also echo the result."
 ;; _____________________________________________________________________________
 ;;; CURSOR
 ;; <https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Cursor-Display>
+
+;; Try to update cursor appearance on text terminals?
+;; This works only for Xterm-compatible text terminals.
+(setopt xterm-update-cursor 'type)
 
 ;; Turn on/off cursor blinking by default? 1 means 'on' and -1 means 'off'
 (blink-cursor-mode -1)
@@ -776,12 +790,11 @@ a `cursor-type' or nil. The first non-nil return wins.")
 ;; "C-," is the leader key, reach the local leader via "C-, C-,"
 ;;
 ;;; - Defaults for Emacs with terminal UI - invoked by "emacs -nw":
-;; "C-z" is the leader key, reach the local leader via "C-z C-z"
+;; "C-," is the leader key, reach the local leader via "C-, C-,"
 ;;
 ;; Terminal note: In "emacs -nw", "C-z" is normally bound to suspend Emacs.
-;; We rebind it as a leader, and it works in modern terminals - e.g. WezTerm.
-;; If your TTY converts C-z to SIGTSTP before Emacs sees it (rare), disable
-;; the suspend char or move it - see optional snippet below.
+;; If you choose "C-z" as your leader and your TTY converts it to SIGTSTP
+;; before Emacs sees it (rare), disable or move the suspend char as below.
 ;;
 ;; (add-hook 'tty-setup-hook
 ;;           (lambda ()
@@ -894,11 +907,10 @@ local leader is shown."
                   `("Local" . ,eon-localleader-map)))))
 
 (defcustom eon-localleader-key
-  (if (eon-terminalp) "C-z" "C-,")
+  (if (eon-terminalp) "C-," "C-,")
   "Local leader key, pressed after the leader.
 
-- GUI default: \"C-,\" -> reach local leader via \"C-, C-,\"
-- TUI default: \"C-z\" -> reach local leader via \"C-z C-z\"
+In graphical and terminal Emacs, press \"C-, C-,\" by default.
 
 Use `eon-customize-group' to change, or use `setopt' from Lisp."
   :group 'eon-leader
@@ -965,8 +977,8 @@ Customize `eon-localleader-key' explicitly to override this default."
       (eon-localleader--set-key 'eon-localleader-key value))))
 
 (defcustom eon-leader-key
-  (if (eon-terminalp) "C-z" "C-,")
-  "Leader prefix key. GUI default: \"C-,\" - TUI default: \"C-z\".
+  (if (eon-terminalp) "C-," "C-,")
+  "Leader prefix key. Default: \"C-,\" in graphical and terminal Emacs.
 Use `eon-customize-group' to change, or `setopt' from Lisp."
   :group 'eon-leader
   :type '(string)
@@ -2079,10 +2091,8 @@ buffer."
 (keymap-set ctl-z-w-map "w"   #'other-window)
 
 ;; Default window navigation – simply switch to the next window in order.
-;; Added for convenience; the default keybindings are "C-x o" and "C-x O".
+;; Added for convenience; the default keybinding is "C-x o".
 (keymap-global-set "M-o" #'other-window)
-(when (>= emacs-major-version 31)
-  (keymap-global-set "M-O" #'other-window-backward))
 
 ;; _____________________________________________________________________________
 ;;; BUFFER MANAGEMENT
